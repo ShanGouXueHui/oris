@@ -1,40 +1,23 @@
-# TOOLS.md - Local Notes
+# TOOLS.md
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
+## 当前允许方向
+- Git / GitHub
+- Shell / 系统检查
+- Filesystem（受控目录）
+- Web 文档检索
+- HTTP / API 调试
+- Docs / Markdown 更新
 
-## What Goes Here
+## 默认谨慎使用
+- 浏览器自动化
+- 外部社区 skills
+- 数据库写操作
+- 生产环境系统级改写
 
-Things like:
-
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
-
-## Examples
-
-```markdown
-### Cameras
-
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
-
-### SSH
-
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.
+## 默认禁止自动执行
+- 删除大量文件
+- 改写 secrets
+- 批量升级依赖
+- 修改生产数据库
+- 未经验证修改反向代理与系统服务
+\n

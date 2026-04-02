@@ -1,17 +1,12 @@
-# USER.md - About Your Human
+# USER.md
 
-_Learn about the person you're helping. Update this as you go._
-
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
-
-## Context
-
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+## 用户偏好
+- 中文交流
+- 专业、直接、结构化
+- 输出区分事实 / 推断 / 假设 / 风险
+- 优先 copy-paste 命令
+- 避免手工找文件或手工改文件
+- Linux 命令中不要使用 set -e
+- 先验证，再提交
+- GitHub 是长期事实源
+\n
