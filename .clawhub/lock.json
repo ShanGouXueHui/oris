@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "skill-vetter": {
+      "version": "1.0.0",
+      "installedAt": 1775012233768
+    },
+    "proactive-agent": {
+      "version": "3.1.0",
+      "installedAt": 1775012281317
+    }
+  }
+}
