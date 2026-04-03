@@ -4,35 +4,28 @@
 2026-04-03
 
 ## 当前阶段
-ORIS v1：规则层完成基线初始化，进入 OpenClaw 运行层与渠道接入准备阶段
+ORIS v1：OpenClaw 运行层与飞书通道接通，进入上游兼容性问题处理阶段
 
 ## 当前状态
-- GitHub 仓库已创建并完成第一版规则层基线提交
-- deploy 用户已创建，具备 sudo 能力
-- admin 侧已创建 `todeploy` 快捷命令
-- deploy 用户已完成 Ubuntu 基础环境初始化
-- GitHub SSH Key 已配置完成，可正常 push/pull
-- OpenClaw CLI 已安装完成
-- OpenRouter 已完成 onboard，配置文件生成于 `~/.openclaw/openclaw.json`
-- OpenClaw Gateway 已成功运行
-- 当前运行方式：前台自管进程 / `nohup openclaw gateway run --port 18789`
-- 当前监听地址：`127.0.0.1:18789`
-- 本机健康检查通过：`curl -I http://127.0.0.1:18789/` 返回 `HTTP/1.1 200 OK`
+- deploy 用户、GitHub SSH、仓库规则层、OpenClaw CLI、OpenRouter onboard 已完成
+- OpenClaw Gateway 已改为 systemd 系统服务 `oris-openclaw.service`
+- OpenRouter key 已通过 `/etc/oris/openclaw.env` 持久化，不再需要手工输入
+- Gateway 正常监听 `127.0.0.1:18789`
+- Feishu WebSocket 通道已接通
+- 飞书 pairing 已批准
+- 飞书私聊消息已能进入 agent session
 
-## 已确认问题
-- 当前服务器 `user-systemd` / DBus 不可用
-- 因此 `openclaw onboard --install-daemon` 的 user service 安装失败
-- 目前不适合依赖 `systemd --user` 维持 OpenClaw Gateway
+## 当前阻塞
+- OpenClaw 当前版本在回复链路触发 ByteString / Unicode 编码错误
+- 表现为飞书端返回：
+  `Cannot convert argument to a ByteString because the character at index 7 has a value of 25226 which is greater than 255.`
+- 该问题已判断为上游 OpenClaw 兼容性 / 编码问题，而非当前服务器部署问题
 
 ## 当前结论
-- OpenClaw 主链路已打通
-- 当前不需要开放公网 18789 端口
-- 如需手机直接访问，应采用 Nginx 反代 + HTTPS + 鉴权，而不是直接暴露 Gateway 端口
-- 下一优先级是渠道接入，首选飞书，微信作为后备
-
-## 下一步
-1. 将当前运行状态与决策沉淀到仓库
-2. 形成 OpenClaw 运行与巡检 runbook
-3. 启动飞书接入
-4. 后续再决定是否补 system-level service 或 Nginx 反代
-
+- 基础设施与飞书通道已基本打通
+- 当前不应继续把时间消耗在服务器侧盲调
+- 后续应转为：
+  1. 跟踪/提交 OpenClaw 上游 issue
+  2. 评估临时替代路径
+  3. 在上游修复前，不将飞书通道作为稳定生产入口
+\n
