@@ -1,31 +1,33 @@
-# PROJECT_STATE.md
+# PROJECT STATE
 
-## 当前日期
-2026-04-03
+## As of 2026-04-03
+The server was reset and rebuilt from scratch.
 
-## 当前阶段
-ORIS v1：OpenClaw 运行层与飞书通道接通，进入上游兼容性问题处理阶段
+## Current baseline
+- Host baseline has been rebuilt.
+- `admin` is the execution user.
+- Python helper venv exists at: `~/venvs/oris`
+- Project repo path: `~/projects/oris`
+- OpenClaw is installed in the `admin` user environment.
+- OpenClaw onboarding has not been completed yet on this rebuilt server.
 
-## 当前状态
-- deploy 用户、GitHub SSH、仓库规则层、OpenClaw CLI、OpenRouter onboard 已完成
-- OpenClaw Gateway 已改为 systemd 系统服务 `oris-openclaw.service`
-- OpenRouter key 已通过 `/etc/oris/openclaw.env` 持久化，不再需要手工输入
-- Gateway 正常监听 `127.0.0.1:18789`
-- Feishu WebSocket 通道已接通
-- 飞书 pairing 已批准
-- 飞书私聊消息已能进入 agent session
+## Runtime conventions
+- OpenClaw runtime config path: `~/.openclaw/openclaw.json`
+- OpenClaw runtime workspace path: `~/.openclaw/workspace`
 
-## 当前阻塞
-- OpenClaw 当前版本在回复链路触发 ByteString / Unicode 编码错误
-- 表现为飞书端返回：
-  `Cannot convert argument to a ByteString because the character at index 7 has a value of 25226 which is greater than 255.`
-- 该问题已判断为上游 OpenClaw 兼容性 / 编码问题，而非当前服务器部署问题
+## Project memory conventions
+The GitHub repo acts as the project-side persistent memory layer.
 
-## 当前结论
-- 基础设施与飞书通道已基本打通
-- 当前不应继续把时间消耗在服务器侧盲调
-- 后续应转为：
-  1. 跟踪/提交 OpenClaw 上游 issue
-  2. 评估临时替代路径
-  3. 在上游修复前，不将飞书通道作为稳定生产入口
-\n
+Primary continuity files:
+1. `README.md`
+2. `docs/PROJECT_STATE.md`
+3. `memory/HANDOFF.md`
+4. `docs/DECISIONS/*.md`
+
+## Next steps
+1. Complete OpenClaw onboarding with the selected model provider and API key.
+2. Verify:
+   - `openclaw gateway status`
+   - `openclaw dashboard`
+   - `openclaw models status`
+3. Continue ORIS system configuration and record every stable conclusion into repo docs.

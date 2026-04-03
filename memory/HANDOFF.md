@@ -1,22 +1,27 @@
-# HANDOFF.md
+# HANDOFF
 
-## 当前交接点
-ORIS 的 OpenClaw 基础设施、OpenRouter 接入、Feishu 通道与 systemd 常驻运行已完成。
+## Current machine state
+- Fresh rebuilt Ubuntu server
+- Execution user: `admin`
+- Repo path: `~/projects/oris`
+- Python helper venv: `~/venvs/oris`
+- GitHub SSH key path: `~/.ssh/github_oris_ed25519`
+- OpenClaw CLI has been installed
+- OpenClaw onboarding is still pending
 
-## 当前事实
-- `oris-openclaw.service` 正常运行
-- `OPENROUTER_API_KEY` 已通过 `/etc/oris/openclaw.env` 持久化
-- Feishu WebSocket 已接通
-- pairing 已批准
-- 飞书消息已进入 agent session
-- 当前回复阶段触发 OpenClaw ByteString / Unicode 编码错误
-- 当前问题判断为上游兼容性问题，不是部署层问题
+## Engineering rules
+- Use copy-paste executable commands only
+- Do not require manual file editing
+- Do not use `set -e`
+- Validate each step before commit/push
+- Do not use cron to auto-commit or auto-push repository changes
+- Persist stable conclusions to GitHub docs immediately after validation
 
-## 下一步
-1. 将当前状态固化到 GitHub
-2. 准备上游 issue 复现材料
-3. 评估临时替代方案：
-   - 继续用 ChatGPT/Codex 作为主研发入口
-   - OpenClaw 暂保留为基础设施与后续通道试验环境
-4. 在上游修复前，不把飞书通道作为稳定商用入口
-\n
+## Read order for future sessions
+1. `README.md`
+2. `docs/PROJECT_STATE.md`
+3. `memory/HANDOFF.md`
+4. newest file under `docs/DECISIONS/`
+
+## Immediate next action
+Run OpenClaw onboarding and verify the gateway on the rebuilt server.
