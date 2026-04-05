@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE_PATH = ROOT / "orchestration" / "active_routing.json"
 SCOREBOARD_PATH = ROOT / "orchestration" / "provider_scoreboard.json"
+REGISTRY_PATH = ROOT / "orchestration" / "provider_registry.json"
 POLICY_PATH = ROOT / "orchestration" / "runtime_policy.yaml"
 STATE_PATH = ROOT / "orchestration" / "runtime_state.json"
 PLAN_PATH = ROOT / "orchestration" / "runtime_plan.json"
@@ -83,6 +84,13 @@ def scoreboard_index(scoreboard):
             }
     return providers, models
 
+def registry_role_tags(registry):
+    out = {}
+    for provider in registry.get("providers", []):
+        for model in provider.get("models", []):
+            out[model.get("model_id")] = model.get("role_tags", [])
+    return out
+
 def model_runtime_penalty(model_id, state, defaults):
     meta = (state.get("models") or {}).get(model_id) or {}
     failures = int(meta.get("consecutive_failures", 0))
@@ -91,6 +99,52 @@ def model_runtime_penalty(model_id, state, defaults):
     blocked = failures >= block_after
     penalty = failures * degrade
     return penalty, blocked, failures
+
+def role_affinity_adjustment(role_name, model_id, provider_id, role_tags):
+    score = 0
+    lower = (model_id or "").lower()
+    tags = set(role_tags or [])
+
+    is_coder = ("coder" in lower) or ("coding" in tags)
+    is_general = ("general" in tags) or ("fallback" in tags)
+    is_free = ("free_pool_candidate" in tags)
+    is_cn_provider = provider_id in {"alibaba_bailian", "tencent_hunyuan", "zhipu"}
+
+    if role_name == "coding":
+        if is_coder:
+            score += 25
+        else:
+            score -= 8
+
+    elif role_name in {"primary_general", "report_generation", "free_fallback"}:
+        if is_coder:
+            score -= 18
+        if is_general:
+            score += 10
+        if is_free:
+            score += 4
+
+    elif role_name == "cn_candidate_pool":
+        if is_cn_provider:
+            score += 20
+        if is_coder:
+            score -= 12
+        if is_free:
+            score += 4
+
+    return score
+
+def build_model_index(scoreboard, registry):
+    _, model_index = scoreboard_index(scoreboard)
+    tag_index = registry_role_tags(registry)
+
+    out = {}
+    for model_id, meta in model_index.items():
+        out[model_id] = {
+            **meta,
+            "role_tags": tag_index.get(model_id, []),
+        }
+    return out
 
 def pick_fallback_chain(role_name, active, model_index, policy, state):
     defaults = policy.get("defaults", {})
@@ -104,16 +158,25 @@ def pick_fallback_chain(role_name, active, model_index, policy, state):
 
     for model_id, meta in model_index.items():
         penalty, blocked, failures = model_runtime_penalty(model_id, state, defaults)
-        effective_score = int(meta.get("model_score", 0)) - penalty
+        affinity = role_affinity_adjustment(
+            role_name,
+            model_id,
+            meta.get("provider_id"),
+            meta.get("role_tags", [])
+        )
+        effective_score = int(meta.get("model_score", 0)) - penalty + affinity
+
         all_models.append({
             "model_id": model_id,
             "provider_id": meta.get("provider_id"),
             "provider_score": meta.get("provider_score", 0),
             "model_score": meta.get("model_score", 0),
+            "affinity_adjustment": affinity,
             "effective_score": effective_score,
             "free_candidate": meta.get("free_candidate", False),
             "blocked": blocked,
             "consecutive_failures": failures,
+            "role_tags": meta.get("role_tags", []),
         })
 
     all_models.sort(
@@ -150,10 +213,11 @@ def pick_fallback_chain(role_name, active, model_index, policy, state):
 def main():
     active = load_json(ACTIVE_PATH)
     scoreboard = load_json(SCOREBOARD_PATH)
+    registry = load_json(REGISTRY_PATH)
     policy = parse_simple_yaml(POLICY_PATH)
     state = load_json(STATE_PATH)
 
-    _, model_index = scoreboard_index(scoreboard)
+    model_index = build_model_index(scoreboard, registry)
 
     plans = {}
     for role_name in (active.get("decisions") or {}).keys():

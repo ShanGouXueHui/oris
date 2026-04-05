@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-04-05T22:59:22.479314+00:00",
+  "generated_at": "2026-04-05T23:03:00.164310+00:00",
   "plans": {
     "primary_general": {
       "selected_model": "openrouter/auto",
@@ -15,30 +15,45 @@
           "provider_id": "openrouter",
           "provider_score": 108,
           "model_score": 108,
-          "effective_score": 108,
+          "affinity_adjustment": 10,
+          "effective_score": 118,
           "free_candidate": false,
           "blocked": false,
-          "consecutive_failures": 0
-        },
-        {
-          "model_id": "qwen-coder-turbo-0919",
-          "provider_id": "alibaba_bailian",
-          "provider_score": 112,
-          "model_score": 135,
-          "effective_score": 135,
-          "free_candidate": true,
-          "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "general",
+            "fallback"
+          ]
         },
         {
           "model_id": "models/gemini-2.0-flash-lite",
           "provider_id": "gemini",
           "provider_score": 110,
           "model_score": 135,
-          "effective_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite-001",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         }
       ]
     },
@@ -54,40 +69,60 @@
           "provider_id": "alibaba_bailian",
           "provider_score": 112,
           "model_score": 127,
-          "effective_score": 127,
+          "affinity_adjustment": 4,
+          "effective_score": 131,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
-        },
-        {
-          "model_id": "qwen-coder-turbo-0919",
-          "provider_id": "alibaba_bailian",
-          "provider_score": 112,
-          "model_score": 135,
-          "effective_score": 135,
-          "free_candidate": true,
-          "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
           "model_id": "models/gemini-2.0-flash-lite",
           "provider_id": "gemini",
           "provider_score": 110,
           "model_score": 135,
-          "effective_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
           "model_id": "models/gemini-2.0-flash-lite-001",
           "provider_id": "gemini",
           "provider_score": 110,
           "model_score": 135,
-          "effective_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
+        },
+        {
+          "model_id": "models/gemini-2.5-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         }
       ]
     },
@@ -104,30 +139,45 @@
           "provider_id": "openrouter",
           "provider_score": 108,
           "model_score": 108,
-          "effective_score": 108,
+          "affinity_adjustment": 10,
+          "effective_score": 118,
           "free_candidate": false,
           "blocked": false,
-          "consecutive_failures": 0
-        },
-        {
-          "model_id": "qwen-coder-turbo-0919",
-          "provider_id": "alibaba_bailian",
-          "provider_score": 112,
-          "model_score": 135,
-          "effective_score": 135,
-          "free_candidate": true,
-          "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "general",
+            "fallback"
+          ]
         },
         {
           "model_id": "models/gemini-2.0-flash-lite",
           "provider_id": "gemini",
           "provider_score": 110,
           "model_score": 135,
-          "effective_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite-001",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "affinity_adjustment": 4,
+          "effective_score": 139,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         }
       ]
     },
@@ -143,30 +193,44 @@
           "provider_id": "alibaba_bailian",
           "provider_score": 112,
           "model_score": 135,
-          "effective_score": 135,
+          "affinity_adjustment": 25,
+          "effective_score": 160,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
-          "model_id": "models/gemini-2.0-flash-lite",
-          "provider_id": "gemini",
-          "provider_score": 110,
+          "model_id": "qwen/qwen3-coder:free",
+          "provider_id": "openrouter",
+          "provider_score": 108,
           "model_score": 135,
-          "effective_score": 135,
+          "affinity_adjustment": 25,
+          "effective_score": 160,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "catalog_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
-          "model_id": "models/gemini-2.0-flash-lite-001",
-          "provider_id": "gemini",
-          "provider_score": 110,
-          "model_score": 135,
-          "effective_score": 135,
-          "free_candidate": true,
+          "model_id": "qwen/qwen3-coder-flash",
+          "provider_id": "openrouter",
+          "provider_score": 108,
+          "model_score": 122,
+          "affinity_adjustment": 25,
+          "effective_score": 147,
+          "free_candidate": false,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "catalog_discovered"
+          ]
         }
       ]
     },
@@ -182,40 +246,60 @@
           "provider_id": "alibaba_bailian",
           "provider_score": 112,
           "model_score": 127,
-          "effective_score": 127,
+          "affinity_adjustment": 24,
+          "effective_score": 151,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
-          "model_id": "qwen-coder-turbo-0919",
+          "model_id": "qwen-math-turbo",
           "provider_id": "alibaba_bailian",
           "provider_score": 112,
-          "model_score": 135,
-          "effective_score": 135,
+          "model_score": 127,
+          "affinity_adjustment": 24,
+          "effective_score": 151,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
-          "model_id": "models/gemini-2.0-flash-lite",
-          "provider_id": "gemini",
-          "provider_score": 110,
-          "model_score": 135,
-          "effective_score": 135,
+          "model_id": "hunyuan-large-role-latest",
+          "provider_id": "tencent_hunyuan",
+          "provider_score": 109,
+          "model_score": 124,
+          "affinity_adjustment": 24,
+          "effective_score": 148,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         },
         {
-          "model_id": "models/gemini-2.0-flash-lite-001",
-          "provider_id": "gemini",
-          "provider_score": 110,
-          "model_score": 135,
-          "effective_score": 135,
+          "model_id": "hunyuan-t1-latest",
+          "provider_id": "tencent_hunyuan",
+          "provider_score": 109,
+          "model_score": 124,
+          "affinity_adjustment": 24,
+          "effective_score": 148,
           "free_candidate": true,
           "blocked": false,
-          "consecutive_failures": 0
+          "consecutive_failures": 0,
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ]
         }
       ]
     }
