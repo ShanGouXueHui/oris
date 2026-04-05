@@ -3,26 +3,33 @@
 ## External HTTPS base
 https://control.orisfy.com/oris-api
 
-## Authentication
-Two layers are currently applied:
-1. Nginx Basic Auth
-2. Application-level Bearer token
+## External authentication
+External HTTPS access currently uses two layers:
 
-Bearer token can be sent with:
-- Authorization: Bearer <token>
-or
-- X-ORIS-API-Key: <token>
+1. Nginx Basic Auth
+2. Application-level API key
+
+Recommended external header usage:
+- Basic Auth: handled by the HTTPS client
+- Application API key: use `X-ORIS-API-Key: <token>`
+
+For the current external HTTPS entrypoint, do not rely on `Authorization: Bearer <token>` together with Basic Auth in the same request, because the authorization header can conflict with the proxy auth layer.
 
 ## Stable endpoints
 
 ### GET /v1/health
-No application bearer required.
+External auth required:
+- Basic Auth only
 
 ### GET /v1/runtime/plan
-Requires application bearer token.
+External auth required:
+- Basic Auth
+- X-ORIS-API-Key
 
 ### POST /v1/infer
-Requires application bearer token.
+External auth required:
+- Basic Auth
+- X-ORIS-API-Key
 
 ## POST /v1/infer request
 {
@@ -65,4 +72,4 @@ Requires application bearer token.
 
 ## Notes
 This is a new system.
-Legacy non-versioned endpoints are intentionally removed from the stable external contract.
+The stable external contract is versioned and v1-only.

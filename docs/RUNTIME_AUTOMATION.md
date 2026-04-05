@@ -30,3 +30,6 @@ Current stable external contract:
 - https://control.orisfy.com/oris-api/v1/health
 - https://control.orisfy.com/oris-api/v1/runtime/plan
 - https://control.orisfy.com/oris-api/v1/infer
+
+## External integration rule
+For current external HTTPS integrations, use Basic Auth plus X-ORIS-API-Key. This is the standard calling mode for Feishu bridge, OpenClaw bridge, and WeChat backend integration.
