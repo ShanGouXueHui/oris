@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-05T20:44:27.710034+00:00",
+  "source_files": {
+    "registry": "/home/admin/projects/oris/orchestration/provider_registry.json",
+    "snapshot": "/home/admin/projects/oris/orchestration/provider_health_snapshot.json",
+    "policy": "/home/admin/projects/oris/orchestration/routing_policy.yaml"
+  },
+  "decisions": {
+    "primary_general": {
+      "selected_model": "openrouter/auto",
+      "provider_id": "openrouter",
+      "provider_status": "healthy",
+      "free_candidate": false,
+      "selection_mode": "ordered_candidates",
+      "considered": [
+        {
+          "model_id": "openrouter/auto",
+          "exists": true,
+          "provider_status": "healthy",
+          "provider_enabled": true,
+          "free_candidate": false,
+          "accepted": true
+        }
+      ]
+    },
+    "free_fallback": {
+      "selected_model": "openrouter/free",
+      "provider_id": "openrouter",
+      "provider_status": "healthy",
+      "free_candidate": true,
+      "selection_mode": "ordered_candidates",
+      "considered": [
+        {
+          "model_id": "openrouter/free",
+          "exists": true,
+          "provider_status": "healthy",
+          "provider_enabled": true,
+          "free_candidate": true,
+          "accepted": true
+        }
+      ]
+    },
+    "report_generation": {
+      "selected_model": "openrouter/auto",
+      "provider_id": "openrouter",
+      "provider_status": "healthy",
+      "free_candidate": false,
+      "selection_mode": "ordered_candidates",
+      "considered": [
+        {
+          "model_id": "openrouter/auto",
+          "exists": true,
+          "provider_status": "healthy",
+          "provider_enabled": true,
+          "free_candidate": false,
+          "accepted": true
+        }
+      ]
+    },
+    "coding": {
+      "selected_model": "openrouter/auto",
+      "provider_id": "openrouter",
+      "provider_status": "healthy",
+      "free_candidate": false,
+      "selection_mode": "ordered_candidates",
+      "considered": [
+        {
+          "model_id": "openrouter/auto",
+          "exists": true,
+          "provider_status": "healthy",
+          "provider_enabled": true,
+          "free_candidate": false,
+          "accepted": true
+        }
+      ]
+    },
+    "cn_candidate_pool": {
+      "selected_model": "openrouter/free",
+      "provider_id": "openrouter",
+      "provider_status": "healthy",
+      "free_candidate": true,
+      "selection_mode": "fallback_scan",
+      "considered": [
+        {
+          "model_id": "glm_flash_candidate",
+          "exists": true,
+          "provider_status": "not_configured",
+          "provider_enabled": false,
+          "free_candidate": true,
+          "accepted": false
+        }
+      ]
+    }
+  }
+}
