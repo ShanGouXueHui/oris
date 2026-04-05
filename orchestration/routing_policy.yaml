@@ -1,0 +1,59 @@
+version: 1
+updated_at: null
+
+global:
+  strategy: weighted-fallback
+  fail_open_to_free_pool: true
+  max_probe_age_minutes: 1440
+  latency_bias: medium
+  availability_bias: high
+  cost_bias: high
+  prefer_secret_managed_credentials: true
+
+roles:
+  primary_general:
+    ordered_candidates:
+      - openrouter/auto
+      - openrouter/free
+    rules:
+      require_health_status: [healthy, degraded, unknown]
+      avoid_status: [down]
+      allow_free_candidates_only: false
+
+  free_fallback:
+    ordered_candidates:
+      - openrouter/free
+    rules:
+      require_health_status: [healthy, degraded, unknown]
+      allow_free_candidates_only: true
+
+  report_generation:
+    ordered_candidates:
+      - openrouter/auto
+      - openrouter/free
+    rules:
+      require_health_status: [healthy, degraded, unknown]
+      minimum_context_window: null
+
+  coding:
+    ordered_candidates:
+      - openrouter/auto
+    rules:
+      require_health_status: [healthy, degraded, unknown]
+      prefer_tool_capable: true
+
+  cn_candidate_pool:
+    ordered_candidates:
+      - glm_flash_candidate
+    rules:
+      require_health_status: [healthy, degraded, unknown]
+      allow_unconfigured: false
+
+replacement_policy:
+  auto_replace_when:
+    last_probe_failed_consecutive: 3
+    success_rate_24h_below: 0.7
+    median_latency_ms_above: 15000
+  notification_only_when:
+    provider_not_configured: true
+    free_policy_changed: true

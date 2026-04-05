@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-05T20:34:42.751408+00:00",
+  "providers": [
+    {
+      "provider_id": "openrouter",
+      "enabled": true,
+      "status": "unknown",
+      "last_probe_at": "2026-04-05T20:34:42.751375+00:00",
+      "models": [
+        {
+          "model_id": "openrouter/auto",
+          "free_candidate": true,
+          "probe_result": "not_implemented",
+          "latency_ms": null,
+          "error": null
+        },
+        {
+          "model_id": "openrouter/free",
+          "free_candidate": true,
+          "probe_result": "not_implemented",
+          "latency_ms": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "provider_id": "gemini",
+      "enabled": false,
+      "status": "not_configured",
+      "last_probe_at": "2026-04-05T20:34:42.751387+00:00",
+      "models": [
+        {
+          "model_id": "gemini_flash_candidate",
+          "free_candidate": true,
+          "probe_result": "not_implemented",
+          "latency_ms": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "provider_id": "zhipu",
+      "enabled": false,
+      "status": "not_configured",
+      "last_probe_at": "2026-04-05T20:34:42.751392+00:00",
+      "models": [
+        {
+          "model_id": "glm_flash_candidate",
+          "free_candidate": true,
+          "probe_result": "not_implemented",
+          "latency_ms": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "provider_id": "alibaba_bailian",
+      "enabled": false,
+      "status": "not_configured",
+      "last_probe_at": "2026-04-05T20:34:42.751396+00:00",
+      "models": []
+    },
+    {
+      "provider_id": "tencent_hunyuan",
+      "enabled": false,
+      "status": "not_configured",
+      "last_probe_at": "2026-04-05T20:34:42.751400+00:00",
+      "models": []
+    },
+    {
+      "provider_id": "minimax",
+      "enabled": false,
+      "status": "not_configured",
+      "last_probe_at": "2026-04-05T20:34:42.751403+00:00",
+      "models": []
+    },
+    {
+      "provider_id": "kimi",
+      "enabled": false,
+      "status": "not_configured",
+      "last_probe_at": "2026-04-05T20:34:42.751406+00:00",
+      "models": []
+    }
+  ]
+}
