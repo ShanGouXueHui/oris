@@ -59,3 +59,6 @@ ORIS now exposes scripts/oris_infer.py as a stable local entrypoint. Callers onl
 
 ## Local HTTP API layer
 ORIS now exposes a local HTTP API through scripts/oris_http_api.py. Gateways and upper-layer services can call /infer instead of invoking internal scripts directly.
+
+## Commercial HTTPS entrypoint
+ORIS now exposes a secure external HTTPS entrypoint through Nginx on control.orisfy.com/oris-api/*. Internal HTTP remains loopback-only and is not the external integration surface.
