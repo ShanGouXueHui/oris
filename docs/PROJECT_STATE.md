@@ -77,3 +77,15 @@ Future sessions should read in this order:
 - Zhipu direct probe is no longer blocked by wrong model naming; the current blocker is insufficient balance / missing resource package on the account side.
 - Therefore ORIS is correctly falling back to Gemini instead of waiting for Zhipu.
 
+## Active routing latest state (2026-04-06)
+Current routing decisions after Bailian/Hunyuan integration:
+- `primary_general` -> `openrouter/auto`
+- `free_fallback` -> `qwen3.6-plus`
+- `coding` -> `qwen-coder-turbo-0919`
+- `cn_candidate_pool` -> `qwen3.6-plus`
+
+Interpretation:
+- Bailian is now active in real routing, not just in probe results
+- Hunyuan is healthy and in the pool
+- Gemini remains healthy and available as a fallback candidate
+

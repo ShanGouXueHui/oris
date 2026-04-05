@@ -75,6 +75,7 @@ def build_openrouter_models(remote_models: list[dict]) -> list[dict]:
             "notes": "OpenRouter free router; available free models are provider-managed and dynamic."
         }
     ]
+
     seen = {"openrouter/auto", "openrouter/free"}
 
     for item in remote_models:
@@ -103,7 +104,13 @@ def build_openrouter_models(remote_models: list[dict]) -> list[dict]:
         })
         seen.add(model_id)
 
-    results.sort(key=lambda x: (-int(bool(x.get("free_candidate"))), -int(x.get("priority", 0)), x.get("model_id", "")))
+    results.sort(
+        key=lambda x: (
+            -int(bool(x.get("free_candidate"))),
+            -int(x.get("priority", 0)),
+            x.get("model_id", "")
+        )
+    )
     return results
 
 def refresh_openrouter(provider: dict) -> tuple[dict, dict]:
@@ -112,8 +119,18 @@ def refresh_openrouter(provider: dict) -> tuple[dict, dict]:
 
     if not api_key:
         provider["enabled"] = False
-        provider.setdefault("health", {}).update({"status": "not_configured", "last_probe_at": now, "last_error": "missing_openrouter_api_key"})
-        return provider, {"provider_id": "openrouter", "enabled": False, "status": "not_configured", "last_probe_at": now, "models": []}
+        provider.setdefault("health", {}).update({
+            "status": "not_configured",
+            "last_probe_at": now,
+            "last_error": "missing_openrouter_api_key"
+        })
+        return provider, {
+            "provider_id": "openrouter",
+            "enabled": False,
+            "status": "not_configured",
+            "last_probe_at": now,
+            "models": []
+        }
 
     try:
         remote_models = fetch_openrouter_models(api_key)
@@ -121,14 +138,24 @@ def refresh_openrouter(provider: dict) -> tuple[dict, dict]:
         provider["enabled"] = True
         provider["auth_ref"] = "/models/providers/openrouter/apiKey"
         provider["models"] = managed_models
-        provider.setdefault("health", {}).update({"status": "healthy", "last_probe_at": now, "last_error": None})
+        provider.setdefault("health", {}).update({
+            "status": "healthy",
+            "last_probe_at": now,
+            "last_error": None
+        })
         return provider, {
             "provider_id": "openrouter",
             "enabled": True,
             "status": "healthy",
             "last_probe_at": now,
             "models": [
-                {"model_id": m["model_id"], "free_candidate": m.get("free_candidate", False), "probe_result": "catalog_sync_ok", "latency_ms": None, "error": None}
+                {
+                    "model_id": m["model_id"],
+                    "free_candidate": m.get("free_candidate", False),
+                    "probe_result": "catalog_sync_ok",
+                    "latency_ms": None,
+                    "error": None
+                }
                 for m in managed_models
             ]
         }
@@ -139,14 +166,24 @@ def refresh_openrouter(provider: dict) -> tuple[dict, dict]:
     except Exception as e:
         err = f"{type(e).__name__}: {e}"
 
-    provider.setdefault("health", {}).update({"status": "degraded", "last_probe_at": now, "last_error": err})
+    provider.setdefault("health", {}).update({
+        "status": "degraded",
+        "last_probe_at": now,
+        "last_error": err
+    })
     return provider, {
         "provider_id": "openrouter",
         "enabled": provider.get("enabled", False),
         "status": "degraded",
         "last_probe_at": now,
         "models": [
-            {"model_id": m.get("model_id"), "free_candidate": m.get("free_candidate", False), "probe_result": "catalog_sync_failed", "latency_ms": None, "error": err}
+            {
+                "model_id": m.get("model_id"),
+                "free_candidate": m.get("free_candidate", False),
+                "probe_result": "catalog_sync_failed",
+                "latency_ms": None,
+                "error": err
+            }
             for m in provider.get("models", [])
         ]
     }
@@ -162,58 +199,73 @@ def run_adapter(script_name: str) -> dict:
     )
     if result.returncode != 0:
         raise RuntimeError(f"{script_name} failed: {result.stderr.strip()}")
-    return json.loads(result.stdout.strip())
+    payload = result.stdout.strip()
+    if not payload:
+        raise RuntimeError(f"{script_name} returned empty output")
+    return json.loads(payload)
 
-def refresh_generic(provider: dict, script_name: str, auth_ref: str) -> tuple[dict, dict]:
-    data = run_adapter(script_name)
-    provider["enabled"] = data.get("status") in ("healthy", "degraded")
-    provider["auth_ref"] = auth_ref
+def normalize_direct_models(provider_id: str, models: list[dict], script_name: str) -> list[dict]:
+    normalized = []
 
-    discovered_models = []
-    for m in data.get("models", []):
-        model_id = (m.get("model_id") or "").lower()
+    for m in models:
+        model_id = (m.get("model_id") or "").strip()
+        if not model_id:
+            continue
+
         free_candidate = bool(m.get("free_candidate", False))
+        lower_id = model_id.lower()
 
-        if provider.get("provider_id") == "gemini":
-            if any(tag in model_id for tag in ["flash-lite", "flash", "gemma"]):
+        if provider_id == "gemini":
+            if any(tag in lower_id for tag in ["flash-lite", "flash", "gemma"]):
                 free_candidate = True
 
         role_tags = ["direct_probe_discovered"]
         if free_candidate:
             role_tags.append("free_pool_candidate")
 
-        discovered_models.append(
-            {
-                "model_id": m.get("model_id"),
-                "role_tags": role_tags,
-                "priority": 70 if free_candidate else 50,
-                "quota_mode": "probe_required",
-                "cost_mode": "dynamic",
-                "free_candidate": free_candidate,
-                "notes": f"Discovered by {script_name}."
-            }
-        )
+        normalized.append({
+            "model_id": model_id,
+            "role_tags": role_tags,
+            "priority": 70 if free_candidate else 50,
+            "quota_mode": "probe_required",
+            "cost_mode": "dynamic",
+            "free_candidate": free_candidate,
+            "notes": f"Discovered by {script_name}."
+        })
 
+    return normalized
+
+def refresh_generic(provider: dict, script_name: str, auth_ref: str) -> tuple[dict, dict]:
+    data = run_adapter(script_name)
+    provider_id = provider.get("provider_id")
+    discovered_models = normalize_direct_models(provider_id, data.get("models", []), script_name)
+
+    status = data.get("status", "unknown")
+    enabled = status in ("healthy", "degraded")
+
+    provider["enabled"] = enabled
+    provider["auth_ref"] = auth_ref
     provider["models"] = discovered_models
     provider.setdefault("health", {}).update({
-        "status": data.get("status", "unknown"),
+        "status": status,
         "last_probe_at": data.get("last_probe_at"),
         "last_error": data.get("error")
     })
+
     snapshot = {
-        "provider_id": provider.get("provider_id"),
-        "enabled": provider.get("enabled", False),
-        "status": data.get("status", "unknown"),
+        "provider_id": provider_id,
+        "enabled": enabled,
+        "status": status,
         "last_probe_at": data.get("last_probe_at"),
         "models": [
             {
                 "model_id": m.get("model_id"),
                 "free_candidate": m.get("free_candidate", False),
-                "probe_result": "direct_probe_ok" if data.get("status") == "healthy" else data.get("status"),
+                "probe_result": "direct_probe_ok" if status == "healthy" else status,
                 "latency_ms": None,
                 "error": data.get("error")
             }
-            for m in data.get("models", [])
+            for m in discovered_models
         ]
     }
     return provider, snapshot
@@ -232,7 +284,7 @@ def passthrough_provider(provider: dict) -> tuple[dict, dict]:
                 "free_candidate": m.get("free_candidate", False),
                 "probe_result": "not_implemented",
                 "latency_ms": None,
-                "error": None,
+                "error": None
             }
             for m in provider.get("models", [])
         ]
@@ -247,21 +299,47 @@ def main() -> int:
 
     for provider in registry.get("providers", []):
         provider_id = provider.get("provider_id")
+
         if provider_id == "openrouter":
             updated_provider, snapshot = refresh_openrouter(provider)
         elif provider_id == "gemini":
-            updated_provider, snapshot = refresh_generic(provider, "provider_probe_gemini.py", "/models/providers/gemini/apiKey")
+            updated_provider, snapshot = refresh_generic(
+                provider,
+                "provider_probe_gemini.py",
+                "/models/providers/gemini/apiKey"
+            )
         elif provider_id == "zhipu":
-            updated_provider, snapshot = refresh_generic(provider, "provider_probe_zhipu.py", "/models/providers/zhipu/apiKey")
+            updated_provider, snapshot = refresh_generic(
+                provider,
+                "provider_probe_zhipu.py",
+                "/models/providers/zhipu/apiKey"
+            )
+        elif provider_id == "alibaba_bailian":
+            updated_provider, snapshot = refresh_generic(
+                provider,
+                "provider_probe_alibaba_bailian.py",
+                "/models/providers/alibaba_bailian/apiKey"
+            )
+        elif provider_id == "tencent_hunyuan":
+            updated_provider, snapshot = refresh_generic(
+                provider,
+                "provider_probe_tencent_hunyuan.py",
+                "/models/providers/tencent_hunyuan/apiKey"
+            )
         else:
             updated_provider, snapshot = passthrough_provider(provider)
+
         providers.append(updated_provider)
         snapshots.append(snapshot)
 
     registry["providers"] = providers
     save_json(REGISTRY_PATH, registry)
 
-    snapshot = {"version": 1, "generated_at": utc_now(), "providers": snapshots}
+    snapshot = {
+        "version": 1,
+        "generated_at": utc_now(),
+        "providers": snapshots
+    }
     save_json(SNAPSHOT_PATH, snapshot)
 
     counts = {p.get("provider_id"): len(p.get("models", [])) for p in providers}

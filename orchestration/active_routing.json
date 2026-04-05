@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-04-05T21:06:33.826936+00:00",
+  "generated_at": "2026-04-05T22:46:36.520043+00:00",
   "source_files": {
     "registry": "/home/admin/projects/oris/orchestration/provider_registry.json",
     "snapshot": "/home/admin/projects/oris/orchestration/provider_health_snapshot.json",
@@ -25,14 +25,14 @@
       ]
     },
     "free_fallback": {
-      "selected_model": "models/gemini-2.5-flash-lite",
-      "provider_id": "gemini",
+      "selected_model": "qwen3.6-plus",
+      "provider_id": "alibaba_bailian",
       "provider_status": "healthy",
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
         {
-          "model_id": "models/gemini-2.5-flash-lite",
+          "model_id": "qwen3.6-plus",
           "exists": true,
           "provider_status": "healthy",
           "provider_enabled": true,
@@ -59,39 +59,31 @@
       ]
     },
     "coding": {
-      "selected_model": "openrouter/auto",
-      "provider_id": "openrouter",
-      "provider_status": "healthy",
-      "free_candidate": false,
-      "selection_mode": "ordered_candidates",
-      "considered": [
-        {
-          "model_id": "openrouter/auto",
-          "exists": true,
-          "provider_status": "healthy",
-          "provider_enabled": true,
-          "free_candidate": false,
-          "accepted": true
-        }
-      ]
-    },
-    "cn_candidate_pool": {
-      "selected_model": "models/gemini-2.5-flash",
-      "provider_id": "gemini",
+      "selected_model": "qwen-coder-turbo-0919",
+      "provider_id": "alibaba_bailian",
       "provider_status": "healthy",
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
         {
-          "model_id": "glm-4-flash",
-          "exists": false,
-          "provider_status": null,
-          "provider_enabled": null,
-          "free_candidate": null,
-          "accepted": false
-        },
+          "model_id": "qwen-coder-turbo-0919",
+          "exists": true,
+          "provider_status": "healthy",
+          "provider_enabled": true,
+          "free_candidate": true,
+          "accepted": true
+        }
+      ]
+    },
+    "cn_candidate_pool": {
+      "selected_model": "qwen3.6-plus",
+      "provider_id": "alibaba_bailian",
+      "provider_status": "healthy",
+      "free_candidate": true,
+      "selection_mode": "ordered_candidates",
+      "considered": [
         {
-          "model_id": "models/gemini-2.5-flash",
+          "model_id": "qwen3.6-plus",
           "exists": true,
           "provider_status": "healthy",
           "provider_enabled": true,

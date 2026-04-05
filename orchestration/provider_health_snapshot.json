@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "generated_at": "2026-04-05T21:06:33.790082+00:00",
+  "generated_at": "2026-04-05T22:46:36.483456+00:00",
   "providers": [
     {
       "provider_id": "openrouter",
       "enabled": true,
       "status": "healthy",
-      "last_probe_at": "2026-04-05T21:06:32.863961+00:00",
+      "last_probe_at": "2026-04-05T22:45:52.883067+00:00",
       "models": [
         {
           "model_id": "openrouter/free",
@@ -2457,11 +2457,11 @@
       "provider_id": "gemini",
       "enabled": true,
       "status": "healthy",
-      "last_probe_at": "2026-04-05T21:06:33.379905+00:00",
+      "last_probe_at": "2026-04-05T22:45:53.063709+00:00",
       "models": [
         {
           "model_id": "models/gemini-2.5-flash",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2475,35 +2475,35 @@
         },
         {
           "model_id": "models/gemini-2.0-flash",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.0-flash-001",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.0-flash-lite-001",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.0-flash-lite",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.5-flash-preview-tts",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2517,70 +2517,70 @@
         },
         {
           "model_id": "models/gemma-3-1b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-3-4b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-3-12b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-3-27b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-3n-e4b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-3n-e2b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-4-26b-a4b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemma-4-31b-it",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-flash-latest",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-flash-lite-latest",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2594,14 +2594,14 @@
         },
         {
           "model_id": "models/gemini-2.5-flash-lite",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.5-flash-image",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2615,7 +2615,7 @@
         },
         {
           "model_id": "models/gemini-3-flash-preview",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2636,7 +2636,7 @@
         },
         {
           "model_id": "models/gemini-3.1-flash-lite-preview",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2657,7 +2657,7 @@
         },
         {
           "model_id": "models/gemini-3.1-flash-image-preview",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2783,28 +2783,28 @@
         },
         {
           "model_id": "models/gemini-2.5-flash-native-audio-latest",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.5-flash-native-audio-preview-09-2025",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-2.5-flash-native-audio-preview-12-2025",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
         },
         {
           "model_id": "models/gemini-3.1-flash-live-preview",
-          "free_candidate": false,
+          "free_candidate": true,
           "probe_result": "direct_probe_ok",
           "latency_ms": null,
           "error": null
@@ -2815,35 +2815,79 @@
       "provider_id": "zhipu",
       "enabled": true,
       "status": "degraded",
-      "last_probe_at": "2026-04-05T21:06:33.777163+00:00",
+      "last_probe_at": "2026-04-05T22:46:23.403620+00:00",
       "models": []
     },
     {
       "provider_id": "alibaba_bailian",
-      "enabled": false,
-      "status": "not_configured",
-      "last_probe_at": "2026-04-05T21:06:33.784572+00:00",
-      "models": []
+      "enabled": true,
+      "status": "healthy",
+      "last_probe_at": "2026-04-05T22:46:33.306027+00:00",
+      "models": [
+        {
+          "model_id": "qwen3.6-plus",
+          "free_candidate": true,
+          "probe_result": "direct_probe_ok",
+          "latency_ms": null,
+          "error": null
+        },
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "free_candidate": true,
+          "probe_result": "direct_probe_ok",
+          "latency_ms": null,
+          "error": null
+        },
+        {
+          "model_id": "qwen-math-turbo",
+          "free_candidate": true,
+          "probe_result": "direct_probe_ok",
+          "latency_ms": null,
+          "error": null
+        }
+      ]
     },
     {
       "provider_id": "tencent_hunyuan",
-      "enabled": false,
-      "status": "not_configured",
-      "last_probe_at": "2026-04-05T21:06:33.784603+00:00",
-      "models": []
+      "enabled": true,
+      "status": "healthy",
+      "last_probe_at": "2026-04-05T22:46:36.469952+00:00",
+      "models": [
+        {
+          "model_id": "hunyuan-turbos-latest",
+          "free_candidate": true,
+          "probe_result": "direct_probe_ok",
+          "latency_ms": null,
+          "error": null
+        },
+        {
+          "model_id": "hunyuan-t1-latest",
+          "free_candidate": true,
+          "probe_result": "direct_probe_ok",
+          "latency_ms": null,
+          "error": null
+        },
+        {
+          "model_id": "hunyuan-large-role-latest",
+          "free_candidate": true,
+          "probe_result": "direct_probe_ok",
+          "latency_ms": null,
+          "error": null
+        }
+      ]
     },
     {
       "provider_id": "minimax",
       "enabled": false,
       "status": "not_configured",
-      "last_probe_at": "2026-04-05T21:06:33.784608+00:00",
+      "last_probe_at": "2026-04-05T22:46:36.478017+00:00",
       "models": []
     },
     {
       "provider_id": "kimi",
       "enabled": false,
       "status": "not_configured",
-      "last_probe_at": "2026-04-05T21:06:33.784612+00:00",
+      "last_probe_at": "2026-04-05T22:46:36.478033+00:00",
       "models": []
     }
   ]

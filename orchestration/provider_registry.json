@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-04-05T21:06:32.863934+00:00",
+  "updated_at": "2026-04-05T22:45:52.883037+00:00",
   "providers": [
     {
       "provider_id": "openrouter",
@@ -3888,7 +3888,7 @@
       ],
       "health": {
         "status": "healthy",
-        "last_probe_at": "2026-04-05T21:06:32.863961+00:00",
+        "last_probe_at": "2026-04-05T22:45:52.883067+00:00",
         "success_rate_24h": null,
         "median_latency_ms": null,
         "last_error": null
@@ -4487,7 +4487,7 @@
       ],
       "health": {
         "status": "healthy",
-        "last_probe_at": "2026-04-05T21:06:33.379905+00:00",
+        "last_probe_at": "2026-04-05T22:45:53.063709+00:00",
         "success_rate_24h": null,
         "median_latency_ms": null,
         "last_error": null
@@ -4510,7 +4510,7 @@
       "models": [],
       "health": {
         "status": "degraded",
-        "last_probe_at": "2026-04-05T21:06:33.777163+00:00",
+        "last_probe_at": "2026-04-05T22:46:23.403620+00:00",
         "success_rate_24h": null,
         "median_latency_ms": null,
         "last_error": "http_429"
@@ -4520,9 +4520,9 @@
       "provider_id": "alibaba_bailian",
       "display_name": "Alibaba Bailian",
       "category": "direct",
-      "enabled": false,
+      "enabled": true,
       "region": "cn",
-      "auth_ref": null,
+      "auth_ref": "/models/providers/alibaba_bailian/apiKey",
       "supports": {
         "chat": true,
         "web_search": "unknown",
@@ -4530,10 +4530,47 @@
         "vision": "unknown",
         "json_mode": "unknown"
       },
-      "models": [],
+      "models": [
+        {
+          "model_id": "qwen3.6-plus",
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ],
+          "priority": 70,
+          "quota_mode": "probe_required",
+          "cost_mode": "dynamic",
+          "free_candidate": true,
+          "notes": "Discovered by provider_probe_alibaba_bailian.py."
+        },
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ],
+          "priority": 70,
+          "quota_mode": "probe_required",
+          "cost_mode": "dynamic",
+          "free_candidate": true,
+          "notes": "Discovered by provider_probe_alibaba_bailian.py."
+        },
+        {
+          "model_id": "qwen-math-turbo",
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ],
+          "priority": 70,
+          "quota_mode": "probe_required",
+          "cost_mode": "dynamic",
+          "free_candidate": true,
+          "notes": "Discovered by provider_probe_alibaba_bailian.py."
+        }
+      ],
       "health": {
-        "status": "not_configured",
-        "last_probe_at": null,
+        "status": "healthy",
+        "last_probe_at": "2026-04-05T22:46:33.306027+00:00",
         "success_rate_24h": null,
         "median_latency_ms": null,
         "last_error": null
@@ -4543,9 +4580,9 @@
       "provider_id": "tencent_hunyuan",
       "display_name": "Tencent Hunyuan",
       "category": "direct",
-      "enabled": false,
+      "enabled": true,
       "region": "cn",
-      "auth_ref": null,
+      "auth_ref": "/models/providers/tencent_hunyuan/apiKey",
       "supports": {
         "chat": true,
         "web_search": "unknown",
@@ -4553,10 +4590,47 @@
         "vision": "unknown",
         "json_mode": "unknown"
       },
-      "models": [],
+      "models": [
+        {
+          "model_id": "hunyuan-turbos-latest",
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ],
+          "priority": 70,
+          "quota_mode": "probe_required",
+          "cost_mode": "dynamic",
+          "free_candidate": true,
+          "notes": "Discovered by provider_probe_tencent_hunyuan.py."
+        },
+        {
+          "model_id": "hunyuan-t1-latest",
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ],
+          "priority": 70,
+          "quota_mode": "probe_required",
+          "cost_mode": "dynamic",
+          "free_candidate": true,
+          "notes": "Discovered by provider_probe_tencent_hunyuan.py."
+        },
+        {
+          "model_id": "hunyuan-large-role-latest",
+          "role_tags": [
+            "direct_probe_discovered",
+            "free_pool_candidate"
+          ],
+          "priority": 70,
+          "quota_mode": "probe_required",
+          "cost_mode": "dynamic",
+          "free_candidate": true,
+          "notes": "Discovered by provider_probe_tencent_hunyuan.py."
+        }
+      ],
       "health": {
-        "status": "not_configured",
-        "last_probe_at": null,
+        "status": "healthy",
+        "last_probe_at": "2026-04-05T22:46:36.469952+00:00",
         "success_rate_24h": null,
         "median_latency_ms": null,
         "last_error": null
