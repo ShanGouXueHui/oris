@@ -14,6 +14,8 @@ roles:
   primary_general:
     ordered_candidates:
       - openrouter/auto
+      - models/gemini-2.5-flash
+      - models/gemini-flash-latest
       - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
@@ -22,6 +24,11 @@ roles:
 
   free_fallback:
     ordered_candidates:
+      - models/gemini-2.5-flash-lite
+      - models/gemini-2.0-flash-lite
+      - models/gemini-2.0-flash
+      - models/gemini-flash-lite-latest
+      - models/gemini-flash-latest
       - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
@@ -30,6 +37,8 @@ roles:
   report_generation:
     ordered_candidates:
       - openrouter/auto
+      - models/gemini-2.5-pro
+      - models/gemini-pro-latest
       - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
@@ -38,13 +47,18 @@ roles:
   coding:
     ordered_candidates:
       - openrouter/auto
+      - models/gemini-2.5-flash
+      - models/gemini-flash-latest
     rules:
       require_health_status: [healthy, degraded, unknown]
       prefer_tool_capable: true
 
   cn_candidate_pool:
     ordered_candidates:
-      - glm_flash_candidate
+      - glm-4-flash
+      - models/gemini-2.5-flash
+      - models/gemini-flash-latest
+      - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
       allow_unconfigured: false
