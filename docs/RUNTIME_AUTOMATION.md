@@ -24,3 +24,9 @@ The service files live outside the Git repository:
 - ~/.config/systemd/user/oris-quota-probe.service
 - ~/.config/systemd/user/oris-http-api.service
 - ~/.config/systemd/user/oris-quota-probe.timer
+
+## Versioned external API
+Current stable external contract:
+- https://control.orisfy.com/oris-api/v1/health
+- https://control.orisfy.com/oris-api/v1/runtime/plan
+- https://control.orisfy.com/oris-api/v1/infer
