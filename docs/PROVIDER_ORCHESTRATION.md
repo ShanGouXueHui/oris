@@ -56,3 +56,6 @@ ORIS now includes runtime_execute.py to execute execution_primary, apply retry, 
 
 ## Unified inference entrypoint
 ORIS now exposes scripts/oris_infer.py as a stable local entrypoint. Callers only provide role and prompt, while ORIS handles planning, execution, retry, failover, feedback, and execution logging internally.
+
+## Local HTTP API layer
+ORIS now exposes a local HTTP API through scripts/oris_http_api.py. Gateways and upper-layer services can call /infer instead of invoking internal scripts directly.
