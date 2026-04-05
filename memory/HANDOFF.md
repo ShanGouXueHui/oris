@@ -1,46 +1,31 @@
 # HANDOFF
 
-## Machine status
-- Fresh rebuilt Ubuntu server
-- Execution user: `admin`
-- Repo path: `~/projects/oris`
-- Python helper venv: `~/venvs/oris`
-- GitHub SSH key path: `~/.ssh/github_oris_ed25519`
+## What is already working
+- OpenClaw baseline is installed and stable under `admin`
+- Public dashboard works at `https://control.orisfy.com`
+- Nginx + HTTPS + Basic Auth are working
+- OpenClaw gateway is still loopback-only on `127.0.0.1:18789`
+- Gateway token is SecretRef-managed
+- OpenRouter model auth is working again
+- Feishu websocket channel is working
+- Feishu bot pairing was completed successfully
+- Feishu bot already replied successfully in DM
 
-## OpenClaw status
-- Installed successfully under the `admin` user environment
-- Onboarding completed successfully
-- Gateway service is running under systemd user service
-- Bind address: `127.0.0.1`
-- Port: `18789`
-- Default model: `openrouter/auto`
-- OpenRouter key is effective
-- Control UI insecure auth flag has been disabled
+## Important paths
+- Repo: `~/projects/oris`
+- OpenClaw config: `~/.openclaw/openclaw.json`
+- OpenClaw workspace: `~/.openclaw/workspace`
+- Secrets file: `~/.openclaw/secrets.json`
+- Auth profiles: `~/.openclaw/agents/main/agent/auth-profiles.json`
 
-## Important path note
-OpenClaw was installed under npm-global, so PATH must include:
+## Security posture
+- Keep OpenClaw loopback-only
+- Keep public access at the reverse-proxy layer only
+- Do not commit secrets into GitHub
+- Rotate Feishu App Secret before final production hardening
 
-`$HOME/.npm-global/bin`
-
-Current fix was written into:
-- `~/.bashrc`
-- `~/.profile`
-
-## Current non-blocking warnings
-1. `gateway.trusted_proxies_missing`
-2. `gateway.nodes.deny_commands_ineffective`
-
-These do not block baseline usage in the current loopback-only single-user setup.
-
-## Engineering rules
-- Use copy-paste executable commands only
-- Do not require manual file editing
-- Do not use `set -e`
-- Validate each step before commit/push
-- Keep everything under the same execution user unless there is a very strong reason to isolate
-
-## Immediate next action
-Choose one of the following as the next workstream:
-1. Configure Control UI access path
-2. Configure web search provider
-3. Configure first channel integration
+## Next recommended steps
+1. Decide whether to add QQ Bot / Tencent-side channel
+2. Rotate Feishu App Secret and update `~/.openclaw/secrets.json`
+3. Re-verify Feishu after secret rotation
+4. Optionally refine Feishu allowlist / group policy / operator workflow
