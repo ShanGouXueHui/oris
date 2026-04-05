@@ -66,3 +66,14 @@ Future sessions should read in this order:
 2. `docs/PROJECT_STATE.md`
 3. `memory/HANDOFF.md`
 4. latest file under `docs/DECISIONS/`
+
+## Provider orchestration latest status (2026-04-06)
+- OpenRouter catalog auto-refresh is working and currently discovers hundreds of models dynamically.
+- Active routing automation is working and writes `orchestration/active_routing.json`.
+- Gemini direct probe is healthy and Gemini models are now part of the automatic routing pool.
+- Current routing outcomes include:
+  - `free_fallback` -> Gemini Flash Lite path
+  - `cn_candidate_pool` -> Gemini Flash path
+- Zhipu direct probe is no longer blocked by wrong model naming; the current blocker is insufficient balance / missing resource package on the account side.
+- Therefore ORIS is correctly falling back to Gemini instead of waiting for Zhipu.
+

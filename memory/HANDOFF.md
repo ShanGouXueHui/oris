@@ -45,3 +45,12 @@
 3. Install only a minimal necessary skill set after readiness check
 4. Resume QQ Bot only after platform approval completes
 5. Rotate Feishu App Secret before final production hardening
+
+## Provider orchestration latest status
+- OpenRouter catalog refresh is automated
+- Active routing selection is automated
+- Gemini direct probe is healthy
+- Gemini is now being selected automatically for fallback / candidate routing
+- Zhipu probe currently fails because the account lacks balance or resource package
+- No manual provider switching is required at this stage
+
