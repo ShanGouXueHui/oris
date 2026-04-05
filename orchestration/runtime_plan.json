@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-04-05T23:19:38.485911+00:00",
+  "generated_at": "2026-04-05T23:21:52.134002+00:00",
   "plans": {
     "primary_general": {
       "selected_model": "openrouter/auto",
@@ -270,8 +270,8 @@
     },
     "cn_candidate_pool": {
       "selected_model": "qwen3.6-plus",
-      "selected_model_blocked": true,
-      "execution_primary": "qwen-math-turbo",
+      "selected_model_blocked": false,
+      "execution_primary": "qwen3.6-plus",
       "retry_attempts": 1,
       "retry_backoff_seconds": [
         1
@@ -283,12 +283,12 @@
           "provider_score": 112,
           "model_score": 127,
           "affinity_adjustment": 24,
-          "effective_score": 106,
+          "effective_score": 151,
           "free_candidate": true,
           "free_verified": false,
-          "blocked": true,
-          "blocked_until": "2026-04-05T23:36:16.943586+00:00",
-          "consecutive_failures": 3,
+          "blocked": false,
+          "blocked_until": null,
+          "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
             "free_pool_candidate"

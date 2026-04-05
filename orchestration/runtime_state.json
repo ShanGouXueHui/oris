@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "updated_at": "2026-04-05T23:09:03.806036+00:00",
+  "updated_at": "2026-04-05T23:21:52.133794+00:00",
   "models": {
     "qwen3.6-plus": {
-      "total_successes": 0,
+      "total_successes": 1,
       "total_failures": 3,
-      "consecutive_failures": 3,
-      "last_result": "failure",
-      "last_role": "free_fallback",
-      "last_error": "probe_fail_3",
+      "consecutive_failures": 0,
+      "last_result": "success",
+      "last_role": "cn_candidate_pool",
+      "last_error": null,
       "last_failure_at": "2026-04-05T23:06:16.943586+00:00",
-      "last_success_at": null,
-      "blocked_until": "2026-04-05T23:36:16.943586+00:00"
+      "last_success_at": "2026-04-05T23:21:52.093822+00:00",
+      "blocked_until": null
     }
   }
 }
