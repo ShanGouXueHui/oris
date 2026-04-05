@@ -24,5 +24,6 @@ Build a provider orchestration layer for ORIS that can:
 5. Keep model replacement policy machine-readable.
 
 ## Current phase
-This is only the skeleton.
-Actual provider probes and dynamic health logic still need implementation.
+This module now auto-refreshes the OpenRouter catalog through the OpenRouter Models API and writes runtime snapshots automatically.
+The provider registry should be treated as an auto-generated cache, not as a hand-maintained source of truth.
+Manual work should be limited to routing policy and rare overrides.
