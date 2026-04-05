@@ -8,12 +8,12 @@ The active runtime service file lives outside the Git repository:
 Current content:
 
 [Unit]
-Description=ORIS quota/provider probe, scoring, and route selection
+Description=ORIS quota/provider probe, scoring, route selection, and runtime planning
 
 [Service]
 Type=oneshot
 WorkingDirectory=/home/admin/projects/oris
-ExecStart=/bin/bash -lc '/usr/bin/python3 /home/admin/projects/oris/scripts/quota_probe.py && /usr/bin/python3 /home/admin/projects/oris/scripts/provider_scoreboard.py && /usr/bin/python3 /home/admin/projects/oris/scripts/model_selector.py'
+ExecStart=/bin/bash -lc '/usr/bin/python3 /home/admin/projects/oris/scripts/quota_probe.py && /usr/bin/python3 /home/admin/projects/oris/scripts/provider_scoreboard.py && /usr/bin/python3 /home/admin/projects/oris/scripts/model_selector.py && /usr/bin/python3 /home/admin/projects/oris/scripts/runtime_plan.py'
 
 ## systemd user timer
 The active timer file lives at:
@@ -24,3 +24,4 @@ Purpose:
 - run provider probe automatically every hour
 - update provider scoreboard
 - regenerate active routing automatically
+- regenerate runtime failover plan automatically

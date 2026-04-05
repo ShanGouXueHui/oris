@@ -41,3 +41,6 @@ ORIS now generates `provider_scoreboard.json` as an intermediate automatic scori
 
 ## Retry and failover principle
 Target runtime behavior is retry first, then automatic failover to the next eligible model, so end users can use ORIS with minimal visible interruption.
+
+## Runtime plan layer
+ORIS now generates runtime_plan.json to describe retry-first and failover-second execution chains for each role.

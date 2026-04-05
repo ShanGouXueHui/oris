@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-05T22:59:22.479314+00:00",
+  "plans": {
+    "primary_general": {
+      "selected_model": "openrouter/auto",
+      "retry_attempts": 2,
+      "retry_backoff_seconds": [
+        1,
+        2
+      ],
+      "failover_chain": [
+        {
+          "model_id": "openrouter/auto",
+          "provider_id": "openrouter",
+          "provider_score": 108,
+          "model_score": 108,
+          "effective_score": 108,
+          "free_candidate": false,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        }
+      ]
+    },
+    "free_fallback": {
+      "selected_model": "qwen3.6-plus",
+      "retry_attempts": 1,
+      "retry_backoff_seconds": [
+        1
+      ],
+      "failover_chain": [
+        {
+          "model_id": "qwen3.6-plus",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 127,
+          "effective_score": 127,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite-001",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        }
+      ]
+    },
+    "report_generation": {
+      "selected_model": "openrouter/auto",
+      "retry_attempts": 2,
+      "retry_backoff_seconds": [
+        1,
+        2
+      ],
+      "failover_chain": [
+        {
+          "model_id": "openrouter/auto",
+          "provider_id": "openrouter",
+          "provider_score": 108,
+          "model_score": 108,
+          "effective_score": 108,
+          "free_candidate": false,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        }
+      ]
+    },
+    "coding": {
+      "selected_model": "qwen-coder-turbo-0919",
+      "retry_attempts": 1,
+      "retry_backoff_seconds": [
+        1
+      ],
+      "failover_chain": [
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite-001",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        }
+      ]
+    },
+    "cn_candidate_pool": {
+      "selected_model": "qwen3.6-plus",
+      "retry_attempts": 1,
+      "retry_backoff_seconds": [
+        1
+      ],
+      "failover_chain": [
+        {
+          "model_id": "qwen3.6-plus",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 127,
+          "effective_score": 127,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "qwen-coder-turbo-0919",
+          "provider_id": "alibaba_bailian",
+          "provider_score": 112,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        },
+        {
+          "model_id": "models/gemini-2.0-flash-lite-001",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
+          "effective_score": 135,
+          "free_candidate": true,
+          "blocked": false,
+          "consecutive_failures": 0
+        }
+      ]
+    }
+  }
+}

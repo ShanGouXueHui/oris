@@ -1,0 +1,30 @@
+version: 1
+updated_at: null
+
+defaults:
+  retry_attempts: 2
+  retry_backoff_seconds: [1, 2]
+  max_failover_hops: 3
+  degrade_score_on_failure: 15
+  block_after_consecutive_failures: 3
+
+roles:
+  primary_general:
+    retry_attempts: 2
+    max_failover_hops: 3
+
+  free_fallback:
+    retry_attempts: 1
+    max_failover_hops: 4
+
+  report_generation:
+    retry_attempts: 2
+    max_failover_hops: 3
+
+  coding:
+    retry_attempts: 1
+    max_failover_hops: 3
+
+  cn_candidate_pool:
+    retry_attempts: 1
+    max_failover_hops: 4
