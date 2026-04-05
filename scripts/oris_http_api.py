@@ -78,7 +78,7 @@ def require_bearer(handler):
     return bool(expected and provided and provided == expected)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "ORISHTTP/1.1"
+    server_version = "ORISHTTP/2.0"
 
     def log_message(self, format, *args):
         return
@@ -87,23 +87,15 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
 
-        if path in ("/health", "/v1/health"):
-            if path == "/health":
-                json_response(self, 200, {
-                    "ok": True,
-                    "service": "oris-http-api",
-                    "host": HOST,
-                    "port": PORT,
-                })
-            else:
-                json_response(self, 200, v1_ok(None, {
-                    "service": "oris-http-api",
-                    "version": "v1",
-                    "listen": f"http://{HOST}:{PORT}",
-                }))
+        if path == "/v1/health":
+            json_response(self, 200, v1_ok(None, {
+                "service": "oris-http-api",
+                "version": "v1",
+                "listen": f"http://{HOST}:{PORT}",
+            }))
             return
 
-        if path in ("/runtime/plan", "/v1/runtime/plan"):
+        if path == "/v1/runtime/plan":
             request_id = self.headers.get("X-Request-Id") or str(uuid.uuid4())
             if not require_bearer(self):
                 json_response(self, 401, v1_err(request_id, "unauthorized", "missing or invalid bearer token"))
@@ -113,22 +105,19 @@ class Handler(BaseHTTPRequestHandler):
                 return
             try:
                 data = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
-                if path == "/runtime/plan":
-                    json_response(self, 200, {"ok": True, "runtime_plan": data})
-                else:
-                    json_response(self, 200, v1_ok(request_id, {"runtime_plan": data}))
+                json_response(self, 200, v1_ok(request_id, {"runtime_plan": data}))
             except Exception as e:
                 json_response(self, 500, v1_err(request_id, "runtime_plan_read_failed", f"{type(e).__name__}: {e}"))
             return
 
-        json_response(self, 404, {"ok": False, "error": "not_found"})
+        json_response(self, 404, v1_err(None, "not_found", "path not found"))
 
     def do_POST(self):
         parsed = urlparse(self.path)
         path = parsed.path
 
-        if path not in ("/infer", "/v1/infer"):
-            json_response(self, 404, {"ok": False, "error": "not_found"})
+        if path != "/v1/infer":
+            json_response(self, 404, v1_err(None, "not_found", "path not found"))
             return
 
         try:
@@ -140,38 +129,26 @@ class Handler(BaseHTTPRequestHandler):
         try:
             payload = json.loads(raw.decode("utf-8")) if raw else {}
         except Exception as e:
-            if path == "/v1/infer":
-                json_response(self, 400, v1_err(None, "invalid_json", str(e)))
-            else:
-                json_response(self, 400, {"ok": False, "error": f"invalid_json: {e}"})
+            json_response(self, 400, v1_err(None, "invalid_json", str(e)))
             return
 
         request_id = payload.get("request_id") or self.headers.get("X-Request-Id") or str(uuid.uuid4())
 
         if not require_bearer(self):
-            if path == "/v1/infer":
-                json_response(self, 401, v1_err(request_id, "unauthorized", "missing or invalid bearer token"))
-            else:
-                json_response(self, 401, {"ok": False, "error": "missing or invalid bearer token"})
+            json_response(self, 401, v1_err(request_id, "unauthorized", "missing or invalid bearer token"))
             return
 
         role = payload.get("role")
         prompt = payload.get("prompt")
-        source = payload.get("source") or ("http_api_v1" if path == "/v1/infer" else "http_api")
+        source = payload.get("source") or "http_api_v1"
         show_raw = bool(payload.get("show_raw", False))
 
         if not isinstance(role, str) or not role.strip():
-            if path == "/v1/infer":
-                json_response(self, 400, v1_err(request_id, "missing_role", "role is required"))
-            else:
-                json_response(self, 400, {"ok": False, "error": "missing_role"})
+            json_response(self, 400, v1_err(request_id, "missing_role", "role is required"))
             return
 
         if not isinstance(prompt, str) or not prompt.strip():
-            if path == "/v1/infer":
-                json_response(self, 400, v1_err(request_id, "missing_prompt", "prompt is required"))
-            else:
-                json_response(self, 400, {"ok": False, "error": "missing_prompt"})
+            json_response(self, 400, v1_err(request_id, "missing_prompt", "prompt is required"))
             return
 
         cmd = [
@@ -190,24 +167,13 @@ class Handler(BaseHTTPRequestHandler):
         stderr = (result.stderr or "").strip()
 
         if not stdout:
-            if path == "/v1/infer":
-                json_response(self, 500, v1_err(request_id, "empty_executor_output", "executor returned empty output", stderr[:1000]))
-            else:
-                json_response(self, 500, {"ok": False, "error": "empty_executor_output", "stderr": stderr[:1000]})
+            json_response(self, 500, v1_err(request_id, "empty_executor_output", "executor returned empty output", stderr[:1000]))
             return
 
         try:
             data = json.loads(stdout)
         except Exception as e:
-            if path == "/v1/infer":
-                json_response(self, 500, v1_err(request_id, "executor_output_not_json", str(e), {"stdout_preview": stdout[:1000], "stderr": stderr[:1000]}))
-            else:
-                json_response(self, 500, {"ok": False, "error": f"executor_output_not_json: {e}", "stdout_preview": stdout[:1000], "stderr": stderr[:1000]})
-            return
-
-        if path == "/infer":
-            status = 200 if result.returncode == 0 and data.get("ok") else 502
-            json_response(self, status, data)
+            json_response(self, 500, v1_err(request_id, "executor_output_not_json", str(e), {"stdout_preview": stdout[:1000], "stderr": stderr[:1000]}))
             return
 
         if result.returncode == 0 and data.get("ok"):

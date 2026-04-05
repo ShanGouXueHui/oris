@@ -10,9 +10,9 @@ This is internal-only and not intended as the external commercial entrypoint.
 ## External commercial HTTPS entrypoint
 External access is provided through Nginx + TLS + Basic Auth on:
 
-- https://control.orisfy.com/oris-api/health
-- https://control.orisfy.com/oris-api/runtime/plan
-- https://control.orisfy.com/oris-api/infer
+- https://control.orisfy.com/oris-api/v1/health
+- https://control.orisfy.com/oris-api/v1/runtime/plan
+- https://control.orisfy.com/oris-api/v1/infer
 
 Current split:
 - https://control.orisfy.com/ -> OpenClaw Control UI
