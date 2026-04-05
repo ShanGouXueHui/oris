@@ -53,3 +53,6 @@ ORIS now enforces machine-verified free-only policy not only in active routing, 
 
 ## Runtime executor layer
 ORIS now includes runtime_execute.py to execute execution_primary, apply retry, fail over to the next candidate, and write runtime feedback automatically.
+
+## Unified inference entrypoint
+ORIS now exposes scripts/oris_infer.py as a stable local entrypoint. Callers only provide role and prompt, while ORIS handles planning, execution, retry, failover, feedback, and execution logging internally.
