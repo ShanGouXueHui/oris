@@ -40,7 +40,8 @@
 - Resume QQ Bot integration only after approval completes and correct `AppID` + `AppSecret` are available from QQ Bot platform
 
 ## Recommended next steps
-1. Continue non-channel work while QQ Bot approval is pending
-2. After QQ Bot approval, retrieve `AppID` and `AppSecret`
-3. Integrate QQ Bot using the same `~/.openclaw/secrets.json` architecture
-4. Rotate Feishu App Secret before final production hardening
+1. Build free token / free quota orchestration skeleton
+2. Formalize Expert-01 (Insight Analyst) and Expert-02 (Coding Engineer)
+3. Install only a minimal necessary skill set after readiness check
+4. Resume QQ Bot only after platform approval completes
+5. Rotate Feishu App Secret before final production hardening
