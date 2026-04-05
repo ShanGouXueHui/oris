@@ -1,16 +1,19 @@
 {
   "version": 1,
-  "generated_at": "2026-04-05T22:46:36.520043+00:00",
+  "generated_at": "2026-04-05T22:53:35.247970+00:00",
   "source_files": {
     "registry": "/home/admin/projects/oris/orchestration/provider_registry.json",
     "snapshot": "/home/admin/projects/oris/orchestration/provider_health_snapshot.json",
-    "policy": "/home/admin/projects/oris/orchestration/routing_policy.yaml"
+    "policy": "/home/admin/projects/oris/orchestration/routing_policy.yaml",
+    "scoreboard": "/home/admin/projects/oris/orchestration/provider_scoreboard.json"
   },
   "decisions": {
     "primary_general": {
       "selected_model": "openrouter/auto",
       "provider_id": "openrouter",
       "provider_status": "healthy",
+      "provider_score": 108,
+      "model_score": 108,
       "free_candidate": false,
       "selection_mode": "ordered_candidates",
       "considered": [
@@ -20,6 +23,7 @@
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": false,
+          "model_score": 108,
           "accepted": true
         }
       ]
@@ -28,6 +32,8 @@
       "selected_model": "qwen3.6-plus",
       "provider_id": "alibaba_bailian",
       "provider_status": "healthy",
+      "provider_score": 112,
+      "model_score": 127,
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
@@ -37,6 +43,7 @@
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": true,
+          "model_score": 127,
           "accepted": true
         }
       ]
@@ -45,6 +52,8 @@
       "selected_model": "openrouter/auto",
       "provider_id": "openrouter",
       "provider_status": "healthy",
+      "provider_score": 108,
+      "model_score": 108,
       "free_candidate": false,
       "selection_mode": "ordered_candidates",
       "considered": [
@@ -54,6 +63,7 @@
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": false,
+          "model_score": 108,
           "accepted": true
         }
       ]
@@ -62,6 +72,8 @@
       "selected_model": "qwen-coder-turbo-0919",
       "provider_id": "alibaba_bailian",
       "provider_status": "healthy",
+      "provider_score": 112,
+      "model_score": 135,
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
@@ -71,6 +83,7 @@
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": true,
+          "model_score": 135,
           "accepted": true
         }
       ]
@@ -79,6 +92,8 @@
       "selected_model": "qwen3.6-plus",
       "provider_id": "alibaba_bailian",
       "provider_status": "healthy",
+      "provider_score": 112,
+      "model_score": 127,
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
@@ -88,6 +103,7 @@
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": true,
+          "model_score": 127,
           "accepted": true
         }
       ]

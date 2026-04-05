@@ -12,7 +12,9 @@ Build a provider orchestration layer for ORIS that can:
 - `orchestration/routing_policy.yaml`
 - `orchestration/provider_health_snapshot.json`
 - `orchestration/active_routing.json`
+- `orchestration/provider_scoreboard.json`
 - `scripts/quota_probe.py`
+- `scripts/provider_scoreboard.py`
 - `scripts/model_selector.py`
 
 ## Design principles
@@ -33,3 +35,9 @@ Manual work should be limited to routing policy and rare overrides.
 ## Decision layer
 The orchestration stack now includes an automatic selector that writes `orchestration/active_routing.json`.
 This file should be treated as the current routing source of truth.
+
+## Scoring layer
+ORIS now generates `provider_scoreboard.json` as an intermediate automatic scoring layer between provider probes and final route selection.
+
+## Retry and failover principle
+Target runtime behavior is retry first, then automatic failover to the next eligible model, so end users can use ORIS with minimal visible interruption.

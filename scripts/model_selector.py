@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = ROOT / "orchestration" / "provider_registry.json"
 SNAPSHOT_PATH = ROOT / "orchestration" / "provider_health_snapshot.json"
 POLICY_PATH = ROOT / "orchestration" / "routing_policy.yaml"
+SCOREBOARD_PATH = ROOT / "orchestration" / "provider_scoreboard.json"
 ACTIVE_PATH = ROOT / "orchestration" / "active_routing.json"
 
 def utc_now() -> str:
@@ -17,10 +18,6 @@ def load_json(path: Path) -> dict:
         return json.load(f)
 
 def simple_yaml_parse(path: Path) -> dict:
-    """
-    Lightweight parser for the constrained routing_policy.yaml currently used here.
-    Avoids adding a PyYAML dependency.
-    """
     text = path.read_text(encoding="utf-8").splitlines()
     data = {"roles": {}, "global": {}, "replacement_policy": {}}
 
@@ -69,12 +66,19 @@ def simple_yaml_parse(path: Path) -> dict:
     return data
 
 def health_by_provider(snapshot: dict) -> dict:
-    out = {}
-    for p in snapshot.get("providers", []):
-        out[p.get("provider_id")] = p
-    return out
+    return {p.get("provider_id"): p for p in snapshot.get("providers", [])}
 
-def index_models(registry: dict, snapshot_idx: dict) -> dict:
+def scores_by_model(scoreboard: dict) -> tuple[dict, dict]:
+    model_scores = {}
+    provider_scores = {}
+    for provider in scoreboard.get("providers", []):
+        pid = provider.get("provider_id")
+        provider_scores[pid] = provider.get("provider_score", 0)
+        for model in provider.get("models", []):
+            model_scores[model.get("model_id")] = model.get("score", 0)
+    return model_scores, provider_scores
+
+def index_models(registry: dict, snapshot_idx: dict, model_scores: dict, provider_scores: dict) -> dict:
     catalog = {}
     for provider in registry.get("providers", []):
         provider_id = provider.get("provider_id")
@@ -92,7 +96,9 @@ def index_models(registry: dict, snapshot_idx: dict) -> dict:
                 "provider_id": provider_id,
                 "provider_enabled": provider.get("enabled", False),
                 "provider_status": provider_status,
+                "provider_score": provider_scores.get(provider_id, 0),
                 "model_id": model_id,
+                "model_score": model_scores.get(model_id, 0),
                 "free_candidate": model.get("free_candidate", False),
                 "priority": model.get("priority", 0),
                 "role_tags": model.get("role_tags", []),
@@ -141,6 +147,7 @@ def choose_role_targets(policy: dict, catalog: dict) -> dict:
                 "provider_status": model.get("provider_status") if model else None,
                 "provider_enabled": model.get("provider_enabled") if model else None,
                 "free_candidate": model.get("free_candidate") if model else None,
+                "model_score": model.get("model_score") if model else None,
                 "accepted": model_allowed(model, rules) if model else False,
             })
             if model and model_allowed(model, rules):
@@ -149,12 +156,13 @@ def choose_role_targets(policy: dict, catalog: dict) -> dict:
 
         if not selected:
             fallback_candidates = []
-            for model_id, model in catalog.items():
+            for _, model in catalog.items():
                 if model_allowed(model, rules):
                     fallback_candidates.append(model)
 
             fallback_candidates.sort(
                 key=lambda x: (
+                    -int(x.get("model_score", 0)),
                     0 if x.get("provider_status") == "healthy" else 1,
                     0 if x.get("free_candidate") else 1,
                     -int(x.get("priority", 0)),
@@ -168,6 +176,8 @@ def choose_role_targets(policy: dict, catalog: dict) -> dict:
             "selected_model": selected.get("model_id") if selected else None,
             "provider_id": selected.get("provider_id") if selected else None,
             "provider_status": selected.get("provider_status") if selected else None,
+            "provider_score": selected.get("provider_score") if selected else None,
+            "model_score": selected.get("model_score") if selected else None,
             "free_candidate": selected.get("free_candidate") if selected else None,
             "selection_mode": (
                 "ordered_candidates" if selected and selected.get("model_id") in ordered
@@ -183,9 +193,11 @@ def main() -> int:
     registry = load_json(REGISTRY_PATH)
     snapshot = load_json(SNAPSHOT_PATH)
     policy = simple_yaml_parse(POLICY_PATH)
+    scoreboard = load_json(SCOREBOARD_PATH)
 
     snapshot_idx = health_by_provider(snapshot)
-    catalog = index_models(registry, snapshot_idx)
+    model_scores, provider_scores = scores_by_model(scoreboard)
+    catalog = index_models(registry, snapshot_idx, model_scores, provider_scores)
     decisions = choose_role_targets(policy, catalog)
 
     active = {
@@ -195,6 +207,7 @@ def main() -> int:
             "registry": str(REGISTRY_PATH),
             "snapshot": str(SNAPSHOT_PATH),
             "policy": str(POLICY_PATH),
+            "scoreboard": str(SCOREBOARD_PATH),
         },
         "decisions": decisions,
     }
@@ -206,8 +219,7 @@ def main() -> int:
     print("model_selector: active routing updated")
     print(f"model_selector: wrote -> {ACTIVE_PATH}")
     for role, info in decisions.items():
-        print(f"{role}: {info['selected_model']} ({info['selection_mode']})")
-
+        print(f"{role}: {info['selected_model']} ({info['selection_mode']}) score={info.get('model_score')}")
     return 0
 
 if __name__ == "__main__":
