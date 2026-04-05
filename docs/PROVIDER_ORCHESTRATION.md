@@ -47,3 +47,6 @@ ORIS now generates runtime_plan.json to describe retry-first and failover-second
 
 ## Failure memory layer
 ORIS now records runtime feedback, tracks consecutive failures, applies temporary blocking, and computes block-aware execution_primary for real runtime use.
+
+## Strict free gate
+ORIS now enforces machine-verified free-only policy not only in active routing, but also inside runtime free-fallback failover plans.

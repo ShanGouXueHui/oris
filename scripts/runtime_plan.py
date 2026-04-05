@@ -10,6 +10,7 @@ REGISTRY_PATH = ROOT / "orchestration" / "provider_registry.json"
 POLICY_PATH = ROOT / "orchestration" / "runtime_policy.yaml"
 STATE_PATH = ROOT / "orchestration" / "runtime_state.json"
 PLAN_PATH = ROOT / "orchestration" / "runtime_plan.json"
+FREE_ELIGIBILITY_PATH = ROOT / "orchestration" / "free_eligibility.json"
 
 def utc_now():
     return datetime.now(timezone.utc)
@@ -166,7 +167,12 @@ def build_model_index(scoreboard, registry):
         }
     return out
 
-def pick_fallback_chain(role_name, active, model_index, policy, state):
+def eligible_for_role(role_name, model_id, verified_free_models):
+    if role_name == "free_fallback":
+        return model_id in verified_free_models
+    return True
+
+def pick_fallback_chain(role_name, active, model_index, policy, state, verified_free_models):
     defaults = policy.get("defaults", {})
     role_cfg = (policy.get("roles") or {}).get(role_name, {})
     retry_attempts = role_cfg.get("retry_attempts", defaults.get("retry_attempts", 1))
@@ -177,6 +183,9 @@ def pick_fallback_chain(role_name, active, model_index, policy, state):
     all_models = []
 
     for model_id, meta in model_index.items():
+        if not eligible_for_role(role_name, model_id, verified_free_models):
+            continue
+
         penalty, blocked, failures, blocked_until = model_runtime_penalty(model_id, state, defaults)
         affinity = role_affinity_adjustment(
             role_name,
@@ -194,6 +203,7 @@ def pick_fallback_chain(role_name, active, model_index, policy, state):
             "affinity_adjustment": affinity,
             "effective_score": effective_score,
             "free_candidate": meta.get("free_candidate", False),
+            "free_verified": model_id in verified_free_models,
             "blocked": blocked,
             "blocked_until": blocked_until,
             "consecutive_failures": failures,
@@ -245,12 +255,21 @@ def main():
     registry = load_json(REGISTRY_PATH)
     policy = parse_simple_yaml(POLICY_PATH)
     state = load_json(STATE_PATH)
+    free_eligibility = load_json(FREE_ELIGIBILITY_PATH)
 
+    verified_free_models = set(free_eligibility.get("verified_free_models", []))
     model_index = build_model_index(scoreboard, registry)
 
     plans = {}
     for role_name in (active.get("decisions") or {}).keys():
-        plans[role_name] = pick_fallback_chain(role_name, active, model_index, policy, state)
+        plans[role_name] = pick_fallback_chain(
+            role_name,
+            active,
+            model_index,
+            policy,
+            state,
+            verified_free_models
+        )
 
     state["updated_at"] = iso(utc_now())
     save_json(STATE_PATH, state)
