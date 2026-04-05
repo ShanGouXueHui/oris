@@ -1,9 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-04-05T23:03:00.164310+00:00",
+  "generated_at": "2026-04-05T23:09:03.806232+00:00",
   "plans": {
     "primary_general": {
       "selected_model": "openrouter/auto",
+      "selected_model_blocked": false,
+      "execution_primary": "openrouter/auto",
       "retry_attempts": 2,
       "retry_backoff_seconds": [
         1,
@@ -19,6 +21,7 @@
           "effective_score": 118,
           "free_candidate": false,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "general",
@@ -34,6 +37,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -49,6 +53,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -59,6 +64,8 @@
     },
     "free_fallback": {
       "selected_model": "qwen3.6-plus",
+      "selected_model_blocked": true,
+      "execution_primary": "models/gemini-2.0-flash-lite",
       "retry_attempts": 1,
       "retry_backoff_seconds": [
         1
@@ -70,10 +77,11 @@
           "provider_score": 112,
           "model_score": 127,
           "affinity_adjustment": 4,
-          "effective_score": 131,
+          "effective_score": 86,
           "free_candidate": true,
-          "blocked": false,
-          "consecutive_failures": 0,
+          "blocked": true,
+          "blocked_until": "2026-04-05T23:36:16.943586+00:00",
+          "consecutive_failures": 3,
           "role_tags": [
             "direct_probe_discovered",
             "free_pool_candidate"
@@ -88,6 +96,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -103,6 +112,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -118,6 +128,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -128,6 +139,8 @@
     },
     "report_generation": {
       "selected_model": "openrouter/auto",
+      "selected_model_blocked": false,
+      "execution_primary": "openrouter/auto",
       "retry_attempts": 2,
       "retry_backoff_seconds": [
         1,
@@ -143,6 +156,7 @@
           "effective_score": 118,
           "free_candidate": false,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "general",
@@ -158,6 +172,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -173,6 +188,7 @@
           "effective_score": 139,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -183,6 +199,8 @@
     },
     "coding": {
       "selected_model": "qwen-coder-turbo-0919",
+      "selected_model_blocked": false,
+      "execution_primary": "qwen-coder-turbo-0919",
       "retry_attempts": 1,
       "retry_backoff_seconds": [
         1
@@ -197,6 +215,7 @@
           "effective_score": 160,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -212,6 +231,7 @@
           "effective_score": 160,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "catalog_discovered",
@@ -227,6 +247,7 @@
           "effective_score": 147,
           "free_candidate": false,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "catalog_discovered"
@@ -236,6 +257,8 @@
     },
     "cn_candidate_pool": {
       "selected_model": "qwen3.6-plus",
+      "selected_model_blocked": true,
+      "execution_primary": "qwen-math-turbo",
       "retry_attempts": 1,
       "retry_backoff_seconds": [
         1
@@ -247,10 +270,11 @@
           "provider_score": 112,
           "model_score": 127,
           "affinity_adjustment": 24,
-          "effective_score": 151,
+          "effective_score": 106,
           "free_candidate": true,
-          "blocked": false,
-          "consecutive_failures": 0,
+          "blocked": true,
+          "blocked_until": "2026-04-05T23:36:16.943586+00:00",
+          "consecutive_failures": 3,
           "role_tags": [
             "direct_probe_discovered",
             "free_pool_candidate"
@@ -265,6 +289,7 @@
           "effective_score": 151,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -280,6 +305,7 @@
           "effective_score": 148,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",
@@ -295,6 +321,7 @@
           "effective_score": 148,
           "free_candidate": true,
           "blocked": false,
+          "blocked_until": null,
           "consecutive_failures": 0,
           "role_tags": [
             "direct_probe_discovered",

@@ -7,6 +7,7 @@ defaults:
   max_failover_hops: 3
   degrade_score_on_failure: 15
   block_after_consecutive_failures: 3
+  block_duration_seconds: 1800
 
 roles:
   primary_general:

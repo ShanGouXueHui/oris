@@ -44,3 +44,6 @@ Target runtime behavior is retry first, then automatic failover to the next elig
 
 ## Runtime plan layer
 ORIS now generates runtime_plan.json to describe retry-first and failover-second execution chains for each role.
+
+## Failure memory layer
+ORIS now records runtime feedback, tracks consecutive failures, applies temporary blocking, and computes block-aware execution_primary for real runtime use.

@@ -1,5 +1,17 @@
 {
   "version": 1,
-  "updated_at": "2026-04-05T23:03:00.164106+00:00",
-  "models": {}
+  "updated_at": "2026-04-05T23:09:03.806036+00:00",
+  "models": {
+    "qwen3.6-plus": {
+      "total_successes": 0,
+      "total_failures": 3,
+      "consecutive_failures": 3,
+      "last_result": "failure",
+      "last_role": "free_fallback",
+      "last_error": "probe_fail_3",
+      "last_failure_at": "2026-04-05T23:06:16.943586+00:00",
+      "last_success_at": null,
+      "blocked_until": "2026-04-05T23:36:16.943586+00:00"
+    }
+  }
 }
