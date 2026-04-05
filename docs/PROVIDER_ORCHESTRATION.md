@@ -50,3 +50,6 @@ ORIS now records runtime feedback, tracks consecutive failures, applies temporar
 
 ## Strict free gate
 ORIS now enforces machine-verified free-only policy not only in active routing, but also inside runtime free-fallback failover plans.
+
+## Runtime executor layer
+ORIS now includes runtime_execute.py to execute execution_primary, apply retry, fail over to the next candidate, and write runtime feedback automatically.
