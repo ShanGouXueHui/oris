@@ -19,10 +19,6 @@ def utc_now_dt():
     return datetime.now(timezone.utc)
 
 
-def utc_now_iso():
-    return utc_now_dt().isoformat()
-
-
 def load_json(path: Path):
     return json.loads(path.read_text(encoding='utf-8'))
 
@@ -112,7 +108,7 @@ def discover_files(cfg):
 
 def get_columns(cur, schema, table):
     cur.execute(
-        """
+        '''
         SELECT
             column_name,
             is_nullable,
@@ -122,7 +118,7 @@ def get_columns(cur, schema, table):
         FROM information_schema.columns
         WHERE table_schema = %s AND table_name = %s
         ORDER BY ordinal_position
-        """,
+        ''',
         (schema, table),
     )
     return cur.fetchall()
@@ -154,69 +150,7 @@ def build_delivery_code(cfg, file_path: Path, channel: str, artifact_code: str):
     return sanitize_token(base, max_len)
 
 
-def choose_existing_lookup(cur, schema, table, columns_meta, values):
-    names = {c['column_name'] for c in columns_meta}
-
-    if table == 'report_artifact':
-        if 'artifact_code' in names and values.get('artifact_code'):
-            cur.execute(
-                f'SELECT * FROM "{schema}"."{table}" WHERE artifact_code = %s ORDER BY 1 LIMIT 1',
-                (values['artifact_code'],),
-            )
-            row = cur.fetchone()
-            if row:
-                return row
-
-        if 'sha256' in names and 'storage_path' in names and values.get('sha256') and values.get('storage_path'):
-            cur.execute(
-                f'SELECT * FROM "{schema}"."{table}" WHERE sha256 = %s AND storage_path = %s ORDER BY 1 LIMIT 1',
-                (values['sha256'], values['storage_path']),
-            )
-            row = cur.fetchone()
-            if row:
-                return row
-
-    if table == 'delivery_task':
-        if 'task_code' in names and values.get('task_code'):
-            cur.execute(
-                f'SELECT * FROM "{schema}"."{table}" WHERE task_code = %s ORDER BY 1 LIMIT 1',
-                (values['task_code'],),
-            )
-            row = cur.fetchone()
-            if row:
-                return row
-
-        if 'delivery_code' in names and values.get('delivery_code'):
-            cur.execute(
-                f'SELECT * FROM "{schema}"."{table}" WHERE delivery_code = %s ORDER BY 1 LIMIT 1',
-                (values['delivery_code'],),
-            )
-            row = cur.fetchone()
-            if row:
-                return row
-
-        if 'artifact_id' in names and 'channel' in names and 'status' in names:
-            cur.execute(
-                f'SELECT * FROM "{schema}"."{table}" WHERE artifact_id = %s AND channel = %s AND status = %s ORDER BY 1 LIMIT 1',
-                (values.get('artifact_id'), values.get('channel'), values.get('status')),
-            )
-            row = cur.fetchone()
-            if row:
-                return row
-
-        if 'artifact_id' in names and 'target_channel' in names and 'status' in names:
-            cur.execute(
-                f'SELECT * FROM "{schema}"."{table}" WHERE artifact_id = %s AND target_channel = %s AND status = %s ORDER BY 1 LIMIT 1',
-                (values.get('artifact_id'), values.get('target_channel'), values.get('status')),
-            )
-            row = cur.fetchone()
-            if row:
-                return row
-
-    return None
-
-
-def base_artifact_values(cfg, file_path: Path):
+def candidate_artifact_values(cfg, file_path: Path):
     suffix = file_path.suffix.lower()
     rel_path = str(file_path.relative_to(ROOT))
     stat = file_path.stat()
@@ -224,8 +158,10 @@ def base_artifact_values(cfg, file_path: Path):
     artifact_kind = cfg['artifact_kind_map'].get(suffix, 'unknown_artifact')
     mime_type = cfg['mime_type_map'].get(suffix, 'application/octet-stream')
     generated_at = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc)
+    actor = cfg.get('defaults', {}).get('system_actor', 'system')
+    artifact_code = build_artifact_code(cfg, file_path, artifact_kind, sha256)
 
-    metadata = {
+    meta = {
         'artifact_kind': artifact_kind,
         'relative_path': rel_path,
         'generated_at': generated_at.isoformat(),
@@ -234,13 +170,7 @@ def base_artifact_values(cfg, file_path: Path):
         'producer_channel': cfg['source']['producer_channel'],
     }
 
-    artifact_id = str(uuid.uuid4())
-    artifact_code = build_artifact_code(cfg, file_path, artifact_kind, sha256)
-
     return {
-        'artifact_id': artifact_id,
-        'id': artifact_id,
-        'artifact_uuid': artifact_id,
         'artifact_code': artifact_code,
         'report_code': artifact_code,
         'artifact_kind': artifact_kind,
@@ -257,6 +187,7 @@ def base_artifact_values(cfg, file_path: Path):
         'artifact_uri': rel_path,
         'sha256': sha256,
         'size_bytes': stat.st_size,
+        'file_size': stat.st_size,
         'file_size_bytes': stat.st_size,
         'status': 'ready',
         'source_name': cfg['source']['generator_name'],
@@ -266,11 +197,11 @@ def base_artifact_values(cfg, file_path: Path):
         'created_at': utc_now_dt(),
         'updated_at': utc_now_dt(),
         'generated_at': generated_at,
-        'metadata': Json(metadata),
-        'meta_json': Json(metadata),
+        'metadata': {'artifact_kind': artifact_kind, 'relative_path': rel_path},
+        'meta_json': {'artifact_kind': artifact_kind, 'relative_path': rel_path},
         'notes': 'auto-registered from outputs/evals',
-        'created_by': cfg.get('defaults', {}).get('system_actor', 'system'),
-        'updated_by': cfg.get('defaults', {}).get('system_actor', 'system'),
+        'created_by': actor,
+        'updated_by': actor,
         'version_num': int(cfg.get('defaults', {}).get('default_version_num', 1)),
         'version_no': int(cfg.get('defaults', {}).get('default_version_num', 1)),
         'is_active': bool(cfg.get('defaults', {}).get('default_is_active', True)),
@@ -279,11 +210,17 @@ def base_artifact_values(cfg, file_path: Path):
     }
 
 
-def base_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
-    artifact_id = artifact_row.get('artifact_id') or artifact_row.get('id') or artifact_row.get('artifact_uuid')
+def candidate_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
+    actor = cfg.get('defaults', {}).get('system_actor', 'system')
+    artifact_id = artifact_row.get('artifact_id')
+    if artifact_id is None:
+        artifact_id = artifact_row.get('id')
+    if artifact_id is None:
+        artifact_id = artifact_row.get('report_artifact_id')
+
     artifact_code = artifact_row.get('artifact_code') or artifact_row.get('report_code') or 'artifact'
-    task_uuid = str(uuid.uuid4())
     delivery_code = build_delivery_code(cfg, file_path, channel, artifact_code)
+    status = cfg['delivery']['default_status']
     payload = {
         'channel': channel,
         'artifact_file_name': file_path.name,
@@ -291,14 +228,10 @@ def base_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
         'downloadable': True,
         'delivery_mode': 'download',
     }
-    status = cfg['delivery']['default_status']
 
     return {
-        'delivery_task_id': task_uuid,
-        'task_id': task_uuid,
-        'id': task_uuid,
-        'task_uuid': task_uuid,
         'artifact_id': artifact_id,
+        'report_artifact_id': artifact_id,
         'task_code': delivery_code,
         'delivery_code': delivery_code,
         'task_type': cfg['delivery']['task_type'],
@@ -306,14 +239,14 @@ def base_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
         'channel': channel,
         'target_channel': channel,
         'status': status,
-        'payload': Json(payload),
-        'meta_json': Json(payload),
+        'payload': payload,
+        'meta_json': payload,
         'created_at': utc_now_dt(),
         'updated_at': utc_now_dt(),
         'queued_at': utc_now_dt(),
         'notes': 'auto-created delivery task from artifact registry',
-        'created_by': cfg.get('defaults', {}).get('system_actor', 'system'),
-        'updated_by': cfg.get('defaults', {}).get('system_actor', 'system'),
+        'created_by': actor,
+        'updated_by': actor,
         'priority': int(cfg.get('defaults', {}).get('default_priority', 100)),
         'retry_count': int(cfg.get('defaults', {}).get('default_retry_count', 0)),
         'attempt_count': int(cfg.get('defaults', {}).get('default_retry_count', 0)),
@@ -325,16 +258,84 @@ def base_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
     }
 
 
-def synthesize_missing_values(table_name, columns_meta, values, cfg):
-    names = {c['column_name'] for c in columns_meta}
+def maybe_uuid(value):
+    try:
+        return str(uuid.UUID(str(value)))
+    except Exception:
+        return None
+
+
+def coerce_value(col, value):
+    data_type = (col.get('data_type') or '').lower()
+    udt_name = (col.get('udt_name') or '').lower()
+
+    if value is None:
+        return False, None
+
+    if isinstance(value, Json):
+        return True, value
+
+    if data_type in {'json', 'jsonb'} or udt_name in {'json', 'jsonb'}:
+        return True, Json(value)
+
+    if data_type in {'bigint', 'integer', 'smallint'}:
+        if isinstance(value, bool):
+            return True, int(value)
+        if isinstance(value, int):
+            return True, value
+        if isinstance(value, str) and re.fullmatch(r'-?\d+', value.strip()):
+            return True, int(value.strip())
+        return False, None
+
+    if data_type == 'uuid':
+        parsed = maybe_uuid(value)
+        if parsed:
+            return True, parsed
+        return False, None
+
+    if data_type == 'boolean':
+        if isinstance(value, bool):
+            return True, value
+        if isinstance(value, int):
+            return True, bool(value)
+        if isinstance(value, str):
+            v = value.strip().lower()
+            if v in {'true', 't', '1', 'yes', 'y'}:
+                return True, True
+            if v in {'false', 'f', '0', 'no', 'n'}:
+                return True, False
+        return False, None
+
+    if data_type.startswith('timestamp') or data_type == 'date':
+        if isinstance(value, datetime):
+            return True, value
+        if isinstance(value, str):
+            return True, value
+        return False, None
+
+    if data_type in {'text', 'character varying', 'character'}:
+        return True, str(value)
+
+    return True, value
+
+
+def synthesize_missing_values(table_name, columns_meta, values, cfg, file_path=None, artifact_code=None):
+    values = dict(values)
 
     for col in columns_meta:
         name = col['column_name']
         nullable = col['is_nullable'] == 'YES'
         has_default = col['column_default'] is not None
+        data_type = (col.get('data_type') or '').lower()
+        udt_name = (col.get('udt_name') or '').lower()
 
         if name in values:
-            continue
+            ok, coerced = coerce_value(col, values[name])
+            if ok:
+                values[name] = coerced
+                continue
+            del values[name]
+
         if nullable or has_default:
             continue
 
@@ -350,7 +351,7 @@ def synthesize_missing_values(table_name, columns_meta, values, cfg):
             values[name] = int(cfg.get('defaults', {}).get('default_version_num', 1))
             continue
 
-        if name in {'priority'}:
+        if name == 'priority':
             values[name] = int(cfg.get('defaults', {}).get('default_priority', 100))
             continue
 
@@ -358,41 +359,20 @@ def synthesize_missing_values(table_name, columns_meta, values, cfg):
             values[name] = int(cfg.get('defaults', {}).get('default_retry_count', 0))
             continue
 
-        if name in {'is_deleted', 'deleted_flag', 'deleted'}:
-            values[name] = bool(cfg.get('defaults', {}).get('default_is_deleted', False))
-            continue
-
         if name in {'is_active', 'active', 'enabled'}:
             values[name] = bool(cfg.get('defaults', {}).get('default_is_active', True))
             continue
 
-        if name in {'metadata', 'meta_json', 'payload', 'context_json', 'extra_json'}:
+        if name in {'is_deleted', 'deleted_flag', 'deleted'}:
+            values[name] = bool(cfg.get('defaults', {}).get('default_is_deleted', False))
+            continue
+
+        if name == 'status':
+            values[name] = 'ready' if table_name == 'report_artifact' else cfg['delivery']['default_status']
+            continue
+
+        if name in {'metadata', 'meta_json', 'payload', 'context_json', 'extra_json'} and (data_type in {'json', 'jsonb'} or udt_name in {'json', 'jsonb'}):
             values[name] = Json({})
-            continue
-
-        if name in {'status'}:
-            if table_name == 'report_artifact':
-                values[name] = 'ready'
-            else:
-                values[name] = cfg['delivery']['default_status']
-            continue
-
-        if name in {'artifact_id', 'delivery_task_id', 'task_id', 'id', 'task_uuid', 'artifact_uuid'}:
-            values[name] = str(uuid.uuid4())
-            continue
-
-        if name in {'name', 'title', 'display_name', 'artifact_name', 'file_name'} and 'file_name' in values:
-            values[name] = values['file_name']
-            continue
-
-        if name in {'artifact_type'} and 'file_ext' in values:
-            values[name] = str(values['file_ext']).lstrip('.')
-            continue
-
-        if name in {'mime_type'} and 'file_ext' in values:
-            ext = str(values['file_ext']).lower()
-            mime_map = cfg.get('mime_type_map', {})
-            values[name] = mime_map.get(ext, 'application/octet-stream')
             continue
 
         if name in {'source_name'}:
@@ -411,53 +391,39 @@ def synthesize_missing_values(table_name, columns_meta, values, cfg):
             values[name] = cfg['delivery']['task_type']
             continue
 
-        if name in {'artifact_code', 'report_code'} and table_name == 'report_artifact':
-            file_name = values.get('file_name', 'artifact')
-            sha256 = values.get('sha256', uuid.uuid4().hex)
+        if name in {'artifact_code', 'report_code'} and file_path is not None:
+            sha256 = values.get('sha256', 'unknownsha')
             artifact_kind = values.get('artifact_kind', 'artifact')
-            values[name] = build_artifact_code(cfg, Path(file_name), artifact_kind, sha256)
+            values[name] = build_artifact_code(cfg, file_path, artifact_kind, sha256)
             continue
 
-        if name in {'task_code', 'delivery_code'} and table_name == 'delivery_task':
-            file_name = values.get('artifact_file_name') or values.get('file_name') or 'delivery'
+        if name in {'task_code', 'delivery_code'} and file_path is not None:
             channel = values.get('channel') or values.get('target_channel') or 'channel'
-            artifact_code = values.get('artifact_code') or 'artifact'
-            values[name] = build_delivery_code(cfg, Path(file_name), channel, artifact_code)
-            continue
-
-        data_type = (col.get('data_type') or '').lower()
-        udt_name = (col.get('udt_name') or '').lower()
-
-        if data_type in {'json', 'jsonb'}:
-            values[name] = Json({})
-            continue
-
-        if data_type in {'boolean'}:
-            values[name] = False
-            continue
-
-        if data_type in {'integer', 'bigint', 'smallint'}:
-            values[name] = 0
-            continue
-
-        if data_type.startswith('timestamp') or data_type == 'date':
-            values[name] = utc_now_dt()
+            ac = artifact_code or values.get('artifact_code') or 'artifact'
+            values[name] = build_delivery_code(cfg, file_path, channel, ac)
             continue
 
         if data_type == 'uuid':
             values[name] = str(uuid.uuid4())
             continue
 
-        if udt_name in {'json', 'jsonb'}:
+        if data_type in {'json', 'jsonb'} or udt_name in {'json', 'jsonb'}:
             values[name] = Json({})
+            continue
+
+        if data_type == 'boolean':
+            values[name] = False
+            continue
+
+        if data_type.startswith('timestamp') or data_type == 'date':
+            values[name] = utc_now_dt()
             continue
 
     return values
 
 
-def normalize_record_for_insert(table_name, columns_meta, values, cfg):
-    values = synthesize_missing_values(table_name, columns_meta, dict(values), cfg)
-
+def normalize_record_for_insert(table_name, columns_meta, values, cfg, file_path=None, artifact_code=None):
+    values = synthesize_missing_values(table_name, columns_meta, values, cfg, file_path=file_path, artifact_code=artifact_code)
     insert_values = {}
     missing_required = []
 
@@ -467,23 +433,102 @@ def normalize_record_for_insert(table_name, columns_meta, values, cfg):
         has_default = col['column_default'] is not None
 
         if name in values:
-            insert_values[name] = values[name]
+            ok, coerced = coerce_value(col, values[name])
+            if ok:
+                insert_values[name] = coerced
+            elif not nullable and not has_default:
+                missing_required.append(name)
         elif not nullable and not has_default:
             missing_required.append(name)
 
     return insert_values, missing_required
 
 
-def dynamic_insert(cur, schema, table, columns_meta, values, cfg):
-    insert_values, missing_required = normalize_record_for_insert(table, columns_meta, values, cfg)
+def dynamic_insert(cur, schema, table, columns_meta, values, cfg, file_path=None, artifact_code=None):
+    insert_values, missing_required = normalize_record_for_insert(
+        table,
+        columns_meta,
+        values,
+        cfg,
+        file_path=file_path,
+        artifact_code=artifact_code,
+    )
     if missing_required:
-        raise RuntimeError(f'{table} missing required columns: {missing_required}')
+        raise RuntimeError(f'{table} missing required columns after type-aware normalization: {missing_required}')
 
     cols = list(insert_values.keys())
     placeholders = ', '.join(['%s'] * len(cols))
     sql = f'INSERT INTO "{schema}"."{table}" ({", ".join(cols)}) VALUES ({placeholders}) RETURNING *'
     cur.execute(sql, [insert_values[c] for c in cols])
     return cur.fetchone()
+
+
+def find_existing_artifact(cur, schema, table, columns_meta, values):
+    names = {c['column_name'] for c in columns_meta}
+
+    if 'artifact_code' in names and values.get('artifact_code'):
+        cur.execute(
+            f'SELECT * FROM "{schema}"."{table}" WHERE artifact_code = %s LIMIT 1',
+            (values['artifact_code'],),
+        )
+        row = cur.fetchone()
+        if row:
+            return row
+
+    if 'storage_path' in names and 'sha256' in names and values.get('storage_path') and values.get('sha256'):
+        cur.execute(
+            f'SELECT * FROM "{schema}"."{table}" WHERE storage_path = %s AND sha256 = %s LIMIT 1',
+            (values['storage_path'], values['sha256']),
+        )
+        row = cur.fetchone()
+        if row:
+            return row
+
+    return None
+
+
+def find_existing_delivery(cur, schema, table, columns_meta, values):
+    names = {c['column_name'] for c in columns_meta}
+
+    if 'task_code' in names and values.get('task_code'):
+        cur.execute(
+            f'SELECT * FROM "{schema}"."{table}" WHERE task_code = %s LIMIT 1',
+            (values['task_code'],),
+        )
+        row = cur.fetchone()
+        if row:
+            return row
+
+    if 'delivery_code' in names and values.get('delivery_code'):
+        cur.execute(
+            f'SELECT * FROM "{schema}"."{table}" WHERE delivery_code = %s LIMIT 1',
+            (values['delivery_code'],),
+        )
+        row = cur.fetchone()
+        if row:
+            return row
+
+    candidate_artifact_col = 'artifact_id' if 'artifact_id' in names else ('report_artifact_id' if 'report_artifact_id' in names else None)
+    candidate_channel_col = 'channel' if 'channel' in names else ('target_channel' if 'target_channel' in names else None)
+
+    if candidate_artifact_col and candidate_channel_col and values.get(candidate_artifact_col) is not None and values.get(candidate_channel_col):
+        cur.execute(
+            f'SELECT * FROM "{schema}"."{table}" WHERE {candidate_artifact_col} = %s AND {candidate_channel_col} = %s LIMIT 1',
+            (values[candidate_artifact_col], values[candidate_channel_col]),
+        )
+        row = cur.fetchone()
+        if row:
+            return row
+
+    return None
+
+
+def pretty_row(row, preferred_columns):
+    result = {}
+    for col in preferred_columns:
+        if col in row:
+            result[col] = row[col]
+    return result
 
 
 def main():
@@ -506,13 +551,8 @@ def main():
     )
 
     summary = {
-        'db': {
-            'host': db_cfg['host'],
-            'port': db_cfg['port'],
-            'dbname': db_cfg['dbname'],
-            'user': db_cfg['user'],
-            'schema': schema,
-        },
+        'db': db_cfg,
+        'schema': schema,
         'files_scanned': len(files),
         'artifacts': [],
         'delivery_tasks': [],
@@ -525,65 +565,88 @@ def main():
                 delivery_columns = get_columns(cur, schema, delivery_table)
 
                 for file_path in files:
-                    artifact_values = base_artifact_values(cfg, file_path)
-                    existing_artifact = choose_existing_lookup(cur, schema, artifact_table, artifact_columns, artifact_values)
+                    artifact_values = candidate_artifact_values(cfg, file_path)
+                    existing_artifact = find_existing_artifact(cur, schema, artifact_table, artifact_columns, artifact_values)
 
                     if existing_artifact:
                         artifact_row = existing_artifact
                         artifact_action = 'existing'
                     else:
-                        artifact_row = dynamic_insert(cur, schema, artifact_table, artifact_columns, artifact_values, cfg)
+                        artifact_row = dynamic_insert(
+                            cur, schema, artifact_table, artifact_columns, artifact_values, cfg, file_path=file_path
+                        )
                         artifact_action = 'inserted'
 
-                    artifact_id = artifact_row.get('artifact_id') or artifact_row.get('id') or artifact_row.get('artifact_uuid')
+                    artifact_id = artifact_row.get('artifact_id')
+                    if artifact_id is None:
+                        artifact_id = artifact_row.get('id')
+                    if artifact_id is None:
+                        artifact_id = artifact_row.get('report_artifact_id')
+
                     artifact_code = artifact_row.get('artifact_code') or artifact_row.get('report_code')
 
                     summary['artifacts'].append({
                         'action': artifact_action,
                         'artifact_id': artifact_id,
                         'artifact_code': artifact_code,
-                        'file_name': file_path.name,
-                        'storage_path': str(file_path.relative_to(ROOT)),
+                        'file_path': str(file_path.relative_to(ROOT)),
                     })
 
                     for channel in cfg['delivery']['channels']:
-                        delivery_values = base_delivery_values(cfg, artifact_row, file_path, channel)
-                        delivery_values['artifact_code'] = artifact_code
-                        delivery_values['artifact_file_name'] = file_path.name
-
+                        delivery_values = candidate_delivery_values(cfg, artifact_row, file_path, channel)
                         existing_delivery = None
                         if not cfg['delivery'].get('allow_duplicate_pending_tasks', False):
-                            existing_delivery = choose_existing_lookup(cur, schema, delivery_table, delivery_columns, delivery_values)
+                            existing_delivery = find_existing_delivery(cur, schema, delivery_table, delivery_columns, delivery_values)
 
                         if existing_delivery:
                             delivery_row = existing_delivery
                             delivery_action = 'existing'
                         else:
-                            delivery_row = dynamic_insert(cur, schema, delivery_table, delivery_columns, delivery_values, cfg)
+                            delivery_row = dynamic_insert(
+                                cur,
+                                schema,
+                                delivery_table,
+                                delivery_columns,
+                                delivery_values,
+                                cfg,
+                                file_path=file_path,
+                                artifact_code=artifact_code,
+                            )
                             delivery_action = 'inserted'
 
-                        delivery_id = (
-                            delivery_row.get('delivery_task_id')
-                            or delivery_row.get('task_id')
-                            or delivery_row.get('id')
-                            or delivery_row.get('task_uuid')
-                        )
+                        delivery_id = delivery_row.get('delivery_task_id')
+                        if delivery_id is None:
+                            delivery_id = delivery_row.get('task_id')
+                        if delivery_id is None:
+                            delivery_id = delivery_row.get('id')
+
                         delivery_code = delivery_row.get('task_code') or delivery_row.get('delivery_code')
 
                         summary['delivery_tasks'].append({
                             'action': delivery_action,
                             'delivery_task_id': delivery_id,
                             'delivery_code': delivery_code,
-                            'artifact_id': artifact_id,
                             'channel': channel,
-                            'file_name': file_path.name,
+                            'artifact_id': artifact_id,
                         })
 
                 cur.execute(f'SELECT COUNT(*) AS cnt FROM "{schema}"."{artifact_table}"')
-                summary['artifact_count'] = cur.fetchone()['cnt']
+                summary['report_artifact_count'] = cur.fetchone()['cnt']
 
                 cur.execute(f'SELECT COUNT(*) AS cnt FROM "{schema}"."{delivery_table}"')
                 summary['delivery_task_count'] = cur.fetchone()['cnt']
+
+                cur.execute(f'SELECT * FROM "{schema}"."{artifact_table}" ORDER BY 1 DESC LIMIT 5')
+                summary['latest_artifacts'] = [
+                    pretty_row(row, ['id', 'artifact_id', 'artifact_code', 'report_code', 'title', 'name', 'storage_path', 'status', 'created_at'])
+                    for row in cur.fetchall()
+                ]
+
+                cur.execute(f'SELECT * FROM "{schema}"."{delivery_table}" ORDER BY 1 DESC LIMIT 10')
+                summary['latest_delivery_tasks'] = [
+                    pretty_row(row, ['id', 'task_id', 'delivery_task_id', 'task_code', 'delivery_code', 'channel', 'target_channel', 'status', 'created_at'])
+                    for row in cur.fetchall()
+                ]
 
         print(json.dumps(summary, ensure_ascii=False, indent=2, default=str))
     finally:
