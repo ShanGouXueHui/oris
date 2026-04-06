@@ -137,3 +137,24 @@ Interpretation:
 - alert_event
 
 <!-- ORIS_INSIGHT_DB_BOOTSTRAP:END -->
+\n\n<!-- ORIS_REPORT_ARTIFACT_QUEUE:BEGIN -->
+## Report artifact registry and delivery queue
+- 报告产物注册已接入数据库
+- 配置文件：config/report_runtime.json
+- 注册脚本：scripts/register_report_delivery.py
+- 目标表：
+  - insight.report_artifact
+  - insight.delivery_task
+- 当前支持产物：
+  - Word 报告
+  - Excel 评分底表
+  - 下载 manifest
+  - zip 交付包
+- 当前已排队渠道：
+  - Feishu
+  - Qbot
+- 当前状态：
+  - 已完成“产物注册 + 待分发任务入库”
+  - 尚未完成“Qbot/Feishu 文件发送器消费 delivery_task”
+
+<!-- ORIS_REPORT_ARTIFACT_QUEUE:END -->

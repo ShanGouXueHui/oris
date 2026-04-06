@@ -93,3 +93,19 @@
 - 渠道下载支持 Feishu，后续支持 Qbot
 
 <!-- ORIS_INSIGHT_DB_BOOTSTRAP:END -->
+\n\n<!-- ORIS_REPORT_ARTIFACT_QUEUE:BEGIN -->
+## Report artifact continuity
+后续凡涉及 Word / Excel 报告产物、下载分发、报告注册，优先读取：
+- config/report_runtime.json
+- scripts/register_report_delivery.py
+- docs/DECISIONS/2026-04-06-report-artifact-registry-and-delivery-queue.md
+- docs/RUNBOOKS/REPORT_ARTIFACT_DELIVERY.md
+
+固定约束：
+- 常量放配置文件或数据库，不散落脚本
+- 正式报告主件为 Word
+- Excel 为辅助底表
+- 报告产物先入 report_artifact，再建 delivery_task
+- 下载分发渠道当前排队支持 Feishu / Qbot
+
+<!-- ORIS_REPORT_ARTIFACT_QUEUE:END -->

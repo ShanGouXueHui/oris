@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "policy_name": "report_artifact_delivery_runtime",
+  "artifact_scan": {
+    "root_dir": "outputs/evals",
+    "patterns": [
+      "oris_eval_report_*.docx",
+      "oris_eval_scoring_*.xlsx",
+      "oris_eval_download_manifest_*.json",
+      "oris_eval_package_*.zip"
+    ],
+    "max_files_per_run": 20
+  },
+  "artifact_kind_map": {
+    ".docx": "word_report",
+    ".xlsx": "excel_scoring",
+    ".json": "download_manifest",
+    ".zip": "delivery_package"
+  },
+  "mime_type_map": {
+    ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ".json": "application/json",
+    ".zip": "application/zip"
+  },
+  "db": {
+    "schema": "insight",
+    "report_artifact_table": "report_artifact",
+    "delivery_task_table": "delivery_task"
+  },
+  "delivery": {
+    "channels": [
+      "feishu",
+      "qbot"
+    ],
+    "default_status": "pending",
+    "task_type": "artifact_delivery",
+    "allow_duplicate_pending_tasks": false
+  },
+  "source": {
+    "generator_name": "run_eval_report",
+    "generator_type": "system_generated",
+    "producer_channel": "internal"
+  }
+}
