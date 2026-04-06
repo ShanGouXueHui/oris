@@ -80,6 +80,42 @@
     },
     "execution": {
       "feishu_execute_send_default": true
+    },
+    "channel_profiles": {
+      "feishu": {
+        "default_general_role": "cn_candidate_pool",
+        "max_reply_chars": 1200,
+        "unsafe_reply_fallback": "我是 Oris，会按问题类型自动选择合适模型与能力；你直接看结果就行。",
+        "unsafe_markers": [
+          "tool_code",
+          "default_api.",
+          "session_status(",
+          "print(",
+          "```",
+          "def ",
+          "import ",
+          "from ",
+          "class "
+        ],
+        "meta_question_rules": [
+          {
+            "pattern": "^你用的什么模型[？?]?$",
+            "reply": "我是 Oris，会根据问题类型自动选择合适模型；当前会优先用更快的中文模型来回复。"
+          },
+          {
+            "pattern": "^你是什么模型[？?]?$",
+            "reply": "我是 Oris，会根据问题类型自动选择合适模型；当前会优先用更快的中文模型来回复。"
+          },
+          {
+            "pattern": "^你是哪个模型[？?]?$",
+            "reply": "我是 Oris，会根据问题类型自动选择合适模型；当前会优先用更快的中文模型来回复。"
+          },
+          {
+            "pattern": "^你用的哪个模型[？?]?$",
+            "reply": "我是 Oris，会根据问题类型自动选择合适模型；当前会优先用更快的中文模型来回复。"
+          }
+        ]
+      }
     }
   },
   "feishu": {

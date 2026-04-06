@@ -79,3 +79,6 @@ The next layer should connect the worker skeleton to a real inbound server path 
 
 ## Final cutover status
 Feishu direct webhook path is now enabled through scripts/feishu_callback_server.py and systemd service oris-feishu-callback.service.
+
+## Response governance
+Feishu now uses config-driven channel governance for default role selection, meta-question handling, and unsafe internal-output blocking.

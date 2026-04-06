@@ -2,30 +2,39 @@
 import argparse
 import json
 import re
-import uuid
 import urllib.request
+import uuid
 from datetime import datetime, timezone
-from pathlib import Path
-from lib.runtime_config import local_service_url, rel_path, read_oris_api_key, exact_reply_patterns, role_routing, read_feishu_creds, feishu_api, default_source
 
-ROOT = Path(__file__).resolve().parents[1]
+from lib.runtime_config import (
+    local_service_url,
+    rel_path,
+    read_oris_api_key,
+    role_routing,
+    exact_reply_patterns,
+    default_source,
+    config,
+)
+
+CFG = config()
 LOG_PATH = rel_path("bridge_feishu_log")
 LOCAL_V1_INFER_URL = local_service_url("oris_v1_infer_url")
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
-def load_json(path: Path):
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
-
-def append_jsonl(path: Path, record: dict):
+def append_jsonl(path, record):
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+def feishu_profile():
+    return ((((CFG.get("bridges") or {}).get("channel_profiles") or {}).get("feishu")) or {})
 
 def choose_role(text: str) -> str:
     t = (text or "").strip().lower()
     routing = role_routing()
+    profile = feishu_profile()
+
     coding_keywords = routing.get("coding_keywords", [])
     report_keywords = routing.get("report_keywords", [])
     cn_keywords = routing.get("cn_keywords", [])
@@ -39,15 +48,14 @@ def choose_role(text: str) -> str:
         return "cn_candidate_pool"
     if any(k in t for k in cheap_keywords):
         return "free_fallback"
-    return "primary_general"
 
-def apply_reply_policy(input_text: str, raw_reply: str) -> tuple[str, str]:
+    return profile.get("default_general_role", "primary_general")
+
+def apply_exact_reply_rule(input_text: str, raw_reply: str):
     text = (input_text or "").strip()
     reply = (raw_reply or "").strip()
 
-    patterns = exact_reply_patterns()
-
-    for p in patterns:
+    for p in exact_reply_patterns():
         m = re.match(p, text, flags=re.IGNORECASE)
         if m:
             forced = m.group(1).strip()
@@ -55,6 +63,32 @@ def apply_reply_policy(input_text: str, raw_reply: str) -> tuple[str, str]:
             return forced, "exact_reply_rule"
 
     return reply, "model_raw"
+
+def apply_meta_question_rule(input_text: str):
+    text = (input_text or "").strip()
+    for rule in feishu_profile().get("meta_question_rules", []):
+        pattern = rule.get("pattern")
+        reply = (rule.get("reply") or "").strip()
+        if pattern and reply and re.match(pattern, text, flags=re.IGNORECASE):
+            return reply, "meta_question_rule"
+    return None, None
+
+def sanitize_reply(reply_text: str):
+    text = (reply_text or "").strip()
+    profile = feishu_profile()
+    fallback = profile.get("unsafe_reply_fallback", "我是 Oris，会按问题类型自动选择合适模型与能力；你直接看结果就行。")
+    markers = profile.get("unsafe_markers", [])
+
+    lowered = text.lower()
+    for marker in markers:
+        if marker.lower() in lowered:
+            return fallback, "unsafe_reply_guard"
+
+    max_chars = int(profile.get("max_reply_chars", 1200))
+    if len(text) > max_chars:
+        text = text[:max_chars].rstrip()
+
+    return text, "sanitized_model_reply"
 
 def call_oris(role: str, prompt: str, source: str, request_id: str, api_key: str):
     payload = {
@@ -71,7 +105,7 @@ def call_oris(role: str, prompt: str, source: str, request_id: str, api_key: str
             "Content-Type": "application/json",
             "Accept": "application/json",
             "X-ORIS-API-Key": api_key,
-            "User-Agent": "ORIS-Feishu-Bridge/1.1",
+            "User-Agent": "ORIS-Feishu-Bridge/1.0",
         },
     )
     with urllib.request.urlopen(req, timeout=180) as resp:
@@ -82,8 +116,8 @@ def main():
     ap.add_argument("--sender-open-id", required=True)
     ap.add_argument("--chat-id", required=True)
     ap.add_argument("--text", required=True)
-    ap.add_argument("--role", default=None)
     ap.add_argument("--source", default=default_source("feishu_bridge"))
+    ap.add_argument("--role", default=None)
     args = ap.parse_args()
 
     api_key = read_oris_api_key()
@@ -103,10 +137,44 @@ def main():
         "selected_role": role,
     }
 
+    meta_reply, meta_policy = apply_meta_question_rule(args.text)
+    if meta_reply:
+        record["ok"] = True
+        record["reply_policy"] = meta_policy
+        record["oris_response"] = None
+        record["reply_text_preview"] = meta_reply[:300]
+        append_jsonl(LOG_PATH, record)
+
+        print(json.dumps({
+            "ok": True,
+            "request_id": request_id,
+            "bridge": {
+                "channel": "feishu",
+                "sender_open_id": args.sender_open_id,
+                "chat_id": args.chat_id,
+                "selected_role": role,
+                "reply_policy": meta_policy,
+            },
+            "reply_text": meta_reply,
+            "oris_result": None,
+        }, ensure_ascii=False, indent=2))
+        return
+
     try:
-        result = call_oris(role=role, prompt=args.text, source=args.source, request_id=request_id, api_key=api_key)
+        result = call_oris(
+            role=role,
+            prompt=args.text,
+            source=args.source,
+            request_id=request_id,
+            api_key=api_key,
+        )
+
         raw_reply = (((result.get("data") or {}).get("text")) or "").strip()
-        reply_text, reply_policy = apply_reply_policy(args.text, raw_reply)
+        reply_text, reply_policy = apply_exact_reply_rule(args.text, raw_reply)
+
+        if reply_policy != "exact_reply_rule":
+            reply_text, sanitized_policy = sanitize_reply(reply_text)
+            reply_policy = sanitized_policy
 
         record["ok"] = bool(result.get("ok"))
         record["reply_policy"] = reply_policy
