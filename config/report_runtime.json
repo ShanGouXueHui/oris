@@ -1,76 +1,27 @@
 {
-  "version": 1,
-  "policy_name": "report_artifact_delivery_runtime",
-  "artifact_scan": {
-    "root_dir": "outputs/evals",
-    "patterns": [
-      "oris_eval_report_*.docx",
-      "oris_eval_scoring_*.xlsx",
-      "oris_eval_download_manifest_*.json",
-      "oris_eval_package_*.zip"
+  "version": 2,
+  "paths": {
+    "report_download_server_log": "orchestration/report_download_server_log.jsonl"
+  },
+  "report_delivery": {
+    "public_download_base_url": "https://control.orisfy.com/oris-download",
+    "download_path_prefix": "/download",
+    "default_link_ttl_hours": 24,
+    "sensitive_link_ttl_hours": 2,
+    "package_link_ttl_hours": 24,
+    "default_max_downloads": 3,
+    "package_max_downloads": 2,
+    "json_manifest_downloadable": false,
+    "allowed_public_extensions": [
+      ".docx",
+      ".xlsx",
+      ".zip",
+      ".pdf"
     ],
-    "max_files_per_run": 20
-  },
-  "artifact_kind_map": {
-    ".docx": "word_report",
-    ".xlsx": "excel_scoring",
-    ".json": "download_manifest",
-    ".zip": "delivery_package"
-  },
-  "mime_type_map": {
-    ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    ".json": "application/json",
-    ".zip": "application/zip"
-  },
-  "db": {
-    "schema": "insight",
-    "report_artifact_table": "report_artifact",
-    "delivery_task_table": "delivery_task"
-  },
-  "delivery": {
-    "channels": [
+    "downloadable_channels": [
       "feishu",
       "qbot"
     ],
-    "default_status": "pending",
-    "task_type": "artifact_delivery",
-    "allow_duplicate_pending_tasks": false,
-    "channel_type_map": {
-      "feishu": "feishu",
-      "qbot": "qbot"
-    },
-    "default_channel_type": "generic_download",
-    "default_delivery_mode": "download_link"
-  },
-  "source": {
-    "generator_name": "run_eval_report",
-    "generator_type": "system_generated",
-    "producer_channel": "internal"
-  },
-  "naming": {
-    "artifact_code_prefix": "artifact",
-    "delivery_code_prefix": "delivery",
-    "max_code_length": 120
-  },
-  "defaults": {
-    "system_actor": "system",
-    "default_priority": 100,
-    "default_retry_count": 0,
-    "default_version_num": 1,
-    "default_is_active": true,
-    "default_is_deleted": false
-  },
-  "download": {
-    "bind_host": "127.0.0.1",
-    "bind_port": 8791,
-    "health_path": "/health",
-    "download_path_prefix": "/download",
-    "public_base_url": "https://control.orisfy.com",
-    "public_path_prefix": "/oris-download",
-    "link_ttl_seconds": 604800
-  },
-  "paths": {
-    "report_download_log": "orchestration/report_download_server_log.jsonl"
+    "download_security_version": 2
   }
 }

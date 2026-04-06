@@ -109,3 +109,11 @@
 - 下载分发渠道当前排队支持 Feishu / Qbot
 
 <!-- ORIS_REPORT_ARTIFACT_QUEUE:END -->
+
+
+<!-- ORIS_REPORT_DOWNLOAD_SECURITY:BEGIN -->
+## Report Download Security v2
+- delivery link is now delivery_code scoped
+- audit / revoke / max_downloads supported
+- future enhancement can add recipient binding if needed
+<!-- ORIS_REPORT_DOWNLOAD_SECURITY:END -->

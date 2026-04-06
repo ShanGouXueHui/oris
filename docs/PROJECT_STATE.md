@@ -158,3 +158,13 @@ Interpretation:
   - 尚未完成“Qbot/Feishu 文件发送器消费 delivery_task”
 
 <!-- ORIS_REPORT_ARTIFACT_QUEUE:END -->
+
+
+<!-- ORIS_REPORT_DOWNLOAD_SECURITY:BEGIN -->
+## Report Download Security v2
+- security model: signed delivery_code
+- audit table: `insight.download_event`
+- duplicate pending task prevention: enabled
+- revoke helper: `scripts/revoke_delivery_links.py`
+- sync script: `scripts/register_report_delivery.py`
+<!-- ORIS_REPORT_DOWNLOAD_SECURITY:END -->
