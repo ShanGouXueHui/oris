@@ -312,3 +312,25 @@
 - 只有 Feishu / 正式触发路径才允许 register + delivery
 - 后续优化重点应转向“内容质量”和“通用化”，而非继续反复修触发链路
 
+
+## 2026-04-07 增量记忆：必须继续推进的 3 项需求
+
+1. 多AI结果对比 + 自动进化
+- 规则路径、LLM compare、外部 AI API 建议，后续都要纳入统一 compare framework。
+- compare 结果不能只停留在 compiled_case，要继续落到最终交付件。
+- 目标：结构更完整、分析更深、表达更专业、证据更充分。
+
+2. 高星 GitHub skills 纳入 ORIS 能力体系
+- 持续 benchmark 洞察类、抓取类、doc/ppt 生成与美化类高星 skills。
+- 对优于当前链路的能力，允许接入 ORIS 注册表与运行时。
+- 原则：吸收优势实现，不做封闭自研。
+
+3. 外部 skill refresh 进入常态化管道
+- skill registry 不能静态维护，需持续刷新。
+- 刷新结果要反馈到 compiler / compare / evolution / postprocess。
+- 这是一项长期机制建设，不是一次性任务。
+
+## 执行口径
+- 一律按“通用版”推进，不为单一 case 写特判。
+- 常量、候选集、规则、刷新配置放配置/注册表，不写死代码。
+- 目标交付标准：Word 详细版、Excel 原始证据底表、PPT 交流版，质量持续向商用品质提升。
