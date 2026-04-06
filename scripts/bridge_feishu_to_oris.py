@@ -6,11 +6,11 @@ import uuid
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from scripts.lib.runtime_config import local_service_url, rel_path, read_oris_api_key, exact_reply_patterns, role_routing, read_feishu_creds, feishu_api, default_source
 
 ROOT = Path(__file__).resolve().parents[1]
-SECRETS_PATH = Path.home() / ".openclaw" / "secrets.json"
-LOG_PATH = ROOT / "orchestration" / "bridge_feishu_log.jsonl"
-LOCAL_V1_INFER_URL = "http://127.0.0.1:8788/v1/infer"
+LOG_PATH = rel_path("bridge_feishu_log")
+LOCAL_V1_INFER_URL = local_service_url("oris_v1_infer_url")
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
@@ -23,28 +23,13 @@ def append_jsonl(path: Path, record: dict):
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
-def read_api_key():
-    if not SECRETS_PATH.exists():
-        return None
-    data = load_json(SECRETS_PATH)
-    return (((data.get("services") or {}).get("oris_api") or {}).get("bearerToken"))
-
 def choose_role(text: str) -> str:
     t = (text or "").strip().lower()
-
-    coding_keywords = [
-        "代码", "报错", "debug", "bug", "python", "javascript", "typescript",
-        "fastapi", "接口", "api", "脚本", "deploy", "nginx", "systemd", "sql"
-    ]
-    report_keywords = [
-        "报告", "洞察", "分析", "研报", "复盘", "总结", "report", "insight"
-    ]
-    cn_keywords = [
-        "国产", "中文模型", "阿里", "腾讯", "智谱", "混元", "百炼", "qwen", "glm"
-    ]
-    cheap_keywords = [
-        "省钱", "便宜", "低成本", "免费", "fallback", "控成本"
-    ]
+    routing = role_routing()
+    coding_keywords = routing.get("coding_keywords", [])
+    report_keywords = routing.get("report_keywords", [])
+    cn_keywords = routing.get("cn_keywords", [])
+    cheap_keywords = routing.get("cheap_keywords", [])
 
     if any(k in t for k in coding_keywords):
         return "coding"
@@ -60,14 +45,7 @@ def apply_reply_policy(input_text: str, raw_reply: str) -> tuple[str, str]:
     text = (input_text or "").strip()
     reply = (raw_reply or "").strip()
 
-    patterns = [
-        r'^\s*请只回答[：:]\s*(.+?)\s*$',
-        r'^\s*只回答[：:]\s*(.+?)\s*$',
-        r'^\s*请只回复[：:]\s*(.+?)\s*$',
-        r'^\s*只回复[：:]\s*(.+?)\s*$',
-        r'^\s*请只输出[：:]\s*(.+?)\s*$',
-        r'^\s*只输出[：:]\s*(.+?)\s*$',
-    ]
+    patterns = exact_reply_patterns()
 
     for p in patterns:
         m = re.match(p, text, flags=re.IGNORECASE)
@@ -105,10 +83,10 @@ def main():
     ap.add_argument("--chat-id", required=True)
     ap.add_argument("--text", required=True)
     ap.add_argument("--role", default=None)
-    ap.add_argument("--source", default="feishu_bridge_core")
+    ap.add_argument("--source", default=default_source("feishu_bridge"))
     args = ap.parse_args()
 
-    api_key = read_api_key()
+    api_key = read_oris_api_key()
     if not api_key:
         raise SystemExit("missing ORIS API key in ~/.openclaw/secrets.json")
 

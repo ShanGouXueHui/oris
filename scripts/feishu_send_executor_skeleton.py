@@ -4,15 +4,14 @@ import json
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from scripts.lib.runtime_config import local_service_url, rel_path, read_oris_api_key, exact_reply_patterns, role_routing, read_feishu_creds, feishu_api, default_source
 
 ROOT = Path(__file__).resolve().parents[1]
-SECRETS_PATH = Path.home() / ".openclaw" / "secrets.json"
-OPENCLAW_CONFIG_PATH = Path.home() / ".openclaw" / "openclaw.json"
-LOG_PATH = ROOT / "orchestration" / "feishu_send_executor_log.jsonl"
+LOG_PATH = rel_path("feishu_send_executor_log")
 
-TOKEN_URL = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal"
-SEND_URL = "https://open.feishu.cn/open-apis/im/v1/messages"
-REPLY_URL_TEMPLATE = "https://open.feishu.cn/open-apis/im/v1/messages/{message_id}/reply"
+TOKEN_URL = feishu_api("token_url")
+SEND_URL = feishu_api("send_url")
+REPLY_URL_TEMPLATE = feishu_api("reply_url_template")
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
@@ -26,51 +25,6 @@ def load_json(path: Path, default=None):
 def append_jsonl(path: Path, record: dict):
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
-
-def deep_get(data, path):
-    cur = data
-    for key in path:
-        if not isinstance(cur, dict) or key not in cur:
-            return None
-        cur = cur[key]
-    return cur
-
-def read_feishu_creds():
-    cfg = load_json(OPENCLAW_CONFIG_PATH, {})
-    sec = load_json(SECRETS_PATH, {})
-
-    app_id_candidates = [
-        ["channels", "feishu", "accounts", "main", "appId"],
-        ["channels", "feishu", "appId"],
-    ]
-    app_secret_candidates = [
-        ["channels", "feishu", "accounts", "main", "appSecret"],
-        ["channels", "feishu", "appSecret"],
-        ["channels", "feishu", "accounts", "main", "app_secret"],
-        ["channels", "feishu", "app_secret"],
-    ]
-
-    app_id = None
-    for p in app_id_candidates:
-        v = deep_get(cfg, p)
-        if isinstance(v, str) and v.strip():
-            app_id = v.strip()
-            break
-    if not app_id:
-        for p in app_id_candidates:
-            v = deep_get(sec, p)
-            if isinstance(v, str) and v.strip():
-                app_id = v.strip()
-                break
-
-    app_secret = None
-    for p in app_secret_candidates:
-        v = deep_get(sec, p)
-        if isinstance(v, str) and v.strip():
-            app_secret = v.strip()
-            break
-
-    return app_id, app_secret
 
 def post_json(url: str, payload: dict, headers: dict | None = None, timeout: int = 120):
     req = urllib.request.Request(

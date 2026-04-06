@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "local_services": {
+    "oris_v1_infer_url": "http://127.0.0.1:8788/v1/infer"
+  },
+  "paths": {
+    "bridge_feishu_log": "orchestration/bridge_feishu_log.jsonl",
+    "feishu_ingress_log": "orchestration/feishu_event_ingress_log.jsonl",
+    "feishu_transport_log": "orchestration/feishu_transport_log.jsonl",
+    "feishu_send_executor_log": "orchestration/feishu_send_executor_log.jsonl",
+    "feishu_event_dedupe": "orchestration/feishu_event_dedupe.json",
+    "openclaw_bridge_log": "orchestration/openclaw_bridge_log.jsonl"
+  },
+  "bridges": {
+    "default_sources": {
+      "feishu_bridge": "feishu_bridge_core",
+      "feishu_ingress": "feishu_event_ingress",
+      "openclaw_bridge": "openclaw_bridge"
+    },
+    "role_routing": {
+      "coding_keywords": [
+        "代码", "报错", "debug", "bug", "python", "javascript", "typescript",
+        "fastapi", "接口", "api", "脚本", "deploy", "nginx", "systemd", "sql"
+      ],
+      "report_keywords": [
+        "报告", "洞察", "分析", "研报", "复盘", "总结", "report", "insight"
+      ],
+      "cn_keywords": [
+        "国产", "中文模型", "阿里", "腾讯", "智谱", "混元", "百炼", "qwen", "glm"
+      ],
+      "cheap_keywords": [
+        "省钱", "便宜", "低成本", "免费", "fallback", "控成本"
+      ]
+    },
+    "reply_rules": {
+      "exact_reply_patterns": [
+        "^\\s*请只回答[：:]\\s*(.+?)\\s*$",
+        "^\\s*只回答[：:]\\s*(.+?)\\s*$",
+        "^\\s*请只回复[：:]\\s*(.+?)\\s*$",
+        "^\\s*只回复[：:]\\s*(.+?)\\s*$",
+        "^\\s*请只输出[：:]\\s*(.+?)\\s*$",
+        "^\\s*只输出[：:]\\s*(.+?)\\s*$"
+      ]
+    }
+  },
+  "feishu": {
+    "token_url": "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",
+    "send_url": "https://open.feishu.cn/open-apis/im/v1/messages",
+    "reply_url_template": "https://open.feishu.cn/open-apis/im/v1/messages/{message_id}/reply"
+  }
+}

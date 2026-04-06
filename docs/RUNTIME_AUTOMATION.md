@@ -33,3 +33,6 @@ Current stable external contract:
 
 ## External integration rule
 For current external HTTPS integrations, use Basic Auth plus X-ORIS-API-Key. This is the standard calling mode for Feishu bridge, OpenClaw bridge, and WeChat backend integration.
+
+## Config-first rule
+Non-secret runtime constants should live in repository config files first. Secrets remain in ~/.openclaw/secrets.json. Frequently adjusted business rules should move to database/admin UI later rather than staying hardcoded in scripts.
