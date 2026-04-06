@@ -36,29 +36,32 @@ Responsibility:
 - output transport preview object
 - write transport log
 
+### 4. Send executor skeleton
+File:
+- scripts/feishu_send_executor_skeleton.py
+
+Responsibility:
+- fetch tenant_access_token
+- convert send envelope into Feishu API request
+- support dry-run preview
+- support real execution when explicitly enabled
+- write send executor log
+
 ## Logs
 - orchestration/bridge_feishu_log.jsonl
 - orchestration/feishu_event_ingress_log.jsonl
 - orchestration/feishu_transport_log.jsonl
+- orchestration/feishu_send_executor_log.jsonl
 
 ## Dedupe store
 - orchestration/feishu_event_dedupe.json
-
-## Reply shaping
-The bridge applies an exact-reply rule for prompts such as:
-- 请只回答：...
-- 只回答：...
-- 请只回复：...
-- 只回复：...
-- 请只输出：...
-- 只输出：...
 
 ## Current status
 Feishu integration now has:
 - bridge core
 - event ingress skeleton
 - transport skeleton
-- idempotency preview layer
+- send executor skeleton
 
 ## Next step
-The next layer should connect the transport skeleton to real Feishu send API execution.
+The next layer should connect the send executor skeleton into a real inbound/outbound worker path and decide whether to enable real send in production.

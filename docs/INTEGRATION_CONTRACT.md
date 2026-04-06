@@ -93,3 +93,6 @@ Feishu now has both a bridge core and an ingress skeleton. The next missing laye
 
 ## Feishu transport skeleton status
 Feishu now includes a transport skeleton with dedupe and send-envelope preview. The next missing layer is real outbound send execution.
+
+## Feishu send executor skeleton status
+Feishu now includes a send executor skeleton that can fetch tenant_access_token and build real send/reply API calls, while staying dry-run by default.
