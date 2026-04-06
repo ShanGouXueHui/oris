@@ -99,3 +99,6 @@ Feishu now includes a send executor skeleton that can fetch tenant_access_token 
 
 ## Feishu worker skeleton status
 Feishu now includes a worker skeleton that chains transport preview and send execution preview while safely stopping on deduped inputs.
+
+## OpenClaw production path status
+OpenClaw is now the recommended first real production transport path into ORIS through scripts/openclaw_bridge_to_oris.py.
