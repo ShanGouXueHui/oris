@@ -87,3 +87,6 @@ Do not mix external Basic Auth with application bearer token in the same Authori
 
 ## Bridge core implementation status
 Feishu now has a reusable bridge core in scripts/bridge_feishu_to_oris.py. Real event ingress is still a separate next-layer task.
+
+## Feishu ingress skeleton status
+Feishu now has both a bridge core and an ingress skeleton. The next missing layer is real event transport and outbound delivery.

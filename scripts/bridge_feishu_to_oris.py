@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import os
+import re
 import uuid
 import urllib.request
 from datetime import datetime, timezone
@@ -56,6 +56,28 @@ def choose_role(text: str) -> str:
         return "free_fallback"
     return "primary_general"
 
+def apply_reply_policy(input_text: str, raw_reply: str) -> tuple[str, str]:
+    text = (input_text or "").strip()
+    reply = (raw_reply or "").strip()
+
+    patterns = [
+        r'^\s*请只回答[：:]\s*(.+?)\s*$',
+        r'^\s*只回答[：:]\s*(.+?)\s*$',
+        r'^\s*请只回复[：:]\s*(.+?)\s*$',
+        r'^\s*只回复[：:]\s*(.+?)\s*$',
+        r'^\s*请只输出[：:]\s*(.+?)\s*$',
+        r'^\s*只输出[：:]\s*(.+?)\s*$',
+    ]
+
+    for p in patterns:
+        m = re.match(p, text, flags=re.IGNORECASE)
+        if m:
+            forced = m.group(1).strip()
+            forced = forced.strip('“”"\' ')
+            return forced, "exact_reply_rule"
+
+    return reply, "model_raw"
+
 def call_oris(role: str, prompt: str, source: str, request_id: str, api_key: str):
     payload = {
         "role": role,
@@ -71,7 +93,7 @@ def call_oris(role: str, prompt: str, source: str, request_id: str, api_key: str
             "Content-Type": "application/json",
             "Accept": "application/json",
             "X-ORIS-API-Key": api_key,
-            "User-Agent": "ORIS-Feishu-Bridge/1.0",
+            "User-Agent": "ORIS-Feishu-Bridge/1.1",
         },
     )
     with urllib.request.urlopen(req, timeout=180) as resp:
@@ -105,9 +127,11 @@ def main():
 
     try:
         result = call_oris(role=role, prompt=args.text, source=args.source, request_id=request_id, api_key=api_key)
-        reply_text = (((result.get("data") or {}).get("text")) or "").strip()
+        raw_reply = (((result.get("data") or {}).get("text")) or "").strip()
+        reply_text, reply_policy = apply_reply_policy(args.text, raw_reply)
 
         record["ok"] = bool(result.get("ok"))
+        record["reply_policy"] = reply_policy
         record["oris_response"] = result
         record["reply_text_preview"] = reply_text[:300]
         append_jsonl(LOG_PATH, record)
@@ -120,6 +144,7 @@ def main():
                 "sender_open_id": args.sender_open_id,
                 "chat_id": args.chat_id,
                 "selected_role": role,
+                "reply_policy": reply_policy,
             },
             "reply_text": reply_text,
             "oris_result": result,

@@ -1,36 +1,47 @@
-# Feishu Bridge Core
+# Feishu Bridge
 
-## Current status
-A bridge core is now available in:
+## Layer split
 
+### 1. Bridge core
+File:
 - scripts/bridge_feishu_to_oris.py
 
-This is not yet the full Feishu event ingress layer.
-It is the reusable bridge core that turns:
-- Feishu text input
-into
-- ORIS role selection
-- ORIS v1 infer call
-- reply text output
-- bridge log record
+Responsibility:
+- accept Feishu-like text input
+- choose ORIS role
+- call local ORIS v1 infer
+- normalize reply text
+- write bridge log
 
-## Current flow
-1. receive text
-2. select ORIS role
-3. call local ORIS v1 infer endpoint
-4. return reply_text
-5. append bridge log
+### 2. Event ingress skeleton
+File:
+- scripts/feishu_event_ingress_skeleton.py
 
-## Current log
+Responsibility:
+- accept Feishu callback-like payload
+- handle challenge mode
+- parse im.message.receive_v1 text message
+- call bridge core
+- produce reply action preview
+- write ingress log
+
+## Logs
 - orchestration/bridge_feishu_log.jsonl
+- orchestration/feishu_event_ingress_log.jsonl
 
-## Role selection
-Default auto role selection is heuristic:
-- coding
-- report_generation
-- cn_candidate_pool
-- free_fallback
-- primary_general
+## Reply shaping
+The bridge now applies an exact-reply rule for prompts such as:
+- 请只回答：...
+- 只回答：...
+- 请只回复：...
+- 只回复：...
+- 请只输出：...
+- 只输出：...
+
+This reduces reliance on the model following the instruction exactly.
 
 ## Next step
-The next engineering layer should connect this bridge core to real Feishu event ingress and outbound reply delivery.
+The next layer should connect the ingress skeleton to real Feishu transport:
+- real inbound event verification
+- real outbound reply delivery
+- message deduplication / idempotency
