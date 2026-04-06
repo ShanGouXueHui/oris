@@ -6,7 +6,7 @@ import uuid
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from scripts.lib.runtime_config import local_service_url, rel_path, read_oris_api_key, exact_reply_patterns, role_routing, read_feishu_creds, feishu_api, default_source
+from lib.runtime_config import local_service_url, rel_path, read_oris_api_key, exact_reply_patterns, role_routing, read_feishu_creds, feishu_api, default_source
 
 ROOT = Path(__file__).resolve().parents[1]
 LOG_PATH = rel_path("bridge_feishu_log")
