@@ -2,77 +2,96 @@
 import argparse
 import json
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from lib.runtime_config import rel_path, default_source
+
 ROOT = Path(__file__).resolve().parents[1]
+LOG_PATH = rel_path("feishu_ingress_log")
 BRIDGE_SCRIPT = ROOT / "scripts" / "bridge_feishu_to_oris.py"
-LOG_PATH = ROOT / "orchestration" / "feishu_event_ingress_log.jsonl"
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
-def append_jsonl(path: Path, record: dict):
+def append_jsonl(path, record):
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 def load_payload(args):
+    if args.payload_json:
+        return json.loads(args.payload_json)
     if args.payload_file:
         return json.loads(Path(args.payload_file).read_text(encoding="utf-8"))
-    raw = args.payload_json or ""
-    if raw.strip():
-        return json.loads(raw)
-    raise SystemExit("either --payload-file or --payload-json is required")
+    raise SystemExit("missing --payload-json or --payload-file")
 
-def parse_text_message(payload: dict):
+def parse_text_content(message_type, content):
+    if message_type == "text":
+        if isinstance(content, str):
+            try:
+                parsed = json.loads(content)
+                if isinstance(parsed, dict):
+                    return (parsed.get("text") or "").strip()
+            except Exception:
+                return content.strip()
+        if isinstance(content, dict):
+            return (content.get("text") or "").strip()
+    return ""
+
+def normalize_event(payload):
+    # real Feishu schema 2.0
     header = payload.get("header") or {}
-    event_type = header.get("event_type")
-
-    if event_type != "im.message.receive_v1":
-        return None
-
     event = payload.get("event") or {}
-    sender = (((event.get("sender") or {}).get("sender_id") or {}).get("open_id"))
-    message = event.get("message") or {}
-    chat_id = message.get("chat_id")
-    message_id = message.get("message_id")
-    message_type = message.get("message_type")
-    content_raw = message.get("content") or "{}"
 
-    try:
-        content = json.loads(content_raw)
-    except Exception:
-        content = {}
+    if header or event:
+        sender_open_id = (
+            (((event.get("sender") or {}).get("sender_id") or {}).get("open_id"))
+            or ""
+        )
+        message = event.get("message") or {}
+        return {
+            "event_type": header.get("event_type") or payload.get("type") or "",
+            "event_id": header.get("event_id") or payload.get("event_id") or "",
+            "sender_open_id": sender_open_id,
+            "chat_id": message.get("chat_id") or "",
+            "message_id": message.get("message_id") or "",
+            "message_type": message.get("message_type") or "",
+            "text": parse_text_content(message.get("message_type"), message.get("content")),
+        }
 
-    text = content.get("text", "")
-
+    # flattened / test payload compatibility
     return {
-        "event_type": event_type,
-        "sender_open_id": sender,
-        "chat_id": chat_id,
-        "message_id": message_id,
-        "message_type": message_type,
-        "text": text,
+        "event_type": payload.get("event_type") or payload.get("type") or "",
+        "event_id": payload.get("event_id") or "",
+        "sender_open_id": payload.get("sender_open_id") or "",
+        "chat_id": payload.get("chat_id") or "",
+        "message_id": payload.get("message_id") or "",
+        "message_type": payload.get("message_type") or "",
+        "text": (payload.get("text") or "").strip(),
     }
 
-def run_bridge(sender_open_id: str, chat_id: str, text: str):
+def call_bridge(sender_open_id, chat_id, text):
     cmd = [
         "/usr/bin/python3",
         str(BRIDGE_SCRIPT),
         "--sender-open-id", sender_open_id,
         "--chat-id", chat_id,
         "--text", text,
-        "--source", "feishu_event_ingress",
+        "--source", default_source("feishu_ingress"),
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
-        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "bridge_failed")
-    return json.loads(result.stdout)
+        raise RuntimeError(f"bridge_failed rc={result.returncode} stderr={result.stderr.strip()}")
+    try:
+        return json.loads(result.stdout)
+    except Exception as e:
+        raise RuntimeError(f"bridge_non_json: {e}; stdout={result.stdout[:1000]}")
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--payload-file", default=None)
-    ap.add_argument("--payload-json", default=None)
+    ap.add_argument("--payload-json")
+    ap.add_argument("--payload-file")
     args = ap.parse_args()
 
     payload = load_payload(args)
@@ -86,48 +105,53 @@ def main():
         print(json.dumps(out, ensure_ascii=False, indent=2))
         return
 
-    parsed = parse_text_message(payload)
-    if not parsed:
-        out = {
-            "ok": False,
-            "error": "unsupported_event_type",
-            "event_type": ((payload.get("header") or {}).get("event_type")),
-        }
-        print(json.dumps(out, ensure_ascii=False, indent=2))
-        raise SystemExit(2)
-
+    ingress = normalize_event(payload)
     record = {
         "ts": utc_now(),
-        "event_type": parsed.get("event_type"),
-        "sender_open_id": parsed.get("sender_open_id"),
-        "chat_id": parsed.get("chat_id"),
-        "message_id": parsed.get("message_id"),
-        "message_type": parsed.get("message_type"),
-        "text_preview": (parsed.get("text") or "")[:300],
+        "event_type": ingress.get("event_type"),
+        "sender_open_id": ingress.get("sender_open_id"),
+        "chat_id": ingress.get("chat_id"),
+        "message_id": ingress.get("message_id"),
+        "message_type": ingress.get("message_type"),
+        "text_preview": (ingress.get("text") or "")[:300],
     }
 
+    if ingress.get("message_type") != "text" or not ingress.get("text"):
+        record["ok"] = True
+        record["mode"] = "ignored_non_text_or_empty"
+        append_jsonl(LOG_PATH, record)
+        print(json.dumps({
+            "ok": True,
+            "mode": "ignored_non_text_or_empty",
+            "ingress": ingress,
+            "reply_action": None,
+            "bridge_result": None,
+        }, ensure_ascii=False, indent=2))
+        return
+
     try:
-        bridge_result = run_bridge(
-            sender_open_id=parsed["sender_open_id"],
-            chat_id=parsed["chat_id"],
-            text=parsed["text"],
+        bridge_result = call_bridge(
+            sender_open_id=ingress["sender_open_id"],
+            chat_id=ingress["chat_id"],
+            text=ingress["text"],
         )
-        reply_text = bridge_result.get("reply_text", "").strip()
+        reply_text = (bridge_result.get("reply_text") or "").strip()
 
         out = {
             "ok": True,
             "mode": "message_reply_preview",
-            "ingress": parsed,
+            "ingress": ingress,
             "reply_action": {
                 "type": "text",
-                "message_id": parsed.get("message_id"),
-                "chat_id": parsed.get("chat_id"),
+                "message_id": ingress["message_id"],
+                "chat_id": ingress["chat_id"],
                 "text": reply_text,
             },
             "bridge_result": bridge_result,
         }
 
         record["ok"] = True
+        record["mode"] = "message_reply_preview"
         record["reply_text_preview"] = reply_text[:300]
         record["bridge_result"] = bridge_result
         append_jsonl(LOG_PATH, record)
@@ -136,15 +160,16 @@ def main():
 
     except Exception as e:
         record["ok"] = False
+        record["mode"] = "bridge_failed"
         record["error"] = f"{type(e).__name__}: {e}"
         append_jsonl(LOG_PATH, record)
         print(json.dumps({
             "ok": False,
-            "mode": "message_reply_preview",
-            "ingress": parsed,
+            "mode": "bridge_failed",
+            "ingress": ingress,
             "error": f"{type(e).__name__}: {e}",
         }, ensure_ascii=False, indent=2))
-        raise SystemExit(2)
+        sys.exit(2)
 
 if __name__ == "__main__":
     main()

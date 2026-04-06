@@ -85,3 +85,6 @@ Feishu now uses config-driven channel governance for default role selection, met
 
 ## Ability-first routing
 Feishu consumer chat now follows an ability-first routing principle. Language may influence future weighting, but it is not the primary routing key.
+
+## Single source of truth
+Real Feishu event ingress now delegates reply generation to `scripts/bridge_feishu_to_oris.py` so production behavior matches local bridge smoke behavior.
