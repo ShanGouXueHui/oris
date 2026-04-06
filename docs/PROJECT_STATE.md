@@ -112,3 +112,28 @@ Interpretation:
 4. insight skill scaffold
 5. Feishu / Qbot 下载分发闭环
 <!-- ORIS_INSIGHT_PLATFORM:END -->
+
+<!-- ORIS_INSIGHT_DB_BOOTSTRAP:BEGIN -->
+## Insight database bootstrap
+- 洞察主库已落地：PostgreSQL
+- database: oris_insight
+- schema: insight
+- 配置文件：config/insight_storage.json
+- 初始化 SQL：sql/insight_schema_v1.sql
+- 决策文档：docs/DECISIONS/2026-04-06-postgres-insight-bootstrap.md
+- Runbook：docs/RUNBOOKS/INSIGHT_POSTGRES_BOOTSTRAP.md
+
+### 已落首批核心表
+- company
+- competitor_set / competitor_set_member
+- source / source_snapshot
+- evidence_item
+- metric_observation
+- analysis_run
+- report_artifact
+- citation_link
+- delivery_task
+- watch_task
+- alert_event
+
+<!-- ORIS_INSIGHT_DB_BOOTSTRAP:END -->

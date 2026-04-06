@@ -72,3 +72,24 @@
 - 业务常量进入 config 或数据库，不接受继续散落在脚本里
 - 企业竞争力洞察采用 PostgreSQL 主库作为中台底座
 <!-- ORIS_INSIGHT_PLATFORM:END -->
+
+<!-- ORIS_INSIGHT_DB_BOOTSTRAP:BEGIN -->
+## Insight database continuity
+后续凡涉及企业竞争力洞察、证据链、报告生成、下载分发，优先读取：
+- config/insight_storage.json
+- sql/insight_schema_v1.sql
+- docs/INSIGHT_DATA_MODEL.md
+- docs/INSIGHT_PLATFORM_ARCHITECTURE.md
+- docs/INSIGHT_SKILL_ROADMAP.md
+- docs/DECISIONS/2026-04-06-postgres-insight-bootstrap.md
+- docs/RUNBOOKS/INSIGHT_POSTGRES_BOOTSTRAP.md
+
+固定约束：
+- 洞察主库为 PostgreSQL
+- schema 为 insight
+- 连接信息走 config + secrets
+- 正式报告主件为 Word
+- Excel 为辅助底表
+- 渠道下载支持 Feishu，后续支持 Qbot
+
+<!-- ORIS_INSIGHT_DB_BOOTSTRAP:END -->
