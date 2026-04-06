@@ -36,3 +36,6 @@ For current external HTTPS integrations, use Basic Auth plus X-ORIS-API-Key. Thi
 
 ## Config-first rule
 Non-secret runtime constants should live in repository config files first. Secrets remain in ~/.openclaw/secrets.json. Frequently adjusted business rules should move to database/admin UI later rather than staying hardcoded in scripts.
+
+## Production rollout position
+Current production rollout priority is OpenClaw first. Direct Feishu transport remains staged/dry-run until outbound execution is explicitly enabled.
