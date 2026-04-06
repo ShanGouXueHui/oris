@@ -40,7 +40,8 @@
       "feishu": "feishu",
       "qbot": "qbot"
     },
-    "default_channel_type": "generic_download"
+    "default_channel_type": "generic_download",
+    "default_delivery_mode": "download_link"
   },
   "source": {
     "generator_name": "run_eval_report",
@@ -59,5 +60,17 @@
     "default_version_num": 1,
     "default_is_active": true,
     "default_is_deleted": false
+  },
+  "download": {
+    "bind_host": "127.0.0.1",
+    "bind_port": 8791,
+    "health_path": "/health",
+    "download_path_prefix": "/download",
+    "public_base_url": "https://control.orisfy.com",
+    "public_path_prefix": "/oris-download",
+    "link_ttl_seconds": 604800
+  },
+  "paths": {
+    "report_download_log": "orchestration/report_download_server_log.jsonl"
   }
 }
