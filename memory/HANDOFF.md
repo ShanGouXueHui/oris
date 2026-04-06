@@ -135,7 +135,8 @@
 4. `docs/DOC_STATUS_MATRIX_2026-04-06.md`
 
 当前要继续的第一件事：
-- 做 delivery executor，执行 pending delivery_task 到 Feishu / Qbot，并回写 sent/failed 状态。
+- 等 Qbot 账号审批完成后启用真实发送。
+- 将 4 个 insight skill scaffold 接入真实 source / evidence / metric 写库链路。
 
 注意事项：
 - 用 copy-paste 可执行命令
@@ -159,3 +160,17 @@
 - `channel_target` 对 Feishu 当前口径为 `chat_id`
 - 历史任务 `21 / 27` 为非 downloadable json manifest，已做 historical_cleanup 标注
 - 下一步优先补 Qbot executor，然后开始 4 个 insight skill scaffold
+
+## 2026-04-06 incremental handoff — Qbot scaffold and insight skills
+
+本轮已完成：
+- `config/report_runtime.json` 增加 qbot disabled scaffold 与 execution_channels
+- `scripts/qbot_send_executor_skeleton.py` 已创建
+- `config/insight_skill_runtime.json` 已创建
+- 已创建 4 个 ORIS insight skill scaffold
+- 已创建 Word / Excel / PPT 模板骨架
+
+注意事项：
+- `qbot` 当前是 scaffold，不做真实发送
+- 审批完成后只需补 webhook/target 配置并启用 execute_enabled
+- 后续应优先把 4 个 skill 接到真实 DB 写入与 artifact generation

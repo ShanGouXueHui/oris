@@ -42,17 +42,31 @@
         "target_type": "webhook",
         "default_target": null
       }
+    },
+    "execution_channels": [
+      "feishu"
+    ],
+    "disabled_channels": {
+      "qbot": {
+        "enabled": false,
+        "reason": "qq_open_platform_approval_pending",
+        "keep_tasks_pending": true
+      }
     }
   },
   "channels": {
     "feishu": {
       "mode": "feishu_messages_api",
       "receive_id_type": "chat_id",
-      "default_receive_id": "oc_2088cbc62e2aa06533848ec7b7b06415"
+      "default_receive_id": "oc_2088cbc62e2aa06533848ec7b7b06415",
+      "execute_enabled": true
     },
     "qbot": {
       "mode": "generic_webhook",
-      "webhook_url_env": "QBOT_WEBHOOK_URL"
+      "webhook_url_env": "QBOT_WEBHOOK_URL",
+      "default_target": null,
+      "execute_enabled": false,
+      "dry_run_without_credentials": true
     }
   }
 }

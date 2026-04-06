@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "default_output_schema_version": "v1",
+  "answer_protocol": {
+    "layers": [
+      "facts",
+      "inferences",
+      "hypotheses",
+      "risks"
+    ],
+    "required_sections": [
+      "conclusion",
+      "core_data",
+      "sources",
+      "analysis",
+      "risks",
+      "next_steps"
+    ]
+  },
+  "artifact_generation": {
+    "word": {
+      "enabled": true,
+      "template_code": "enterprise_report_v1"
+    },
+    "excel": {
+      "enabled": true,
+      "template_code": "evidence_matrix_v1"
+    },
+    "ppt": {
+      "enabled": true,
+      "template_code": "executive_briefing_v1",
+      "status": "scaffold"
+    }
+  },
+  "delivery_channels": {
+    "feishu": {
+      "enabled": true
+    },
+    "qbot": {
+      "enabled": false,
+      "reason": "qq_open_platform_approval_pending"
+    }
+  },
+  "skills": {
+    "company_profile_skill": {
+      "enabled": true,
+      "status": "scaffold",
+      "default_sources": [
+        "official_website",
+        "exchange_filing",
+        "annual_report",
+        "investor_relations"
+      ],
+      "db_write_intent": [
+        "company",
+        "source",
+        "source_snapshot",
+        "evidence_item",
+        "metric_observation",
+        "citation_link",
+        "analysis_run"
+      ],
+      "default_artifacts": [
+        "word",
+        "excel",
+        "ppt"
+      ]
+    },
+    "competitor_research_skill": {
+      "enabled": true,
+      "status": "scaffold",
+      "default_sources": [
+        "official_website",
+        "product_page",
+        "pricing_page",
+        "newsroom",
+        "exchange_filing"
+      ],
+      "db_write_intent": [
+        "competitor_set",
+        "competitor_set_member",
+        "source_snapshot",
+        "evidence_item",
+        "metric_observation",
+        "citation_link",
+        "analysis_run"
+      ],
+      "default_artifacts": [
+        "word",
+        "excel",
+        "ppt"
+      ]
+    },
+    "official_source_ingest_skill": {
+      "enabled": true,
+      "status": "scaffold",
+      "default_sources": [
+        "official_website",
+        "exchange_filing",
+        "government",
+        "api",
+        "pdf"
+      ],
+      "db_write_intent": [
+        "source",
+        "source_snapshot",
+        "evidence_item",
+        "metric_observation"
+      ],
+      "default_artifacts": [
+        "excel"
+      ]
+    },
+    "report_build_skill": {
+      "enabled": true,
+      "status": "scaffold",
+      "default_sources": [
+        "analysis_run",
+        "evidence_item",
+        "metric_observation",
+        "citation_link"
+      ],
+      "db_write_intent": [
+        "report_artifact"
+      ],
+      "default_artifacts": [
+        "word",
+        "excel",
+        "ppt"
+      ]
+    }
+  }
+}

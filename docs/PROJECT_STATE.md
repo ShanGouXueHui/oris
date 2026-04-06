@@ -201,3 +201,20 @@ Interpretation:
 - Feishu `pending_count = 0`
 - 已成功发送任务：`17 / 19 / 23 / 25 / 29 / 31`
 - 历史脏任务：`21 / 27`
+
+## Update — 2026-04-06 Qbot scaffold and insight skill scaffolds
+
+当前状态新增结论：
+- Qbot delivery 先完成 scaffold，不等待账号审批
+- `delivery.execution_channels` 当前只启用 `feishu`
+- Qbot 保持 disabled scaffold，避免在账号未完成前污染 pending queue
+- 已创建第一批 ORIS 自建 insight skill scaffold：
+  - `company_profile_skill`
+  - `competitor_research_skill`
+  - `official_source_ingest_skill`
+  - `report_build_skill`
+- 已同时建立商务级 Word / Excel / PPT 模板骨架
+
+下一步：
+- 等 Qbot 账号审批完成后启用真实发送
+- 将 4 个 skill scaffold 接入真实 source/evidence/metric 写库链路

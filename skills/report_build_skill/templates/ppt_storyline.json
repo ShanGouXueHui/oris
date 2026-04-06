@@ -1,0 +1,25 @@
+{
+  "deck_name": "executive_briefing_v1",
+  "slides": [
+    {
+      "title": "Executive Summary",
+      "purpose": "高层结论页"
+    },
+    {
+      "title": "Core Metrics",
+      "purpose": "关键指标页"
+    },
+    {
+      "title": "Evidence & Sources",
+      "purpose": "证据与出处页"
+    },
+    {
+      "title": "Competitor Comparison",
+      "purpose": "竞对对比页"
+    },
+    {
+      "title": "Risks & Next Steps",
+      "purpose": "风险与下一步页"
+    }
+  ]
+}

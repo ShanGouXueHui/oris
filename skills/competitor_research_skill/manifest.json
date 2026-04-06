@@ -1,0 +1,7 @@
+{
+  "skill_name": "competitor_research_skill",
+  "version": "0.1.0",
+  "status": "scaffold",
+  "entrypoint": "runner.py",
+  "runtime_config": "config/insight_skill_runtime.json"
+}

@@ -1,0 +1,25 @@
+{
+  "workbook_name": "enterprise_evidence_matrix_v1",
+  "sheets": [
+    {
+      "name": "summary",
+      "purpose": "结论与关键指标摘要"
+    },
+    {
+      "name": "evidence_items",
+      "purpose": "证据底表"
+    },
+    {
+      "name": "citations",
+      "purpose": "出处与定位"
+    },
+    {
+      "name": "metrics",
+      "purpose": "指标观测"
+    },
+    {
+      "name": "competitor_matrix",
+      "purpose": "竞品对比"
+    }
+  ]
+}
