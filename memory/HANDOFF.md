@@ -199,3 +199,17 @@
 - 当前闭环已覆盖：入库 → 读库组装 → 本地产物 → artifact 注册 → Feishu 投递
 - `json` 产物当前不投递，符合 `downloadable_flag=false`
 - 下一步应优先补 `citation_link` 与真实正文级 evidence extraction
+
+
+## 2026-04-06 incremental handoff — official ingest citation_link closed loop
+
+本轮已完成：
+- `skills/official_source_ingest_skill/runner.py` 已自动写入 `citation_link`
+- `scripts/backfill_citation_links_from_ingest.py` 已创建，可用于历史 ingest 补 citation
+- Canonical live fetch + body extraction 最新一次运行已验证 citation 自动落库
+
+注意事项：
+- 当前 citation 是 evidence-level 绑定，`report_id` 仍为空，后续可在正式报告注册后补 report-level 绑定
+- `claim_code` 当前口径：`{run_code}:snapshot_{snapshot_id}:evidence_{evidence_id}`
+- 下一步应让 `report_build_skill` 直接消费 `citation_link`，生成可审计正式报告
+

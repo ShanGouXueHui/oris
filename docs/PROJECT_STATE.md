@@ -242,3 +242,17 @@ Interpretation:
 - `report_artifact` 新增：`10 / 11 / 12`
 - Feishu 实发成功任务：`33 / 34`
 - `report_json` 未投递，符合 `downloadable_flag=false` 设计
+
+
+## Update — 2026-04-06 Official ingest now writes citation_link
+
+当前状态新增结论：
+- `official_source_ingest_skill` 已从 live fetch + body extraction 进一步闭环到 `citation_link`
+- 新抓取正文级 `evidence_item` 会自动生成 evidence-level citation binding
+- 当前链路已覆盖：`company → source → source_snapshot → analysis_run → evidence_item → metric_observation → citation_link`
+
+验证结果：
+- Canonical 最新 official ingest 已完成自动 citation 写入
+- `citation_link` 可按 `claim_code / evidence_item_id / source_snapshot_id` 去重
+- 历史 snapshot 3 的 8 条正文级 evidence 也已完成 citation 回填
+
