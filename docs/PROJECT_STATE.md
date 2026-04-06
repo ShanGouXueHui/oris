@@ -256,3 +256,27 @@ Interpretation:
 - `citation_link` 可按 `claim_code / evidence_item_id / source_snapshot_id` 去重
 - 历史 snapshot 3 的 8 条正文级 evidence 也已完成 citation 回填
 
+
+## Update — 2026-04-06 Official ingest citation loop fully closed
+
+当前状态新增结论：
+- `official_source_ingest_skill` 已完成 live fetch + body extraction + `citation_link` 自动写入
+- runner 输出已补齐 `citation_ids`、`written_citation_count`
+- 当前 Canonical 最新一次 official ingest 已验证：
+  - `analysis_run_id = 8`
+  - `snapshot_id = 9`
+  - `evidence_count = 8`
+  - `citation_count = 8`
+
+验证结果：
+- evidence-level citation 已按 `claim_code = {run_code}:snapshot_{snapshot_id}:evidence_{evidence_id}` 自动生成
+- `citation_note = auto_generated_from_official_source_ingest_skill`
+- `db_write_plan` 已覆盖：
+  `company / source / source_snapshot / analysis_run / evidence_item / metric_observation / citation_link`
+
+修正说明：
+- 上一版 `official_source_ingest_skill` 在 citation 输出层存在两个问题：
+  - `row["title"]` 取值不稳定，导致 real run 报 `KeyError`
+  - `citation_ids / written_citation_count` 未完整暴露到 runner 输出
+- 当前已通过 follow-up 修复，主线以本次修正后状态为准
+

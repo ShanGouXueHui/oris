@@ -213,3 +213,20 @@
 - `claim_code` 当前口径：`{run_code}:snapshot_{snapshot_id}:evidence_{evidence_id}`
 - 下一步应让 `report_build_skill` 直接消费 `citation_link`，生成可审计正式报告
 
+
+## 2026-04-06 incremental handoff — official ingest citation output fixed
+
+本轮已完成：
+- 修复 `official_source_ingest_skill` 的 citation label/url fallback
+- 修复 `total_citation_count` 初始化缺失问题
+- runner 输出已增加：
+  - `citation_ids`
+  - `written_citation_count`
+  - `db_write_plan` 中的 `citation_link`
+- Canonical 最新 real run 已验证 `evidence_ids_count = 8` 且 `citation_ids_count = 8`
+
+注意事项：
+- 目前 `citation_link` 是 evidence-level 绑定，`report_id` 仍为空
+- 后续应让 `report_build_skill` 直接消费 `citation_link`，形成正式报告引用层
+- 当前 authoritative runtime 结论应以本次 follow-up fix 后结果为准
+

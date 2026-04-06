@@ -623,6 +623,7 @@ def build_output(req: dict, company_record: dict, run_row: dict | None, plan_row
             {"field": "planned_snapshot_count" if dry_run else "written_snapshot_count", "value": source_count},
             {"field": "planned_evidence_count" if dry_run else "written_evidence_count", "value": evidence_count},
             {"field": "planned_metric_count" if dry_run else "written_metric_count", "value": metric_count},
+            {"field": "planned_citation_count" if dry_run else "written_citation_count", "value": (evidence_count if dry_run else sum(len(row.get("citation_ids") or []) for row in plan_rows))},
         ],
         "sources": [{"source_type": x["source_type"], "url": x["url"], "fetch_ok": x["fetch_ok"], "fetch_error": x["fetch_error"]} for x in plan_rows],
         "facts": facts,
@@ -643,6 +644,7 @@ def build_output(req: dict, company_record: dict, run_row: dict | None, plan_row
             "analysis_run",
             "evidence_item",
             "metric_observation",
+            "citation_link",
         ],
         "artifact_plan": [],
     }
@@ -669,10 +671,12 @@ def build_output(req: dict, company_record: dict, run_row: dict | None, plan_row
         }
         for key in [
             "company_id", "company_action", "source_id", "source_action",
-            "snapshot_id", "evidence_ids", "metric_ids", "analysis_run_id", "run_code"
+            "snapshot_id", "evidence_ids", "metric_ids", "citation_ids", "analysis_run_id", "run_code"
         ]:
             if key in row:
                 item[key] = row[key]
+        if "citation_ids" not in item:
+            item["citation_ids"] = row.get("citation_ids") or []
         out["source_plan"].append(item)
 
     return to_jsonable(out)
@@ -755,6 +759,8 @@ def main():
                 company = company_wrap["company"]
                 run_row = insert_analysis_run(cur, company["id"])
 
+                total_citation_count = 0
+
                 persisted = []
                 for row in plan_rows:
                     source_wrap = ensure_source(
@@ -784,6 +790,20 @@ def main():
                             confidence_score=0.75 if row.get("fetch_ok") else 0.60,
                         )
                         evidence_ids.append(evidence_id)
+                        citation_base_title = (
+                            row.get("title")
+                            or row.get("snapshot_title")
+                            or row.get("source_name")
+                            or source.get("source_name")
+                            or source.get("title")
+                            or "source_segment"
+                        )
+                        citation_url = (
+                            row.get("url")
+                            or row.get("snapshot_url")
+                            or source.get("url")
+                            or ""
+                        )
                         citation_id = insert_citation_link(
                             cur,
                             request_id=run_row["request_id"],
@@ -791,8 +811,8 @@ def main():
                             source_id=source["id"],
                             source_snapshot_id=snapshot_id,
                             evidence_item_id=evidence_id,
-                            citation_label=f'{row["title"]} / segment {idx:02d}',
-                            citation_url=row["url"],
+                            citation_label=f'{citation_base_title} / segment {idx:02d}',
+                            citation_url=citation_url,
                         )
                         citation_ids.append(citation_id)
 
@@ -828,6 +848,7 @@ def main():
                     row["evidence_ids"] = evidence_ids
                     row["metric_ids"] = metric_ids
                     row["citation_ids"] = citation_ids
+                    total_citation_count += len(citation_ids)
                     row["analysis_run_id"] = run_row["id"]
                     row["run_code"] = run_row["run_code"]
                     persisted.append(row)
