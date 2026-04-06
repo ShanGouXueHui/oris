@@ -23,3 +23,6 @@ In Feishu developer console:
 
 ## Runtime note
 Because this is now direct webhook mode, ORIS should be treated as the primary receiver for that Feishu app's event flow.
+
+## Verification status
+Feishu webhook URL verification has passed. The next step is real message event testing with `im.message.receive_v1` and end-to-end reply validation.
