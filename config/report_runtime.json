@@ -23,5 +23,36 @@
       "qbot"
     ],
     "download_security_version": 2
+  },
+  "delivery": {
+    "task_table": "insight.delivery_task",
+    "pending_status": "pending",
+    "sent_status": "sent",
+    "failed_status": "failed",
+    "channel_type_map": {
+      "feishu": "feishu",
+      "qbot": "qbot"
+    },
+    "channel_targets": {
+      "feishu": {
+        "target_type": "chat_id",
+        "default_target": "oc_2088cbc62e2aa06533848ec7b7b06415"
+      },
+      "qbot": {
+        "target_type": "webhook",
+        "default_target": null
+      }
+    }
+  },
+  "channels": {
+    "feishu": {
+      "mode": "feishu_messages_api",
+      "receive_id_type": "chat_id",
+      "default_receive_id": "oc_2088cbc62e2aa06533848ec7b7b06415"
+    },
+    "qbot": {
+      "mode": "generic_webhook",
+      "webhook_url_env": "QBOT_WEBHOOK_URL"
+    }
   }
 }

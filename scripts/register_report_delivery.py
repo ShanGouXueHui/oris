@@ -224,7 +224,7 @@ def ensure_delivery_task(cur, artifact, channel):
         artifact["artifact_id"],
         delivery_code,
         channel,
-        None,
+        channel_target_for(channel, runtime_cfg),
         "download_link",
         "pending",
         policy["max_downloads"],
@@ -244,9 +244,29 @@ def ensure_delivery_task(cur, artifact, channel):
         "download_url": download_url,
     }
 
+
+def channel_target_for(channel, runtime_cfg):
+    delivery_cfg = runtime_cfg.get("delivery") if isinstance(runtime_cfg, dict) else {}
+    targets = delivery_cfg.get("channel_targets") if isinstance(delivery_cfg, dict) else {}
+    channels = runtime_cfg.get("channels") if isinstance(runtime_cfg, dict) else {}
+
+    target_cfg = targets.get(channel) if isinstance(targets, dict) else None
+    if isinstance(target_cfg, dict):
+        target = target_cfg.get("default_target")
+        if target:
+            return target
+
+    ch_cfg = channels.get(channel) if isinstance(channels, dict) else None
+    if isinstance(ch_cfg, dict):
+        target = ch_cfg.get("default_receive_id") or ch_cfg.get("default_target")
+        if target:
+            return target
+
+    return None
+
 def main():
     ensure_signing_key()
-    _, report_cfg = load_report_runtime()
+    runtime_cfg, report_cfg = load_report_runtime()
     channels = list(report_cfg.get("downloadable_channels", ["feishu", "qbot"]))
     files = scan_files()
 
