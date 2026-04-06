@@ -280,3 +280,27 @@ Interpretation:
   - `citation_ids / written_citation_count` 未完整暴露到 runner 输出
 - 当前已通过 follow-up 修复，主线以本次修正后状态为准
 
+
+## Update — 2026-04-06 Account-strategy case generated and delivered
+
+当前状态新增结论：
+- `account_strategy_skill` 已完成首个真实业务 case 编排：
+  `account-strategy-akkodis-huawei-cloud-auto-eu-20260406`
+- 已完成 partner / cloud / customers 官方源采集，以及竞争对手 benchmark 接入
+- 已生成 account-strategy 正式交付物：
+  - Word
+  - Excel
+  - JSON
+  - PPT storyline（当前环境缺少 `python-pptx`，暂未生成真实 `.pptx`）
+
+验证结果：
+- 顶层编排输出已落盘：
+  `outputs/account_strategy/account-strategy-akkodis-huawei-cloud-auto-eu-20260406/.../account_strategy_case.json`
+- 报告产物已接入 `insight.report_artifact`
+- 可下载产物已写入 `delivery_task`
+- Feishu 已完成真实发送（以 delivery_task 回写状态为准）
+
+当前结论：
+- ORIS 已具备“真实洞察 case → 证据/引用 → Word/Excel → artifact 注册 → Feishu 投递”的业务闭环
+- 唯一未闭合项是：真实 `.pptx` 文件生成
+

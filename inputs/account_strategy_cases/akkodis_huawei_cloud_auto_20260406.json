@@ -1,0 +1,117 @@
+{
+  "case_code": "account-strategy-akkodis-huawei-cloud-auto-eu-20260406",
+  "analysis_type": "account_strategy",
+  "partner": {
+    "name": "Akkodis",
+    "domain": "akkodis.com",
+    "region": "Europe",
+    "role": "solution_partner",
+    "sources": [
+      {
+        "source_name": "Akkodis Official Website",
+        "source_type": "official_website",
+        "url": "https://www.akkodis.com/en",
+        "title": "Akkodis Homepage",
+        "publisher": "Akkodis",
+        "official_flag": true
+      },
+      {
+        "source_name": "Akkodis AI-Core Press Release",
+        "source_type": "official_website",
+        "url": "https://www.akkodis.com/en/newsroom/press-releases/ai-core-global-product-portfolio-flagship",
+        "title": "Akkodis AI-Core",
+        "publisher": "Akkodis",
+        "official_flag": true
+      }
+    ]
+  },
+  "cloud_vendor": {
+    "name": "Huawei Cloud",
+    "domain": "huaweicloud.com",
+    "region": "global",
+    "role": "ai_cloud_platform",
+    "sources": [
+      {
+        "source_name": "Huawei Cloud ModelArts Product Page",
+        "source_type": "official_website",
+        "url": "https://www.huaweicloud.com/intl/en-us/product/modelarts.html",
+        "title": "ModelArts AI Development Platform",
+        "publisher": "Huawei Cloud",
+        "official_flag": true
+      },
+      {
+        "source_name": "Huawei Cloud ModelArts Service Overview",
+        "source_type": "official_website",
+        "url": "https://support.huaweicloud.com/intl/en-us/productdesc-modelarts/modelarts_01_0001.html",
+        "title": "What Is ModelArts?",
+        "publisher": "Huawei Cloud",
+        "official_flag": true
+      }
+    ]
+  },
+  "customers": [
+    {
+      "name": "引望",
+      "domain": "yinwang.com",
+      "region": "China",
+      "type": "auto_intelligence_platform",
+      "sources": [
+        {
+          "source_name": "引望官网",
+          "source_type": "official_website",
+          "url": "https://www.yinwang.com/cn/",
+          "title": "引望官网",
+          "publisher": "引望",
+          "official_flag": true
+        },
+        {
+          "source_name": "乾崑社区",
+          "source_type": "official_website",
+          "url": "https://developer.yinwang.com/",
+          "title": "乾崑社区",
+          "publisher": "引望",
+          "official_flag": true
+        }
+      ]
+    },
+    {
+      "name": "北汽",
+      "domain": "baicglobal.com",
+      "region": "China",
+      "type": "oem",
+      "sources": [
+        {
+          "source_name": "BAIC Global Official Website",
+          "source_type": "official_website",
+          "url": "https://www.baicglobal.com/",
+          "title": "BAIC Global Homepage",
+          "publisher": "BAIC",
+          "official_flag": true
+        }
+      ]
+    }
+  ],
+  "competitor_case_path": "inputs/competitor_research_cases/akkodis_vs_eu_auto_peers_20260406.json",
+  "dimensions": [
+    "core_technology",
+    "ai_capability",
+    "full_stack_solution",
+    "ecosystem",
+    "cost_and_delivery",
+    "automotive_domain_depth",
+    "overseas_go_to_market"
+  ],
+  "questions": [
+    "华为云AI能力中，哪些可以与Akkodis形成强强联合，突破Top车企用户",
+    "Akkodis相对其欧洲主要竞争对手，强弱项分别是什么",
+    "华为云可以帮助Akkodis补齐哪些能力，哪些AI能力最关键",
+    "若客户是假设为引望，长短板是什么，联合方案如何差异化增强其竞争力",
+    "若客户是假设为北汽，长短板是什么，联合方案如何差异化增强其竞争力",
+    "Akkodis+华为云在海外市场拓展中，能如何形成差异化联合AI解决方案"
+  ],
+  "required_artifacts": [
+    "word",
+    "excel",
+    "ppt"
+  ]
+}

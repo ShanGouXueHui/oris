@@ -68,7 +68,7 @@
     },
     "competitor_research_skill": {
       "enabled": true,
-      "status": "scaffold",
+      "status": "db_backed_beta",
       "default_sources": [
         "official_website",
         "product_page",
@@ -127,6 +127,50 @@
         "word",
         "excel",
         "ppt"
+      ]
+    },
+    "account_strategy_skill": {
+      "enabled": true,
+      "status": "scaffold",
+      "default_sources": [
+        "official_website",
+        "annual_report",
+        "product_page",
+        "gartner",
+        "forrester",
+        "idc",
+        "firstmark_mad",
+        "arena_leaderboard",
+        "openrouter_rankings",
+        "artificialanalysis",
+        "github_public_apis",
+        "reputable_news"
+      ],
+      "db_write_intent": [
+        "company",
+        "competitor_set",
+        "competitor_set_member",
+        "source",
+        "source_snapshot",
+        "evidence_item",
+        "metric_observation",
+        "citation_link",
+        "analysis_run",
+        "report_artifact"
+      ],
+      "default_artifacts": [
+        "word",
+        "excel",
+        "ppt"
+      ],
+      "case_registry_root": "inputs/account_strategy_cases",
+      "analysis_graph": [
+        "partner",
+        "cloud_vendor",
+        "customers",
+        "competitors",
+        "capability_mapping",
+        "solution_recommendation"
       ]
     }
   }

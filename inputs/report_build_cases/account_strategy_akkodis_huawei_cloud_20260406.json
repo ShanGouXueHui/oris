@@ -1,0 +1,5 @@
+{
+  "analysis_type": "account_strategy",
+  "input_json_path": "outputs/account_strategy/account-strategy-akkodis-huawei-cloud-auto-eu-20260406/20260406_190742/account_strategy_case.json",
+  "artifact_types": ["word", "excel", "ppt"]
+}

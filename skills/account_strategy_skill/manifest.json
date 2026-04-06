@@ -1,0 +1,7 @@
+{
+  "skill_name": "account_strategy_skill",
+  "version": "v1",
+  "status": "scaffold",
+  "entrypoint": "runner.py",
+  "description": "Top-level business insight skill for partner-cloud-customer-competitor account strategy analysis and enterprise artifact planning."
+}

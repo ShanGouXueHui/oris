@@ -230,3 +230,21 @@
 - 后续应让 `report_build_skill` 直接消费 `citation_link`，形成正式报告引用层
 - 当前 authoritative runtime 结论应以本次 follow-up fix 后结果为准
 
+
+## 2026-04-06 incremental handoff — first account-strategy case closed loop
+
+本轮已完成：
+- `account_strategy_skill` 已升级为真实 orchestrator
+- 已完成 `Akkodis + Huawei Cloud + 引望/北汽 + 欧洲竞争对手` case 编排
+- 已生成 `account_strategy_case.json`
+- 已生成 `account_strategy_report.docx`
+- 已生成 `account_strategy_workbook.xlsx`
+- 已生成 `account_strategy_bundle.json`
+- 已生成 `account_strategy_deck_storyline.json`
+- 已完成 artifact 注册与 Feishu 交付闭环
+
+注意事项：
+- 当前环境没有 `python-pptx`，所以 PPT 仍为 storyline JSON，不是真实 `.pptx`
+- 下一步应优先补真实 PPT 生成能力
+- 之后可把 `account_strategy_runner.py` 合并进 `report_build_skill` 主入口，形成统一 artifact build 路径
+

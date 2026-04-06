@@ -1,0 +1,126 @@
+{
+  "case_code": "competitor-research-akkodis-vs-eu-auto-peers-20260406",
+  "analysis_type": "competitor_research",
+  "target_company": {
+    "name": "Akkodis",
+    "domain": "akkodis.com",
+    "region": "Europe",
+    "sources": [
+      {
+        "source_name": "Akkodis Official Website",
+        "source_type": "official_website",
+        "url": "https://www.akkodis.com/",
+        "title": "Akkodis Homepage",
+        "publisher": "Akkodis",
+        "official_flag": true
+      },
+      {
+        "source_name": "Akkodis AI-Core Press Release",
+        "source_type": "official_website",
+        "url": "https://www.akkodis.com/en/newsroom/press-releases/ai-core-global-product-portfolio-flagship",
+        "title": "Akkodis AI-Core",
+        "publisher": "Akkodis",
+        "official_flag": true
+      }
+    ]
+  },
+  "competitors": [
+    {
+      "name": "Capgemini Engineering",
+      "domain": "capgemini.com",
+      "region": "Europe",
+      "sources": [
+        {
+          "source_name": "Capgemini Engineering Brand Page",
+          "source_type": "official_website",
+          "url": "https://www.capgemini.com/about-us/who-we-are/our-brands/capgemini-engineering/",
+          "title": "Capgemini Engineering",
+          "publisher": "Capgemini",
+          "official_flag": true
+        }
+      ]
+    },
+    {
+      "name": "AVL",
+      "domain": "avl.com",
+      "region": "Europe",
+      "sources": [
+        {
+          "source_name": "AVL SDV Testing Page",
+          "source_type": "official_website",
+          "url": "https://www.avl.com/en/development-speed-and-methodology/acceleration-testing-software-defined-vehicles",
+          "title": "AVL SDV Testing",
+          "publisher": "AVL",
+          "official_flag": true
+        },
+        {
+          "source_name": "AVL Software Page",
+          "source_type": "official_website",
+          "url": "https://www.avl.com/en-at/software",
+          "title": "AVL Software",
+          "publisher": "AVL",
+          "official_flag": true
+        }
+      ]
+    },
+    {
+      "name": "Alten",
+      "domain": "alten.com",
+      "region": "Europe",
+      "sources": [
+        {
+          "source_name": "ALTEN Group Overview",
+          "source_type": "official_website",
+          "url": "https://www.alten.com/alten-group/",
+          "title": "ALTEN Group",
+          "publisher": "ALTEN",
+          "official_flag": true
+        },
+        {
+          "source_name": "ALTEN Automotive",
+          "source_type": "official_website",
+          "url": "https://www.alten.com/Industries/automotive-engineering/",
+          "title": "ALTEN Automotive",
+          "publisher": "ALTEN",
+          "official_flag": true
+        }
+      ]
+    },
+    {
+      "name": "Bertrandt",
+      "domain": "bertrandt.com",
+      "region": "Europe",
+      "sources": [
+        {
+          "source_name": "Bertrandt Official Website",
+          "source_type": "official_website",
+          "url": "https://www.bertrandt.com/en/",
+          "title": "Bertrandt Homepage",
+          "publisher": "Bertrandt",
+          "official_flag": true
+        },
+        {
+          "source_name": "Bertrandt Product Engineering",
+          "source_type": "official_website",
+          "url": "https://www.bertrandt.com/en/product-engineering",
+          "title": "Bertrandt Product Engineering",
+          "publisher": "Bertrandt",
+          "official_flag": true
+        }
+      ]
+    }
+  ],
+  "dimensions": [
+    "core_technology",
+    "ai_capability",
+    "full_stack_solution",
+    "ecosystem",
+    "cost_and_delivery",
+    "automotive_domain_depth"
+  ],
+  "required_artifacts": [
+    "word",
+    "excel",
+    "ppt"
+  ]
+}
