@@ -124,3 +124,24 @@
 - current runtime expects normalized `db` config but remains backward-compatible
 - do not assume a single config shape when adding future storage/report helpers
 <!-- ORIS_INSIGHT_STORAGE_COMPAT:END -->
+
+<!-- ORIS_SESSION_WRAPUP:BEGIN -->
+## Session wrap-up / next-chat entry
+
+新对话进入后，先读：
+1. `docs/PROJECT_STATE.md`
+2. `memory/HANDOFF.md`
+3. `docs/SESSION_WRAPUP_2026-04-06.md`
+4. `docs/DOC_STATUS_MATRIX_2026-04-06.md`
+
+当前要继续的第一件事：
+- 做 delivery executor，执行 pending delivery_task 到 Feishu / Qbot，并回写 sent/failed 状态。
+
+注意事项：
+- 用 copy-paste 可执行命令
+- 不使用 set -e
+- 不手工改文件
+- 先验证，再 commit/push
+- 优先读 GitHub 文档，不依赖聊天短上下文
+
+<!-- ORIS_SESSION_WRAPUP:END -->

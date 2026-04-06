@@ -176,3 +176,14 @@ Interpretation:
 - runtime helper now supports legacy postgres/database/storage.* shapes
 - report download security v2 chain restored on top of compatible DB parser
 <!-- ORIS_INSIGHT_STORAGE_COMPAT:END -->
+
+<!-- ORIS_SESSION_WRAPUP:BEGIN -->
+## Session wrap-up / continuity
+
+- 归档总结：`docs/SESSION_WRAPUP_2026-04-06.md`
+- 文档状态矩阵：`docs/DOC_STATUS_MATRIX_2026-04-06.md`
+- 当前判断：系统已进入“AI员工产品化 Phase 2：证据化回答 + 报告交付 + 洞察记忆底座”阶段。
+- 当前最高优先级：实现 delivery executor，把 pending delivery_task 真正发送到 Feishu / Qbot。
+- 第二优先级：落地第一批 insight skills scaffold（company profile / competitor research / official source ingest / report build）。
+
+<!-- ORIS_SESSION_WRAPUP:END -->
