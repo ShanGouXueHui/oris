@@ -26,3 +26,6 @@ Because this is now direct webhook mode, ORIS should be treated as the primary r
 
 ## Verification status
 Feishu webhook URL verification has passed. The next step is real message event testing with `im.message.receive_v1` and end-to-end reply validation.
+
+## Product routing principle
+Current product principle: correctness first, latency second. Default general chat should prefer the strongest suitable general path rather than forcing a Chinese-model path by language alone.

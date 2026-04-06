@@ -82,3 +82,6 @@ Feishu direct webhook path is now enabled through scripts/feishu_callback_server
 
 ## Response governance
 Feishu now uses config-driven channel governance for default role selection, meta-question handling, and unsafe internal-output blocking.
+
+## Ability-first routing
+Feishu consumer chat now follows an ability-first routing principle. Language may influence future weighting, but it is not the primary routing key.
