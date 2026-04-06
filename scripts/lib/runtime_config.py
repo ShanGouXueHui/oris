@@ -33,6 +33,12 @@ def local_service_url(key: str) -> str:
         raise KeyError(f"missing config.local_services.{key}")
     return value
 
+def local_service_value(key: str):
+    cfg = config()
+    if key not in (cfg.get("local_services") or {}):
+        raise KeyError(f"missing config.local_services.{key}")
+    return (cfg.get("local_services") or {}).get(key)
+
 def default_source(key: str) -> str:
     cfg = config()
     value = (((cfg.get("bridges") or {}).get("default_sources") or {}).get(key))
@@ -40,15 +46,20 @@ def default_source(key: str) -> str:
         raise KeyError(f"missing config.bridges.default_sources.{key}")
     return value
 
+def bridge_execution_flag(key: str, default=False):
+    cfg = config()
+    return bool((((cfg.get("bridges") or {}).get("execution") or {}).get(key, default)))
+
 def role_routing():
     return (((config().get("bridges") or {}).get("role_routing")) or {})
 
 def exact_reply_patterns():
     return ((((config().get("bridges") or {}).get("reply_rules") or {}).get("exact_reply_patterns")) or [])
 
-def feishu_api(key: str) -> str:
-    value = ((config().get("feishu") or {}).get(key))
-    if not value:
+def feishu_api(key: str):
+    cfg = config()
+    value = ((cfg.get("feishu") or {}).get(key))
+    if value is None:
         raise KeyError(f"missing config.feishu.{key}")
     return value
 
@@ -106,3 +117,24 @@ def read_feishu_creds():
             break
 
     return app_id, app_secret
+
+def read_feishu_verification_token():
+    cfg = openclaw_config()
+    sec = secrets()
+
+    candidates = [
+        ["channels", "feishu", "verificationToken"],
+        ["channels", "feishu", "accounts", "main", "verificationToken"],
+    ]
+
+    for p in candidates:
+        v = deep_get(sec, p)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+
+    for p in candidates:
+        v = deep_get(cfg, p)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+
+    return None

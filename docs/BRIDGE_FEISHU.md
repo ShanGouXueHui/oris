@@ -76,3 +76,6 @@ Feishu integration now has:
 
 ## Next step
 The next layer should connect the worker skeleton to a real inbound server path and decide when to enable execute-send in production.
+
+## Final cutover status
+Feishu direct webhook path is now enabled through scripts/feishu_callback_server.py and systemd service oris-feishu-callback.service.
