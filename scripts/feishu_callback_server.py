@@ -34,7 +34,7 @@ def json_response(handler, code, payload):
     handler.wfile.write(body)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "ORISFeishuCallback/1.0"
+    server_version = "ORISFeishuCallback/1.1"
 
     def log_message(self, format, *args):
         return
@@ -55,6 +55,13 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         path = urlparse(self.path).path
         if path != EVENT_PATH:
+            append_jsonl(LOG_PATH, {
+                "ts": utc_now(),
+                "ok": False,
+                "mode": "wrong_path",
+                "path": path,
+                "headers": dict(self.headers),
+            })
             json_response(self, 404, {"ok": False, "error": "not_found"})
             return
 
@@ -63,39 +70,54 @@ class Handler(BaseHTTPRequestHandler):
         except Exception:
             length = 0
         raw = self.rfile.read(length) if length > 0 else b""
+        raw_text = raw.decode("utf-8", errors="ignore")
+
+        append_jsonl(LOG_PATH, {
+            "ts": utc_now(),
+            "ok": True,
+            "mode": "incoming_post",
+            "path": path,
+            "headers": dict(self.headers),
+            "raw_preview": raw_text[:2000],
+        })
 
         try:
-            payload = json.loads(raw.decode("utf-8")) if raw else {}
+            payload = json.loads(raw_text) if raw_text else {}
         except Exception as e:
             append_jsonl(LOG_PATH, {
                 "ts": utc_now(),
                 "ok": False,
                 "mode": "invalid_json",
                 "error": str(e),
-                "raw_preview": raw[:500].decode("utf-8", errors="ignore"),
+                "raw_preview": raw_text[:2000],
             })
             json_response(self, 400, {"code": 1, "msg": f"invalid_json: {e}"})
             return
 
-        # challenge verification
         if "challenge" in payload:
             expected_token = read_feishu_verification_token()
             incoming_token = payload.get("token")
+            append_jsonl(LOG_PATH, {
+                "ts": utc_now(),
+                "ok": True,
+                "mode": "challenge_incoming",
+                "payload": payload,
+                "expected_token_present": bool(expected_token),
+                "incoming_token_present": bool(incoming_token),
+                "token_match": (expected_token == incoming_token) if expected_token and incoming_token else None,
+            })
+
             if expected_token and incoming_token and incoming_token != expected_token:
                 append_jsonl(LOG_PATH, {
                     "ts": utc_now(),
                     "ok": False,
                     "mode": "challenge_rejected",
                     "reason": "verification_token_mismatch",
+                    "payload": payload,
                 })
                 json_response(self, 403, {"code": 1, "msg": "verification_token_mismatch"})
                 return
 
-            append_jsonl(LOG_PATH, {
-                "ts": utc_now(),
-                "ok": True,
-                "mode": "challenge",
-            })
             json_response(self, 200, {"challenge": payload.get("challenge")})
             return
 
@@ -115,8 +137,9 @@ class Handler(BaseHTTPRequestHandler):
                 "ts": utc_now(),
                 "ok": False,
                 "mode": "worker_failed",
-                "stdout_preview": (result.stdout or "")[:1000],
-                "stderr_preview": (result.stderr or "")[:1000],
+                "stdout_preview": (result.stdout or "")[:2000],
+                "stderr_preview": (result.stderr or "")[:2000],
+                "payload": payload,
             })
             json_response(self, 500, {"code": 1, "msg": "worker_failed"})
             return
@@ -128,7 +151,8 @@ class Handler(BaseHTTPRequestHandler):
                 "ts": utc_now(),
                 "ok": False,
                 "mode": "worker_non_json",
-                "stdout_preview": (result.stdout or "")[:1000],
+                "stdout_preview": (result.stdout or "")[:2000],
+                "payload": payload,
             })
             json_response(self, 500, {"code": 1, "msg": "worker_non_json"})
             return
@@ -140,6 +164,7 @@ class Handler(BaseHTTPRequestHandler):
             "worker_mode": worker_result.get("worker_mode"),
             "transport_mode": ((worker_result.get("transport_result") or {}).get("mode")),
             "send_mode": ((worker_result.get("send_result") or {}).get("mode")) if worker_result.get("send_result") else None,
+            "payload": payload,
         })
         json_response(self, 200, {"code": 0})
 
