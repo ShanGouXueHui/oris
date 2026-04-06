@@ -1,0 +1,32 @@
+{
+  "answer_policy": {
+    "version": 1,
+    "correctness_first": true,
+    "evidence_required_for_key_claims": true,
+    "require_data_points": true,
+    "require_source_name": true,
+    "require_source_link": true,
+    "require_fact_inference_risk_split": true,
+    "source_priority": [
+      "official_primary",
+      "authoritative_secondary",
+      "general_secondary"
+    ],
+    "minimum_sources": {
+      "fact_question": 1,
+      "analysis_question": 2,
+      "high_risk_question": 3
+    },
+    "disallow_unsupported_numeric_claims": true,
+    "disallow_fabricated_sources": true,
+    "degrade_when_sources_insufficient": true,
+    "answer_checklist": [
+      "明确结论",
+      "关键数据",
+      "数据出处",
+      "来源链接",
+      "事实与推断区分",
+      "风险或反例"
+    ]
+  }
+}
