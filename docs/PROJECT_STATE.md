@@ -89,3 +89,26 @@ Interpretation:
 - Hunyuan is healthy and in the pool
 - Gemini remains healthy and available as a fallback candidate
 
+
+<!-- ORIS_INSIGHT_PLATFORM:BEGIN -->
+## Insight platform architecture
+- 已新增洞察中台总设计：`docs/INSIGHT_PLATFORM_ARCHITECTURE.md`
+- 已新增洞察数据模型：`docs/INSIGHT_DATA_MODEL.md`
+- 已新增洞察 skill 路线图：`docs/INSIGHT_SKILL_ROADMAP.md`
+- 已新增决策记录：`docs/DECISIONS/2026-04-06-insight-memory-postgres-and-skill-roadmap.md`
+
+### 当前固定方向
+- 洞察主库：PostgreSQL
+- 正式交付主件：Word
+- 辅助底表：Excel
+- 后续扩展：PPT
+- 渠道下载：Feishu / 后续 Qbot
+- 常量治理：config-first / db-first，不允许业务常量继续散落在脚本里
+
+### 下一阶段实施顺序
+1. PostgreSQL 初始化
+2. 洞察 schema 落地
+3. artifact 元数据统一
+4. insight skill scaffold
+5. Feishu / Qbot 下载分发闭环
+<!-- ORIS_INSIGHT_PLATFORM:END -->

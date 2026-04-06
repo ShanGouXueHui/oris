@@ -54,3 +54,21 @@
 - Zhipu probe currently fails because the account lacks balance or resource package
 - No manual provider switching is required at this stage
 
+
+<!-- ORIS_INSIGHT_PLATFORM:BEGIN -->
+## Insight continuity anchor
+后续凡涉及以下主题，优先读取：
+- `docs/INSIGHT_PLATFORM_ARCHITECTURE.md`
+- `docs/INSIGHT_DATA_MODEL.md`
+- `docs/INSIGHT_SKILL_ROADMAP.md`
+- `docs/DECISIONS/2026-04-06-insight-memory-postgres-and-skill-roadmap.md`
+- `docs/ANSWER_PROTOCOL.md`
+- `docs/SOURCE_POLICY.md`
+
+后续默认约束：
+- 以证据优先协议生成结论
+- 报告正式件为 Word，可辅以 Excel
+- 渠道下载支持 Feishu，后续支持 Qbot
+- 业务常量进入 config 或数据库，不接受继续散落在脚本里
+- 企业竞争力洞察采用 PostgreSQL 主库作为中台底座
+<!-- ORIS_INSIGHT_PLATFORM:END -->
