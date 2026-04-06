@@ -2,12 +2,16 @@
 import json
 import hashlib
 import re
+from datetime import datetime, timezone, date
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 CFG_PATH = ROOT / "config" / "insight_storage.json"
 SECRETS_PATH = Path("/home/admin/.openclaw/secrets.json")
+
+def utc_now():
+    return datetime.now(timezone.utc)
 
 def slugify(text: str, default: str = "item") -> str:
     s = re.sub(r"[^a-z0-9]+", "-", (text or "").strip().lower())
@@ -92,7 +96,7 @@ def build_insert_sql(table_name: str, data: dict, returning: str = "id"):
     placeholders = []
     values = []
     for k in keys:
-        if k == "metadata_json":
+        if k.endswith("_json"):
             placeholders.append("%s::jsonb")
             values.append(json.dumps(data[k], ensure_ascii=False))
         else:
@@ -234,5 +238,118 @@ def insert_source_snapshot(
 
     set_search_path(cur)
     sql, values = build_insert_sql("source_snapshot", payload)
+    cur.execute(sql, values)
+    return cur.fetchone()[0]
+
+def insert_analysis_run(cur, request_id: str, analysis_type: str, target_company_id: int | None, request_payload: dict, run_note: str | None = None):
+    cols = table_columns(cur, "analysis_run")
+    run_code = f"{slugify(analysis_type, 'analysis')}-{sha1_text(request_id)[:8]}"
+    payload = {}
+
+    if "run_code" in cols:
+        payload["run_code"] = run_code
+    if "request_id" in cols:
+        payload["request_id"] = request_id
+    if "analysis_type" in cols:
+        payload["analysis_type"] = analysis_type
+    if "target_company_id" in cols:
+        payload["target_company_id"] = target_company_id
+    if "status" in cols:
+        payload["status"] = "completed"
+    if "input_json" in cols:
+        payload["input_json"] = request_payload
+    if "request_json" in cols:
+        payload["request_json"] = request_payload
+    if "metadata_json" in cols:
+        payload["metadata_json"] = {"note": run_note or "official source ingest bootstrap write"}
+    if "started_at" in cols:
+        payload["started_at"] = utc_now()
+    if "completed_at" in cols:
+        payload["completed_at"] = utc_now()
+
+    set_search_path(cur)
+    sql, values = build_insert_sql("analysis_run", payload)
+    cur.execute(sql, values)
+    return cur.fetchone()[0], run_code
+
+def insert_evidence_item(
+    cur,
+    source_snapshot_id: int,
+    company_id: int,
+    evidence_type: str,
+    evidence_title: str,
+    evidence_text: str,
+    evidence_number=None,
+    evidence_unit: str | None = None,
+    evidence_date: date | None = None,
+    confidence_score: float | None = None,
+    locator_json: dict | None = None,
+):
+    cols = table_columns(cur, "evidence_item")
+    payload = {}
+    if "source_snapshot_id" in cols:
+        payload["source_snapshot_id"] = source_snapshot_id
+    if "company_id" in cols:
+        payload["company_id"] = company_id
+    if "evidence_type" in cols:
+        payload["evidence_type"] = evidence_type
+    if "evidence_title" in cols:
+        payload["evidence_title"] = evidence_title
+    if "evidence_text" in cols:
+        payload["evidence_text"] = evidence_text
+    if "evidence_number" in cols:
+        payload["evidence_number"] = evidence_number
+    if "evidence_unit" in cols:
+        payload["evidence_unit"] = evidence_unit
+    if "evidence_date" in cols:
+        payload["evidence_date"] = evidence_date
+    if "confidence_score" in cols:
+        payload["confidence_score"] = confidence_score
+    if "locator_json" in cols:
+        payload["locator_json"] = locator_json or {}
+
+    set_search_path(cur)
+    sql, values = build_insert_sql("evidence_item", payload)
+    cur.execute(sql, values)
+    return cur.fetchone()[0]
+
+def insert_metric_observation(
+    cur,
+    company_id: int,
+    metric_code: str,
+    metric_name: str,
+    metric_value,
+    metric_unit: str,
+    period_type: str,
+    observation_date,
+    source_snapshot_id: int | None = None,
+    evidence_item_id: int | None = None,
+    normalization_rule: str | None = None,
+):
+    cols = table_columns(cur, "metric_observation")
+    payload = {}
+    if "company_id" in cols:
+        payload["company_id"] = company_id
+    if "metric_code" in cols:
+        payload["metric_code"] = metric_code
+    if "metric_name" in cols:
+        payload["metric_name"] = metric_name
+    if "metric_value" in cols:
+        payload["metric_value"] = metric_value
+    if "metric_unit" in cols:
+        payload["metric_unit"] = metric_unit
+    if "period_type" in cols:
+        payload["period_type"] = period_type
+    if "observation_date" in cols:
+        payload["observation_date"] = observation_date
+    if "source_snapshot_id" in cols:
+        payload["source_snapshot_id"] = source_snapshot_id
+    if "evidence_item_id" in cols:
+        payload["evidence_item_id"] = evidence_item_id
+    if "normalization_rule" in cols:
+        payload["normalization_rule"] = normalization_rule
+
+    set_search_path(cur)
+    sql, values = build_insert_sql("metric_observation", payload)
     cur.execute(sql, values)
     return cur.fetchone()[0]

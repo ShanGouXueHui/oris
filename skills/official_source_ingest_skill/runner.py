@@ -2,7 +2,8 @@
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
+import uuid
+from datetime import datetime, timezone, date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -13,6 +14,9 @@ from lib.insight_db import (
     ensure_company,
     ensure_source,
     insert_source_snapshot,
+    insert_analysis_run,
+    insert_evidence_item,
+    insert_metric_observation,
     sha256_text,
 )
 from lib.insight_skill_runtime import build_standard_output, load_request
@@ -88,7 +92,7 @@ def write_snapshot_files(entity: str, source_item: dict, index_num: int):
         "entity": entity,
         "source": source_item,
         "captured_at": utc_now(),
-        "note": "scaffold real-write bootstrap without live fetch body"
+        "note": "bootstrap write without live fetch body"
     }
     parsed_text = "\n".join([
         f"title: {source_item.get('title') or source_item.get('source_name')}",
@@ -111,7 +115,22 @@ def write_snapshot_files(entity: str, source_item: dict, index_num: int):
         "content_hash": sha256_text(raw_text),
         "snapshot_time": raw_payload["captured_at"],
         "fetch_time": raw_payload["captured_at"],
+        "parsed_text": parsed_text,
     }
+
+def build_bootstrap_evidence_text(entity: str, src: dict, file_info: dict):
+    lines = [
+        f"entity: {entity}",
+        f"source_name: {src.get('source_name') or ''}",
+        f"source_type: {src.get('source_type') or ''}",
+        f"title: {src.get('title') or ''}",
+        f"url: {src.get('url') or ''}",
+        f"publisher: {src.get('publisher') or ''}",
+        f"snapshot_time: {file_info.get('snapshot_time') or ''}",
+        f"raw_storage_path: {file_info.get('raw_storage_path') or ''}",
+        f"parsed_text_storage_path: {file_info.get('parsed_text_storage_path') or ''}",
+    ]
+    return "\n".join(lines)
 
 def main():
     ap = argparse.ArgumentParser()
@@ -121,6 +140,7 @@ def main():
     args = ap.parse_args()
 
     request = load_request(args.input_file, args.input_json, DEFAULT_REQUEST)
+    request_id = str(uuid.uuid4())
     entity = request.get("entity") or request.get("company_name") or "unknown"
     domain = request.get("domain")
     region = request.get("region")
@@ -140,31 +160,33 @@ def main():
         out = build_standard_output(
             skill_name=SKILL_NAME,
             request=request,
-            conclusion="official_source_ingest_skill dry-run ready; company/source/source_snapshot write plan resolved.",
+            conclusion="official_source_ingest_skill dry-run ready; company/source/source_snapshot/analysis_run/evidence_item/metric_observation write plan resolved.",
             core_data=[
                 {"field": "entity", "value": entity},
                 {"field": "domain", "value": domain},
-                {"field": "planned_snapshot_count", "value": len(planned)}
+                {"field": "planned_snapshot_count", "value": len(planned)},
+                {"field": "planned_evidence_count", "value": len(planned)},
+                {"field": "planned_metric_count", "value": len(planned)}
             ],
             sources=[{"source_type": x.get("source_type"), "required": True} for x in planned],
             facts=[
                 "This dry-run already materializes local raw/parsed snapshot files.",
-                "DB write target for this step is company/source/source_snapshot."
+                "DB write target for this step is company/source/source_snapshot/analysis_run/evidence_item/metric_observation."
             ],
             inferences=[
-                "Once this write path is stable, evidence_item and metric_observation can be layered on the same source_snapshot ids."
+                "Once this write path is stable, company_profile_skill can consume durable snapshot/evidence/metric ids instead of temporary payloads."
             ],
             hypotheses=[],
             risks=[
-                "This step does not yet fetch live page body; downstream evidence extraction is still placeholder-level."
+                "This step still uses bootstrap metadata evidence, not live fetched page body."
             ],
             next_steps=[
                 "Run without --dry-run to persist into insight schema.",
-                "Add real fetch/body parsing.",
-                "Attach evidence and metric extraction."
+                "Add live fetch/body parsing.",
+                "Replace bootstrap evidence with extracted evidence."
             ],
             source_plan=planned,
-            db_write_plan=["company", "source", "source_snapshot"],
+            db_write_plan=["company", "source", "source_snapshot", "analysis_run", "evidence_item", "metric_observation"],
             artifact_plan=[]
         )
         print(json.dumps(out, ensure_ascii=False, indent=2))
@@ -176,6 +198,15 @@ def main():
         with conn:
             with conn.cursor() as cur:
                 company_id, company_action = ensure_company(cur, entity, domain=domain, region=region)
+                analysis_run_id, run_code = insert_analysis_run(
+                    cur,
+                    request_id=request_id,
+                    analysis_type="official_source_ingest",
+                    target_company_id=company_id,
+                    request_payload=request,
+                    run_note="bootstrap source ingest with analysis/evidence/metric writes",
+                )
+
                 for i, src in enumerate(sources, start=1):
                     file_info = planned[i - 1]
                     source_id, source_action = ensure_source(
@@ -204,50 +235,99 @@ def main():
                             "source_name": src.get("source_name"),
                             "source_type": src.get("source_type"),
                             "url": src.get("url"),
-                            "runner": SKILL_NAME
+                            "runner": SKILL_NAME,
+                            "analysis_run_id": analysis_run_id,
+                            "request_id": request_id
                         },
                     )
+
+                    evidence_text = build_bootstrap_evidence_text(entity, src, file_info)
+                    evidence_id = insert_evidence_item(
+                        cur,
+                        source_snapshot_id=snapshot_id,
+                        company_id=company_id,
+                        evidence_type="source_capture",
+                        evidence_title=src.get("title") or src.get("source_name") or f"{entity} source {i}",
+                        evidence_text=evidence_text,
+                        evidence_number=None,
+                        evidence_unit=None,
+                        evidence_date=date.today(),
+                        confidence_score=0.6,
+                        locator_json={
+                            "url": src.get("url"),
+                            "raw_storage_path": file_info["raw_storage_path"],
+                            "parsed_text_storage_path": file_info["parsed_text_storage_path"],
+                            "analysis_run_id": analysis_run_id,
+                            "request_id": request_id
+                        },
+                    )
+
+                    metric_id = insert_metric_observation(
+                        cur,
+                        company_id=company_id,
+                        metric_code="official_source_snapshot_count",
+                        metric_name="Official Source Snapshot Count",
+                        metric_value=1,
+                        metric_unit="count",
+                        period_type="point_in_time",
+                        observation_date=date.today(),
+                        source_snapshot_id=snapshot_id,
+                        evidence_item_id=evidence_id,
+                        normalization_rule="1 row per ingested official source snapshot",
+                    )
+
                     results.append({
+                        "analysis_run_id": analysis_run_id,
+                        "run_code": run_code,
                         "company_id": company_id,
                         "company_action": company_action,
                         "source_id": source_id,
                         "source_action": source_action,
                         "snapshot_id": snapshot_id,
+                        "evidence_id": evidence_id,
+                        "metric_id": metric_id,
                         "source_name": src.get("source_name"),
                         "source_type": src.get("source_type"),
                         "url": src.get("url"),
                         "raw_storage_path": file_info["raw_storage_path"],
                         "parsed_text_storage_path": file_info["parsed_text_storage_path"],
                     })
+
         out = build_standard_output(
             skill_name=SKILL_NAME,
             request=request,
-            conclusion="official_source_ingest_skill real-write succeeded; company/source/source_snapshot persisted into insight schema.",
+            conclusion="official_source_ingest_skill real-write succeeded; company/source/source_snapshot/analysis_run/evidence_item/metric_observation persisted into insight schema.",
             core_data=[
                 {"field": "entity", "value": entity},
                 {"field": "company_id", "value": results[0]["company_id"] if results else None},
-                {"field": "written_snapshot_count", "value": len(results)}
+                {"field": "analysis_run_id", "value": results[0]["analysis_run_id"] if results else None},
+                {"field": "written_snapshot_count", "value": len(results)},
+                {"field": "written_evidence_count", "value": len(results)},
+                {"field": "written_metric_count", "value": len(results)}
             ],
             sources=[{"source_type": x.get("source_type"), "url": x.get("url")} for x in results],
             facts=[
                 "Company record ensured in insight.company.",
                 "Source records ensured in insight.source.",
-                "Snapshot rows inserted into insight.source_snapshot."
+                "Snapshot rows inserted into insight.source_snapshot.",
+                "Analysis run row inserted into insight.analysis_run.",
+                "Bootstrap evidence rows inserted into insight.evidence_item.",
+                "Bootstrap metric rows inserted into insight.metric_observation."
             ],
             inferences=[
-                "This establishes the durable upstream ids needed for evidence_item and metric_observation."
+                "This creates the minimum durable chain needed for downstream company profile and report assembly."
             ],
             hypotheses=[],
             risks=[
-                "Live page body fetch/parsing is not yet integrated; current raw snapshot is metadata bootstrap."
+                "Evidence and metric rows are still bootstrap-level placeholders until live fetch and extraction are integrated."
             ],
             next_steps=[
                 "Attach live fetch body.",
-                "Extract evidence_item from source_snapshot.",
-                "Extract metric_observation from evidence_item."
+                "Extract real evidence_item from parsed text.",
+                "Derive domain metrics beyond snapshot count."
             ],
             source_plan=results,
-            db_write_plan=["company", "source", "source_snapshot"],
+            db_write_plan=["company", "source", "source_snapshot", "analysis_run", "evidence_item", "metric_observation"],
             artifact_plan=[]
         )
         print(json.dumps(out, ensure_ascii=False, indent=2))
