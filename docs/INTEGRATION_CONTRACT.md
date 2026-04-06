@@ -84,3 +84,6 @@ For all external HTTPS integrations, use:
 - X-ORIS-API-Key
 
 Do not mix external Basic Auth with application bearer token in the same Authorization header.
+
+## Bridge core implementation status
+Feishu now has a reusable bridge core in scripts/bridge_feishu_to_oris.py. Real event ingress is still a separate next-layer task.
