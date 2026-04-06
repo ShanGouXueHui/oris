@@ -4,9 +4,9 @@ import hmac
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlparse, unquote
 
 import psycopg2
-import psycopg2.extras
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG_DIR = ROOT / "config"
@@ -45,6 +45,42 @@ def slugify(text):
         s = s.replace("--", "-")
     return s.strip("-") or "artifact"
 
+def parse_dsn(s):
+    if not isinstance(s, str) or "://" not in s:
+        return None
+    u = urlparse(s)
+    if not u.scheme.startswith("postgres"):
+        return None
+    return {
+        "host": u.hostname or "127.0.0.1",
+        "port": int(u.port or 5432),
+        "dbname": (u.path or "/").lstrip("/") or "oris_insight",
+        "user": unquote(u.username or "oris_app"),
+        "password": unquote(u.password or ""),
+    }
+
+def dict_to_db(d):
+    if not isinstance(d, dict):
+        return None
+    host = d.get("host") or d.get("hostname")
+    port = d.get("port", 5432)
+    dbname = d.get("dbname") or d.get("database") or d.get("name")
+    user = d.get("user") or d.get("username")
+    password = d.get("password", "")
+    if host and dbname and user:
+        return {
+            "host": host,
+            "port": int(port),
+            "dbname": dbname,
+            "user": user,
+            "password": password,
+        }
+    for k in ("dsn", "url", "database_url", "uri", "connection_string"):
+        parsed = parse_dsn(d.get(k))
+        if parsed:
+            return parsed
+    return None
+
 def load_insight_storage():
     return load_json(CONFIG_DIR / "insight_storage.json", {})
 
@@ -56,16 +92,19 @@ def extract_db_cfg(raw):
         (raw.get("storage") or {}).get("db"),
         (raw.get("storage") or {}).get("postgres"),
         (raw.get("storage") or {}).get("database"),
+        (raw.get("insight") or {}).get("db"),
+        (raw.get("insight") or {}).get("postgres"),
     ]
     for item in candidates:
-        if isinstance(item, dict) and item.get("host") and item.get("port") and item.get("dbname") and item.get("user"):
-            return {
-                "host": item["host"],
-                "port": int(item["port"]),
-                "dbname": item["dbname"],
-                "user": item["user"],
-                "password": item.get("password", ""),
-            }
+        cfg = dict_to_db(item)
+        if cfg:
+            return cfg
+
+    for k in ("dsn", "url", "database_url", "uri", "connection_string"):
+        cfg = parse_dsn(raw.get(k))
+        if cfg:
+            return cfg
+
     raise RuntimeError("config/insight_storage.json missing usable db config")
 
 def db_connect():
@@ -75,7 +114,7 @@ def db_connect():
         port=cfg["port"],
         dbname=cfg["dbname"],
         user=cfg["user"],
-        password=cfg["password"],
+        password=cfg.get("password", ""),
     )
 
 def load_report_runtime():

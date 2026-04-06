@@ -20,5 +20,14 @@
     "config_first": true,
     "db_first_for_variable_rules": true,
     "no_business_constants_in_scripts": true
-  }
+  },
+  "db": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dbname": "oris_insight",
+    "user": "oris_app",
+    "password": "vTsIx0FP8JLvmLM9eSRz15gaJaKJlEFO"
+  },
+  "storage_engine": "postgres",
+  "config_version": 2
 }

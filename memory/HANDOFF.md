@@ -117,3 +117,10 @@
 - audit / revoke / max_downloads supported
 - future enhancement can add recipient binding if needed
 <!-- ORIS_REPORT_DOWNLOAD_SECURITY:END -->
+
+
+<!-- ORIS_INSIGHT_STORAGE_COMPAT:BEGIN -->
+## Insight Storage Compatibility
+- current runtime expects normalized `db` config but remains backward-compatible
+- do not assume a single config shape when adding future storage/report helpers
+<!-- ORIS_INSIGHT_STORAGE_COMPAT:END -->

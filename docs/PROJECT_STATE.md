@@ -168,3 +168,11 @@ Interpretation:
 - revoke helper: `scripts/revoke_delivery_links.py`
 - sync script: `scripts/register_report_delivery.py`
 <!-- ORIS_REPORT_DOWNLOAD_SECURITY:END -->
+
+
+<!-- ORIS_INSIGHT_STORAGE_COMPAT:BEGIN -->
+## Insight Storage Compatibility
+- normalized `config/insight_storage.json` to standard `db` block
+- runtime helper now supports legacy postgres/database/storage.* shapes
+- report download security v2 chain restored on top of compatible DB parser
+<!-- ORIS_INSIGHT_STORAGE_COMPAT:END -->
