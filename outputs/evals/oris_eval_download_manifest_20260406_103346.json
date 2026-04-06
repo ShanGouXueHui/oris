@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-06T10:33:46.208166+00:00",
+  "download_targets": [
+    "feishu",
+    "qbot"
+  ],
+  "files": [
+    {
+      "filename": "oris_eval_scoring_20260406_103346.xlsx",
+      "absolute_path": "/home/admin/projects/oris/outputs/evals/oris_eval_scoring_20260406_103346.xlsx",
+      "size_bytes": 8454
+    },
+    {
+      "filename": "oris_eval_report_20260406_103346.docx",
+      "absolute_path": "/home/admin/projects/oris/outputs/evals/oris_eval_report_20260406_103346.docx",
+      "size_bytes": 38514
+    }
+  ]
+}
