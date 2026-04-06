@@ -174,3 +174,13 @@
 - `qbot` 当前是 scaffold，不做真实发送
 - 审批完成后只需补 webhook/target 配置并启用 execute_enabled
 - 后续应优先把 4 个 skill 接到真实 DB 写入与 artifact generation
+
+## 2026-04-06 incremental handoff — eval report and executor wrappers
+
+本轮已完成：
+- `scripts/evals/run_eval_report.py` 已确认纳入主线
+- `scripts/run_delivery_executor_once.sh` / `scripts/run_delivery_executor_loop.sh` 已确认纳入主线
+
+注意事项：
+- `run_eval_report.py` 是当前评测报告生成脚本，不是临时测试文件
+- `run_delivery_executor_loop.sh` 适合后续 systemd / cron / supervisor 化接入

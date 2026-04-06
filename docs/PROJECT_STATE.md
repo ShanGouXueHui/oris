@@ -218,3 +218,14 @@ Interpretation:
 下一步：
 - 等 Qbot 账号审批完成后启用真实发送
 - 将 4 个 skill scaffold 接入真实 source/evidence/metric 写库链路
+
+## Update — 2026-04-06 eval report script and delivery executor run wrappers
+
+当前状态新增结论：
+- `scripts/evals/run_eval_report.py` 纳入主线，作为评测结果到 Word / Excel / ZIP 报告生成脚本
+- `scripts/run_delivery_executor_once.sh` 纳入主线，作为 delivery executor 单次执行入口
+- `scripts/run_delivery_executor_loop.sh` 纳入主线，作为 delivery executor 常驻轮询入口
+
+说明：
+- 这 3 个文件不属于临时噪音，和当前 ORIS 的报告交付与 delivery executor 运维主线一致
+- 后续若做 systemd 化，可直接复用 loop wrapper
