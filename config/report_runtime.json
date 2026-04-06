@@ -41,5 +41,18 @@
     "generator_name": "run_eval_report",
     "generator_type": "system_generated",
     "producer_channel": "internal"
+  },
+  "naming": {
+    "artifact_code_prefix": "artifact",
+    "delivery_code_prefix": "delivery",
+    "max_code_length": 120
+  },
+  "defaults": {
+    "system_actor": "system",
+    "default_priority": 100,
+    "default_retry_count": 0,
+    "default_version_num": 1,
+    "default_is_active": true,
+    "default_is_deleted": false
   }
 }
