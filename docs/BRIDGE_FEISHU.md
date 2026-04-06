@@ -25,12 +25,27 @@ Responsibility:
 - produce reply action preview
 - write ingress log
 
+### 3. Transport skeleton
+File:
+- scripts/feishu_transport_skeleton.py
+
+Responsibility:
+- add event idempotency / dedupe
+- call ingress skeleton
+- convert reply preview into Feishu send envelope
+- output transport preview object
+- write transport log
+
 ## Logs
 - orchestration/bridge_feishu_log.jsonl
 - orchestration/feishu_event_ingress_log.jsonl
+- orchestration/feishu_transport_log.jsonl
+
+## Dedupe store
+- orchestration/feishu_event_dedupe.json
 
 ## Reply shaping
-The bridge now applies an exact-reply rule for prompts such as:
+The bridge applies an exact-reply rule for prompts such as:
 - 请只回答：...
 - 只回答：...
 - 请只回复：...
@@ -38,10 +53,12 @@ The bridge now applies an exact-reply rule for prompts such as:
 - 请只输出：...
 - 只输出：...
 
-This reduces reliance on the model following the instruction exactly.
+## Current status
+Feishu integration now has:
+- bridge core
+- event ingress skeleton
+- transport skeleton
+- idempotency preview layer
 
 ## Next step
-The next layer should connect the ingress skeleton to real Feishu transport:
-- real inbound event verification
-- real outbound reply delivery
-- message deduplication / idempotency
+The next layer should connect the transport skeleton to real Feishu send API execution.

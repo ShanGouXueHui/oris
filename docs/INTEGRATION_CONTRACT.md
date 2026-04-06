@@ -90,3 +90,6 @@ Feishu now has a reusable bridge core in scripts/bridge_feishu_to_oris.py. Real 
 
 ## Feishu ingress skeleton status
 Feishu now has both a bridge core and an ingress skeleton. The next missing layer is real event transport and outbound delivery.
+
+## Feishu transport skeleton status
+Feishu now includes a transport skeleton with dedupe and send-envelope preview. The next missing layer is real outbound send execution.
