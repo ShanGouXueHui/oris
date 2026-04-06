@@ -229,3 +229,16 @@ Interpretation:
 说明：
 - 这 3 个文件不属于临时噪音，和当前 ORIS 的报告交付与 delivery executor 运维主线一致
 - 后续若做 systemd 化，可直接复用 loop wrapper
+
+## Update — 2026-04-06 Report-build artifacts registered and delivered
+
+当前状态新增结论：
+- `report_build_skill` 生成的 DB-backed Word / Excel / JSON 已接入 `insight.report_artifact`
+- 其中可下载产物已自动创建 Feishu `delivery_task`
+- Feishu 已真实发送 `canonical_db_report.docx` 与 `canonical_db_report.xlsx`
+- 对应 delivery task 已回写为 `sent + delivered_at`
+
+验证结果：
+- `report_artifact` 新增：`10 / 11 / 12`
+- Feishu 实发成功任务：`33 / 34`
+- `report_json` 未投递，符合 `downloadable_flag=false` 设计

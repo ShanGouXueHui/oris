@@ -184,3 +184,18 @@
 注意事项：
 - `run_eval_report.py` 是当前评测报告生成脚本，不是临时测试文件
 - `run_delivery_executor_loop.sh` 适合后续 systemd / cron / supervisor 化接入
+
+## 2026-04-06 incremental handoff — report_build delivery closed loop
+
+本轮已完成：
+- `report_build_skill` 已生成本地 DB-backed `docx / xlsx / json`
+- `scripts/register_report_build_delivery.py` 已可扫描 `outputs/report_build/*`
+- 产物已写入 `insight.report_artifact`
+- 可下载产物已写入 Feishu `delivery_task`
+- `delivery_executor.py` 已将新增 report_build 任务真实发送到 Feishu
+- `delivery_task 33 / 34` 已回写为 `sent`
+
+注意事项：
+- 当前闭环已覆盖：入库 → 读库组装 → 本地产物 → artifact 注册 → Feishu 投递
+- `json` 产物当前不投递，符合 `downloadable_flag=false`
+- 下一步应优先补 `citation_link` 与真实正文级 evidence extraction
