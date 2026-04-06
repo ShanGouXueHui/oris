@@ -304,3 +304,109 @@ Interpretation:
 - ORIS 已具备“真实洞察 case → 证据/引用 → Word/Excel → artifact 注册 → Feishu 投递”的业务闭环
 - 唯一未闭合项是：真实 `.pptx` 文件生成
 
+
+## Update — 2026-04-07 Mature generic insight architecture (current target state)
+
+目标不再是 demo/定制 case，而是可商用的高端洞察分析 AI 员工，定位对标高端咨询顾问的研究与材料输出工作流。
+
+### 当前确认有效的主链
+- `prompt_to_case_compiler.py` 已升级为 `deterministic_plus_llm_compare`
+- compiler trace 当前固定包含：
+  - `raw_prompt`
+  - `normalized_prompt`
+  - `profile_selection`
+  - `deliverable_detection`
+  - `question_extraction`
+  - `entity_detection`
+  - `role_binding_initial`
+  - `role_binding_after_default_expansion`
+  - `llm_compare`
+  - `hybrid_merge`
+  - `case_assembly`
+- `company_profile` 通用链路已跑通：
+  - prompt → compiled_case → official ingest / company profile → report bundle
+  - 已生成 `docx / xlsx / pptx / json`
+  - 已完成 artifact register + delivery executor
+
+### 当前唯一主阻塞
+- `account_strategy` 通用链路仍有 runner 入参协议不一致问题：
+  - pipeline 传入的是 JSON string
+  - `skills/report_build_skill/account_strategy_runner.py` 当前按文件路径读取
+  - 导致 `FileNotFoundError`
+- 修复原则：
+  - runner 兼容两种输入：`path` 与 `inline json`
+  - 后续 pipeline 可以逐步统一，但 runner 先做向后兼容，避免再次炸链路
+
+### 商用交付口径（固定）
+- Word：详细专业版洞察报告
+- Excel：原始证据 / 原始出处 / 原始文本，不以抽象打分为主
+- PPT：商务交流版，面向高层汇报
+- 输出必须按多层框架展开，而非官网摘要再排版
+
+### 洞察方法论（固定应用）
+- BLM
+- 五看：
+  - 看客户
+  - 看竞争
+  - 看自己
+  - 看产业/行业
+  - 看技术
+- 并强制区分：
+  - 事实
+  - 推断
+  - 建议
+  - 风险
+
+### 当前实施策略
+- 先修通用 runner / pipeline 契约
+- 再提升 account_strategy 报告内容密度与原始证据底表
+- 再清理重复投递与旧 trigger 噪音
+- 最后再引入外部高星成熟组件做增强，不在主阻塞未清前盲目扩工具面
+
+## Update — 2026-04-06 Generic insight pipeline delivery mode stabilized
+
+当前状态新增结论：
+- `run_generic_insight_pipeline.py` 已改为：
+  - 手工调试默认“不注册 / 不投递”
+  - 仅显式启用 delivery 时才注册 `report_artifact` 并执行 `delivery_executor`
+- `feishu_insight_trigger.py` 已显式使用正式投递模式
+- 因此当前行为已稳定为：
+  - 本地/手工调试：只生成材料，不向 Feishu 重复发送
+  - Feishu 自然语言触发：正式生成并自动回传 `pptx / docx / xlsx`
+
+验证结果：
+- 手工调试 `registered_count = 0`
+- 手工调试 `delivery_executor_rc = None`
+- Feishu 自然语言触发已成功产出并发送：
+  - `account_strategy_deck.pptx`
+  - `account_strategy_report.docx`
+  - `account_strategy_workbook.xlsx`
+
+已确认问题：
+- 此前出现的重复发送，不是 Feishu transport 重复，而是每次重跑 pipeline 都重新注册新 delivery task 并再次执行投递
+- 当前该问题已通过“调试默认不投递，触发显式投递”模式隔离
+
+下一阶段主目标（通用化，不再 case-specific）：
+1. 将 ORIS 升级为通用洞察引擎，而非单一 Akkodis case runner
+2. compiler 升级为 `Rule Parser + LLM Parser + Compare/Merge` 双路解析
+3. 研究框架固化为：
+   - 五看（客户 / 竞争 / 自己 / 产业 / 技术）
+   - BLM
+   - competitive benchmark
+   - value chain
+   - scenario planning
+4. 报告生成升级为咨询级三件套：
+   - Word：详细商业洞察报告
+   - Excel：原始证据与出处底表
+   - PPT：商务交流版
+5. 增加“外部 AI API 对比分析 + 自动优化回写”机制：
+   - 比较 ORIS 输出与外部 AI 建议
+   - 补齐缺失维度
+   - 记录质量评估
+   - 形成可演进的洞察生成闭环
+
+明确原则：
+- 不再为单个客户/单个项目写死常量
+- 所有规则、实体映射、方法论、运行开关应下沉到配置文件或数据库
+- 最终产品目标不是 demo，而是面向商用、接近咨询公司交付质量的高端洞察产品
+

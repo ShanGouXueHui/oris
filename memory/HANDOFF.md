@@ -248,3 +248,67 @@
 - 下一步应优先补真实 PPT 生成能力
 - 之后可把 `account_strategy_runner.py` 合并进 `report_build_skill` 主入口，形成统一 artifact build 路径
 
+
+## 2026-04-07 incremental handoff — mature generic insight architecture
+
+当前阶段定位：
+- ORIS 洞察系统目标定位已明确为可商用高端产品，不接受 demo 级输出
+- 交付目标对标高端咨询顾问材料，不是简单摘要机器人
+
+当前确认有效：
+- `compiler` 已升级为 `hybrid_compare`
+- `company_profile` generic flow 已真实跑通
+- 长安汽车 case 已成功输出：
+  - `company_profile_report.docx`
+  - `company_profile_workbook.xlsx`
+  - `company_profile_deck.pptx`
+  - `company_profile_bundle.json`
+
+当前唯一主阻塞：
+- `account_strategy_runner.py` 与 `run_generic_insight_pipeline.py` 的入参协议不一致
+- pipeline 当前给 runner 的是 JSON string
+- runner 当前按 path 读取，导致 `FileNotFoundError`
+
+下一步固定顺序：
+1. 先修 `account_strategy_runner.py`，兼容 path / inline json 双输入
+2. 再跑通 Akkodis generic account strategy 全流程
+3. 再收敛投递逻辑，只投递本轮新 artifact
+4. 再提升 rich synthesis 与 raw evidence workbook
+5. 再评估接入外部高星 skill / repo 做增强
+
+高优先级原则：
+- 常量放 config / DB，不继续写死在代码里
+- 输出必须分行业层 / 技术栈层 / 客户场景层 / 竞争层 / 方案层 / 风险层
+- Excel 以原始证据和出处为主，不以抽象评分为核心
+
+## 2026-04-06 incremental handoff — generic insight delivery mode stabilized
+
+本轮已完成：
+- `run_generic_insight_pipeline.py` 已支持“手工调试默认不注册/不投递”
+- `feishu_insight_trigger.py` 已改为显式开启正式投递
+- Feishu 自然语言 prompt 已成功触发完整链路：
+  - prompt -> compiler -> pipeline -> artifacts -> register -> delivery executor -> Feishu 回传
+- 当前自然语言触发成功回传三件套：
+  - `account_strategy_deck.pptx`
+  - `account_strategy_report.docx`
+  - `account_strategy_workbook.xlsx`
+
+问题复盘：
+- 之前出现“重复发 6 份材料”的根因，不是 Feishu 重复发，而是每次手工重跑 pipeline 都重新注册并自动投递
+- 现已通过“调试默认不投递、正式触发显式投递”模式修复
+
+下一阶段：
+1. 把 ORIS 从 case-specific runner 提升为通用洞察引擎
+2. compiler 升级为 `Rule Parser + LLM Parser + Compare/Merge`
+3. 固化五看 / BLM / competitive benchmark / value chain / scenario planning 方法论
+4. 升级三类交付件：
+   - Word = 咨询级详细报告
+   - Excel = 原始证据底表
+   - PPT = 商务交流版
+5. 增加外部 AI API 对比分析与自动优化回写机制
+
+注意事项：
+- 后续手工调试默认不应触发投递
+- 只有 Feishu / 正式触发路径才允许 register + delivery
+- 后续优化重点应转向“内容质量”和“通用化”，而非继续反复修触发链路
+
