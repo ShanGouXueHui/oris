@@ -27,11 +27,14 @@ def append_jsonl(path, record):
 
 def json_response(handler, code, payload):
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    handler.send_response(code)
-    handler.send_header("Content-Type", "application/json; charset=utf-8")
-    handler.send_header("Content-Length", str(len(body)))
-    handler.end_headers()
-    handler.wfile.write(body)
+    try:
+        handler.send_response(code)
+        handler.send_header("Content-Type", "application/json; charset=utf-8")
+        handler.send_header("Content-Length", str(len(body)))
+        handler.end_headers()
+        handler.wfile.write(body)
+    except (BrokenPipeError, ConnectionResetError):
+        return
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "ORISFeishuCallback/1.1"
