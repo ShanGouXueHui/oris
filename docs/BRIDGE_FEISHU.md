@@ -45,7 +45,17 @@ Responsibility:
 - convert send envelope into Feishu API request
 - support dry-run preview
 - support real execution when explicitly enabled
+- skip deduped inputs safely
 - write send executor log
+
+### 5. Worker skeleton
+File:
+- scripts/feishu_worker_skeleton.py
+
+Responsibility:
+- chain transport skeleton and send executor skeleton
+- stop safely on challenge / deduped mode
+- produce one combined worker result
 
 ## Logs
 - orchestration/bridge_feishu_log.jsonl
@@ -62,6 +72,7 @@ Feishu integration now has:
 - event ingress skeleton
 - transport skeleton
 - send executor skeleton
+- worker skeleton
 
 ## Next step
-The next layer should connect the send executor skeleton into a real inbound/outbound worker path and decide whether to enable real send in production.
+The next layer should connect the worker skeleton to a real inbound server path and decide when to enable execute-send in production.

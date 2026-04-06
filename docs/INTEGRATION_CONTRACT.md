@@ -96,3 +96,6 @@ Feishu now includes a transport skeleton with dedupe and send-envelope preview. 
 
 ## Feishu send executor skeleton status
 Feishu now includes a send executor skeleton that can fetch tenant_access_token and build real send/reply API calls, while staying dry-run by default.
+
+## Feishu worker skeleton status
+Feishu now includes a worker skeleton that chains transport preview and send execution preview while safely stopping on deduped inputs.

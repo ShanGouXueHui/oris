@@ -112,6 +112,8 @@ def build_execute_request(send_envelope: dict):
         }
         mode = "reply"
     else:
+        if not receive_id:
+            raise RuntimeError("send_envelope missing receive_id for send mode")
         url = f"{SEND_URL}?receive_id_type={receive_id_type}"
         payload = {
             "receive_id": receive_id,
@@ -139,6 +141,44 @@ def main():
     send_envelope = preview.get("send_envelope") or {}
     identity = preview.get("identity") or {}
     dedupe_key = preview.get("dedupe_key")
+    mode_in = preview.get("mode")
+
+    if mode_in == "deduped":
+        out = {
+            "ok": True,
+            "mode": "skipped_deduped",
+            "identity": identity,
+            "dedupe_key": dedupe_key,
+            "reason": "transport input was deduped; no send should happen",
+        }
+        append_jsonl(LOG_PATH, {
+            "ts": utc_now(),
+            "mode": "skipped_deduped",
+            "identity": identity,
+            "dedupe_key": dedupe_key,
+            "ok": True,
+        })
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        return
+
+    if not send_envelope:
+        out = {
+            "ok": False,
+            "mode": "invalid_input",
+            "identity": identity,
+            "dedupe_key": dedupe_key,
+            "error": "missing send_envelope",
+        }
+        append_jsonl(LOG_PATH, {
+            "ts": utc_now(),
+            "mode": "invalid_input",
+            "identity": identity,
+            "dedupe_key": dedupe_key,
+            "ok": False,
+            "error": "missing send_envelope",
+        })
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        raise SystemExit(2)
 
     app_id, app_secret = read_feishu_creds()
     if not app_id or not app_secret:
