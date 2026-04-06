@@ -187,3 +187,17 @@ Interpretation:
 - 第二优先级：落地第一批 insight skills scaffold（company profile / competitor research / official source ingest / report build）。
 
 <!-- ORIS_SESSION_WRAPUP:END -->
+
+## Update — 2026-04-06 Feishu delivery executor live
+
+当前状态新增结论：
+- Feishu 报告下载链接分发执行器已跑通
+- `insight.delivery_task` 的 Feishu pending 任务已可真实发送并回写 `sent/delivered_at`
+- Feishu 发送目标使用 `chat_id`
+- Feishu 发送方式使用正式 OpenAPI，而不是 webhook 直发
+- 历史 `json manifest` 脏任务已识别并保留 failed，不视为当前链路失败
+
+验证结果：
+- Feishu `pending_count = 0`
+- 已成功发送任务：`17 / 19 / 23 / 25 / 29 / 31`
+- 历史脏任务：`21 / 27`

@@ -145,3 +145,17 @@
 - 优先读 GitHub 文档，不依赖聊天短上下文
 
 <!-- ORIS_SESSION_WRAPUP:END -->
+
+## 2026-04-06 incremental handoff — Feishu delivery executor
+
+本轮已完成：
+- `config/report_runtime.json` 增加 delivery/channels/channel_targets 配置
+- `scripts/register_report_delivery.py` 开始写入默认 `channel_target`
+- `scripts/delivery_executor.py` 已按真实 `insight.delivery_task` 表结构改造
+- Feishu 通过 `scripts/feishu_send_executor_skeleton.py` 正式发送下载链接消息成功
+- Feishu 当前无剩余 pending delivery_task
+
+注意事项：
+- `channel_target` 对 Feishu 当前口径为 `chat_id`
+- 历史任务 `21 / 27` 为非 downloadable json manifest，已做 historical_cleanup 标注
+- 下一步优先补 Qbot executor，然后开始 4 个 insight skill scaffold
