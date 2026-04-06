@@ -221,8 +221,15 @@ def candidate_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
     artifact_code = artifact_row.get('artifact_code') or artifact_row.get('report_code') or 'artifact'
     delivery_code = build_delivery_code(cfg, file_path, channel, artifact_code)
     status = cfg['delivery']['default_status']
+    channel_type = (
+        ((cfg.get('delivery') or {}).get('channel_type_map') or {}).get(channel)
+        or ((cfg.get('delivery') or {}).get('default_channel_type'))
+        or channel
+    )
+
     payload = {
         'channel': channel,
+        'channel_type': channel_type,
         'artifact_file_name': file_path.name,
         'artifact_relative_path': str(file_path.relative_to(ROOT)),
         'downloadable': True,
@@ -237,6 +244,7 @@ def candidate_delivery_values(cfg, artifact_row, file_path: Path, channel: str):
         'task_type': cfg['delivery']['task_type'],
         'delivery_type': cfg['delivery']['task_type'],
         'channel': channel,
+        'channel_type': channel_type,
         'target_channel': channel,
         'status': status,
         'payload': payload,
@@ -389,6 +397,15 @@ def synthesize_missing_values(table_name, columns_meta, values, cfg, file_path=N
 
         if name in {'task_type', 'delivery_type'} and table_name == 'delivery_task':
             values[name] = cfg['delivery']['task_type']
+            continue
+
+        if name == 'channel_type' and table_name == 'delivery_task':
+            channel_value = values.get('channel') or values.get('target_channel') or 'unknown_channel'
+            values[name] = (
+                ((cfg.get('delivery') or {}).get('channel_type_map') or {}).get(channel_value)
+                or ((cfg.get('delivery') or {}).get('default_channel_type'))
+                or channel_value
+            )
             continue
 
         if name in {'artifact_code', 'report_code'} and file_path is not None:

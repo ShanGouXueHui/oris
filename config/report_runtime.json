@@ -35,7 +35,12 @@
     ],
     "default_status": "pending",
     "task_type": "artifact_delivery",
-    "allow_duplicate_pending_tasks": false
+    "allow_duplicate_pending_tasks": false,
+    "channel_type_map": {
+      "feishu": "feishu",
+      "qbot": "qbot"
+    },
+    "default_channel_type": "generic_download"
   },
   "source": {
     "generator_name": "run_eval_report",
