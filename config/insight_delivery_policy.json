@@ -1,0 +1,16 @@
+{
+  "default_delivery_mode": "chat_md",
+  "explicit_artifact_keywords": {
+    "word": ["word", "doc", "docx", "word版", "word 版", "书面报告", "洞察报告word", "word报告"],
+    "ppt": ["ppt", "pptx", "powerpoint", "演示文稿", "汇报ppt", "交流ppt", "deck"],
+    "excel": ["excel", "xlsx", "底表", "证据底表", "数据底表", "evidence table"]
+  },
+  "freshness_policy": {
+    "same_day_required": true,
+    "force_refresh_on_new_prompt": true
+  },
+  "chat_md": {
+    "max_source_links": 20,
+    "max_preview_chars": 800
+  }
+}

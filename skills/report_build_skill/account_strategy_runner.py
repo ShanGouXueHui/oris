@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 import argparse
 import json
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
 from docx import Document
 from docx.shared import Pt
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment
+from pptx import Presentation
 
-try:
-    from pptx import Presentation
-    from pptx.util import Inches, Pt as PPTPt
-    HAS_PPTX = True
-except Exception:
-    HAS_PPTX = False
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.lib.oris_llm_client import call_oris_text
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -24,338 +25,449 @@ def utc_now():
 def ts_compact():
     return datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
-def slugify(value: str):
-    import re
-    s = re.sub(r"[^a-zA-Z0-9]+", "-", value or "").strip("-").lower()
-    return s or "account-strategy"
-
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
-def save_json(path: Path, data: dict):
+def load_input_payload(value: str):
+    s = (value or "").strip()
+    if not s:
+        raise ValueError("empty input json path/payload")
+    if s.startswith("{"):
+        return json.loads(s)
+    p = Path(s)
+    return json.loads(p.read_text(encoding="utf-8"))
+
+def resolve_case_payload(value: str):
+    payload = load_input_payload(value)
+
+    # 1) already final case json
+    if isinstance(payload, dict) and (
+        payload.get("case_code") or ((payload.get("request") or {}).get("case_code"))
+    ):
+        return payload
+
+    # 2) wrapper json from pipeline/report request
+    if isinstance(payload, dict) and payload.get("input_json_path"):
+        inner = payload.get("input_json_path")
+        if not inner:
+            raise ValueError("input_json_path is empty in wrapper payload")
+        case = load_input_payload(inner)
+        if not isinstance(case, dict) or not (
+            case.get("case_code") or ((case.get("request") or {}).get("case_code"))
+        ):
+            raise ValueError("wrapped input_json_path did not resolve to account strategy case json")
+        return case
+
+    raise ValueError("unsupported account strategy input payload shape")
+
+def write_json(path: Path, data: dict):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-def flatten_citations(case_data: dict):
-    rows = []
-    for entity_name, block in (case_data.get("db_backed_entities") or {}).items():
-        for c in (block.get("recent_citations") or []):
-            rows.append({
-                "scope": "entity",
-                "entity_name": entity_name,
-                "claim_code": c.get("claim_code"),
-                "citation_label": c.get("citation_label"),
-                "citation_url": c.get("citation_url"),
-                "citation_note": c.get("citation_note"),
-                "evidence_item_id": c.get("evidence_item_id"),
-                "source_snapshot_id": c.get("source_snapshot_id"),
-                "source_id": c.get("source_id"),
-            })
+def normalize(v):
+    if v is None:
+        return ""
+    if isinstance(v, (dict, list)):
+        return json.dumps(v, ensure_ascii=False)
+    return str(v)
 
-    for entity_name, block in (case_data.get("db_backed_competitors") or {}).items():
-        for c in (block.get("recent_citations") or []):
-            rows.append({
-                "scope": "competitor",
-                "entity_name": entity_name,
-                "claim_code": c.get("claim_code"),
-                "citation_label": c.get("citation_label"),
-                "citation_url": c.get("citation_url"),
-                "citation_note": c.get("citation_note"),
-                "evidence_item_id": c.get("evidence_item_id"),
-                "source_snapshot_id": c.get("source_snapshot_id"),
-                "source_id": c.get("source_id"),
-            })
-    return rows
+def collect_nested_rows(obj, target_key, out):
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k == target_key and isinstance(v, list):
+                out.extend(v)
+            else:
+                collect_nested_rows(v, target_key, out)
+    elif isinstance(obj, list):
+        for item in obj:
+            collect_nested_rows(item, target_key, out)
 
-def write_docx(path: Path, case_data: dict, citations: list):
+def safe_json_from_text(text: str):
+    text = (text or "").strip()
+    if not text:
+        return None
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+    import re
+    m = re.search(r'(\{.*\})', text, flags=re.S)
+    if m:
+        try:
+            return json.loads(m.group(1))
+        except Exception:
+            return None
+    return None
+
+def build_synthesis(case: dict, evidence_rows: list, citation_rows: list):
+    prompt = {
+        "task": "生成高质量商业洞察内容",
+        "requirements": {
+            "style": "专业、分层、可用于商务汇报，不允许口水化",
+            "must_cover": [
+                "行业层",
+                "技术栈层",
+                "客户场景层",
+                "竞争格局层",
+                "合作方案层",
+                "风险与下一步"
+            ],
+            "must_distinguish": ["事实", "推断", "建议", "风险"],
+            "must_use_evidence": True
+        },
+        "input": {
+            "case_code": case.get("case_code"),
+            "questions": case.get("questions") or [],
+            "frameworks": case.get("frameworks") or [],
+            "report_sections": case.get("report_sections") or [],
+            "entity_summaries": case.get("entity_summaries") or [],
+            "competitor_matrix": case.get("competitor_matrix") or [],
+            "capability_mapping": case.get("capability_mapping") or [],
+            "analysis_sections": case.get("analysis_sections") or [],
+            "recommendation_titles": case.get("recommendation_titles") or [],
+            "evidence_sample": evidence_rows[:40],
+            "citation_sample": citation_rows[:40]
+        },
+        "output_schema": {
+            "executive_summary": ["..."],
+            "industry_view": ["..."],
+            "technology_stack_view": ["..."],
+            "customer_scene_view": {
+                "引望": ["..."],
+                "北汽": ["..."]
+            },
+            "competitive_view": ["..."],
+            "joint_solution_recommendations": ["..."],
+            "risks_and_next_steps": ["..."]
+        }
+    }
+
+    try:
+        resp = call_oris_text(
+            "请基于下面JSON生成严格JSON，不要输出解释文字：\n" + json.dumps(prompt, ensure_ascii=False),
+            role="free_fallback",
+            timeout_seconds=180
+        )
+        if resp.get("ok"):
+            parsed = safe_json_from_text(resp.get("text", ""))
+            if parsed:
+                return {"mode": "llm", "sections": parsed}
+    except Exception:
+        pass
+
+    # fallback deterministic
+    entity_summaries = case.get("entity_summaries") or []
+    competitor_matrix = case.get("competitor_matrix") or []
+    capability_mapping = case.get("capability_mapping") or []
+
+    sections = {
+        "executive_summary": [
+            "本报告围绕伙伴、云平台、客户、竞争对手四层关系图展开，目标是形成可落地的联合方案而非泛泛介绍。",
+            f"当前证据条数={len(evidence_rows)}，引用条数={len(citation_rows)}，可支撑正式商务交流材料。"
+        ],
+        "industry_view": [
+            "汽车行业已从单点智能功能竞争，转向软件定义汽车、车云闭环、数据驱动迭代与全球化交付能力竞争。",
+            "对工程服务伙伴而言，价值不只在研发外包，而在把 AI、验证、数据、云平台、合规与全球交付打通。"
+        ],
+        "technology_stack_view": [
+            "建议按五层技术栈展开：算力与云底座、数据与MLOps、模型与AI开发平台、车端/云端工程与验证、运营闭环与质量分析。",
+            "华为云的价值不应只写成‘有AI能力’，而要展开到 ModelArts/MLOps/数据处理/推理部署/车云协同等能力层。"
+        ],
+        "customer_scene_view": {
+            "引望": [
+                "引望更偏智能汽车平台/方案供给方，重点应放在平台能力、生态适配、开发者体系、量产交付效率。",
+                "联合方案应强调 AI 工程效率、工具链、验证闭环与生态输出能力。"
+            ],
+            "北汽": [
+                "北汽更偏整车OEM，重点应放在车型项目落地、供应链协同、成本、上市节奏、海外车型复制与品牌差异化。",
+                "联合方案应强调车企数字化研发、质量闭环、营销/售后数据智能与海外拓展支撑。"
+            ]
+        },
+        "competitive_view": [
+            "竞争对手比较不宜只讲‘谁强谁弱’，应拆成工程深度、AI能力、全栈方案、生态、交付成本、区域覆盖六个维度。",
+            f"当前竞争矩阵条目={len(competitor_matrix)}，建议在正式汇报中把原始证据与原始出处直接挂到每个维度。"
+        ],
+        "joint_solution_recommendations": [
+            x.get("joint_value") for x in capability_mapping[:6] if x.get("joint_value")
+        ] or ["建议把联合方案拆成 SDV/智能驾驶工程工厂、车云运营闭环、海外本地化交付 三条主线。"],
+        "risks_and_next_steps": [
+            "对外材料必须避免抽象打分，优先展示原始证据、出处、能力映射和客户场景匹配。",
+            "下一步应继续补年报/投资者关系/权威新闻/第三方研究源，增强规模、财务、客户案例与生态合作的数据密度。"
+        ]
+    }
+    return {"mode": "deterministic_fallback", "sections": sections}
+
+def add_bullets(slide, title, items):
+    slide.shapes.title.text = title
+    tf = slide.placeholders[1].text_frame
+    tf.clear()
+    items = items or ["N/A"]
+    for i, item in enumerate(items):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        p.text = str(item)
+
+def make_docx(path: Path, case: dict, sections: dict, evidence_rows: list, citation_rows: list):
     doc = Document()
-    normal = doc.styles["Normal"]
-    normal.font.name = "Arial"
-    normal.font.size = Pt(10)
+    h = doc.add_heading("Akkodis × Huawei Cloud 商业洞察报告", 0)
+    h.runs[0].font.size = Pt(20)
 
-    req = case_data.get("request") or {}
-    case_code = req.get("case_code")
-    partner = (req.get("partner") or {}).get("name")
-    cloud = (req.get("cloud_vendor") or {}).get("name")
+    doc.add_heading("一、执行摘要", level=1)
+    for x in sections.get("executive_summary") or []:
+        doc.add_paragraph(str(x), style="List Bullet")
 
-    doc.add_heading("ORIS Account Strategy Insight Report", level=0)
-    p = doc.add_paragraph()
-    p.add_run("Case Code: ").bold = True
-    p.add_run(str(case_code))
-    p = doc.add_paragraph()
-    p.add_run("Theme: ").bold = True
-    p.add_run(f"{partner} + {cloud} automotive joint account strategy")
+    doc.add_heading("二、行业层", level=1)
+    for x in sections.get("industry_view") or []:
+        doc.add_paragraph(str(x), style="List Bullet")
 
-    doc.add_heading("1. Executive Summary", level=1)
-    for item in (case_data.get("recommendation_framework") or [])[:2]:
-        doc.add_paragraph(item.get("title"), style="List Bullet")
-        for point in (item.get("points") or [])[:3]:
-            doc.add_paragraph(point, style="List Bullet 2")
+    doc.add_heading("三、AI技术栈层", level=1)
+    for x in sections.get("technology_stack_view") or []:
+        doc.add_paragraph(str(x), style="List Bullet")
 
-    doc.add_heading("2. Core Entity Signal Summary", level=1)
-    table = doc.add_table(rows=1, cols=5)
+    doc.add_heading("四、客户场景层", level=1)
+    csv = sections.get("customer_scene_view") or {}
+    for k, items in csv.items():
+        doc.add_heading(str(k), level=2)
+        for x in items or []:
+            doc.add_paragraph(str(x), style="List Bullet")
+
+    doc.add_heading("五、竞争格局层", level=1)
+    for x in sections.get("competitive_view") or []:
+        doc.add_paragraph(str(x), style="List Bullet")
+
+    doc.add_heading("六、联合方案建议", level=1)
+    for x in sections.get("joint_solution_recommendations") or []:
+        doc.add_paragraph(str(x), style="List Bullet")
+
+    doc.add_heading("七、风险与下一步", level=1)
+    for x in sections.get("risks_and_next_steps") or []:
+        doc.add_paragraph(str(x), style="List Bullet")
+
+    doc.add_heading("八、实体摘要", level=1)
+    table = doc.add_table(rows=1, cols=6)
     hdr = table.rows[0].cells
     hdr[0].text = "Entity"
-    hdr[1].text = "Signal Strength"
+    hdr[1].text = "Type"
     hdr[2].text = "Snapshots"
     hdr[3].text = "Evidence"
     hdr[4].text = "Citations"
-    for row in (case_data.get("entity_summaries") or []):
+    hdr[5].text = "Notes"
+    for row in case.get("entity_summaries") or []:
         cells = table.add_row().cells
-        cells[0].text = str(row.get("entity_name"))
-        cells[1].text = str(row.get("signal_strength"))
-        cells[2].text = str(row.get("source_snapshot_count_recent"))
-        cells[3].text = str(row.get("evidence_item_count_recent"))
-        cells[4].text = str(row.get("citation_count_recent"))
+        cells[0].text = normalize(row.get("entity_name"))
+        cells[1].text = normalize(row.get("entity_type"))
+        cells[2].text = normalize(row.get("source_snapshot_count_recent"))
+        cells[3].text = normalize(row.get("evidence_item_count_recent"))
+        cells[4].text = normalize(row.get("citation_count_recent"))
+        cells[5].text = normalize((row.get("sample_metric_codes") or [])[:3])
 
-    doc.add_heading("3. Competitor Benchmark", level=1)
-    for row in (case_data.get("competitor_benchmark_ref", {}).get("comparison_matrix") or []):
+    doc.add_heading("九、竞争矩阵（原始量）", level=1)
+    table = doc.add_table(rows=1, cols=6)
+    hdr = table.rows[0].cells
+    hdr[0].text = "Entity"
+    hdr[1].text = "Type"
+    hdr[2].text = "Snapshots"
+    hdr[3].text = "Evidence"
+    hdr[4].text = "Metrics"
+    hdr[5].text = "Citations"
+    for row in case.get("competitor_matrix") or []:
+        cells = table.add_row().cells
+        cells[0].text = normalize(row.get("entity_name"))
+        cells[1].text = normalize(row.get("entity_type"))
+        cells[2].text = normalize(row.get("source_snapshot_count_recent"))
+        cells[3].text = normalize(row.get("evidence_item_count_recent"))
+        cells[4].text = normalize(row.get("metric_observation_count_recent"))
+        cells[5].text = normalize(row.get("citation_count_recent"))
+
+    doc.add_heading("十、证据样本", level=1)
+    for row in evidence_rows[:30]:
         doc.add_paragraph(
-            f"{row.get('entity_name')}: signal={row.get('signal_strength')}, "
-            f"snapshots={row.get('source_snapshot_count_recent')}, "
-            f"evidence={row.get('evidence_item_count_recent')}, "
-            f"citations={row.get('citation_count_recent')}",
+            f"{normalize(row.get('evidence_title'))}\n{normalize(row.get('evidence_text'))}",
             style="List Bullet"
         )
 
-    doc.add_heading("4. Recommendation Framework", level=1)
-    for item in (case_data.get("recommendation_framework") or []):
-        doc.add_paragraph(item.get("title"), style="List Bullet")
-        for point in (item.get("points") or [])[:5]:
-            doc.add_paragraph(point, style="List Bullet 2")
-
-    doc.add_heading("5. Citation Appendix", level=1)
-    for c in citations[:80]:
+    doc.add_heading("十一、引用附录", level=1)
+    for row in citation_rows[:80]:
         doc.add_paragraph(
-            f"[{c.get('entity_name')}] {c.get('citation_label')} | {c.get('citation_url')}",
+            f"{normalize(row.get('citation_label'))}\n{normalize(row.get('citation_url'))}",
             style="List Bullet"
         )
 
     doc.save(path)
 
-def autosize_sheet(ws):
-    for col in ws.columns:
-        max_len = 0
-        col_letter = col[0].column_letter
-        for cell in col:
-            v = "" if cell.value is None else str(cell.value)
-            max_len = max(max_len, len(v))
-        ws.column_dimensions[col_letter].width = min(max(max_len + 2, 12), 60)
-
-def write_sheet(ws, headers, rows):
-    ws.append(headers)
-    for cell in ws[1]:
-        cell.font = Font(bold=True)
-        cell.alignment = Alignment(vertical="center")
-    for row in rows:
-        ws.append(row)
-    autosize_sheet(ws)
-
-def write_xlsx(path: Path, case_data: dict, citations: list):
+def make_xlsx(path: Path, case: dict, evidence_rows: list, citation_rows: list, snapshot_rows: list, metric_rows: list):
     wb = Workbook()
+
     ws = wb.active
-    ws.title = "Overview"
-
-    req = case_data.get("request") or {}
-    overview_rows = [
-        ("case_code", req.get("case_code")),
-        ("partner", (req.get("partner") or {}).get("name")),
-        ("cloud_vendor", (req.get("cloud_vendor") or {}).get("name")),
-        ("customer_count", len(req.get("customers") or [])),
-        ("competitor_count", len(case_data.get("competitor_benchmark_ref", {}).get("comparison_matrix") or [])),
-        ("generated_at", case_data.get("ts")),
-    ]
-    write_sheet(ws, ["field", "value"], overview_rows)
-
-    ws2 = wb.create_sheet("Entity_Summaries")
-    rows2 = []
-    for x in (case_data.get("entity_summaries") or []):
-        rows2.append([
-            x.get("entity_name"),
-            x.get("signal_strength"),
-            x.get("source_snapshot_count_recent"),
-            x.get("evidence_item_count_recent"),
-            x.get("metric_observation_count_recent"),
-            x.get("citation_count_recent"),
-            " | ".join(x.get("sample_metric_codes") or [])
+    ws.title = "entity_summaries"
+    ws.append(["entity_name", "entity_type", "source_snapshot_count_recent", "evidence_item_count_recent", "metric_observation_count_recent", "citation_count_recent"])
+    for row in case.get("entity_summaries") or []:
+        ws.append([
+            normalize(row.get("entity_name")),
+            normalize(row.get("entity_type")),
+            normalize(row.get("source_snapshot_count_recent")),
+            normalize(row.get("evidence_item_count_recent")),
+            normalize(row.get("metric_observation_count_recent")),
+            normalize(row.get("citation_count_recent"))
         ])
-    write_sheet(
-        ws2,
-        ["entity_name", "signal_strength", "snapshots", "evidence", "metrics", "citations", "sample_metric_codes"],
-        rows2
-    )
 
-    ws3 = wb.create_sheet("Competitor_Matrix")
-    rows3 = []
-    for x in (case_data.get("competitor_benchmark_ref", {}).get("comparison_matrix") or []):
-        rows3.append([
-            x.get("entity_name"),
-            x.get("entity_type"),
-            x.get("signal_strength"),
-            x.get("source_snapshot_count_recent"),
-            x.get("evidence_item_count_recent"),
-            x.get("metric_observation_count_recent"),
-            x.get("citation_count_recent"),
-            " | ".join(x.get("dimensions") or [])
+    ws2 = wb.create_sheet("competitor_matrix")
+    ws2.append(["entity_name", "entity_type", "dimensions", "source_snapshot_count_recent", "evidence_item_count_recent", "metric_observation_count_recent", "citation_count_recent"])
+    for row in case.get("competitor_matrix") or []:
+        ws2.append([
+            normalize(row.get("entity_name")),
+            normalize(row.get("entity_type")),
+            normalize((row.get("dimensions") or [])),
+            normalize(row.get("source_snapshot_count_recent")),
+            normalize(row.get("evidence_item_count_recent")),
+            normalize(row.get("metric_observation_count_recent")),
+            normalize(row.get("citation_count_recent"))
         ])
-    write_sheet(
-        ws3,
-        ["entity_name", "entity_type", "signal_strength", "snapshots", "evidence", "metrics", "citations", "dimensions"],
-        rows3
-    )
 
-    ws4 = wb.create_sheet("Recommendations")
-    rows4 = []
-    for item in (case_data.get("recommendation_framework") or []):
-        if item.get("points"):
-            for idx, point in enumerate(item.get("points") or [], start=1):
-                rows4.append([item.get("title"), idx, point])
-        else:
-            rows4.append([item.get("title"), "", ""])
-    write_sheet(ws4, ["recommendation_title", "point_no", "point"], rows4)
-
-    ws5 = wb.create_sheet("Citations")
-    rows5 = []
-    for c in citations:
-        rows5.append([
-            c.get("scope"),
-            c.get("entity_name"),
-            c.get("claim_code"),
-            c.get("citation_label"),
-            c.get("citation_url"),
-            c.get("citation_note"),
-            c.get("evidence_item_id"),
-            c.get("source_snapshot_id"),
-            c.get("source_id")
+    ws3 = wb.create_sheet("evidence_raw")
+    ws3.append(["id", "company_id", "source_snapshot_id", "evidence_type", "evidence_title", "evidence_text", "evidence_date", "confidence_score"])
+    for row in evidence_rows:
+        ws3.append([
+            normalize(row.get("id")),
+            normalize(row.get("company_id")),
+            normalize(row.get("source_snapshot_id")),
+            normalize(row.get("evidence_type")),
+            normalize(row.get("evidence_title")),
+            normalize(row.get("evidence_text")),
+            normalize(row.get("evidence_date")),
+            normalize(row.get("confidence_score"))
         ])
-    write_sheet(
-        ws5,
-        ["scope", "entity_name", "claim_code", "citation_label", "citation_url", "citation_note", "evidence_item_id", "source_snapshot_id", "source_id"],
-        rows5
-    )
+
+    ws4 = wb.create_sheet("citations_raw")
+    ws4.append(["id", "claim_code", "evidence_item_id", "source_snapshot_id", "source_id", "citation_label", "citation_url", "citation_note"])
+    for row in citation_rows:
+        ws4.append([
+            normalize(row.get("id")),
+            normalize(row.get("claim_code")),
+            normalize(row.get("evidence_item_id")),
+            normalize(row.get("source_snapshot_id")),
+            normalize(row.get("source_id")),
+            normalize(row.get("citation_label")),
+            normalize(row.get("citation_url")),
+            normalize(row.get("citation_note"))
+        ])
+
+    ws5 = wb.create_sheet("snapshots_raw")
+    ws5.append(["id", "company_id", "source_id", "snapshot_title", "snapshot_url", "raw_storage_path", "parsed_text_storage_path"])
+    for row in snapshot_rows:
+        ws5.append([
+            normalize(row.get("id")),
+            normalize(row.get("company_id")),
+            normalize(row.get("source_id")),
+            normalize(row.get("snapshot_title")),
+            normalize(row.get("snapshot_url")),
+            normalize(row.get("raw_storage_path")),
+            normalize(row.get("parsed_text_storage_path"))
+        ])
+
+    ws6 = wb.create_sheet("metrics_raw")
+    ws6.append(["id", "company_id", "metric_code", "metric_name", "metric_value", "metric_unit", "observation_date", "source_snapshot_id"])
+    for row in metric_rows:
+        ws6.append([
+            normalize(row.get("id")),
+            normalize(row.get("company_id")),
+            normalize(row.get("metric_code")),
+            normalize(row.get("metric_name")),
+            normalize(row.get("metric_value")),
+            normalize(row.get("metric_unit")),
+            normalize(row.get("observation_date")),
+            normalize(row.get("source_snapshot_id"))
+        ])
 
     wb.save(path)
 
-def add_bullets(slide, title, bullets):
-    slide.shapes.title.text = title
-    body = slide.placeholders[1].text_frame
-    body.clear()
-    for i, bullet in enumerate(bullets):
-        p = body.paragraphs[0] if i == 0 else body.add_paragraph()
-        p.text = bullet
-        p.level = 0
-        if HAS_PPTX:
-            p.font.size = PPTPt(20)
-
-def write_pptx(path: Path, case_data: dict):
+def make_pptx(path: Path, case: dict, sections: dict):
     prs = Presentation()
 
-    req = case_data.get("request") or {}
-    partner = (req.get("partner") or {}).get("name")
-    cloud = (req.get("cloud_vendor") or {}).get("name")
-
-    slide = prs.slides.add_slide(prs.slide_layouts[0])
-    slide.shapes.title.text = "ORIS Account Strategy Briefing"
-    slide.placeholders[1].text = f"{partner} + {cloud}\nAutomotive Joint AI Strategy"
-
-    summary = next((x for x in (case_data.get("recommendation_framework") or []) if x.get("recommendation_code") == "joint_solution_fit"), None)
     slide = prs.slides.add_slide(prs.slide_layouts[1])
-    add_bullets(slide, "联合能力主张", summary.get("points") if summary else ["联合能力主张待补充"])
-
-    for item in (case_data.get("recommendation_framework") or []):
-        if str(item.get("recommendation_code", "")).startswith("customer-"):
-            slide = prs.slides.add_slide(prs.slide_layouts[1])
-            add_bullets(slide, item.get("title"), item.get("points") or [])
+    add_bullets(slide, "Akkodis × Huawei Cloud 商业洞察", sections.get("executive_summary"))
 
     slide = prs.slides.add_slide(prs.slide_layouts[1])
-    matrix = case_data.get("competitor_benchmark_ref", {}).get("comparison_matrix") or []
-    bullets = [
-        f"{x.get('entity_name')}: signal={x.get('signal_strength')}, evidence={x.get('evidence_item_count_recent')}, citations={x.get('citation_count_recent')}"
-        for x in matrix[:6]
-    ]
-    add_bullets(slide, "欧洲竞争对手对标信号", bullets)
+    add_bullets(slide, "行业层", sections.get("industry_view"))
 
     slide = prs.slides.add_slide(prs.slide_layouts[1])
-    add_bullets(
-        slide,
-        "下一步",
-        [
-            "将 account_strategy JSON 与 citation_link 接入正式报告生成。",
-            "输出客户版 Word / Excel / PPT 正式材料。",
-            "注册 report_artifact 并通过 Feishu 交付。"
-        ]
-    )
+    add_bullets(slide, "AI技术栈层", sections.get("technology_stack_view"))
+
+    for customer_name, items in (sections.get("customer_scene_view") or {}).items():
+        slide = prs.slides.add_slide(prs.slide_layouts[1])
+        add_bullets(slide, f"{customer_name} 客户场景", items)
+
+    slide = prs.slides.add_slide(prs.slide_layouts[1])
+    add_bullets(slide, "竞争格局层", sections.get("competitive_view"))
+
+    slide = prs.slides.add_slide(prs.slide_layouts[1])
+    add_bullets(slide, "联合方案建议", sections.get("joint_solution_recommendations"))
+
+    slide = prs.slides.add_slide(prs.slide_layouts[1])
+    add_bullets(slide, "风险与下一步", sections.get("risks_and_next_steps"))
 
     prs.save(path)
 
-def write_storyline_json(path: Path, case_data: dict):
-    storyline = {
-        "title": "ORIS Account Strategy Briefing",
-        "slides": [
-            {"title": "封面", "points": ["Akkodis + Huawei Cloud", "Automotive Joint AI Strategy"]},
-            *[
-                {"title": x.get("title"), "points": x.get("points") or []}
-                for x in (case_data.get("recommendation_framework") or [])
-            ]
-        ]
-    }
-    save_json(path, storyline)
-
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input-json", required=True)
+    ap.add_argument("--input-json-path", required=True)
     args = ap.parse_args()
 
-    req = json.loads(args.input_json)
-    input_json_path = Path(req["input_json_path"])
-    case_data = load_json(input_json_path)
+    case = resolve_case_payload(args.input_json_path)
 
-    case_code = (case_data.get("request") or {}).get("case_code") or "account-strategy"
-    out_dir = ROOT / "outputs" / "report_build" / slugify(case_code) / ts_compact()
+    evidence_rows, citation_rows, snapshot_rows, metric_rows = [], [], [], []
+    collect_nested_rows(case, "recent_evidence_items", evidence_rows)
+    collect_nested_rows(case, "recent_citations", citation_rows)
+    collect_nested_rows(case, "recent_snapshots", snapshot_rows)
+    collect_nested_rows(case, "recent_metric_observations", metric_rows)
+
+    evidence_rows = evidence_rows[:500]
+    citation_rows = citation_rows[:500]
+    snapshot_rows = snapshot_rows[:500]
+    metric_rows = metric_rows[:500]
+
+    synth = build_synthesis(case, evidence_rows, citation_rows)
+    sections = synth["sections"]
+
+    case_code = case.get("case_code") or ((case.get("request") or {}).get("case_code")) or "account-strategy-case"
+    out_dir = ROOT / "outputs" / "report_build" / case_code / ts_compact()
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    citations = flatten_citations(case_data)
 
     docx_path = out_dir / "account_strategy_report.docx"
     xlsx_path = out_dir / "account_strategy_workbook.xlsx"
+    pptx_path = out_dir / "account_strategy_deck.pptx"
     json_path = out_dir / "account_strategy_bundle.json"
 
-    write_docx(docx_path, case_data, citations)
-    write_xlsx(xlsx_path, case_data, citations)
-    save_json(json_path, case_data)
-
-    artifact_plan = [
-        {"artifact_type": "word", "path": str(docx_path.relative_to(ROOT))},
-        {"artifact_type": "excel", "path": str(xlsx_path.relative_to(ROOT))},
-        {"artifact_type": "json", "path": str(json_path.relative_to(ROOT))}
-    ]
-
-    ppt_status = "generated"
-    if HAS_PPTX:
-        pptx_path = out_dir / "account_strategy_deck.pptx"
-        write_pptx(pptx_path, case_data)
-        artifact_plan.append({"artifact_type": "ppt", "path": str(pptx_path.relative_to(ROOT))})
-    else:
-        ppt_status = "python_pptx_not_available_storyline_generated"
-        storyline_path = out_dir / "account_strategy_deck_storyline.json"
-        write_storyline_json(storyline_path, case_data)
-        artifact_plan.append({"artifact_type": "ppt_storyline", "path": str(storyline_path.relative_to(ROOT))})
+    make_docx(docx_path, case, sections, evidence_rows, citation_rows)
+    make_xlsx(xlsx_path, case, evidence_rows, citation_rows, snapshot_rows, metric_rows)
+    make_pptx(pptx_path, case, sections)
 
     out = {
         "ok": True,
         "skill_name": "report_build_skill.account_strategy_runner",
-        "schema_version": "v1",
+        "schema_version": "v2",
         "ts": utc_now(),
-        "request": req,
-        "conclusion": "account-strategy report bundle generated from ORIS account_strategy_case JSON.",
+        "request": {
+            "analysis_type": "account_strategy",
+            "input_json_path": args.input_json_path,
+            "case_code": case.get("case_code")
+        },
+        "conclusion": "rich account-strategy bundle generated with raw evidence/citation workbook and executive PPT.",
+        "synthesis_mode": synth.get("mode"),
         "core_data": [
-            {"field": "case_code", "value": case_code},
-            {"field": "citation_count_total", "value": len(citations)},
-            {"field": "ppt_status", "value": ppt_status},
-            {"field": "generated_artifact_count", "value": len(artifact_plan)}
+            {"field": "case_code", "value": case.get("case_code")},
+            {"field": "evidence_count_total", "value": len(evidence_rows)},
+            {"field": "citation_count_total", "value": len(citation_rows)},
+            {"field": "snapshot_count_total", "value": len(snapshot_rows)},
+            {"field": "metric_count_total", "value": len(metric_rows)}
         ],
-        "artifact_plan": artifact_plan
+        "artifact_plan": [
+            {"artifact_type": "word", "path": str(docx_path.relative_to(ROOT))},
+            {"artifact_type": "excel", "path": str(xlsx_path.relative_to(ROOT))},
+            {"artifact_type": "ppt", "path": str(pptx_path.relative_to(ROOT))},
+            {"artifact_type": "json", "path": str(json_path.relative_to(ROOT))}
+        ]
     }
 
+    write_json(json_path, out)
     print(json.dumps(out, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":

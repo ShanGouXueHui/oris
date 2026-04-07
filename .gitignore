@@ -5,3 +5,26 @@ env/*.local
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# runtime logs / states
+orchestration/*.jsonl
+orchestration/*.log
+orchestration/*_state.json
+orchestration/tmp/
+
+# generated outputs
+outputs/
+inputs/generated_cases/
+
+# backups
+backups/
+*.bak_*
+*.finalfix_*.bak
+*.fix_*.bak
+*.initfix_*.bak
+*.outputfix*.bak
+
+# local snapshots
+orchestration/provider_health_snapshot.json
+orchestration/provider_registry.json
+orchestration/provider_scoreboard.json

@@ -1,0 +1,42 @@
+{
+  "schema_version": "v1",
+  "compiler_runtime": {
+    "parser_mode": "hybrid_compare",
+    "execution_mode": "deterministic_plus_llm_compare",
+    "enable_rule_parser": true,
+    "enable_llm_shadow_compare": true,
+    "enable_external_ai_suggestion_compare": true,
+    "enable_evolution_actions": true,
+    "llm_compare_max_chars": 12000,
+    "llm_compare_timeout_seconds": 90,
+    "persist_compare_trace": true,
+    "persist_external_skill_candidates": true,
+    "word_requirements": [
+      "executive_summary",
+      "company_or_case_overview",
+      "industry_and_competition",
+      "technology_stack_breakdown",
+      "customer_scenario_analysis",
+      "recommendations",
+      "risks",
+      "citations_appendix"
+    ],
+    "excel_requirements": [
+      "raw_evidence_table",
+      "source_registry",
+      "citation_binding_table",
+      "claim_usage_table"
+    ],
+    "ppt_requirements": [
+      "title",
+      "executive_summary",
+      "industry_context",
+      "competitive_position",
+      "technology_stack",
+      "customer_scenarios",
+      "recommendations",
+      "next_steps"
+    ],
+    "external_skill_registry_path": "config/external_skill_registry.json"
+  }
+}

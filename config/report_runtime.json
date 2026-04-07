@@ -16,7 +16,8 @@
       ".docx",
       ".xlsx",
       ".zip",
-      ".pdf"
+      ".pdf",
+      ".pptx"
     ],
     "downloadable_channels": [
       "feishu",

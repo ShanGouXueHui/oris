@@ -173,5 +173,18 @@
         "solution_recommendation"
       ]
     }
+  },
+  "generic_runtime": {
+    "methodology_rules_path": "config/insight_methodology_rules.json",
+    "case_profiles_path": "config/insight_case_profiles.json",
+    "entity_registry_path": "config/insight_entity_registry.json",
+    "external_skill_registry_path": "config/external_skill_registry.json",
+    "prompt_compiler_script": "scripts/prompt_to_case_compiler_plus_v3.py",
+    "generic_pipeline_script": "scripts/run_generic_insight_pipeline_plus.py",
+    "feishu_trigger_script": "scripts/feishu_insight_trigger.py",
+    "compiler_runtime_path": "config/insight_compiler_runtime.json",
+    "external_skill_refresh_runtime_path": "config/external_skill_refresh_runtime.json",
+    "external_skill_refresh_script": "scripts/refresh_external_skill_registry.py",
+    "delivery_policy_path": "config/insight_delivery_policy.json"
   }
 }

@@ -1,0 +1,173 @@
+{
+  "schema_version": "v1",
+  "external_skills": [
+    {
+      "skill_code": "firecrawl_web_extraction",
+      "category": "research_ingest",
+      "status": "candidate",
+      "enabled": false,
+      "engine_type": "github_project",
+      "repo": "https://github.com/mendableai/firecrawl",
+      "integration_mode": "adapter_pending",
+      "why": "LLM-ready web extraction, crawl, search, structured extraction",
+      "use_when": [
+        "official_site_deep_crawl",
+        "news_and_docs_extraction"
+      ],
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:47.784202+00:00",
+        "full_name": "firecrawl/firecrawl",
+        "stargazers_count": 105024,
+        "forks_count": 6856,
+        "open_issues_count": 257,
+        "watchers_count": 105024,
+        "default_branch": "main",
+        "pushed_at": "2026-04-06T21:07:16Z",
+        "updated_at": "2026-04-06T22:02:02Z",
+        "html_url": "https://github.com/firecrawl/firecrawl"
+      }
+    },
+    {
+      "skill_code": "crawl4ai_deep_crawler",
+      "category": "research_ingest",
+      "status": "candidate",
+      "enabled": false,
+      "engine_type": "github_project",
+      "repo": "https://github.com/unclecode/crawl4ai",
+      "integration_mode": "adapter_pending",
+      "why": "Controllable markdown-first crawl for multi-page research capture",
+      "use_when": [
+        "multi_page_official_site",
+        "docs_crawl",
+        "benchmark_capture"
+      ],
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:48.086882+00:00",
+        "full_name": "unclecode/crawl4ai",
+        "stargazers_count": 63474,
+        "forks_count": 6492,
+        "open_issues_count": 59,
+        "watchers_count": 63474,
+        "default_branch": "main",
+        "pushed_at": "2026-04-06T08:26:44Z",
+        "updated_at": "2026-04-06T21:28:35Z",
+        "html_url": "https://github.com/unclecode/crawl4ai"
+      }
+    },
+    {
+      "skill_code": "litellm_gateway",
+      "category": "llm_gateway",
+      "status": "candidate",
+      "enabled": false,
+      "engine_type": "github_project",
+      "repo": "https://github.com/BerriAI/litellm",
+      "integration_mode": "adapter_pending",
+      "why": "One gateway for multi-model compare, fallback, logging, cost control",
+      "use_when": [
+        "llm_compare",
+        "shadow_generation",
+        "quality_benchmark"
+      ],
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:48.409476+00:00",
+        "full_name": "BerriAI/litellm",
+        "stargazers_count": 42346,
+        "forks_count": 7029,
+        "open_issues_count": 2265,
+        "watchers_count": 42346,
+        "default_branch": "main",
+        "pushed_at": "2026-04-06T22:03:44Z",
+        "updated_at": "2026-04-06T21:12:17Z",
+        "html_url": "https://github.com/BerriAI/litellm"
+      }
+    },
+    {
+      "skill_code": "python_docx_core",
+      "category": "word_generation",
+      "status": "baseline",
+      "enabled": true,
+      "engine_type": "python_library",
+      "repo": "https://github.com/python-openxml/python-docx",
+      "integration_mode": "active",
+      "why": "Core Word document manipulation",
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:48.738358+00:00",
+        "full_name": "python-openxml/python-docx",
+        "stargazers_count": 5509,
+        "forks_count": 1268,
+        "open_issues_count": 707,
+        "watchers_count": 5509,
+        "default_branch": "master",
+        "pushed_at": "2025-06-17T03:15:11Z",
+        "updated_at": "2026-04-05T14:33:20Z",
+        "html_url": "https://github.com/python-openxml/python-docx"
+      }
+    },
+    {
+      "skill_code": "docxtpl_template_engine",
+      "category": "word_generation",
+      "status": "candidate",
+      "enabled": false,
+      "engine_type": "python_library",
+      "repo": "https://github.com/elapouya/python-docx-template",
+      "integration_mode": "adapter_pending",
+      "why": "Template-driven Word generation for consulting-style reports",
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:49.091443+00:00",
+        "full_name": "elapouya/python-docx-template",
+        "stargazers_count": 2602,
+        "forks_count": 432,
+        "open_issues_count": 165,
+        "watchers_count": 2602,
+        "default_branch": "master",
+        "pushed_at": "2026-03-12T20:18:14Z",
+        "updated_at": "2026-04-05T12:24:38Z",
+        "html_url": "https://github.com/elapouya/python-docx-template"
+      }
+    },
+    {
+      "skill_code": "python_pptx_core",
+      "category": "ppt_generation",
+      "status": "baseline",
+      "enabled": true,
+      "engine_type": "python_library",
+      "repo": "https://github.com/scanny/python-pptx",
+      "integration_mode": "active",
+      "why": "Core PPTX generation",
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:49.400821+00:00",
+        "full_name": "scanny/python-pptx",
+        "stargazers_count": 3266,
+        "forks_count": 686,
+        "open_issues_count": 530,
+        "watchers_count": 3266,
+        "default_branch": "master",
+        "pushed_at": "2024-08-07T17:36:44Z",
+        "updated_at": "2026-04-05T14:34:24Z",
+        "html_url": "https://github.com/scanny/python-pptx"
+      }
+    },
+    {
+      "skill_code": "pptxgenjs_candidate",
+      "category": "ppt_generation",
+      "status": "candidate",
+      "enabled": false,
+      "engine_type": "node_library",
+      "repo": "https://github.com/gitbrent/PptxGenJS",
+      "integration_mode": "adapter_pending",
+      "why": "Feature-rich deck generation and master-slide control",
+      "refresh_meta": {
+        "checked_at": "2026-04-06T22:04:49.702292+00:00",
+        "full_name": "gitbrent/PptxGenJS",
+        "stargazers_count": 4957,
+        "forks_count": 840,
+        "open_issues_count": 268,
+        "watchers_count": 4957,
+        "default_branch": "master",
+        "pushed_at": "2025-11-28T20:17:14Z",
+        "updated_at": "2026-04-06T20:08:15Z",
+        "html_url": "https://github.com/gitbrent/PptxGenJS"
+      }
+    }
+  ]
+}

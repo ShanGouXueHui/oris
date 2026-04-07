@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "default_methodology_profile": "business_insight_v1",
+  "methodology_profiles": {
+    "business_insight_v1": {
+      "name": "Business Insight v1",
+      "required_output_disciplines": [
+        "fact",
+        "inference",
+        "hypothesis",
+        "risk"
+      ],
+      "source_priority": [
+        "official_website",
+        "annual_report",
+        "investor_relations",
+        "government_or_regulator",
+        "product_page",
+        "gartner",
+        "forrester",
+        "idc",
+        "reputable_news",
+        "developer_portal",
+        "github_public_repo"
+      ],
+      "frameworks": [
+        "five_looks",
+        "blm",
+        "competitive_benchmark",
+        "value_chain",
+        "scenario_planning"
+      ],
+      "report_sections": [
+        "executive_summary",
+        "customer_view",
+        "competition_view",
+        "self_view",
+        "industry_view",
+        "technology_view",
+        "joint_solution_or_recommendation",
+        "risks_and_next_steps",
+        "citation_appendix"
+      ],
+      "ppt_sections": [
+        "title",
+        "executive_summary",
+        "joint_value_proposition",
+        "benchmark",
+        "customer_strategy",
+        "next_steps"
+      ]
+    }
+  },
+  "framework_definitions": {
+    "five_looks": {
+      "title": "五看",
+      "dimensions": [
+        "看客户",
+        "看竞争",
+        "看自己",
+        "看产业/行业",
+        "看技术"
+      ]
+    },
+    "blm": {
+      "title": "BLM",
+      "dimensions": [
+        "战略意图",
+        "创新焦点",
+        "市场地图",
+        "业务设计",
+        "关键任务"
+      ]
+    },
+    "competitive_benchmark": {
+      "title": "Competitive Benchmark",
+      "dimensions": [
+        "核心技术",
+        "AI能力",
+        "全栈解决方案",
+        "生态",
+        "成本与交付",
+        "行业纵深"
+      ]
+    },
+    "value_chain": {
+      "title": "Value Chain",
+      "dimensions": [
+        "价值创造环节",
+        "差异化能力",
+        "成本结构",
+        "外部协同"
+      ]
+    },
+    "scenario_planning": {
+      "title": "Scenario Planning",
+      "dimensions": [
+        "确定性变量",
+        "不确定性变量",
+        "乐观情景",
+        "基准情景",
+        "保守情景"
+      ]
+    }
+  },
+  "authoring_rules": {
+    "must_distinguish_fact_inference_hypothesis_risk": true,
+    "must_prefer_authoritative_sources": true,
+    "must_include_recommendations": true,
+    "must_include_citations_for_key_claims": true,
+    "must_not_write_uncited_strong_claims_as_facts": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "v1",
+  "refresh_runtime": {
+    "enabled": true,
+    "refresh_mode": "github_repo_metadata",
+    "refresh_interval_hours": 24,
+    "request_timeout_seconds": 20,
+    "user_agent": "ORIS-ExternalSkill-Refresh/1.0",
+    "log_path": "orchestration/external_skill_refresh_log.jsonl"
+  }
+}

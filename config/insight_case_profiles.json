@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "default_profile": "company_profile",
+  "profiles": {
+    "account_strategy_partner_cloud_customer": {
+      "analysis_type": "account_strategy",
+      "description": "伙伴 + 云厂商 + 客户 + 竞争对手 的联合商务突破场景",
+      "intent_keywords_any": [
+        "合作",
+        "联合",
+        "车企",
+        "客户突破",
+        "商务交流",
+        "洞察报告",
+        "合作PPT",
+        "joint solution",
+        "account strategy"
+      ],
+      "deliverables_default": [
+        "word",
+        "excel",
+        "ppt"
+      ],
+      "default_dimensions": [
+        "core_technology",
+        "ai_capability",
+        "full_stack_solution",
+        "ecosystem",
+        "cost_and_delivery",
+        "automotive_domain_depth",
+        "overseas_go_to_market"
+      ],
+      "role_priority": {
+        "partner": [
+          "partner",
+          "solution_partner"
+        ],
+        "cloud_vendor": [
+          "cloud_vendor",
+          "cloud_platform",
+          "ai_cloud_platform"
+        ],
+        "customer": [
+          "customer",
+          "oem",
+          "auto_intelligence_platform"
+        ],
+        "competitor": [
+          "competitor",
+          "engineering_ai_services",
+          "automotive_engineering_services",
+          "automotive_engineering_validation"
+        ]
+      },
+      "downstream": {
+        "account_strategy_runner": "skills/account_strategy_skill/runner.py",
+        "report_runner": "skills/report_build_skill/account_strategy_runner.py"
+      }
+    },
+    "company_profile": {
+      "analysis_type": "company_profile",
+      "description": "单公司画像与洞察",
+      "intent_keywords_any": [
+        "公司画像",
+        "公司分析",
+        "company profile",
+        "深入洞察",
+        "主营业务",
+        "核心竞争力"
+      ],
+      "deliverables_default": [
+        "word",
+        "excel",
+        "ppt"
+      ],
+      "downstream": {
+        "company_profile_runner": "skills/company_profile_skill/runner.py",
+        "report_runner": "skills/report_build_skill/runner.py",
+        "bundle_runner": "skills/report_build_skill/company_profile_bundle_runner.py"
+      }
+    },
+    "competitor_benchmark": {
+      "analysis_type": "competitor_research",
+      "description": "目标公司与竞争对手对标",
+      "intent_keywords_any": [
+        "竞争对手",
+        "对标",
+        "benchmark",
+        "vs",
+        "compare",
+        "对比分析"
+      ],
+      "deliverables_default": [
+        "word",
+        "excel",
+        "ppt"
+      ],
+      "default_dimensions": [
+        "product",
+        "pricing",
+        "distribution",
+        "financial",
+        "core_technology",
+        "ai_capability",
+        "ecosystem"
+      ],
+      "downstream": {
+        "competitor_runner": "skills/competitor_research_skill/runner.py"
+      }
+    }
+  }
+}
