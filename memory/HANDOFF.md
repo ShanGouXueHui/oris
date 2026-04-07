@@ -376,3 +376,43 @@
 ### 操作口径
 - For mobile-first usage, prefer chat_md.
 - For formal briefing/export scenarios, explicitly request artifact_bundle.
+
+---
+
+## 2026-04-07 增量交接：Oris 洞察角色继续收口方向
+
+### 本轮确认的长期原则
+- Oris 的“洞察”能力不是只做伙伴洞察，而是通用公司洞察 / 联合方案洞察 / 客户突破洞察 / 竞对洞察。
+- 行业不限于汽车，设计时不要写死汽车语义。
+- 用户并发发消息是正常行为，后续必须通过单实例 trigger + queue worker 解决，而不是要求用户串行操作。
+- chat_md 与附件回复必须统一走同一 delivery executor，不能维持两套发送体系。
+- 默认优先 chat_md 手机可读回复；只有明确要求正式材料时才走 docx / pptx / xlsx。
+- 历史洞察存在老化问题；若不是同一天，应默认重跑而不是持续复用旧结论。
+
+### 下一阶段优先级
+1. 放开通用路由
+   - 去掉 account_strategy 对固定角色组合的硬依赖。
+   - 支持单公司洞察自动分流到 company_profile / company_insight 类 skill set。
+   - 支持多主体联合洞察自动分流到通用 account_strategy。
+
+2. 统一发送链路
+   - chat_md 注册为统一 delivery task。
+   - delivery executor 同时支持文本消息与附件消息。
+   - 生产链路不再直接依赖独立 sender 脚本。
+
+3. 单实例 + 排队
+   - trigger 增加 lock。
+   - trigger 只负责入队。
+   - worker 负责逐条执行 pipeline。
+   - message_id / case_code / chat_id 必须可追踪。
+
+4. freshness
+   - 同 case 但跨天：默认重新洞察。
+   - 同天且 prompt 高相似：允许复用或增量刷新。
+   - 用户明确要求“最新”时，强制重跑。
+
+### 已知报错样本（后续定位参考）
+- `account_strategy profile requires detected partner and cloud_vendor`
+- `missing FEISHU_APP_ID/FEISHU_APP_SECRET (or LARK_*)`
+- `register_report_build_delivery.py: error: unrecognized arguments: --report-prefix ...`
+
