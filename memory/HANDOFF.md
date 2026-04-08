@@ -416,3 +416,170 @@
 - `missing FEISHU_APP_ID/FEISHU_APP_SECRET (or LARK_*)`
 - `register_report_build_delivery.py: error: unrecognized arguments: --report-prefix ...`
 
+
+<!-- SESSION_HANDOFF_2026_04_08_FEISHU_ENTITY_PROVIDER_START -->
+## Session Handoff — 2026-04-08 — Feishu insight worker / company entity detection / provider env recovery
+
+### 1. 本项目固定定位
+ORIS = Operational Reasoning & Integration System。
+它不是聊天玩具，而是一个面向执行、具备推理能力、可整合多模型与多工具的 AI 研发员工系统。
+
+后续所有新对话都必须先从 GitHub 仓库读取并学习以下入口文件，再开始编码或排障：
+- AGENT.md
+- AGENTS.md
+- MEMORY.md
+- BOOTSTRAP.md
+- TOOLS.md
+- USER.md
+- docs/PROJECT_STATE.md
+- docs/MODEL_POLICY.md
+- docs/CHANGELOG_AGENT.md
+- docs/ANSWER_PROTOCOL.md
+- docs/SOURCE_POLICY.md
+- docs/ROUTING_POLICY.md
+- docs/CONFIG_GOVERNANCE.md
+- docs/PROVIDER_ORCHESTRATION.md
+- memory/HANDOFF.md
+
+如果新对话遇到“当前现象”和“docs/代码描述”不一致，必须：
+1. 先以 GitHub 仓库中的代码和 docs 为准进行对比；
+2. 再判断是运行态漂移、临时补丁未提交，还是 docs 过期；
+3. 严禁脱离仓库记忆直接重写。
+
+### 2. 本轮已确认的系统现状
+#### 2.1 Feishu 发送链路
+- Feishu sender 已恢复可用。
+- 之前 ack / final_send 失败的根因之一，是 `.env` 被误缩成仅剩 FEISHU_APP_ID / FEISHU_APP_SECRET，导致其他 provider key 丢失。
+- `.env.runtime` 曾存在，但 `.env` 不完整；后来 env 已重建。
+
+#### 2.2 Provider orchestration
+- Provider orchestration 已恢复运行。
+- 已验证以下脚本能够正常执行并产出：
+  - `scripts/quota_probe.py`
+  - `scripts/provider_scoreboard.py`
+  - `scripts/model_selector.py`
+- `orchestration/active_routing.json` 已能正常生成。
+- 当前 routing 结果显示：
+  - `primary_general -> openrouter/auto`
+  - `free_fallback -> qwen3.6-plus`
+  - `coding -> qwen-coder-turbo-0919`
+  - `cn_candidate_pool -> qwen3.6-plus`
+
+#### 2.3 环境变量状态
+- Feishu 保持不变。
+- 已重新补齐或恢复：
+  - OPENROUTER_API_KEY
+  - HF_TOKEN / HUGGINGFACE_HUB_TOKEN
+  - DASHSCOPE_API_KEY / BAILIAN_API_KEY
+  - GEMINI_API_KEY / GOOGLE_API_KEY
+  - ZHIPU_API_KEY / ZHIPUAI_API_KEY
+  - HUNYUAN_SECRET_ID / HUNYUAN_SECRET_KEY
+  - TENCENTCLOUD_SECRET_ID / TENCENTCLOUD_SECRET_KEY
+- 后续禁止再把 provider key 写死到代码里；只能从 `.env` / `.env.runtime` / 配置文件 / 数据库读取。
+
+#### 2.4 Worker 运行面
+- 曾出现多个 `insight_queue_worker.py` 实例并发，根因是：
+  - 老的 loop launcher `scripts/run_insight_queue_worker_loop.sh`
+  - 手工 nohup 启动
+  - lock file 只能防并发启动，不能阻止外部 respawn
+- 已识别出 loop launcher，并已禁用旧脚本副本：
+  - `scripts/run_insight_queue_worker_loop.sh.disabled`
+  - `scripts/run_insight_queue_worker_loop.sh.bak_*`
+- 目标状态应始终保持：**只允许 1 个 worker 实例**。
+
+### 3. 当前真正卡住的问题
+#### 3.1 不是 Feishu 发送问题
+Feishu 现在能收到消息，但收到的是：
+- prompt 被加工后的占位内容；
+- 或 profile / bootstrap 占位内容；
+- 或渲染异常提示；
+而不是真正的公司洞察正文。
+
+#### 3.2 真正根因：company entity detection / target_company binding 失真
+`company_profile` 主链路里，目标公司识别不稳定，典型问题：
+- `n8n` / `dify` / `Akkodis` 有时能识别；
+- `引望` 会错误命中为 `华为云`；
+- 更糟时，行业词如 `AI Agent` 会被误识别成 company entity；
+- 导致上游 official ingest 落库的是错误实体或空实体；
+- 后续 `source_snapshot_count / evidence_count / metric_count` 为 0；
+- renderer 只能输出 bootstrap 占位内容或阻断说明。
+
+换言之：**当前最优先问题不是继续雕正文模板，而是先把“通用公司识别能力”上线到主链路。**
+
+### 4. 后续工作的优先级（必须按顺序）
+#### P0：先修 company entity detection 主链路
+目标：
+- 让 `company_profile` 在进入主流程前，先运行一个通用 detector；
+- detector 优先识别“用户真正要求洞察的单一公司主体”；
+- 严禁把行业概念、能力名词、竞品集合、场景描述识别为公司。
+
+要求：
+1. 不写死常量到代码；
+2. 规则、阈值、provider_order 放在独立配置文件，至少在 `config/`；
+3. 可以有 fallback，但 fallback 也必须配置化；
+4. 识别结果要带：
+   - `target_company`
+   - `confidence`
+   - `method`
+   - `reason`
+5. 主链路仅在 confidence 达标时覆盖原 `target_company`；
+6. 若识别失败，要显式阻断，并给出结构化错误，不允许继续产出垃圾正文。
+
+#### P1：把 detector 接进 `run_generic_insight_pipeline.py`
+要求：
+- `company_profile` 类型进入 pipeline 时，先做 precheck；
+- precheck 成功才继续 official source ingest；
+- precheck 失败则直接返回明确错误；
+- worker log 中必须增加：
+  - `precheck`
+  - `detected_target_company`
+  - `detection_confidence`
+  - `detection_method`
+
+#### P2：修正文聊天版渲染
+前提是 P0 / P1 先完成。
+要求：
+- Feishu 最终发送的必须是“真实洞察正文”；
+- 不是 prompt；
+- 不是 `company_profile_skill DB-backed profile ready...` 这种占位语；
+- 不是 bootstrap checklist；
+- 不是失败提示，除非真的阻断。
+
+#### P3：回写 docs / memory
+修完后，必须同步更新：
+- docs/PROJECT_STATE.md
+- memory/HANDOFF.md
+- docs/CHANGELOG_AGENT.md
+必要时新增一个 DECISIONS 文档，记录：
+- 为什么引入通用 entity detector
+- 为什么禁止行业概念误识别成公司
+- 为什么 company_profile 必须先做 precheck
+
+### 5. 编程规范（必须继续遵守）
+1. 常量不要写死在代码里，写到配置文件、数据库或 env。
+2. 不要让我手工找文件、手工改代码；要给 copy-paste 可执行命令。
+3. 改代码前先读 GitHub docs 和记忆文件，再出 plan。
+4. 改代码时先备份，再修改，再自检，再验证。
+5. 不要用临时补丁掩盖主问题；优先做可复用、可配置、可回写 docs 的正式解法。
+6. 任何“看起来省事”的临时方案，如果会污染主链路，就不要上。
+7. 遇到异常，先区分：
+   - 识别问题
+   - 配置问题
+   - provider 问题
+   - 渲染问题
+   - Feishu transport 问题
+   不要混为一谈。
+8. 后续若需要引入外部 skill / 开源组件，先比较：
+   - 是否真能提升主链路
+   - 是否可配置
+   - 是否不会覆盖现有 provider orchestration
+   - 是否能留下 docs 和记忆
+
+### 6. 新对话第一目标
+新对话的唯一第一目标是：
+
+**把“通用公司识别能力”正式上线到 ORIS 主链路，并通过 Feishu 发送出真实公司洞察正文。**
+
+在这个目标完成前，不要继续做花哨优化，不要继续堆模板，不要继续修饰 prompt。
+<!-- SESSION_HANDOFF_2026_04_08_FEISHU_ENTITY_PROVIDER_END -->
+
