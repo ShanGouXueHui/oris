@@ -1,64 +1,94 @@
-# Provider Orchestration Module
+# Provider Orchestration Module v2
 
-## Goal
+## 1. Goal
 Build a provider orchestration layer for ORIS that can:
-- track free and low-cost model sources
-- probe model availability and quota status
-- route by role (`general`, `report`, `coding`, `fallback`)
-- replace degraded or expiring free candidates automatically
+- discover candidate model sources
+- probe availability and quota status
+- route by role (`primary_general`, `report_generation`, `coding`, `cn_candidate_pool`, `free_fallback`)
+- retry first, then fail over automatically
+- keep runtime decisions machine-readable and auditable
 
-## Files
-- `orchestration/provider_registry.json`
+---
+
+## 2. File roles
+### Policy / source-of-truth inputs
 - `orchestration/routing_policy.yaml`
+
+### Generated registry / scoring / runtime outputs
+- `orchestration/provider_registry.json`
 - `orchestration/provider_health_snapshot.json`
-- `orchestration/active_routing.json`
 - `orchestration/provider_scoreboard.json`
+- `orchestration/runtime_plan.json`
+- `orchestration/active_routing.json`
+
+### Supporting scripts
 - `scripts/quota_probe.py`
 - `scripts/provider_scoreboard.py`
 - `scripts/model_selector.py`
+- `scripts/runtime_execute.py`
+- `scripts/oris_infer.py`
+- `scripts/oris_http_api.py`
 
-## Design principles
-1. Do not hardcode promotional free-policy assumptions as permanent truth.
-2. Separate:
+---
+
+## 3. Design principles
+1. 不把任何“免费政策”当永久事实
+2. 区分：
    - provider registry
    - routing policy
-   - runtime health snapshot
-3. Prefer SecretRef-managed credentials.
-4. Treat provider marketing promises and runtime availability as different things.
-5. Keep model replacement policy machine-readable.
+   - health snapshot
+   - score layer
+   - runtime plan
+   - active routing
+3. Secret 统一通过 SecretRef / secrets store 管理
+4. provider 宣传口径不等于 runtime 可用性
+5. 所有替换、降级、临时封禁都要机器可读
 
-## Current phase
-This module now auto-refreshes the OpenRouter catalog through the OpenRouter Models API and writes runtime snapshots automatically.
-The provider registry should be treated as an auto-generated cache, not as a hand-maintained source of truth.
-Manual work should be limited to routing policy and rare overrides.
+---
 
-## Decision layer
-The orchestration stack now includes an automatic selector that writes `orchestration/active_routing.json`.
-This file should be treated as the current routing source of truth.
+## 4. Source of truth hierarchy
+### 路由规则真源
+- `routing_policy.yaml`
 
-## Scoring layer
-ORIS now generates `provider_scoreboard.json` as an intermediate automatic scoring layer between provider probes and final route selection.
+### 当前已确认运行基线
+- `active_routing.json`
 
-## Retry and failover principle
-Target runtime behavior is retry first, then automatic failover to the next eligible model, so end users can use ORIS with minimal visible interruption.
+### 观测与评分中间层
+- `provider_health_snapshot.json`
+- `provider_scoreboard.json`
+- `runtime_plan.json`
 
-## Runtime plan layer
-ORIS now generates runtime_plan.json to describe retry-first and failover-second execution chains for each role.
+解释：
+- `active_routing.json` 可以作为当前运行基线，但不是“每次 probe 都自动要提交的文件”
+- health / scoreboard / runtime_plan 更偏运行观测层，默认不作为人工长期记忆
 
-## Failure memory layer
-ORIS now records runtime feedback, tracks consecutive failures, applies temporary blocking, and computes block-aware execution_primary for real runtime use.
+---
 
-## Strict free gate
-ORIS now enforces machine-verified free-only policy not only in active routing, but also inside runtime free-fallback failover plans.
+## 5. Commit policy
+### 可提交
+- 路由规则变化
+- selector 逻辑变化
+- 经验证的 `active_routing.json` 基线重置
 
-## Runtime executor layer
-ORIS now includes runtime_execute.py to execute execution_primary, apply retry, fail over to the next candidate, and write runtime feedback automatically.
+### 默认不提交
+- 每次 probe 导致的 health snapshot 波动
+- 临时失败记忆
+- 一次性 provider 恢复文件
+- 纯运行态诊断产物
 
-## Unified inference entrypoint
-ORIS now exposes scripts/oris_infer.py as a stable local entrypoint. Callers only provide role and prompt, while ORIS handles planning, execution, retry, failover, feedback, and execution logging internally.
+---
 
-## Local HTTP API layer
-ORIS now exposes a local HTTP API through scripts/oris_http_api.py. Gateways and upper-layer services can call /infer instead of invoking internal scripts directly.
+## 6. Runtime behavior
+- 先 retry
+- 再 failover
+- 记录连续失败
+- 临时封禁异常候选
+- 使用 block-aware execution primary
+- 写入 execution logging
 
-## Commercial HTTPS entrypoint
-ORIS now exposes a secure external HTTPS entrypoint through Nginx on control.orisfy.com/oris-api/*. Internal HTTP remains loopback-only and is not the external integration surface.
+---
+
+## 7. 商用品质要求
+- 用户不应感知 provider 抖动
+- failover 必须有边界，不能跨任务类型乱跳
+- 任何自动选择结果都应可追溯到 policy + health + score + plan

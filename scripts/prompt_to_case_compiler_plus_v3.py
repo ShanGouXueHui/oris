@@ -8,6 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = ROOT / "scripts" / "prompt_to_case_compiler_plus_v2.py"
 
+sys.path.insert(0, str(ROOT / "scripts"))
+from company_entity_detector import detect_target_company  # noqa: E402
+
 GENERIC_CUSTOMER_NAME = "generic_automotive_customer"
 GENERIC_CUSTOMER_DISPLAY = "通用车企客户（未指定）"
 
@@ -48,6 +51,7 @@ GENERIC_PPT_SECTIONS = [
     "risks"
 ]
 
+
 def parse_json_text(s: str):
     s = (s or "").strip()
     if not s:
@@ -65,6 +69,7 @@ def parse_json_text(s: str):
             return None
     return None
 
+
 def run_json(cmd):
     r = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if r.returncode != 0:
@@ -73,6 +78,7 @@ def run_json(cmd):
     if obj is None:
         raise RuntimeError("upstream stdout is not valid json")
     return obj
+
 
 def uniq_keep_order(items):
     seen = set()
@@ -86,9 +92,11 @@ def uniq_keep_order(items):
         out.append(x)
     return out
 
+
 def contains_any(text: str, words):
     s = (text or "").lower()
     return any(w.lower() in s for w in words)
+
 
 def infer_chat_md(prompt_text: str):
     return contains_any(prompt_text, [
@@ -104,11 +112,87 @@ def infer_chat_md(prompt_text: str):
         "直接回复"
     ])
 
+
 def infer_generic_automotive_customer(prompt_text: str):
     return contains_any(prompt_text, [
         "汽车行业", "车企", "主机厂", "tier1", "tier-1", "tier 1",
         "智驾", "智能驾驶", "座舱", "汽车客户", "整车厂"
     ])
+
+
+def should_run_company_precheck(compiled_case: dict):
+    profile_code = compiled_case.get("profile_code")
+    analysis_type = compiled_case.get("analysis_type")
+    return profile_code == "company_profile" or analysis_type == "company_profile"
+
+
+def build_target_company_binding(det: dict):
+    canonical = det.get("canonical_name") or det.get("target_company")
+    return {
+        "name": canonical,
+        "display_name": canonical,
+        "type": "target_company",
+        "confidence": det.get("confidence"),
+        "method": det.get("method"),
+        "aliases": det.get("aliases") or [],
+        "sources": [{"kind": "company_entity_detector", "reason": det.get("reason")}],
+    }
+
+
+def apply_company_precheck(compiled_case: dict, prompt_text: str):
+    if not should_run_company_precheck(compiled_case):
+        return compiled_case
+
+    role_bindings = compiled_case.setdefault("role_bindings", {})
+    existing = role_bindings.get("target_company")
+    existing_name = ""
+    if isinstance(existing, dict):
+        existing_name = (existing.get("name") or existing.get("display_name") or "").strip()
+    elif isinstance(existing, str):
+        existing_name = existing.strip()
+
+    det = detect_target_company(prompt_text)
+    precheck = {
+        "kind": "company_entity_detection",
+        "ok": bool(det.get("ok")),
+        "blocked": bool(det.get("blocked")),
+        "reason": det.get("reason"),
+        "method": det.get("method"),
+        "confidence": det.get("confidence"),
+        "target_company": det.get("target_company"),
+        "canonical_name": det.get("canonical_name"),
+        "aliases": det.get("aliases") or [],
+        "candidates": det.get("candidates") or [],
+        "existing_target_company": existing_name,
+    }
+    compiled_case["precheck"] = precheck
+
+    trace = compiled_case.setdefault("trace_tail", [])
+    trace.append(f"company_precheck:{precheck['reason']}")
+
+    if not det.get("ok"):
+        role_bindings["target_company"] = None
+        compiled_case["detected_entities"] = []
+        compiled_case["blocked"] = True
+        compiled_case["blocked_reason"] = "target_company_detection_failed"
+        compiled_case["precheck"]["upstream_target_company_cleared"] = True
+        return compiled_case
+
+    detected_name = (det.get("canonical_name") or det.get("target_company") or "").strip()
+    if existing_name and existing_name.lower() != detected_name.lower():
+        role_bindings["target_company"] = None
+        compiled_case["detected_entities"] = []
+        compiled_case["blocked"] = True
+        compiled_case["blocked_reason"] = "target_company_binding_conflict"
+        compiled_case["precheck"]["blocked"] = True
+        compiled_case["precheck"]["ok"] = False
+        compiled_case["precheck"]["reason"] = "detector_existing_binding_conflict"
+        compiled_case["precheck"]["upstream_target_company_cleared"] = True
+        return compiled_case
+
+    role_bindings["target_company"] = build_target_company_binding(det)
+    return compiled_case
+
 
 def normalize_case(compiled_case: dict, prompt_text: str):
     if not isinstance(compiled_case, dict):
@@ -122,7 +206,6 @@ def normalize_case(compiled_case: dict, prompt_text: str):
         compiled_case["delivery_mode"] = "chat_md"
         compiled_case["deliverables"] = ["chat_md"]
 
-    # 核心泛化逻辑：partner + cloud_vendor 存在时，不再要求具体客户名
     if profile_code == "account_strategy_partner_cloud_customer" or analysis_type == "account_strategy":
         partner = role_bindings.get("partner")
         cloud_vendor = role_bindings.get("cloud_vendor")
@@ -162,7 +245,9 @@ def normalize_case(compiled_case: dict, prompt_text: str):
             trace = compiled_case.setdefault("trace_tail", [])
             trace.append("generic_customer_fallback")
 
+    compiled_case = apply_company_precheck(compiled_case, prompt_text)
     return compiled_case
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -189,6 +274,7 @@ def main():
         p.write_text(json.dumps(compiled_case, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(json.dumps(compiled_case, ensure_ascii=False, indent=2))
+
 
 if __name__ == "__main__":
     main()

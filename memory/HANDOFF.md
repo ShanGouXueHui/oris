@@ -583,3 +583,75 @@ Feishu 现在能收到消息，但收到的是：
 在这个目标完成前，不要继续做花哨优化，不要继续堆模板，不要继续修饰 prompt。
 <!-- SESSION_HANDOFF_2026_04_08_FEISHU_ENTITY_PROVIDER_END -->
 
+## 2026-04-08 drift triage and governance tightening
+本轮已完成：
+- 正式补充 GitHub 同步治理、实体识别治理、洞察投递治理文档
+- 增强 `ROUTING_POLICY / CONFIG_GOVERNANCE / PROVIDER_ORCHESTRATION`
+- `.gitignore` 正式纳管 runtime 日志 / lock / out 文件
+- 运行日志文件开始退出 Git 索引，避免继续污染主仓库
+
+当前固定判断：
+- 主阻塞仍是 company entity detection，不是 Feishu transport
+- `active_routing.json` 是生成型基线快照，不应随每次运行噪音式提交
+- Feishu 聊天链路必须只发送真实正文或明确阻断提示，不得再发送 prompt / bootstrap / placeholder
+
+当前漂移分类：
+- keep-mainline：
+  - `config/company_entity_detection.json`
+  - `config/company_focus_config.json`
+  - `config/entity_resolution.json`
+  - `config/insight_delivery_config.json`
+  - `scripts/build_company_focus_prompt.py`
+  - `scripts/company_entity_detector.py`
+  - `scripts/feishu_insight_enqueue.py`
+  - `scripts/insight_queue_worker.py`
+  - `scripts/render_mobile_insight.py`
+- hold-experimental：
+  - `scripts/feishu_account_strategy_trigger.py`
+  - `scripts/run_account_strategy_case_pipeline.py`
+  - `scripts/run_account_strategy_trigger_loop.sh`
+  - `scripts/run_insight_queue_worker_loop.sh.disabled`
+- drop-from-git：
+  - `orchestration/*.jsonl`
+  - `orchestration/*.lock`
+  - `orchestration/*.out`
+  - `orchestration/restore_provider_files.json`
+
+下一步固定顺序：
+1. 正式接入通用 company entity detection 到 mainline compiler / pipeline
+2. 清理旧 direct-send / placeholder 路径
+3. 本地自检
+4. Feishu 实测
+5. 再更新 docs / handoff / decisions
+
+
+## 2026-04-08 company entity mainline — stabilized
+本轮已完成：
+- `company_entity_detector.py` 正式接入 company_profile 主链路
+- 识别顺序已调整为：
+  - `registry_alias`
+  - `regex_fallback`
+  - `llm_arbitration`
+  - `gliner`
+- 当前默认禁用本地 GLiNER
+- `llm_arbitration` 已接入 `scripts/oris_infer.py`
+- `llm_arbitration.role` 当前使用 `cn_candidate_pool`
+- compare 请求与行业概念请求均已前置阻断
+- `run_generic_insight_pipeline_plus.py` 在 blocked 场景直接短路返回
+- `insight_queue_worker.py` 只发送真实正文或阻断提示
+- pipeline 内 direct send 已退出主链路
+
+已验证：
+- `Anthropic` 单公司请求可正常通过
+- `Akkodis` / `引望` 别名识别可正常通过
+- `AI Agent 行业现在怎么样` 会阻断
+- `比较华为云和阿里云谁更强` 会阻断
+
+当前固定判断：
+- 当前真正可用的商用主方案，不是强依赖本地 GLiNER
+- 当前机器配置下，应优先使用 alias / regex / LLM arbitration
+- 若后续要重新启用本地 GLiNER 作为正式增强层，应先升级机器配置
+
+已知后续项：
+- compiler_trace 仍保留 upstream v2 的历史 entity_detection 痕迹
+- compare 扩展链路的 `llm_compare.api_key_not_found` 当前不阻塞 entity precheck 主链路，可后续单独治理

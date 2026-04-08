@@ -71,3 +71,34 @@ P5：更新 docs/PROJECT_STATE.md、memory/HANDOFF.md、必要时新增 DECISION
 - 当前 company entity detection 是否仍有 alias_match 误判、行业词抢占、竞品列表污染主实体的问题。
 
 从读取 GitHub md 和记忆开始，不要直接写代码。
+
+
+## 2026-04-08 governance addendum
+进入新对话后，除原有必读文件外，还必须优先读取：
+- `docs/GITHUB_SYNC_POLICY.md`
+- `docs/ENTITY_DETECTION_POLICY.md`
+- `docs/INSIGHT_DELIVERY_POLICY.md`
+- `docs/DECISIONS/2026-04-08-github-sync-and-entity-detection-governance.md`
+
+额外要求：
+- 先判断 worktree 漂移属于：主链路候选 / 运行噪音 / 实验残留
+- 不允许把 jsonl / lock / out 这类 runtime 文件继续带进主链路提交
+- `active_routing.json` 只在基线变更被验证后提交
+- Feishu 聊天链路只允许发送真实正文或阻断提示
+- company entity detection 失败时必须明确阻断
+
+
+## 2026-04-08 company entity mainline addendum
+进入新对话后，继续 ORIS 公司洞察链路时，必须优先知道以下事实：
+
+- 当前公司识别主链路已正式切为：
+  - `registry_alias`
+  - `regex_fallback`
+  - `llm_arbitration`
+  - `gliner`
+- 当前默认禁用本地 GLiNER
+- `llm_arbitration` 通过 `scripts/oris_infer.py` 调用，当前 role 为 `cn_candidate_pool`
+- 单公司请求可放行；行业概念 / 多公司比较请求应阻断
+- `run_generic_insight_pipeline_plus.py` 已支持 blocked 场景直接短路返回
+- `insight_queue_worker.py` 只发送真实正文或阻断提示
+- 当前已知尾项：compiler_trace 中仍保留 upstream v2 的历史 entity_detection 痕迹，但不阻塞主链路

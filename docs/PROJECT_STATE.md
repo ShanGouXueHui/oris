@@ -547,3 +547,77 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
 2. chat_md 发送链路曾直接依赖 `send_feishu_text_message.py`，与附件链路不一致。
 3. artifact 注册脚本接口口径存在不一致，出现 `--report-prefix` 参数不兼容问题。
 4. trigger 允许重复启动，存在多实例并发读写风险。
+
+
+## Update — 2026-04-08 Governance tightening
+当前状态新增结论：
+- GitHub 现被再次明确为 ORIS 的权威长期记忆与主链路代码来源
+- 已补充：
+  - `docs/GITHUB_SYNC_POLICY.md`
+  - `docs/ENTITY_DETECTION_POLICY.md`
+  - `docs/INSIGHT_DELIVERY_POLICY.md`
+  - `docs/DECISIONS/2026-04-08-github-sync-and-entity-detection-governance.md`
+- `.gitignore` 已正式接管 runtime 日志 / lock / out 等运行噪音治理
+- `active_routing.json` 继续保留为“可跟踪但需审慎提交”的已验证基线快照
+- 当前第一优先级仍然不是继续雕聊天模板，而是把通用 company entity detection 正式接入主链路，并确保识别失败时明确阻断
+
+当前漂移治理口径：
+- 应进入主链路评审：
+  - `config/company_entity_detection.json`
+  - `config/company_focus_config.json`
+  - `config/entity_resolution.json`
+  - `config/insight_delivery_config.json`
+  - `scripts/build_company_focus_prompt.py`
+  - `scripts/company_entity_detector.py`
+  - `scripts/feishu_insight_enqueue.py`
+  - `scripts/insight_queue_worker.py`
+  - `scripts/render_mobile_insight.py`
+- 暂不纳入本轮主链路：
+  - `scripts/feishu_account_strategy_trigger.py`
+  - `scripts/run_account_strategy_case_pipeline.py`
+  - `scripts/run_account_strategy_trigger_loop.sh`
+  - `scripts/run_insight_queue_worker_loop.sh.disabled`
+- 明确属于运行噪音：
+  - `orchestration/*.jsonl`
+  - `orchestration/*.lock`
+  - `orchestration/*.out`
+  - `orchestration/restore_provider_files.json`
+
+
+## Update — 2026-04-08 Company entity mainline stabilized
+本轮已完成 company_profile 主链路的正式收口：
+
+### 主链路结果
+- `company_entity_detector.py` 已接入正式主链路
+- 当前识别顺序为：
+  - `registry_alias`
+  - `regex_fallback`
+  - `llm_arbitration`
+  - `gliner`
+- 当前默认禁用本地 GLiNER
+- `llm_arbitration` 当前通过 `scripts/oris_infer.py` 调用，role 使用 `cn_candidate_pool`
+
+### 当前行为
+- 单公司请求可放行，例如：
+  - `Anthropic`
+  - `Akkodis`
+  - `引望`
+- 行业概念请求会阻断，例如：
+  - `AI Agent 行业现在怎么样`
+- 多公司比较请求会阻断，例如：
+  - `比较华为云和阿里云谁更强`
+
+### 聊天链路行为
+- pipeline 在 blocked 场景直接返回 `blocked=true`
+- worker 只发送真实正文或明确阻断提示
+- pipeline 内 direct send 已退出正式主链路
+- 当前不会再继续向 Feishu 发送 prompt / bootstrap / placeholder 占位正文
+
+### 当前资源判断
+- 当前部署机（2C2G / 1.6GiB 内存）不适合作为 GLiNER medium 的稳定线上主依赖
+- 当前更合适的线上策略是 alias / regex / LLM arbitration
+- 若后续要重新启用本地 GLiNER 作为正式增强层，推荐升级到至少 `4C8G`，更建议 `4C16G`
+
+### 已知尾项
+- compiler 的主输出面已清理 blocked 场景下的 target_company / detected_entities
+- `compiler_trace` 中仍保留 upstream v2 的历史 entity_detection 痕迹，属于已知后续优化项，不阻塞当前主链路发布

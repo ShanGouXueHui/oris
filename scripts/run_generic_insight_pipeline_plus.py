@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INNER = ROOT / "scripts" / "run_generic_insight_pipeline.py"
-COMPILER = ROOT / "scripts" / "prompt_to_case_compiler_plus_v2.py"
+COMPILER = ROOT / "scripts" / "prompt_to_case_compiler_plus_v3.py"
 RENDER = ROOT / "scripts" / "render_chat_md_from_bundle.py"
 ACCOUNT_CHAT_RENDER = ROOT / "scripts" / "render_account_strategy_chat_md.py"
 SEND = ROOT / "scripts" / "send_feishu_text_message.py"
@@ -150,6 +150,29 @@ def resolve_bundle_json_path(payload: dict, artifact_paths: list[str]) -> str:
     }
     raise RuntimeError(f"bundle json path not found; debug={debug}")
 
+def build_blocked_result(compiled_case: dict):
+    precheck = compiled_case.get("precheck") or {}
+    return {
+        "ok": True,
+        "blocked": True,
+        "profile_code": compiled_case.get("profile_code"),
+        "analysis_type": compiled_case.get("analysis_type"),
+        "compiled_case_path": compiled_case.get("compiled_case_path"),
+        "precheck": precheck,
+        "payload": {
+            "precheck": precheck,
+            "chat_delivery_mode": "blocked",
+            "chat_reply_path": "",
+            "chat_reply_preview": "",
+            "registered_files": [],
+            "registered_count": 0,
+            "delivery_executor_rc": None,
+            "delivery_executor_stdout_tail": "",
+            "delivery_executor_stderr_tail": ""
+        }
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--prompt-text")
@@ -170,6 +193,10 @@ def main():
         ])
     else:
         raise SystemExit("must provide --prompt-text or --compiled-case-path")
+
+    if compiled_case.get("blocked") or ((compiled_case.get("precheck") or {}).get("blocked")):
+        print(json.dumps(build_blocked_result(compiled_case), ensure_ascii=False, indent=2))
+        return
 
     inner = run_json([
         sys.executable,
@@ -228,16 +255,6 @@ def main():
             ])
         chat_send = None
         send_rc = None
-        if args.enable_register_delivery and args.chat_id:
-            chat_send = run_json([
-                sys.executable,
-                str(SEND),
-                "--chat-id",
-                args.chat_id,
-                "--text-file",
-                str(ROOT / md_out["output_path"])
-            ])
-            send_rc = 0 if chat_send.get("ok") else 1
 
         if "report_build_artifacts" in payload:
             payload["internal_report_build_artifacts"] = payload.get("report_build_artifacts") or []

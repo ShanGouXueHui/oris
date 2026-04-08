@@ -1,30 +1,47 @@
-.env
-.env.*
-!.env.example
-env/*.local
+# Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
 
-# runtime logs / states
-orchestration/*.jsonl
-orchestration/*.log
-orchestration/*_state.json
-orchestration/tmp/
+# Virtual environments
+.venv/
+venv/
+env/
 
-# generated outputs
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local outputs / temp
 outputs/
-inputs/generated_cases/
+tmp/
+*.pid
 
-# backups
-backups/
+# Local backups
 *.bak_*
-*.finalfix_*.bak
-*.fix_*.bak
-*.initfix_*.bak
-*.outputfix*.bak
+*.tmp
 
-# local snapshots
+# Runtime orchestration noise
+orchestration/*.jsonl
+orchestration/*.lock
+orchestration/*.out
+orchestration/*_state.json
+orchestration/restore_provider_files.json
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# ORIS local runtime / generated noise
+backups/
+inputs/generated_cases/
+orchestration/*stdout*.log
+orchestration/*nohup*.log
 orchestration/provider_health_snapshot.json
 orchestration/provider_registry.json
 orchestration/provider_scoreboard.json
+orchestration/runtime_plan.json
+*.bak

@@ -1,0 +1,82 @@
+{
+  "company_detector": {
+    "provider_order": [
+      "registry_alias",
+      "regex_fallback",
+      "llm_arbitration",
+      "gliner"
+    ],
+    "registry_alias": {
+      "enabled": true
+    },
+    "gliner": {
+      "enabled": false,
+      "model_name": "urchade/gliner_medium-v2.1",
+      "local_dir": "/home/admin/.cache/oris/models/gliner_medium_v2_1",
+      "candidate_labels": [
+        "company",
+        "organization",
+        "vendor",
+        "product company"
+      ],
+      "threshold": 0.45,
+      "max_text_length": 1200,
+      "prefer_local_cache": true,
+      "auto_download_if_missing": true
+    },
+    "regex_fallback": {
+      "enabled": true,
+      "patterns": [
+        "对\\s*([A-Za-z0-9._+\\-/\\u4e00-\\u9fa5]+)\\s*做一份",
+        "对\\s*([A-Za-z0-9._+\\-/\\u4e00-\\u9fa5]+)\\s*做",
+        "请基于最新可得信息，对\\s*([A-Za-z0-9._+\\-/\\u4e00-\\u9fa5]+)",
+        "分析\\s*([A-Za-z0-9._+\\-/\\u4e00-\\u9fa5]+)",
+        "关于\\s*([A-Za-z0-9._+\\-/\\u4e00-\\u9fa5]+)\\s*做一份"
+      ]
+    },
+    "llm_arbitration": {
+      "enabled": true,
+      "confidence_below": 0.6,
+      "role": "cn_candidate_pool",
+      "infer_script": "scripts/oris_infer.py",
+      "timeout_seconds": 90,
+      "parse_json_from_text": true,
+      "allow_on_compare_requests": false,
+      "fail_closed": true
+    },
+    "blocklist": [
+      "AI",
+      "AI Agent",
+      "Workflow",
+      "Workflow Automation",
+      "Integration Platform",
+      "Developer Tooling",
+      "Platform",
+      "Tooling",
+      "公司",
+      "企业",
+      "平台",
+      "行业",
+      "洞察",
+      "能力",
+      "产品",
+      "商业模式",
+      "核心优势",
+      "能力边界",
+      "潜在短板",
+      "解决方案",
+      "商务合作",
+      "竞争判断",
+      "Word",
+      "PPT",
+      "Excel"
+    ],
+    "cleanup_suffixes": [
+      "公司",
+      "企业",
+      "做一份",
+      "洞察",
+      "分析"
+    ]
+  }
+}

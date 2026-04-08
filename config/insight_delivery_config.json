@@ -1,0 +1,29 @@
+{
+  "feishu_chunk_limit": 1800,
+  "ack_text": "已收到你的洞察请求，正在分析中。\n默认优先返回适合手机直接阅读的结构化结论；若你明确要求 Word / PPT / Excel，再走正式材料模式。",
+  "render_fail_text": "本次洞察未形成可审计的聊天正文；我已阻断占位内容发送，并记录问题。",
+  "exec_fail_text": "这条洞察任务执行失败了，我已记录错误并保留原始请求。请稍后重试。",
+  "entity_block_text": "当前未能稳定识别本次要分析的目标公司，已阻断正式洞察生成。请直接给出明确公司名称，或减少行业词/竞品混杂表述后再试。",
+  "placeholder_blocklist": [
+    "company_profile_skill",
+    "rich company_profile bundle generated from DB-backed",
+    "analysis_run_count_recent",
+    "source_snapshot_count_recent",
+    "profile ready; it now reads persisted",
+    "Let report_build_skill consume",
+    "No source snapshots found",
+    "当前结果未形成可审计的正式洞察正文",
+    "上游仅返回了 profile/skill/bootstrap 占位信息"
+  ],
+  "send_rules": {
+    "allow_direct_send_inside_pipeline": false,
+    "worker_is_single_sender": true
+  },
+  "send_fail_text": "聊天正文发送失败；我已记录错误。",
+  "blocked_result_summary_text": "当前未形成可审计正式正文，已阻断占位内容发送。",
+  "blocked_result_detail_lines": [
+    "当前公司实体识别或公司绑定结果异常。",
+    "当前 source snapshot / evidence / metric 数据不足，不能输出正式商务洞察。",
+    "请先修复实体识别与公司绑定，再补充官方来源抓取与证据落库。"
+  ]
+}

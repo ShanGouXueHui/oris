@@ -1,0 +1,141 @@
+{
+  "entity_registry_path": "config/insight_entity_registry.json",
+  "strong_aliases": {
+    "Dify": [
+      "Dify",
+      "Dify.AI"
+    ],
+    "n8n": [
+      "n8n"
+    ],
+    "Akkodis": [
+      "Akkodis",
+      "AKKODIS"
+    ],
+    "引望": [
+      "引望",
+      "Yinwang",
+      "深圳引望智能技术有限公司",
+      "引望智能"
+    ],
+    "华为云": [
+      "Huawei Cloud",
+      "华为云"
+    ],
+    "Zapier": [
+      "Zapier"
+    ],
+    "Make": [
+      "Make",
+      "Make.com"
+    ],
+    "Mendix": [
+      "Mendix"
+    ],
+    "Microsoft Power Automate": [
+      "Microsoft Power Automate",
+      "Power Automate"
+    ],
+    "Anthropic": [
+      "Anthropic",
+      "Anthropic PBC",
+      "Anthropic AI"
+    ]
+  },
+  "min_confidence": 0.6,
+  "ambiguous_gap": 0.08,
+  "min_alias_length": 2,
+  "negative_terms": [
+    "AI",
+    "AI Agent",
+    "Workflow",
+    "Workflow Automation",
+    "Integration",
+    "Integration Platform",
+    "Platform",
+    "Developer",
+    "Developer Tooling",
+    "Tooling",
+    "Cloud",
+    "Company",
+    "Profile",
+    "Insight",
+    "LLM",
+    "Model",
+    "API",
+    "公司",
+    "企业",
+    "平台",
+    "行业",
+    "洞察",
+    "能力",
+    "产品",
+    "商业模式",
+    "核心优势",
+    "能力边界",
+    "潜在短板",
+    "解决方案",
+    "商务合作",
+    "竞争判断",
+    "Word",
+    "PPT",
+    "Excel"
+  ],
+  "compare_markers": [
+    " vs ",
+    " VS ",
+    "对比",
+    "比较",
+    "谁更",
+    "哪个好"
+  ],
+  "cleanup_prefixes": [
+    "请基于最新可得信息，对",
+    "请对",
+    "请",
+    "对",
+    "关于",
+    "分析",
+    "研究",
+    "洞察"
+  ],
+  "cleanup_suffixes": [
+    "公司",
+    "企业",
+    "做一份",
+    "洞察",
+    "分析",
+    "报告",
+    "画像",
+    "情况"
+  ],
+  "company_suffix_hints": [
+    "集团",
+    "控股",
+    "有限公司",
+    "股份",
+    "科技",
+    "智能",
+    "云",
+    "汽车",
+    "工业"
+  ],
+  "hf_token_env_keys": [
+    "HF_TOKEN",
+    "HUGGINGFACE_TOKEN",
+    "HUGGING_FACE_TOKEN",
+    "huggingface_token",
+    "hf_token"
+  ],
+  "hf_token_secret_keys": [
+    "HF_TOKEN",
+    "HUGGINGFACE_TOKEN",
+    "HUGGING_FACE_TOKEN",
+    "huggingface_token",
+    "hf_token"
+  ],
+  "prompt_template": "你是企业实体识别器。任务：从用户请求中只识别“本次要被分析的目标公司主体”。\n要求：\n1) 只返回一个最可能的目标公司；\n2) 如果文本里既有目标公司又有竞品/行业词，只选目标公司；\n3) 不要把 AI Agent、Workflow Automation、Integration Platform、Developer Tooling 这类行业概念识别成公司；\n4) 若无法确认，返回 unknown。\n输出 JSON：{\"target_company\":\"...\",\"confidence\":0~1,\"aliases\":[...],\"reason\":\"...\"}\n用户请求：\n{{text}}",
+  "block_compare_requests": true,
+  "compare_block_reason_code": "compare_request_not_single_company",
+  "llm_arbitration_prompt_template": "你是 ORIS 的企业主体识别仲裁器。\n任务：从用户请求中识别“本次要被分析的唯一目标公司主体”。\n要求：\n1) 只返回一个最可能的目标公司；\n2) 如果请求本质上是行业趋势、概念讨论、方法论、产品类别，而不是公司主体，返回 unknown；\n3) 如果请求是在比较多个公司，也返回 unknown；\n4) 不要把 AI Agent、Workflow Automation、Integration Platform、Developer Tooling、Platform、Tooling、Cloud 这类概念当公司；\n5) 只输出 JSON，不要输出解释性前后文。\n输出 JSON：{\"target_company\":\"...\",\"confidence\":0~1,\"aliases\":[...],\"reason\":\"...\"}\n用户请求：\n{{text}}"
+}
