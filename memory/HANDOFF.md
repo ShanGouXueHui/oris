@@ -687,3 +687,22 @@ Feishu 现在能收到消息，但收到的是：
   2. `runtime_state.json` block / recover 细化
   3. free eligibility 自动扩容与恢复策略
 <!-- FREE_MODEL_ROUTING_FINAL_HANDOFF:END -->
+
+<!-- RUNTIME_ROUTING_GOVERNANCE_HANDOFF:START -->
+## Runtime routing governance handoff (2026-04-09)
+- 当前 HEAD 已验证：
+  - `report_generation` 自动走 `qwen3.6-plus -> alibaba_bailian`
+  - `runtime_execute.py` 已完成失败分类写回 `runtime_state.json`
+- 当前关键提交：
+  - `6485853` refresh active routing before inference
+  - `00a09e5` restore stable infer refresh chain
+  - `bb70836` complete runtime state failure classification
+- 当前可用能力：
+  1. preflight / postflight 自动刷新
+  2. 免费主链自动生效
+  3. 失败分类写回状态层
+- 后续增强优先方向：
+  1. provider 级 block / recover
+  2. 让 `runtime_plan.py` 更充分消费 `last_error_class` / `blocked_until`
+  3. free eligibility 自动扩容与恢复策略
+<!-- RUNTIME_ROUTING_GOVERNANCE_HANDOFF:END -->

@@ -649,3 +649,27 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
   - `docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md`
   - `docs/RUNBOOK_FREE_MODEL_ROUTING_2026-04-09.md`
 <!-- FREE_MODEL_ROUTING_FINAL_STATUS:END -->
+
+<!-- RUNTIME_ROUTING_GOVERNANCE_STATUS:START -->
+## Runtime routing governance status (2026-04-09)
+- `runtime_execute.py` 已完成失败分类治理，当前会将失败映射为：
+  - `missing_key`
+  - `priced_out`
+  - `rate_limited`
+  - `provider_unstable`
+  - `execution_error`
+- 分类结果会写回 `orchestration/runtime_state.json`，当前已确认新增/维护字段包括：
+  - `last_error_class`
+  - `last_provider_id`
+  - `blocked_until`
+  - `last_failure_at`
+  - `last_success_at`
+  - `consecutive_failures`
+- 当前 smoke 验证保持通过：
+  - `report_generation -> qwen3.6-plus -> alibaba_bailian`
+- 当前说明：免费模型模块已从“自动刷新 + 自动执行”升级到“自动刷新 + 自动执行 + 失败治理”
+- 详见：
+  - `docs/DECISIONS/2026-04-09-runtime-state-failure-classification.md`
+  - `docs/DECISIONS/2026-04-09-infer-preflight-refresh-free-routing.md`
+  - `docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md`
+<!-- RUNTIME_ROUTING_GOVERNANCE_STATUS:END -->
