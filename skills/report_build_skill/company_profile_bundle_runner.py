@@ -8,6 +8,10 @@ from docx import Document
 from docx.shared import Pt
 from openpyxl import Workbook
 from pptx import Presentation
+from pptx.util import Inches, Pt as PptPt
+from pptx.enum.text import PP_ALIGN
+from pptx.dml.color import RGBColor
+from pptx.enum.shapes import MSO_SHAPE
 
 import sys
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,6 +23,8 @@ from scripts.lib.oris_llm_client import call_oris_text
 ROOT = Path(__file__).resolve().parents[2]
 QUALITY_CFG_PATH = ROOT / "config" / "company_profile_quality.json"
 FOCUS_PROFILE_PATH = ROOT / "config" / "company_focus_profiles.json"
+METRIC_TAXONOMY_PATH = ROOT / "config" / "company_metric_taxonomy.json"
+THEME_CFG_PATH = ROOT / "config" / "presentation_theme.json"
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
@@ -341,6 +347,433 @@ def merge_unique(*groups, limit: int = 8):
                 return out
     return out
 
+
+def load_metric_taxonomy():
+    try:
+        return load_json(METRIC_TAXONOMY_PATH)
+    except Exception:
+        return {"version": 1, "profiles": {}}
+
+def load_theme_cfg():
+    try:
+        return load_json(THEME_CFG_PATH)
+    except Exception:
+        return {
+            "version": 1,
+            "default_theme": "executive_blue",
+            "themes": {
+                "executive_blue": {
+                    "palette": {
+                        "bg": "#F7F9FC",
+                        "title": "#0F2747",
+                        "text": "#1F2937",
+                        "muted": "#6B7280",
+                        "accent": "#2563EB",
+                        "accent_2": "#0EA5E9",
+                        "risk": "#DC2626",
+                        "success": "#059669",
+                        "card_bg": "#FFFFFF",
+                        "divider": "#D1D5DB"
+                    }
+                }
+            }
+        }
+
+def hex_to_rgb(hex_str: str):
+    s = (hex_str or "#000000").strip().lstrip("#")
+    if len(s) != 6:
+        s = "000000"
+    return RGBColor(int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
+
+def pick_theme_name(focus_profile: str, theme_cfg: dict):
+    if focus_profile == "automotive_oem":
+        return "auto_premium"
+    if focus_profile in {"foundation_model_company", "cloud_ai_platform"}:
+        return "modern_tech"
+    return theme_cfg.get("default_theme") or "executive_blue"
+
+def theme_palette(focus_profile: str):
+    cfg = load_theme_cfg()
+    theme_name = pick_theme_name(focus_profile, cfg)
+    theme = (cfg.get("themes") or {}).get(theme_name) or {}
+    palette = theme.get("palette") or {}
+    return theme_name, palette
+
+def safe_conclusion_line(data: dict):
+    line = normalize(data.get("conclusion")).strip()
+    if not line:
+        return "公司洞察已生成。"
+    if is_internal_diagnostic_text(line):
+        return "已完成基于当前可得证据的公司洞察与结构化整理。"
+    return line
+
+def metric_taxonomy_for_profile(focus_profile: str):
+    cfg = load_metric_taxonomy()
+    profiles = cfg.get("profiles") or {}
+    prof = profiles.get(focus_profile) or profiles.get("generic_company") or {}
+    ordered = []
+    for key in ["financial_core", "product_core", "operating_core", "model_core", "platform_core"]:
+        ordered.extend(prof.get(key) or [])
+    out = []
+    seen = set()
+    for x in ordered:
+        if x not in seen:
+            out.append(x)
+            seen.add(x)
+    return out
+
+def metric_display_line(row: dict):
+    name = normalize(row.get("metric_name") or row.get("metric_code"))
+    value = normalize(row.get("metric_value"))
+    unit = normalize(row.get("metric_unit"))
+    obs = normalize(row.get("observation_date"))
+    if not name:
+        return ""
+    tail = f"（{obs}）" if obs else ""
+    return f"{name}: {value}{unit}{tail}".strip()
+
+def top_metric_items_by_taxonomy(profile: dict, focus_profile: str, cfg: dict, limit: int = 8):
+    preferred = metric_taxonomy_for_profile(focus_profile)
+    blocklist = set(cfg.get("metric_blocklist") or [])
+    scored = []
+    fallback = []
+
+    for row in profile.get("recent_metric_observations") or []:
+        code = normalize(row.get("metric_code"))
+        if code in blocklist:
+            continue
+        text = metric_display_line(row)
+        if not text:
+            continue
+        sc = score_text(text, focus_profile, cfg) + 1
+        payload = (sc, text, code, row)
+        if metric_matches_taxonomy(row, preferred):
+            scored.append(payload)
+        else:
+            fallback.append(payload)
+
+    code_rank = {code.lower(): idx for idx, code in enumerate(preferred)}
+    scored.sort(key=lambda x: (code_rank.get(normalize(x[2]).lower(), 9999), -x[0], -len(x[1])))
+    fallback.sort(key=lambda x: (-x[0], -len(x[1])))
+
+    out = []
+    seen = set()
+    for group in [scored, fallback]:
+        for sc, text, code, row in group:
+            key = text.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(text)
+            if len(out) >= limit:
+                return out
+    return out
+
+def top_metric_cards(profile: dict, focus_profile: str, cfg: dict, limit: int = 4):
+    preferred = metric_taxonomy_for_profile(focus_profile)
+    rows = []
+    for row in profile.get("recent_metric_observations") or []:
+        if not metric_matches_taxonomy(row, preferred):
+            continue
+        code = normalize(row.get("metric_code"))
+        title = normalize(row.get("metric_name") or code)
+        value = normalize(row.get("metric_value"))
+        unit = normalize(row.get("metric_unit"))
+        obs = normalize(row.get("observation_date"))
+        if not title or not value:
+            continue
+        rows.append({
+            "metric_code": code,
+            "title": title,
+            "value": f"{value}{unit}".strip(),
+            "subtitle": obs or ""
+        })
+    rank = {code.lower(): idx for idx, code in enumerate(preferred)}
+    rows.sort(key=lambda x: rank.get(normalize(x["metric_code"]).lower(), 9999))
+    return rows[:limit]
+
+def add_textbox(slide, left, top, width, height, text, font_size=18, bold=False, color=None, align=PP_ALIGN.LEFT):
+    box = slide.shapes.add_textbox(left, top, width, height)
+    tf = box.text_frame
+    tf.word_wrap = True
+    p = tf.paragraphs[0]
+    if hasattr(p, "clear"):
+        p.clear()
+    p.alignment = align
+    run = p.add_run()
+    safe_text = str(text) if text is not None else ""
+    run.text = safe_text if safe_text.strip() else " "
+    run.font.size = PptPt(font_size)
+    run.font.bold = bold
+    if color is not None:
+        run.font.color.rgb = color
+    return box
+
+def add_rect(slide, left, top, width, height, fill_rgb, line_rgb=None):
+    shape = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
+    shape.fill.solid()
+    shape.fill.fore_color.rgb = fill_rgb
+    shape.line.color.rgb = line_rgb or fill_rgb
+    return shape
+
+def apply_slide_bg(slide, bg_rgb):
+    fill = slide.background.fill
+    fill.solid()
+    fill.fore_color.rgb = bg_rgb
+
+def make_pptx_cover(prs, company_name: str, focus_profile: str, palette: dict):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_slide_bg(slide, hex_to_rgb(palette.get("bg", "#F7F9FC")))
+    add_textbox(slide, Inches(0.7), Inches(1.0), Inches(11.0), Inches(0.8),
+                f"{company_name} 公司洞察", font_size=28, bold=True, color=hex_to_rgb(palette.get("title", "#0F2747")))
+    add_textbox(slide, Inches(0.75), Inches(1.9), Inches(10.5), Inches(0.5),
+                f"焦点画像：{focus_profile}", font_size=14, bold=False, color=hex_to_rgb(palette.get("muted", "#6B7280")))
+    add_rect(slide, Inches(0.75), Inches(2.5), Inches(3.2), Inches(0.08), hex_to_rgb(palette.get("accent", "#2563EB")))
+    return slide
+
+def make_pptx_exec_summary(prs, sections: dict, palette: dict):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_slide_bg(slide, hex_to_rgb(palette.get("bg", "#F7F9FC")))
+    add_textbox(slide, Inches(0.6), Inches(0.4), Inches(6), Inches(0.5),
+                "执行摘要", font_size=24, bold=True, color=hex_to_rgb(palette.get("title", "#0F2747")))
+    items = (sections.get("executive_summary") or [])[:3]
+    card_w = Inches(3.7)
+    xs = [Inches(0.6), Inches(4.3), Inches(8.0)]
+    for i in range(3):
+        add_rect(slide, xs[i], Inches(1.2), card_w, Inches(3.0),
+                 hex_to_rgb(palette.get("card_bg", "#FFFFFF")),
+                 hex_to_rgb(palette.get("divider", "#D1D5DB")))
+        title = ["核心判断", "关键证据", "持续跟踪"][i]
+        body = items[i] if i < len(items) else "N/A"
+        add_textbox(slide, xs[i] + Inches(0.2), Inches(1.45), Inches(3.1), Inches(0.35),
+                    title, font_size=13, bold=True, color=hex_to_rgb(palette.get("accent", "#2563EB")))
+        add_textbox(slide, xs[i] + Inches(0.2), Inches(1.85), Inches(3.15), Inches(2.1),
+                    body, font_size=15, bold=False, color=hex_to_rgb(palette.get("text", "#1F2937")))
+    return slide
+
+def make_pptx_kpi_dashboard(prs, metric_cards: list, palette: dict):
+    if not metric_cards:
+        return
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_slide_bg(slide, hex_to_rgb(palette.get("bg", "#F7F9FC")))
+    add_textbox(slide, Inches(0.6), Inches(0.4), Inches(6), Inches(0.5),
+                "关键指标仪表板", font_size=24, bold=True, color=hex_to_rgb(palette.get("title", "#0F2747")))
+    positions = [
+        (Inches(0.7), Inches(1.3)),
+        (Inches(3.5), Inches(1.3)),
+        (Inches(6.3), Inches(1.3)),
+        (Inches(9.1), Inches(1.3)),
+    ]
+    for idx, card in enumerate(metric_cards[:4]):
+        left, top = positions[idx]
+        add_rect(slide, left, top, Inches(2.3), Inches(2.2),
+                 hex_to_rgb(palette.get("card_bg", "#FFFFFF")),
+                 hex_to_rgb(palette.get("divider", "#D1D5DB")))
+        add_textbox(slide, left + Inches(0.15), top + Inches(0.18), Inches(2.0), Inches(0.35),
+                    card.get("title") or "指标", font_size=12, bold=True, color=hex_to_rgb(palette.get("muted", "#6B7280")))
+        add_textbox(slide, left + Inches(0.15), top + Inches(0.75), Inches(2.0), Inches(0.55),
+                    card.get("value") or "-", font_size=22, bold=True, color=hex_to_rgb(palette.get("accent", "#2563EB")))
+        add_textbox(slide, left + Inches(0.15), top + Inches(1.55), Inches(2.0), Inches(0.3),
+                    card.get("subtitle") or "", font_size=10, bold=False, color=hex_to_rgb(palette.get("muted", "#6B7280")))
+    return slide
+
+def make_pptx_two_column(prs, title: str, items: list, palette: dict):
+    if not items:
+        return
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_slide_bg(slide, hex_to_rgb(palette.get("bg", "#F7F9FC")))
+    add_textbox(slide, Inches(0.6), Inches(0.4), Inches(8), Inches(0.5),
+                title, font_size=24, bold=True, color=hex_to_rgb(palette.get("title", "#0F2747")))
+    cols = [items[::2], items[1::2]]
+    for ci, col in enumerate(cols):
+        left = Inches(0.7) if ci == 0 else Inches(6.4)
+        add_rect(slide, left, Inches(1.2), Inches(5.1), Inches(5.5),
+                 hex_to_rgb(palette.get("card_bg", "#FFFFFF")),
+                 hex_to_rgb(palette.get("divider", "#D1D5DB")))
+        y = 1.45
+        for item in col[:6]:
+            add_textbox(slide, left + Inches(0.18), Inches(y), Inches(4.7), Inches(0.7),
+                        f"• {item}", font_size=13, bold=False, color=hex_to_rgb(palette.get("text", "#1F2937")))
+            y += 0.82
+    return slide
+
+def make_pptx_risk_matrix(prs, items: list, palette: dict):
+    if not items:
+        return
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_slide_bg(slide, hex_to_rgb(palette.get("bg", "#F7F9FC")))
+    add_textbox(slide, Inches(0.6), Inches(0.4), Inches(6), Inches(0.5),
+                "风险矩阵", font_size=24, bold=True, color=hex_to_rgb(palette.get("title", "#0F2747")))
+    for idx, item in enumerate(items[:4]):
+        left = Inches(0.8 + (idx % 2) * 5.6)
+        top = Inches(1.3 + (idx // 2) * 2.4)
+        add_rect(slide, left, top, Inches(4.8), Inches(1.8),
+                 hex_to_rgb(palette.get("card_bg", "#FFFFFF")),
+                 hex_to_rgb(palette.get("risk", "#DC2626")))
+        add_textbox(slide, left + Inches(0.18), top + Inches(0.18), Inches(4.3), Inches(1.2),
+                    item, font_size=13, bold=False, color=hex_to_rgb(palette.get("text", "#1F2937")))
+    return slide
+
+def make_pptx_tracking(prs, items: list, palette: dict):
+    if not items:
+        return
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_slide_bg(slide, hex_to_rgb(palette.get("bg", "#F7F9FC")))
+    add_textbox(slide, Inches(0.6), Inches(0.4), Inches(6), Inches(0.5),
+                "持续跟踪指标", font_size=24, bold=True, color=hex_to_rgb(palette.get("title", "#0F2747")))
+    y = 1.2
+    for item in items[:8]:
+        add_rect(slide, Inches(0.8), Inches(y), Inches(11.2), Inches(0.55),
+                 hex_to_rgb(palette.get("card_bg", "#FFFFFF")),
+                 hex_to_rgb(palette.get("divider", "#D1D5DB")))
+        add_textbox(slide, Inches(1.0), Inches(y + 0.1), Inches(10.8), Inches(0.3),
+                    item, font_size=12, bold=False, color=hex_to_rgb(palette.get("text", "#1F2937")))
+        y += 0.68
+    return slide
+
+
+def is_engineering_next_step(text: str):
+    t = normalize(text).strip().lower()
+    if not t:
+        return True
+    patterns = [
+        "increase official source coverage",
+        "replace bootstrap evidence",
+        "let report_build_skill consume",
+        "db-backed",
+        "analysis_run",
+        "source_snapshot",
+        "evidence_item",
+        "metric rows",
+        "persisted snapshots",
+        "downstream report assembly",
+        "request-only payload",
+        "bootstrap evidence",
+        "official source coverage"
+    ]
+    return any(p in t for p in patterns)
+
+def taxonomy_aliases():
+    return {
+        "revenue": ["revenue", "收入", "营收", "sales"],
+        "gross_profit": ["gross profit", "毛利"],
+        "operating_profit": ["operating profit", "ebit", "营业利润", "经营利润"],
+        "net_profit": ["net profit", "profit attributable", "净利润", "净利"],
+        "free_cash_flow": ["free cash flow", "自由现金流"],
+        "r_and_d_expense": ["r&d", "research and development", "研发", "研发费用"],
+        "cloud_revenue": ["cloud revenue", "云收入", "云业务收入"],
+        "advertising_revenue": ["advertising revenue", "广告收入"],
+        "api_revenue": ["api revenue", "api收入"],
+        "monthly_tokens": ["tokens", "monthly tokens", "token"],
+        "enterprise_customer_count": ["enterprise customer", "客户数量", "企业客户"],
+        "mau": ["mau", "monthly active users", "月活"],
+        "dau": ["dau", "daily active users", "日活"],
+        "nps": ["nps", "net promoter score"],
+        "conversion_rate": ["conversion", "转化率"],
+        "vehicle_sales_total": ["vehicle sales", "deliveries", "销量", "交付"],
+        "ev_sales": ["ev sales", "新能源销量", "电动车销量"],
+        "range_km": ["range", "续航"],
+        "acceleration_0_100_s": ["0-100", "0 to 100", "百公里加速", "百米加速"],
+        "adas_takeover_per_1000km": ["takeover", "接管", "接手次数"],
+    }
+
+def metric_matches_taxonomy(row: dict, preferred_codes: list[str]):
+    code = normalize(row.get("metric_code")).strip().lower()
+    name = normalize(row.get("metric_name")).strip().lower()
+    text = f"{code} {name}".strip()
+
+    if code in {x.lower() for x in preferred_codes}:
+        return True
+
+    alias_map = taxonomy_aliases()
+    for pref in preferred_codes:
+        aliases = alias_map.get(pref, []) + [pref]
+        for alias in aliases:
+            if alias and alias.lower() in text:
+                return True
+    return False
+
+
+def split_numeric_segments(text: str):
+    import re
+    t = normalize(text).strip()
+    if not t:
+        return []
+    raw_parts = re.split(r'[\n\r]+|[•●▪◦]|(?<=;)\s+|(?<=；)\s+|(?<=\.)\s+(?=[A-Z0-9])', t)
+    out = []
+    for part in raw_parts:
+        seg = normalize(part).strip(" -•●▪◦")
+        seg = re.sub(r"\s+", " ", seg).strip()
+        if len(seg) < 20:
+            continue
+        out.append(seg)
+    return out
+
+def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, limit: int = 8):
+    import re
+    rows = []
+    for row in profile.get("recent_evidence_items") or []:
+        title = clean_evidence_label(flatten_text(row.get("evidence_title") or ""))
+        body = flatten_text(row.get("evidence_text") or "")
+        if not body:
+            continue
+        for seg in split_numeric_segments(body):
+            joined = f"{title}：{seg}" if title else seg
+            if is_internal_diagnostic_text(joined):
+                continue
+            if is_user_facing_noise(joined, cfg):
+                continue
+            if not re.search(r"\d", joined):
+                continue
+            sc = score_text(joined, focus_profile, cfg) + 3
+            if "%" in joined:
+                sc += 1
+            if re.search(r"(€|\$|¥|亿元|万元|million|billion|bn|mn|mau|dau|tokens|销量|交付|用户|客户|revenue|profit|cash flow)", joined, flags=re.I):
+                sc += 2
+            rows.append((sc, joined))
+    rows.sort(key=lambda x: (-x[0], -len(x[1])))
+    out = []
+    seen = set()
+    for sc, seg in rows:
+        key = seg.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(seg if len(seg) <= 220 else seg[:220] + "...")
+        if len(out) >= limit:
+            break
+    return out
+
+def metric_cards_from_lines(lines, limit: int = 4):
+    import re
+    cards = []
+    for line in lines or []:
+        t = normalize(line).strip()
+        if not t:
+            continue
+        title = "关键指标"
+        value = t
+        subtitle = ""
+        m = re.match(r'^(.*?)[：:]\s*([^\(（]{1,80})(?:[\(（]([^\)）]{1,40})[\)）])?$', t)
+        if m:
+            left = normalize(m.group(1)).strip()
+            right = normalize(m.group(2)).strip()
+            obs = normalize(m.group(3)).strip()
+            if left:
+                title = left[:28]
+            if right:
+                value = right[:36]
+            subtitle = obs[:24]
+        cards.append({
+            "metric_code": "",
+            "title": title,
+            "value": value,
+            "subtitle": subtitle
+        })
+        if len(cards) >= limit:
+            break
+    return cards
+
 def build_synthesis(data: dict):
     profile = unified_profile(data)
     focus_profile = pick_focus_profile(data)
@@ -403,22 +836,30 @@ def build_synthesis(data: dict):
         pass
 
     evidence_top = top_evidence_items(profile, focus_profile, cfg, limit=int(cfg.get("max_evidence_items", 8)))
-    metrics_top = top_metric_items(profile, focus_profile, cfg, limit=int(cfg.get("max_metric_items", 8)))
+    metrics_top = top_metric_items_by_taxonomy(profile, focus_profile, cfg, limit=int(cfg.get("max_metric_items", 8)))
+    derived_kpis = derived_kpis_from_evidence(profile, focus_profile, cfg, limit=int(cfg.get("max_metric_items", 8)))
+    if not metrics_top:
+        metrics_top = derived_kpis
 
     clean_facts = filter_user_facing_items(data.get("facts") or [], cfg, max_items=8)
     clean_inferences = filter_user_facing_items(data.get("inferences") or [], cfg, max_items=8)
     clean_risks = filter_user_facing_items(data.get("risks") or [], cfg, max_items=8)
-    clean_next_steps = filter_user_facing_items(data.get("next_steps") or [], cfg, max_items=8)
+    clean_next_steps = [
+        x for x in filter_user_facing_items(data.get("next_steps") or [], cfg, max_items=8)
+        if not is_engineering_next_step(x)
+    ]
 
     ev_company, ev_tech, ev_industry, ev_risk = bucket_evidence_items(evidence_top, focus_profile)
 
     summary = [
-        data.get("conclusion") or "公司洞察已生成。",
+        safe_conclusion_line(data),
         f"当前焦点画像：{hint['profile_label']}。",
         "建议以业务结构、核心产品/技术、竞争位置、风险与跟踪指标五层持续跟踪。"
     ]
     if metrics_top:
         summary.append("优先关注指标：" + "；".join(metrics_top[:3]))
+    elif derived_kpis:
+        summary.append("当前可提炼量化片段：" + "；".join(derived_kpis[:2]))
 
     sections = {
         "executive_summary": merge_unique(summary, limit=4),
@@ -431,7 +872,7 @@ def build_synthesis(data: dict):
             limit=8
         ),
         "risk_view": merge_unique(clean_risks, ev_risk, limit=8),
-        "tracking_kpis": merge_unique(clean_next_steps, metrics_top, limit=8)
+        "tracking_kpis": merge_unique(metrics_top, clean_next_steps, limit=8)
     }
     return {"mode": "deterministic_fallback", "sections": sections, "focus_profile": focus_profile}
 
@@ -521,19 +962,23 @@ def make_xlsx(path: Path, data: dict):
 
     wb.save(path)
 
-def make_pptx(path: Path, sections: dict, company_name: str):
+
+def make_pptx(path: Path, sections: dict, company_name: str, focus_profile: str, metric_cards: list | None = None):
     prs = Presentation()
-    slide = prs.slides.add_slide(prs.slide_layouts[1])
-    add_bullets(slide, f"{company_name} 公司洞察", sections.get("executive_summary"))
-    for title, key in [
-        ("公司层", "company_view"),
-        ("技术层", "technology_view"),
-        ("行业层", "industry_view"),
-        ("风险层", "risk_view"),
-        ("持续跟踪指标", "tracking_kpis")
-    ]:
-        slide = prs.slides.add_slide(prs.slide_layouts[1])
-        add_bullets(slide, title, sections.get(key))
+    prs.slide_width = Inches(13.333)
+    prs.slide_height = Inches(7.5)
+
+    theme_name, palette = theme_palette(focus_profile)
+
+    make_pptx_cover(prs, company_name, focus_profile, palette)
+    make_pptx_exec_summary(prs, sections, palette)
+    make_pptx_kpi_dashboard(prs, metric_cards or [], palette)
+    make_pptx_two_column(prs, "公司与商业模式", sections.get("company_view") or [], palette)
+    make_pptx_two_column(prs, "技术与产品能力", sections.get("technology_view") or [], palette)
+    make_pptx_two_column(prs, "行业与竞争", sections.get("industry_view") or [], palette)
+    make_pptx_risk_matrix(prs, sections.get("risk_view") or [], palette)
+    make_pptx_tracking(prs, sections.get("tracking_kpis") or [], palette)
+
     prs.save(path)
 
 def main():
@@ -548,6 +993,9 @@ def main():
     synth = build_synthesis(data)
     sections = synth["sections"]
     focus_profile = synth.get("focus_profile") or pick_focus_profile(data)
+    metric_cards = top_metric_cards(profile, focus_profile, load_quality_cfg(), limit=4)
+    if not metric_cards:
+        metric_cards = metric_cards_from_lines((sections.get("tracking_kpis") or [])[:4], limit=4)
 
     slug = company_name.lower().replace(" ", "-")
     out_dir = ROOT / "outputs" / "report_build" / f"company-profile-{slug}" / ts_compact()
@@ -560,7 +1008,7 @@ def main():
 
     make_docx(docx_path, data, sections)
     make_xlsx(xlsx_path, data)
-    make_pptx(pptx_path, sections, company_name)
+    make_pptx(pptx_path, sections, company_name, focus_profile, metric_cards)
 
     bundle = {
         "ok": True,
