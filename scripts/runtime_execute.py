@@ -6,10 +6,12 @@ import time
 import urllib.request
 import urllib.error
 from pathlib import Path
+from datetime import datetime, timezone, timedelta
 
 ROOT = Path(__file__).resolve().parents[1]
 PLAN_PATH = ROOT / "orchestration" / "runtime_plan.json"
 SECRETS_PATH = Path.home() / ".openclaw" / "secrets.json"
+STATE_PATH = ROOT / "orchestration" / "runtime_state.json"
 
 def load_json(path: Path):
     with path.open("r", encoding="utf-8") as f:
@@ -165,12 +167,112 @@ def execute_model(provider_id: str, model_id: str, prompt: str, api_key: str):
         return call_gemini(model_id, prompt, api_key)
     raise RuntimeError(f"unsupported provider: {provider_id}")
 
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat()
+
+def load_json_or_default(path: Path, default):
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return default
+
+def save_json(path: Path, payload: dict):
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+
+def classify_error(message: str):
+    lower = (message or "").lower()
+    if "missing_api_key" in lower or "missing api key" in lower:
+        return "missing_key"
+    if "http error 402" in lower or "payment required" in lower:
+        return "priced_out"
+    if "http error 429" in lower or "too many requests" in lower:
+        return "rate_limited"
+    unstable_signals = [
+        "http error 500",
+        "http error 502",
+        "http error 503",
+        "http error 504",
+        "bad gateway",
+        "service unavailable",
+        "temporarily unavailable",
+        "timed out",
+        "timeout",
+        "connection reset",
+        "connection aborted",
+    ]
+    if any(x in lower for x in unstable_signals):
+        return "provider_unstable"
+    return "execution_error"
+
+def block_seconds_for_error_class(error_class: str):
+    mapping = {
+        "missing_key": 3600,
+        "priced_out": 21600,
+        "rate_limited": 900,
+        "provider_unstable": 600,
+        "execution_error": 300,
+    }
+    return int(mapping.get(error_class, 300))
+
+def ensure_runtime_state():
+    state = load_json_or_default(
+        STATE_PATH,
+        {
+            "version": 1,
+            "updated_at": utc_now(),
+            "models": {},
+        },
+    )
+    if not isinstance(state, dict):
+        state = {"version": 1, "updated_at": utc_now(), "models": {}}
+    if not isinstance(state.get("models"), dict):
+        state["models"] = {}
+    return state
+
+def mark_model_failure(state: dict, model_id: str, provider_id: str, role: str, error_class: str, error_message: str):
+    now = datetime.now(timezone.utc)
+    models = state.setdefault("models", {})
+    entry = models.setdefault(model_id, {})
+    entry["total_failures"] = int(entry.get("total_failures") or 0) + 1
+    entry["consecutive_failures"] = int(entry.get("consecutive_failures") or 0) + 1
+    entry["last_result"] = "failure"
+    entry["last_role"] = role
+    entry["last_error"] = (error_message or "")[:500]
+    entry["last_error_class"] = error_class
+    entry["last_failure_at"] = now.isoformat()
+    entry["last_provider_id"] = provider_id
+    entry["blocked_until"] = (now + timedelta(seconds=block_seconds_for_error_class(error_class))).isoformat()
+    state["updated_at"] = now.isoformat()
+    save_json(STATE_PATH, state)
+    return state
+
+def mark_model_success(state: dict, model_id: str, provider_id: str, role: str):
+    now = datetime.now(timezone.utc)
+    models = state.setdefault("models", {})
+    entry = models.setdefault(model_id, {})
+    entry["total_successes"] = int(entry.get("total_successes") or 0) + 1
+    entry["consecutive_failures"] = 0
+    entry["last_result"] = "success"
+    entry["last_role"] = role
+    entry["last_error"] = None
+    entry["last_error_class"] = None
+    entry["last_success_at"] = now.isoformat()
+    entry["last_provider_id"] = provider_id
+    entry["blocked_until"] = None
+    state["updated_at"] = now.isoformat()
+    save_json(STATE_PATH, state)
+    return state
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--role", required=True)
     ap.add_argument("--prompt", required=True)
     ap.add_argument("--show-raw", action="store_true")
     args = ap.parse_args()
+
+    runtime_state = ensure_runtime_state()
 
     plan = load_json(PLAN_PATH)
     role_plan = (plan.get("plans") or {}).get(args.role)
@@ -204,11 +306,14 @@ def main():
         api_key = get_provider_key(provider_id, secrets)
 
         if not api_key:
+            error_class = "missing_key"
+            runtime_state = mark_model_failure(runtime_state, model_id, provider_id, args.role, error_class, "missing_api_key")
             attempts_log.append({
                 "provider_id": provider_id,
                 "model_id": model_id,
                 "status": "skipped",
-                "reason": "missing_api_key"
+                "reason": "missing_api_key",
+                "error_class": error_class
             })
             continue
 
@@ -218,6 +323,7 @@ def main():
         for attempt in range(1, max_attempts + 1):
             try:
                 result = execute_model(provider_id, model_id, args.prompt, api_key)
+                runtime_state = mark_model_success(runtime_state, model_id, provider_id, args.role)
                 runtime_feedback(model_id, args.role, "success")
                 output = {
                     "ok": True,
