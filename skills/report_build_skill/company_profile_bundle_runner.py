@@ -722,6 +722,7 @@ def split_numeric_segments(text: str):
     return out
 
 
+
 def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, limit: int = 8):
     rows = []
     negs = [x.lower() for x in profile_negative_patterns(focus_profile)]
@@ -742,6 +743,10 @@ def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, lim
                 continue
             if any(x in jl for x in negs):
                 continue
+            if looks_like_title_echo(seg, title):
+                continue
+            if is_polluted_external_segment(seg, focus_profile):
+                continue
             if not is_metric_like_segment(seg, focus_profile):
                 continue
 
@@ -749,6 +754,10 @@ def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, lim
             if not metric_line:
                 continue
             if is_user_facing_noise(metric_line, cfg):
+                continue
+            if looks_like_title_echo(metric_line, title):
+                continue
+            if is_polluted_external_segment(metric_line, focus_profile):
                 continue
 
             sc = score_text(metric_line, focus_profile, cfg) + 3
@@ -770,7 +779,6 @@ def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, lim
         if len(out) >= limit:
             break
     return out
-
 
 def metric_cards_from_lines(lines, limit: int = 4):
     cards = []
@@ -853,17 +861,30 @@ def profile_negative_patterns(focus_profile: str):
         ]
     return base
 
+
 def is_metric_like_segment(seg: str, focus_profile: str):
     t = normalize(seg).strip()
     if not t:
         return False
     tl = t.lower()
-    if re.search(r"\d", t):
-        return True
+
+    pos = profile_positive_metric_keywords(focus_profile)
+    has_pos_kw = any(x in tl for x in pos)
+    has_number = bool(re.search(r"\d", t))
+    has_metric_unit = bool(re.search(r"(€|\$|¥|rmb|usd|亿元|万元|million|billion|bn|mn|%|mau|dau|tokens?)", t, flags=re.I))
+
+    if focus_profile == "internet_platform":
+        return (has_number and (has_pos_kw or has_metric_unit))
+
     if focus_profile == "foundation_model_company":
-        if any(x in tl for x in ["swe-bench", "terminal bench", "sota", "50 step", "50-step", "dozens of", "agent api", "glm-5"]):
-            return True
-    return False
+        bench_kw = any(x in tl for x in ["swe-bench", "terminal bench", "sota", "50 步", "50-step", "50 step", "dozens of", "benchmark"])
+        return (has_number and (has_pos_kw or has_metric_unit or bench_kw)) or bench_kw
+
+    if focus_profile == "automotive_oem":
+        return has_number and (has_pos_kw or has_metric_unit)
+
+    return has_number and (has_pos_kw or has_metric_unit)
+
 
 def compress_metric_segment(seg: str, title: str, focus_profile: str):
     t = normalize(seg).strip()
@@ -887,20 +908,81 @@ def compress_metric_segment(seg: str, title: str, focus_profile: str):
             continue
         kept.append(s)
         joined = "；".join(kept)
-        if len(joined) >= 120:
+        if len(joined) >= 110:
             break
 
     out = "；".join(kept).strip() if kept else t
     out = re.sub(r"\s+", " ", out).strip("；;，, ")
 
-    if len(out) > 150:
-        out = out[:150].rstrip() + "..."
+    out = re.sub(r"^\d{1,2}\s*月\s*\d{1,2}\s*日[；;，,\s]*", "", out)
+    out = re.sub(r"^20\d{2}年\d{1,2}月\d{1,2}日[；;，,\s]*", "", out)
+
+    if len(out) > 135:
+        out = out[:135].rstrip() + "..."
     if not out:
         return ""
 
     if src:
         return f"{out}（{src}）"
     return out
+
+def profile_positive_metric_keywords(focus_profile: str):
+    base = [
+        "revenue", "revenues", "sales", "gross profit", "operating profit", "non-ifrs",
+        "net profit", "cash flow", "free cash flow", "margin", "growth", "yoy",
+        "收入", "营收", "利润", "毛利", "现金流", "毛利率", "同比", "增长", "客户", "用户",
+        "销量", "交付", "订单", "cloud", "advertising", "games", "vas", "fintech"
+    ]
+    if focus_profile == "internet_platform":
+        base += [
+            "mau", "dau", "social networks", "domestic games", "international games",
+            "video accounts", "payments", "merchant", "cloud services", "ad",
+            "广告", "社交", "游戏", "支付", "云服务", "视频号"
+        ]
+    if focus_profile == "foundation_model_company":
+        base += [
+            "swe-bench", "terminal bench", "sota", "agent api", "api", "benchmark",
+            "50 步", "50-step", "50 step", "dozens of", "glm", "autoglm", "glm-pc",
+            "推理", "基准", "benchmark", "agent", "模型", "api"
+        ]
+    if focus_profile == "automotive_oem":
+        base += [
+            "deliveries", "vehicle sales", "ev sales", "range", "800v", "adas",
+            "acceleration", "takeover", "智驾", "续航", "加速", "接管", "车型"
+        ]
+    return [x.lower() for x in base]
+
+def looks_like_title_echo(seg: str, title: str):
+    s = normalize(seg).strip().lower()
+    t = source_label_short(title).strip().lower()
+    if not s or not t:
+        return False
+    if s == t:
+        return True
+    if s.startswith(t):
+        return True
+    if len(s) <= max(40, len(t) + 20) and t in s:
+        return True
+    return False
+
+def is_polluted_external_segment(seg: str, focus_profile: str):
+    s = normalize(seg).strip().lower()
+    if not s:
+        return True
+    patterns = [
+        "hkex stock code",
+        "release its annual results",
+        "investor relations -",
+        "sec filings",
+        "your information will be processed",
+        "selecting a year value",
+    ]
+    if focus_profile == "foundation_model_company":
+        patterns += [
+            "英特尔 ai pc 生态大会",
+            "重要合作伙伴受邀出席",
+        ]
+    return any(p in s for p in patterns)
 
 def build_synthesis(data: dict):
     profile = unified_profile(data)
