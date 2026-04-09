@@ -620,4 +620,15 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
 
 ### 已知尾项
 - compiler 的主输出面已清理 blocked 场景下的 target_company / detected_entities
-- `compiler_trace` 中仍保留 upstream v2 的历史 entity_detection 痕迹，属于已知后续优化项，不阻塞当前主链路发布
+- `compiler_trace` 中仍保留 upstream v2 的历史 entity_detection 痕迹，属于已知后续优化项，不阻塞当前主链路发布\n\n<!-- FREE_MODEL_ROUTING_STATUS:START -->
+## Free model routing status (2026-04-09)
+- ORIS 已建立免费模型运行链路：routing_policy -> free_eligibility -> runtime_plan -> runtime_execute -> execution_log。
+- 当前 `free_eligibility.json` 已确认包含 `verified_free_models = ["qwen3.6-plus"]`。
+- 当前 `free_fallback` 与 `cn_candidate_pool` 已可选到 `qwen3.6-plus`，说明免费链路基础设施存在且可运行。
+- 当前主要问题不是“免费 API 全坏”，而是 `report_generation` 等角色尚未被严格治理为 free-only，仍可能先选到 `openrouter/auto`。
+- 当前问题定性为：policy 与 runtime plan 之间的契约漂移。
+- 详见：
+  - `docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md`
+  - `docs/RUNBOOK_FREE_MODEL_ROUTING_2026-04-09.md`
+  - `docs/DECISIONS/2026-04-09-free-model-routing-contract-drift.md`
+<!-- FREE_MODEL_ROUTING_STATUS:END -->\n

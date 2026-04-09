@@ -654,4 +654,21 @@ Feishu 现在能收到消息，但收到的是：
 
 已知后续项：
 - compiler_trace 仍保留 upstream v2 的历史 entity_detection 痕迹
-- compare 扩展链路的 `llm_compare.api_key_not_found` 当前不阻塞 entity precheck 主链路，可后续单独治理
+- compare 扩展链路的 `llm_compare.api_key_not_found` 当前不阻塞 entity precheck 主链路，可后续单独治理\n\n<!-- FREE_MODEL_ROUTING_HANDOFF:START -->
+## Free model routing handoff (2026-04-09)
+- 继续处理 ORIS 免费 AI API / 免费模型治理时，先读：
+  - `docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md`
+  - `docs/RUNBOOK_FREE_MODEL_ROUTING_2026-04-09.md`
+  - `docs/DECISIONS/2026-04-09-free-model-routing-contract-drift.md`
+- 当前已确认：
+  - free eligibility 有效，至少包含 `qwen3.6-plus`
+  - runtime execute 的 provider secrets 映射已覆盖 openrouter / gemini / zhipu / alibaba_bailian / tencent_hunyuan
+  - `free_fallback` 正常，`report_generation` 仍可能先打 `openrouter/auto`
+- 当前定性：
+  - 主问题是 policy -> runtime_plan 契约漂移
+  - 不是“免费 provider 全部失效”
+- 后续修复顺序：
+  1. 先修 free-only role 在 runtime_plan 中的严格过滤
+  2. 再修 free eligibility / provider health / scoreboard 的自动刷新链
+  3. 再修 402/429/missing_api_key 下的 free failover 执行纪律
+<!-- FREE_MODEL_ROUTING_HANDOFF:END -->\n
