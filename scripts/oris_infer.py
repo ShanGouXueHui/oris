@@ -41,9 +41,7 @@ def main():
 
     request_id = args.request_id or str(uuid.uuid4())
 
-    refresh = run_cmd(["/usr/bin/python3", str(RUNTIME_PLAN_SCRIPT)])
-    if refresh.returncode != 0:
-        raise SystemExit(f"runtime_plan refresh failed:\n{refresh.stderr}")
+    preflight_refresh()
 
     exec_cmd = [
         "/usr/bin/python3",
