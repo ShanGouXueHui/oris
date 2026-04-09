@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -238,6 +239,7 @@ def is_internal_diagnostic_text(text: str):
     ]
     return any(p in t for p in patterns)
 
+
 def is_user_facing_noise(text: str, cfg: dict):
     t = normalize(text).strip()
     if not t:
@@ -260,13 +262,23 @@ def is_user_facing_noise(text: str, cfg: dict):
         "view all",
         "skip to content",
         "back to top",
+        "news (includes earnings date announcements",
+        "earnings date announcements",
+        "upcoming conference appearances",
+        "your information will be processed",
+        "selecting a year value",
+        "results公示",
+        "结果公示",
+        "会员大会",
+        "章程（草案）",
+        "筹备工作报告",
     ]
-    for p in noise_patterns:
-        if p in tl:
+    for ptn in noise_patterns:
+        if ptn in tl:
             return True
 
-    for p in (cfg.get("noise_patterns") or []):
-        if p and p.lower() in tl:
+    for ptn in (cfg.get("noise_patterns") or []):
+        if ptn and ptn.lower() in tl:
             return True
 
     return False
@@ -694,43 +706,58 @@ def metric_matches_taxonomy(row: dict, preferred_codes: list[str]):
     return False
 
 
+
 def split_numeric_segments(text: str):
-    import re
     t = normalize(text).strip()
     if not t:
         return []
-    raw_parts = re.split(r'[\n\r]+|[•●▪◦]|(?<=;)\s+|(?<=；)\s+|(?<=\.)\s+(?=[A-Z0-9])', t)
+    raw_parts = re.split(r"[\n\r]+|[•●▪◦]|\s{2,}|(?<=；)\s+|(?<=;)\s+|(?<=\.)\s+(?=[A-Z0-9])", t)
     out = []
     for part in raw_parts:
         seg = normalize(part).strip(" -•●▪◦")
         seg = re.sub(r"\s+", " ", seg).strip()
-        if len(seg) < 20:
+        if len(seg) < 18:
             continue
         out.append(seg)
     return out
 
+
 def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, limit: int = 8):
-    import re
     rows = []
+    negs = [x.lower() for x in profile_negative_patterns(focus_profile)]
+
     for row in profile.get("recent_evidence_items") or []:
         title = clean_evidence_label(flatten_text(row.get("evidence_title") or ""))
         body = flatten_text(row.get("evidence_text") or "")
         if not body:
             continue
+
         for seg in split_numeric_segments(body):
             joined = f"{title}：{seg}" if title else seg
+            jl = joined.lower()
+
             if is_internal_diagnostic_text(joined):
                 continue
             if is_user_facing_noise(joined, cfg):
                 continue
-            if not re.search(r"\d", joined):
+            if any(x in jl for x in negs):
                 continue
-            sc = score_text(joined, focus_profile, cfg) + 3
-            if "%" in joined:
+            if not is_metric_like_segment(seg, focus_profile):
+                continue
+
+            metric_line = compress_metric_segment(seg, title, focus_profile)
+            if not metric_line:
+                continue
+            if is_user_facing_noise(metric_line, cfg):
+                continue
+
+            sc = score_text(metric_line, focus_profile, cfg) + 3
+            if re.search(r"\d", metric_line):
                 sc += 1
-            if re.search(r"(€|\$|¥|亿元|万元|million|billion|bn|mn|mau|dau|tokens|销量|交付|用户|客户|revenue|profit|cash flow)", joined, flags=re.I):
+            if re.search(r"(€|\$|¥|rmb|usd|亿元|万元|million|billion|bn|mn|mau|dau|tokens|销量|交付|用户|客户|revenue|profit|cash flow)", metric_line, flags=re.I):
                 sc += 2
-            rows.append((sc, joined))
+            rows.append((sc, metric_line))
+
     rows.sort(key=lambda x: (-x[0], -len(x[1])))
     out = []
     seen = set()
@@ -739,40 +766,141 @@ def derived_kpis_from_evidence(profile: dict, focus_profile: str, cfg: dict, lim
         if key in seen:
             continue
         seen.add(key)
-        out.append(seg if len(seg) <= 220 else seg[:220] + "...")
+        out.append(seg)
         if len(out) >= limit:
             break
     return out
 
+
 def metric_cards_from_lines(lines, limit: int = 4):
-    import re
     cards = []
     for line in lines or []:
         t = normalize(line).strip()
         if not t:
             continue
+
+        t_clean = re.sub(r"（[^）]{0,40}）$", "", t).strip()
         title = "关键指标"
-        value = t
+        value = t_clean
         subtitle = ""
-        m = re.match(r'^(.*?)[：:]\s*([^\(（]{1,80})(?:[\(（]([^\)）]{1,40})[\)）])?$', t)
-        if m:
-            left = normalize(m.group(1)).strip()
-            right = normalize(m.group(2)).strip()
-            obs = normalize(m.group(3)).strip()
-            if left:
-                title = left[:28]
-            if right:
-                value = right[:36]
-            subtitle = obs[:24]
+
+        m1 = re.search(r"^(.{4,40}?)(?:收入|营收|利润|毛利|现金流|用户|客户|销量|交付|tokens?|Revenue|profit|users|customers)", t_clean, flags=re.I)
+        if m1:
+            title = m1.group(0)[:28]
+
+        m2 = re.search(r"((?:RMB|USD|US\$|\$|€)?\s?[\d\.,]+(?:\s?(?:billion|million|bn|mn|%))?)", t_clean, flags=re.I)
+        if m2:
+            value = m2.group(1).strip()
+            subtitle = t_clean[:56]
+        else:
+            value = t_clean[:42]
+
         cards.append({
             "metric_code": "",
             "title": title,
             "value": value,
-            "subtitle": subtitle
+            "subtitle": subtitle[:48]
         })
         if len(cards) >= limit:
             break
     return cards
+
+def source_label_short(title: str):
+    t = clean_evidence_label(title)
+    t = re.sub(r"\s*/\s*(derived|segment)\s*\d+\s*$", "", t, flags=re.I)
+    t = re.sub(r"\s+", " ", t).strip()
+    return t
+
+def profile_negative_patterns(focus_profile: str):
+    base = [
+        "news (includes earnings date announcements",
+        "earnings date announcements",
+        "upcoming conference appearances",
+        "your information will be processed",
+        "selecting a year value",
+        "investor alert options",
+        "at least one of the checkboxes needs to be selected",
+        "checkbox",
+        "email address",
+        "newsletter",
+        "unsubscribe",
+        "privacy",
+        "cookies",
+        "manage cookies",
+        "accept all",
+        "skip to content",
+        "back to top",
+        "view all",
+        "learn more",
+        "opens in new window",
+        "results公示",
+        "结果公示",
+        "会员大会",
+        "章程（草案）",
+        "筹备工作报告",
+        "会议应出席会员",
+        "会议主要内容和通过的主要决定",
+    ]
+    if focus_profile == "internet_platform":
+        base += [
+            "investor relations - investors - sec filings",
+            "sec filings / segment",
+        ]
+    if focus_profile == "foundation_model_company":
+        base += [
+            "会员以举手方式表决通过",
+            "中关村自主大模型产业联盟",
+        ]
+    return base
+
+def is_metric_like_segment(seg: str, focus_profile: str):
+    t = normalize(seg).strip()
+    if not t:
+        return False
+    tl = t.lower()
+    if re.search(r"\d", t):
+        return True
+    if focus_profile == "foundation_model_company":
+        if any(x in tl for x in ["swe-bench", "terminal bench", "sota", "50 step", "50-step", "dozens of", "agent api", "glm-5"]):
+            return True
+    return False
+
+def compress_metric_segment(seg: str, title: str, focus_profile: str):
+    t = normalize(seg).strip()
+    if not t:
+        return ""
+    src = source_label_short(title)
+
+    if src and t.lower().startswith(src.lower()):
+        t = t[len(src):].lstrip(" ：:-")
+
+    t = re.sub(r"\s+", " ", t).strip()
+    t = re.sub(r"\s*[\(\[]?(due to|reflecting|including|which was mainly due to|primarily driven by).*$", "", t, flags=re.I)
+    t = re.sub(r"\s*your information will be processed.*$", "", t, flags=re.I)
+    t = re.sub(r"\s*news \(includes earnings date announcements.*$", "", t, flags=re.I)
+
+    parts = re.split(r"(?<=[\.\!\?。；;])\s+|,\s+(?=[A-Z0-9])|，\s*", t)
+    kept = []
+    for part in parts:
+        s = normalize(part).strip(" -•●▪◦")
+        if not s:
+            continue
+        kept.append(s)
+        joined = "；".join(kept)
+        if len(joined) >= 120:
+            break
+
+    out = "；".join(kept).strip() if kept else t
+    out = re.sub(r"\s+", " ", out).strip("；;，, ")
+
+    if len(out) > 150:
+        out = out[:150].rstrip() + "..."
+    if not out:
+        return ""
+
+    if src:
+        return f"{out}（{src}）"
+    return out
 
 def build_synthesis(data: dict):
     profile = unified_profile(data)
