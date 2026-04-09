@@ -632,3 +632,20 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
   - `docs/RUNBOOK_FREE_MODEL_ROUTING_2026-04-09.md`
   - `docs/DECISIONS/2026-04-09-free-model-routing-contract-drift.md`
 <!-- FREE_MODEL_ROUTING_STATUS:END -->\n
+
+<!-- FREE_MODEL_ROUTING_FINAL_STATUS:START -->
+## Free model routing final status (2026-04-09)
+- `report_generation` 已验证自动切到免费主链：`qwen3.6-plus -> alibaba_bailian`
+- `oris_infer.py` 当前执行链已升级为：
+  - preflight: `quota_probe.py` / `provider_scoreboard.py` / `model_selector.py` / `runtime_plan.py`
+  - execute: `runtime_execute.py`
+  - postflight: 同链路 best-effort refresh
+- 当前 smoke 验证结果：
+  - `preflight_warnings = []`
+  - `post_refresh_warnings = []`
+- 当前说明：免费模型机制已从“人工纠偏”升级为“执行时自动纠偏”
+- 详见：
+  - `docs/DECISIONS/2026-04-09-infer-preflight-refresh-free-routing.md`
+  - `docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md`
+  - `docs/RUNBOOK_FREE_MODEL_ROUTING_2026-04-09.md`
+<!-- FREE_MODEL_ROUTING_FINAL_STATUS:END -->

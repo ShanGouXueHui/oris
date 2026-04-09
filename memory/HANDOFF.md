@@ -672,3 +672,18 @@ Feishu 现在能收到消息，但收到的是：
   2. 再修 free eligibility / provider health / scoreboard 的自动刷新链
   3. 再修 402/429/missing_api_key 下的 free failover 执行纪律
 <!-- FREE_MODEL_ROUTING_HANDOFF:END -->\n
+
+<!-- FREE_MODEL_ROUTING_FINAL_HANDOFF:START -->
+## Free model routing final handoff (2026-04-09)
+- 当前 HEAD 已验证：
+  - `report_generation` 自动走 `qwen3.6-plus -> alibaba_bailian`
+  - preflight / postflight refresh 已生效
+- 修复关键提交：
+  - `6485853` refresh active routing before inference
+  - `00a09e5` restore stable infer refresh chain
+- 中间提交 `4dbb629`、`a3db6a4` 为过渡态，不应作为最终实现口径
+- 后续若继续增强，优先方向是：
+  1. `runtime_execute.py` 失败分类治理
+  2. `runtime_state.json` block / recover 细化
+  3. free eligibility 自动扩容与恢复策略
+<!-- FREE_MODEL_ROUTING_FINAL_HANDOFF:END -->
