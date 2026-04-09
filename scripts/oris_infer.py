@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+QUOTA_PROBE_SCRIPT = ROOT / "scripts" / "quota_probe.py"
+PROVIDER_SCOREBOARD_SCRIPT = ROOT / "scripts" / "provider_scoreboard.py"
 MODEL_SELECTOR_SCRIPT = ROOT / "scripts" / "model_selector.py"
 RUNTIME_PLAN_SCRIPT = ROOT / "scripts" / "runtime_plan.py"
 RUNTIME_EXECUTE_SCRIPT = ROOT / "scripts" / "runtime_execute.py"
