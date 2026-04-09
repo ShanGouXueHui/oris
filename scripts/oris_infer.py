@@ -30,6 +30,45 @@ def append_jsonl(path: Path, record: dict):
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
+def run_refresh(script_path: Path, required: bool = True):
+    result = run_cmd(["/usr/bin/python3", str(script_path)])
+    if result.returncode != 0 and required:
+        raise SystemExit(f"{script_path.name} refresh failed:\n{result.stderr or result.stdout}")
+    return result
+
+def preflight_refresh():
+    warnings = []
+
+    for script_path in [QUOTA_PROBE_SCRIPT, PROVIDER_SCOREBOARD_SCRIPT]:
+        result = run_refresh(script_path, required=False)
+        if result.returncode != 0:
+            warnings.append({
+                "script": script_path.name,
+                "stage": "preflight",
+                "stderr": (result.stderr or result.stdout or "").strip()[:500],
+            })
+
+    run_refresh(MODEL_SELECTOR_SCRIPT, required=True)
+    run_refresh(RUNTIME_PLAN_SCRIPT, required=True)
+    return warnings
+
+def postflight_refresh():
+    warnings = []
+    for script_path in [
+        QUOTA_PROBE_SCRIPT,
+        PROVIDER_SCOREBOARD_SCRIPT,
+        MODEL_SELECTOR_SCRIPT,
+        RUNTIME_PLAN_SCRIPT,
+    ]:
+        result = run_refresh(script_path, required=False)
+        if result.returncode != 0:
+            warnings.append({
+                "script": script_path.name,
+                "stage": "postflight",
+                "stderr": (result.stderr or result.stdout or "").strip()[:500],
+            })
+    return warnings
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--role", required=True)
@@ -41,7 +80,7 @@ def main():
 
     request_id = args.request_id or str(uuid.uuid4())
 
-    preflight_refresh()
+    preflight_warnings = preflight_refresh()
 
     exec_cmd = [
         "/usr/bin/python3",
@@ -62,6 +101,7 @@ def main():
         "prompt_preview": args.prompt[:200],
         "prompt_length": len(args.prompt),
         "executor_returncode": result.returncode,
+        "preflight_warnings": preflight_warnings,
     }
 
     parsed = None
@@ -81,21 +121,16 @@ def main():
         record["stdout_preview"] = (result.stdout or "")[:500]
         record["stderr_preview"] = (result.stderr or "")[:500]
 
-    append_jsonl(LOG_PATH, record)
+    post_refresh_warnings = postflight_refresh()
+    record["post_refresh_warnings"] = post_refresh_warnings
 
-    post_refresh = run_cmd(["/usr/bin/python3", str(RUNTIME_PLAN_SCRIPT)])
-    if post_refresh.returncode != 0:
-        print(json.dumps({
-            "ok": False,
-            "request_id": request_id,
-            "error": "post_runtime_plan_refresh_failed",
-            "stderr": post_refresh.stderr,
-        }, ensure_ascii=False, indent=2))
-        raise SystemExit(2)
+    append_jsonl(LOG_PATH, record)
 
     if parsed is not None:
         parsed["request_id"] = request_id
         parsed["source"] = args.source
+        parsed["preflight_warnings"] = preflight_warnings
+        parsed["post_refresh_warnings"] = post_refresh_warnings
         print(json.dumps(parsed, ensure_ascii=False, indent=2))
         raise SystemExit(0 if parsed.get("ok") else 2)
 
@@ -103,6 +138,8 @@ def main():
         "ok": False,
         "request_id": request_id,
         "error": "executor_output_not_json",
+        "preflight_warnings": preflight_warnings,
+        "post_refresh_warnings": post_refresh_warnings,
     }, ensure_ascii=False, indent=2))
     raise SystemExit(2)
 
