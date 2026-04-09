@@ -36,15 +36,16 @@ roles:
 
   report_generation:
     ordered_candidates:
-      - openrouter/auto
       - qwen3.6-plus
-      - hunyuan-t1-latest
-      - models/gemini-2.5-pro
+      - hunyuan-turbos-latest
+      - models/gemini-2.5-flash-lite
+      - models/gemini-flash-lite-latest
       - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
       minimum_context_window: null
 
+      allow_free_candidates_only: true
   coding:
     ordered_candidates:
       - qwen-coder-turbo-0919

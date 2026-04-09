@@ -167,12 +167,17 @@ def build_model_index(scoreboard, registry):
         }
     return out
 
-def eligible_for_role(role_name, model_id, verified_free_models):
+def eligible_for_role(role_name, model_id, verified_free_models, role_rules=None):
+    role_rules = role_rules or {}
+    if role_rules.get("allow_free_candidates_only", False):
+        return model_id in verified_free_models
     if role_name == "free_fallback":
         return model_id in verified_free_models
     return True
 
 def pick_fallback_chain(role_name, active, model_index, policy, state, verified_free_models):
+    role_cfg = ((policy.get("roles") or {}).get(role_name) or {})
+    role_rules = role_cfg.get("rules") or {}
     defaults = policy.get("defaults", {})
     role_cfg = (policy.get("roles") or {}).get(role_name, {})
     retry_attempts = role_cfg.get("retry_attempts", defaults.get("retry_attempts", 1))
@@ -183,7 +188,7 @@ def pick_fallback_chain(role_name, active, model_index, policy, state, verified_
     all_models = []
 
     for model_id, meta in model_index.items():
-        if not eligible_for_role(role_name, model_id, verified_free_models):
+        if not eligible_for_role(role_name, model_id, verified_free_models, role_rules):
             continue
 
         penalty, blocked, failures, blocked_until = model_runtime_penalty(model_id, state, defaults)

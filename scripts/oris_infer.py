@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL_SELECTOR_SCRIPT = ROOT / "scripts" / "model_selector.py"
 RUNTIME_PLAN_SCRIPT = ROOT / "scripts" / "runtime_plan.py"
 RUNTIME_EXECUTE_SCRIPT = ROOT / "scripts" / "runtime_execute.py"
 LOG_PATH = ROOT / "orchestration" / "execution_log.jsonl"
