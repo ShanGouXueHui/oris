@@ -1,16 +1,60 @@
 {
   "version": 1,
-  "updated_at": "2026-04-05T23:21:52.133794+00:00",
+  "updated_at": "2026-04-09T12:47:04.100876+00:00",
   "models": {
     "qwen3.6-plus": {
-      "total_successes": 1,
+      "total_successes": 12,
       "total_failures": 3,
       "consecutive_failures": 0,
       "last_result": "success",
-      "last_role": "cn_candidate_pool",
+      "last_role": "report_generation",
       "last_error": null,
       "last_failure_at": "2026-04-05T23:06:16.943586+00:00",
-      "last_success_at": "2026-04-05T23:21:52.093822+00:00",
+      "last_success_at": "2026-04-09T12:46:49.954388+00:00",
+      "blocked_until": null
+    },
+    "openrouter/auto": {
+      "total_successes": 2,
+      "total_failures": 2,
+      "consecutive_failures": 0,
+      "last_result": "success",
+      "last_role": "report_generation",
+      "last_error": null,
+      "last_failure_at": "2026-04-08T20:00:36.699608+00:00",
+      "last_success_at": "2026-04-09T10:34:58.008206+00:00",
+      "blocked_until": null
+    },
+    "models/gemini-2.0-flash-lite": {
+      "total_successes": 0,
+      "total_failures": 1,
+      "consecutive_failures": 1,
+      "last_result": "failure",
+      "last_role": "report_generation",
+      "last_error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "last_failure_at": "2026-04-08T20:00:21.237325+00:00",
+      "last_success_at": null,
+      "blocked_until": null
+    },
+    "models/gemini-2.0-flash-lite-001": {
+      "total_successes": 0,
+      "total_failures": 1,
+      "consecutive_failures": 1,
+      "last_result": "failure",
+      "last_role": "report_generation",
+      "last_error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "last_failure_at": "2026-04-08T20:00:24.443986+00:00",
+      "last_success_at": null,
+      "blocked_until": null
+    },
+    "models/gemini-2.5-flash-lite": {
+      "total_successes": 1,
+      "total_failures": 0,
+      "consecutive_failures": 0,
+      "last_result": "success",
+      "last_role": "report_generation",
+      "last_error": null,
+      "last_failure_at": null,
+      "last_success_at": "2026-04-08T20:00:42.482252+00:00",
       "blocked_until": null
     }
   }
