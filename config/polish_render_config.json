@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "default_theme": "executive_blue",
+  "themes": {
+    "executive_blue": {
+      "bg": "#F7F9FC",
+      "title": "#0F2747",
+      "text": "#1F2937",
+      "muted": "#6B7280",
+      "accent": "#2563EB",
+      "accent2": "#0EA5E9",
+      "card": "#FFFFFF",
+      "line": "#D1D5DB",
+      "risk": "#DC2626",
+      "ok": "#059669"
+    },
+    "modern_tech": {
+      "bg": "#F6F8FC",
+      "title": "#0F172A",
+      "text": "#1F2937",
+      "muted": "#667085",
+      "accent": "#7C3AED",
+      "accent2": "#2563EB",
+      "card": "#FFFFFF",
+      "line": "#D0D5DD",
+      "risk": "#DC2626",
+      "ok": "#059669"
+    },
+    "auto_premium": {
+      "bg": "#F8FAFC",
+      "title": "#111827",
+      "text": "#1F2937",
+      "muted": "#6B7280",
+      "accent": "#111827",
+      "accent2": "#2563EB",
+      "card": "#FFFFFF",
+      "line": "#D1D5DB",
+      "risk": "#B91C1C",
+      "ok": "#047857"
+    }
+  },
+  "profile_theme_map": {
+    "internet_platform": "executive_blue",
+    "foundation_model_company": "modern_tech",
+    "cloud_ai_platform": "modern_tech",
+    "automotive_oem": "auto_premium"
+  },
+  "unit_display": {
+    "percent": {
+      "kind": "suffix",
+      "suffix": "%"
+    },
+    "USD_billion": {
+      "kind": "multiply_suffix",
+      "multiplier": 10,
+      "suffix": "亿美元"
+    },
+    "USD_million": {
+      "kind": "divide_suffix",
+      "divisor": 100,
+      "suffix": "亿美元"
+    },
+    "RMB_billion": {
+      "kind": "multiply_prefix_suffix",
+      "multiplier": 10,
+      "prefix": "人民币",
+      "suffix": "亿元"
+    },
+    "RMB_million": {
+      "kind": "divide_prefix_suffix",
+      "divisor": 100,
+      "prefix": "人民币",
+      "suffix": "亿元"
+    },
+    "million_accounts": {
+      "kind": "suffix",
+      "suffix": "百万账户"
+    },
+    "billion_users": {
+      "kind": "multiply_suffix",
+      "multiplier": 10,
+      "suffix": "亿用户"
+    },
+    "steps": {
+      "kind": "suffix",
+      "suffix": "步",
+      "decimals": 0
+    },
+    "B_params_class": {
+      "kind": "suffix",
+      "suffix": "B参数级",
+      "decimals": 0
+    },
+    "tokens_per_second": {
+      "kind": "suffix",
+      "suffix": " tokens/s"
+    },
+    "tokens_per_1k": {
+      "kind": "prefix_suffix",
+      "prefix": "",
+      "suffix": " / 1K tokens"
+    },
+    "tokens_per_million": {
+      "kind": "prefix_suffix",
+      "prefix": "",
+      "suffix": " / 1M tokens"
+    },
+    "RMB_per_million_tokens": {
+      "kind": "prefix_suffix",
+      "prefix": "人民币",
+      "suffix": "元/百万tokens"
+    },
+    "USD_per_million_tokens": {
+      "kind": "prefix_suffix",
+      "prefix": "$",
+      "suffix": "/百万tokens"
+    }
+  },
+  "profile_metric_priority": {
+    "internet_platform": [
+      "revenue",
+      "total_revenue",
+      "google_services_revenue",
+      "google_services_revenue_yoy",
+      "google_cloud_revenue",
+      "google_cloud_revenue_yoy",
+      "google_search_and_other_revenue",
+      "advertising_revenue_share",
+      "paid_subscriptions",
+      "gemini_users",
+      "gross_profit",
+      "gross_profit_yoy",
+      "operating_profit",
+      "operating_profit_yoy",
+      "free_cash_flow",
+      "free_cash_flow_yoy"
+    ],
+    "foundation_model_company": [
+      "api_input_price",
+      "api_output_price",
+      "enterprise_api_count",
+      "agent_long_horizon_steps",
+      "model_class_size",
+      "benchmark_score",
+      "context_window_tokens",
+      "enterprise_customers"
+    ],
+    "automotive_oem": [
+      "vehicle_sales",
+      "deliveries",
+      "revenue",
+      "gross_profit",
+      "operating_profit",
+      "free_cash_flow",
+      "range_km",
+      "zero_to_hundred_acceleration",
+      "adas_takeover_rate"
+    ],
+    "generic_company": [
+      "revenue",
+      "gross_profit",
+      "operating_profit",
+      "free_cash_flow"
+    ]
+  },
+  "metric_scoring_bonus": {
+    "USD_billion": 5,
+    "RMB_billion": 5,
+    "USD_million": 3,
+    "RMB_million": 3,
+    "percent": 4
+  },
+  "metric_candidate_rules": {
+    "google_cloud_revenue|USD_billion": {
+      "min": 0,
+      "max": 100,
+      "bonus": 10
+    },
+    "google_services_revenue|USD_billion": {
+      "min": 0,
+      "max": 500,
+      "bonus": 10
+    },
+    "google_search_and_other_revenue|USD_million": {
+      "min": 1000,
+      "bonus": 8
+    },
+    "gross_profit|RMB_billion": {
+      "min": 0,
+      "bonus": 10
+    },
+    "operating_profit|RMB_billion": {
+      "min": 0,
+      "bonus": 10
+    },
+    "free_cash_flow|RMB_billion": {
+      "min": 0,
+      "bonus": 10
+    },
+    "advertising_revenue_share|percent": {
+      "min": 0,
+      "max": 100,
+      "bonus": 9
+    },
+    "paid_subscriptions|million_accounts": {
+      "min": 0,
+      "bonus": 9
+    },
+    "gemini_users|billion_users": {
+      "min": 0,
+      "bonus": 9
+    },
+    "agent_long_horizon_steps|steps": {
+      "min": 0,
+      "bonus": 9
+    },
+    "model_class_size|B_params_class": {
+      "min": 0,
+      "bonus": 9
+    }
+  },
+  "internal_line_patterns": [
+    "the company profile can now be grounded",
+    "the minimum db-backed evidence chain exists",
+    "current evidence and metrics are still bootstrap-level placeholders",
+    "公司洞察不应停留在官网口径",
+    "建议重点展开的章节："
+  ],
+  "ppt_layout": {
+    "slide_width_inches": 13.333,
+    "slide_height_inches": 7.5,
+    "max_exec_summary_items": 4,
+    "max_dashboard_items": 8,
+    "max_two_col_items_per_page": 12,
+    "max_risk_items": 4,
+    "max_tracking_items": 8
+  }
+}

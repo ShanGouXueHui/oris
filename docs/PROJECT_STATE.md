@@ -686,3 +686,18 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
   - config/company_metric_taxonomy.json
   - config/presentation_theme.json
 <!-- ORIS_CAPABILITY_UPGRADE_PLAN:END -->
+
+<!-- ORIS_POLISH_CONFIG_GOVERNANCE:START -->
+## ORIS polish/render 配置治理（2026-04-10）
+
+- company profile 的展示层（单位换算、主题、展示优先级、内部文案过滤、PPT布局）已进入配置化治理。
+- 新增配置文件：`config/polish_render_config.json`
+- 规则要求：
+  - 展示口径常量不得继续散落在脚本中。
+  - 单位映射、主题色、指标优先级、过滤规则，应优先进入配置文件，必要时再进入数据库。
+  - 代码层只负责读取配置、执行格式化、渲染产物，不承担长期口径管理职责。
+- 当前主流程：
+  - `company_profile_bundle_runner.py` 负责 bundle 生成
+  - `polish_company_profile_bundle.py` 负责 polish json + polished ppt
+  - `run_company_profile_with_polish.py` 负责 bundle + polish 串联执行
+<!-- ORIS_POLISH_CONFIG_GOVERNANCE:END -->

@@ -719,3 +719,20 @@ Feishu 现在能收到消息，但收到的是：
   - shelv
   - pdf-generation
 <!-- ORIS_CONTENT_DELIVERY_UPGRADE_HANDOFF:END -->
+
+<!-- ORIS_POLISH_CONFIG_GOVERNANCE:START -->
+## ORIS polish/render 配置治理 handoff（2026-04-10）
+
+后续继续扩展 company profile / PPT / mobile insight 时，遵守以下约束：
+
+1. 单位换算、文案口径、主题映射、过滤模式、布局上限，不要继续硬编码进脚本。
+2. 优先落到：
+   - `config/polish_render_config.json`
+   - 后续需要多人运营或在线调参时，再迁移到 DB 配置表
+3. `scripts/polish_company_profile_bundle.py` 应保持“薄逻辑”，只做：
+   - 读 bundle
+   - 读 profile
+   - 读 config
+   - 生成 polished json / polished ppt
+4. 新增指标展示规则时，优先改 config，不要直接改脚本分支逻辑。
+<!-- ORIS_POLISH_CONFIG_GOVERNANCE:END -->
