@@ -768,3 +768,14 @@ Feishu 现在能收到消息，但收到的是：
   1. official_source_ingest_skill/runner.py 的 weak_body_text / noise / metadata 判定配置化；
   2. company_profile_skill/runner.py 的 evidence scoring / segment gating 配置化；
   3. 统一形成 ingest -> backfill -> bundle -> polish 全链路配置治理。
+
+## 2026-04-10 16:00:04Z official ingest rule externalization progress
+- 已新增 config/official_ingest_rule_config.json。
+- 已将 official_source_ingest_skill/runner.py 中以下规则迁到配置：
+  - weak_body_text 判定
+  - noise_substrings 判定
+  - metadata_prefixes / metadata_substrings 判定
+- 下一步继续收口：
+  1. company_profile_skill/runner.py 的 segment scoring / evidence gating 配置化；
+  2. official_source_ingest_skill/runner.py 的 extract_evidence_segments 进一步配置化；
+  3. 统一形成 ingest -> backfill -> bundle -> polish 全链路规则治理。

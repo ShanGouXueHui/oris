@@ -20,6 +20,7 @@ SKILL_RUNTIME_PATH = ROOT / "config" / "insight_skill_runtime.json"
 INSIGHT_STORAGE_PATH = ROOT / "config" / "insight_storage.json"
 DEFAULT_TIMEOUT = 30
 OFFICIAL_INGEST_POLICY_PATH = ROOT / "config" / "official_source_ingest_policy.json"
+OFFICIAL_INGEST_RULE_CFG_PATH = ROOT / "config" / "official_ingest_rule_config.json"
 
 
 def utc_now():
@@ -1849,6 +1850,140 @@ def fetch_url_providerized(url: str, timeout: int = DEFAULT_TIMEOUT):
     }
 # === ORIS_FETCH_QUALITY_OVERRIDE_20260410_END ===
 
+
+
+
+# === CONFIG_DRIVEN_INGEST_RULES_START ===
+def load_ingest_rule_cfg():
+    try:
+        return load_json(OFFICIAL_INGEST_RULE_CFG_PATH)
+    except Exception:
+        return {"version": 1, "policy_defaults": {}, "profiles": {}}
+
+def _rule_profiles(source_type: str = "", url: str = ""):
+    out = ["generic"]
+    st = (source_type or "").strip()
+    u = (url or "").strip().lower()
+
+    if st:
+        out.append(f"source_type:{st}")
+
+    if "sec-filings" in u:
+        out.append("url_group:sec_filings")
+
+    return out
+
+def _rule_list(field: str, source_type: str = "", url: str = ""):
+    cfg = load_ingest_rule_cfg()
+    profiles = cfg.get("profiles") or {}
+    out = []
+    for key in _rule_profiles(source_type=source_type, url=url):
+        vals = (profiles.get(key) or {}).get(field) or []
+        for v in vals:
+            s = str(v).strip()
+            if s and s not in out:
+                out.append(s)
+    return out
+
+def _rule_scalar(field: str, source_type: str = "", url: str = "", default=None):
+    cfg = load_ingest_rule_cfg()
+    profiles = cfg.get("profiles") or {}
+    for key in reversed(_rule_profiles(source_type=source_type, url=url)):
+        prof = profiles.get(key) or {}
+        if field in prof:
+            return prof.get(field)
+    return (cfg.get("policy_defaults") or {}).get(field, default)
+
+def load_ingest_policy():
+    try:
+        base = load_json(OFFICIAL_INGEST_POLICY_PATH)
+    except Exception:
+        base = {
+            "pdf_enabled": True,
+            "pdf_max_pages": 30,
+            "max_segments_per_source": 10,
+            "min_segment_length": 40,
+            "noise_substrings": [],
+            "metadata_prefixes": [],
+            "evidence_priority_keywords": []
+        }
+    rule_cfg = load_ingest_rule_cfg()
+    defaults = rule_cfg.get("policy_defaults") or {}
+    out = dict(defaults)
+    out.update(base)
+    return out
+
+def _ingest_norm(text: str) -> str:
+    if "_qnorm" in globals():
+        try:
+            return _qnorm(text)
+        except Exception:
+            pass
+    return normalize_text(text)
+
+def is_metadata_like_text(text: str, source_type: str = "", url: str = "") -> bool:
+    s = str(text or "").strip()
+    if not s:
+        return True
+    lower = s.lower()
+
+    for prefix in _rule_list("metadata_prefixes", source_type=source_type, url=url):
+        if lower.startswith(str(prefix).lower()):
+            return True
+
+    for token in _rule_list("metadata_substrings", source_type=source_type, url=url):
+        if str(token).lower() in lower:
+            return True
+
+    return False
+
+def is_noise_text(text: str, source_type: str = "", url: str = "") -> bool:
+    s = str(text or "").strip()
+    if not s:
+        return True
+    lower = s.lower()
+
+    policy = load_ingest_policy()
+    for bad in (policy.get("noise_substrings") or []):
+        if str(bad).lower() in lower:
+            return True
+
+    for bad in _rule_list("noise_substrings", source_type=source_type, url=url):
+        if str(bad).lower() in lower:
+            return True
+
+    return False
+
+def is_weak_body_text(body_text: str, title: str = "", source_type: str = "", url: str = "") -> bool:
+    body = _ingest_norm(body_text)
+    title_n = _ingest_norm(title)
+
+    if not body:
+        return True
+
+    body_lower = body.lower()
+    exacts = {str(x).strip().lower() for x in _rule_list("weak_body_exact_texts", source_type=source_type, url=url)}
+    if body_lower in exacts:
+        return True
+
+    for token in _rule_list("weak_body_substrings", source_type=source_type, url=url):
+        if str(token).lower() in body_lower:
+            return True
+
+    min_len = int(_rule_scalar("min_meaningful_body_length", source_type=source_type, url=url, default=120) or 120)
+    if len(body) < min_len:
+        return True
+
+    if title_n and body_lower == title_n.lower():
+        return True
+
+    lines = [x.strip() for x in body.splitlines() if x.strip()]
+    unique_ratio = (len(set(lines)) / len(lines)) if lines else 1.0
+    if len(lines) >= 6 and unique_ratio < 0.45:
+        return True
+
+    return False
+# === CONFIG_DRIVEN_INGEST_RULES_END ===
 
 if __name__ == "__main__":
     main()

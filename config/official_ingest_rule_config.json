@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "policy_defaults": {
+    "min_meaningful_body_length": 120
+  },
+  "profiles": {
+    "generic": {
+      "metadata_prefixes": [
+        "title:",
+        "url:",
+        "source_type:",
+        "publisher:",
+        "captured_at:",
+        "fetch_error:",
+        "status_code:",
+        "content_type:",
+        "final_url:",
+        "root_domain:"
+      ],
+      "metadata_substrings": [
+        "privacy",
+        "privacy policy",
+        "terms of service",
+        "all rights reserved",
+        "copyright",
+        "email alert",
+        "unsubscribe",
+        "accept cookies",
+        "cookie settings"
+      ],
+      "noise_substrings": [
+        "skip to main content",
+        "opens in new window",
+        "email address required",
+        "investor alert options",
+        "your information will be processed",
+        "selecting a year value will change the accordion list",
+        "news (includes earnings date announcements",
+        "upcoming conference appearances",
+        "at least one of the checkboxes needs to be selected"
+      ],
+      "weak_body_exact_texts": [
+        "just a moment...",
+        "access denied",
+        "please wait..."
+      ],
+      "weak_body_substrings": [
+        "checking your browser",
+        "browser integrity check",
+        "enable javascript and cookies",
+        "ddos protection by",
+        "cloudflare",
+        "captcha",
+        "security check",
+        "please verify you are human",
+        "subscribe to email alerts",
+        "email alerts",
+        "unsubscribe from email alerts"
+      ]
+    },
+    "source_type:investor_relations": {
+      "weak_body_substrings": [
+        "results & financials",
+        "email alerts",
+        "select year",
+        "additional information"
+      ]
+    },
+    "source_type:sec_filing": {
+      "weak_body_substrings": [
+        "sec filings",
+        "section 16 filings",
+        "proxy filings"
+      ]
+    },
+    "url_group:sec_filings": {
+      "weak_body_substrings": [
+        "sec filings",
+        "quarterly and annual reports"
+      ]
+    }
+  }
+}
