@@ -701,3 +701,12 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
   - `polish_company_profile_bundle.py` 负责 polish json + polished ppt
   - `run_company_profile_with_polish.py` 负责 bundle + polish 串联执行
 <!-- ORIS_POLISH_CONFIG_GOVERNANCE:END -->
+
+## 2026-04-10 15:49:53Z company-profile wrapper + polish status
+- wrapper 标准入口已打通：run_company_profile_with_polish.py 可直接驱动 bundle_runner + polish。
+- Alphabet / Tencent / 智谱 已验证 polished bundle 与 polished ppt 可生成。
+- 当前主约束已从“参数错配”切换为“规则常量继续配置化”。
+- 下一步优先级：
+  1. 将 company_profile_bundle_runner.py 中残余规则常量继续外置到 config；
+  2. foundation_model_company 增强 API 定价 / 企业客户 / benchmark / token 成本类指标回填；
+  3. internet_platform 增强历年序列指标与 segment 粒度压缩。

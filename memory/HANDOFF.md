@@ -736,3 +736,12 @@ Feishu 现在能收到消息，但收到的是：
    - 生成 polished json / polished ppt
 4. 新增指标展示规则时，优先改 config，不要直接改脚本分支逻辑。
 <!-- ORIS_POLISH_CONFIG_GOVERNANCE:END -->
+
+## 2026-04-10 15:49:53Z company-profile wrapper + polish status
+- wrapper 标准入口已打通：run_company_profile_with_polish.py 可直接驱动 bundle_runner + polish。
+- Alphabet / Tencent / 智谱 已验证 polished bundle 与 polished ppt 可生成。
+- 当前主约束已从“参数错配”切换为“规则常量继续配置化”。
+- 下一步优先级：
+  1. 将 company_profile_bundle_runner.py 中残余规则常量继续外置到 config；
+  2. foundation_model_company 增强 API 定价 / 企业客户 / benchmark / token 成本类指标回填；
+  3. internet_platform 增强历年序列指标与 segment 粒度压缩。
