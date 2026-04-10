@@ -745,3 +745,16 @@ Feishu 现在能收到消息，但收到的是：
   1. 将 company_profile_bundle_runner.py 中残余规则常量继续外置到 config；
   2. foundation_model_company 增强 API 定价 / 企业客户 / benchmark / token 成本类指标回填；
   3. internet_platform 增强历年序列指标与 segment 粒度压缩。
+
+## 2026-04-10 15:52:44Z config externalization progress
+- 已新增 config/company_profile_rule_config.json。
+- company_profile_bundle_runner.py 中以下规则已切换为配置驱动：
+  - user_facing_noise_patterns
+  - profile_negative_patterns
+  - profile_positive_metric_keywords
+  - polluted_external_segment_patterns
+  - default_theme_by_focus_profile
+- 下一步继续收口：
+  1. backfill_business_metrics_from_evidence.py 规则配置化；
+  2. backfill_foundation_model_metrics_from_evidence.py 规则配置化；
+  3. official_source_ingest_skill/runner.py 抽取弱正文判定与噪声策略到配置。

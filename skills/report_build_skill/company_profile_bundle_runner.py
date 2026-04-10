@@ -26,6 +26,7 @@ QUALITY_CFG_PATH = ROOT / "config" / "company_profile_quality.json"
 FOCUS_PROFILE_PATH = ROOT / "config" / "company_focus_profiles.json"
 METRIC_TAXONOMY_PATH = ROOT / "config" / "company_metric_taxonomy.json"
 THEME_CFG_PATH = ROOT / "config" / "presentation_theme.json"
+RULE_CFG_PATH = ROOT / "config" / "company_profile_rule_config.json"
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
@@ -391,6 +392,40 @@ def load_theme_cfg():
             }
         }
 
+
+def load_rule_cfg():
+    try:
+        return load_json(RULE_CFG_PATH)
+    except Exception:
+        return {
+            "version": 1,
+            "default_theme_by_focus_profile": {"default": "executive_blue"},
+            "user_facing_noise_patterns": [],
+            "profile_negative_patterns": {"default": []},
+            "profile_positive_metric_keywords": {"default": []},
+            "polluted_external_segment_patterns": {"default": []}
+        }
+
+def rule_list(cfg: dict, key: str, focus_profile: str):
+    section = cfg.get(key) or {}
+    if isinstance(section, list):
+        return section
+    out = []
+    out.extend(section.get("default") or [])
+    out.extend(section.get(focus_profile) or [])
+    seen = set()
+    dedup = []
+    for x in out:
+        s = str(x).strip()
+        if not s:
+            continue
+        k = s.lower()
+        if k in seen:
+            continue
+        seen.add(k)
+        dedup.append(s)
+    return dedup
+
 def hex_to_rgb(hex_str: str):
     s = (hex_str or "#000000").strip().lstrip("#")
     if len(s) != 6:
@@ -398,11 +433,14 @@ def hex_to_rgb(hex_str: str):
     return RGBColor(int(s[0:2], 16), int(s[2:4], 16), int(s[4:6], 16))
 
 def pick_theme_name(focus_profile: str, theme_cfg: dict):
-    if focus_profile == "automotive_oem":
-        return "auto_premium"
-    if focus_profile in {"foundation_model_company", "cloud_ai_platform"}:
-        return "modern_tech"
-    return theme_cfg.get("default_theme") or "executive_blue"
+    rule_cfg = load_rule_cfg()
+    mapping = rule_cfg.get("default_theme_by_focus_profile") or {}
+    return (
+        mapping.get(focus_profile)
+        or mapping.get("default")
+        or theme_cfg.get("default_theme")
+        or "executive_blue"
+    )
 
 def theme_palette(focus_profile: str):
     cfg = load_theme_cfg()
@@ -893,46 +931,8 @@ def source_label_short(title: str):
     return t
 
 def profile_negative_patterns(focus_profile: str):
-    base = [
-        "news (includes earnings date announcements",
-        "earnings date announcements",
-        "upcoming conference appearances",
-        "your information will be processed",
-        "selecting a year value",
-        "investor alert options",
-        "at least one of the checkboxes needs to be selected",
-        "checkbox",
-        "email address",
-        "newsletter",
-        "unsubscribe",
-        "privacy",
-        "cookies",
-        "manage cookies",
-        "accept all",
-        "skip to content",
-        "back to top",
-        "view all",
-        "learn more",
-        "opens in new window",
-        "results公示",
-        "结果公示",
-        "会员大会",
-        "章程（草案）",
-        "筹备工作报告",
-        "会议应出席会员",
-        "会议主要内容和通过的主要决定",
-    ]
-    if focus_profile == "internet_platform":
-        base += [
-            "investor relations - investors - sec filings",
-            "sec filings / segment",
-        ]
-    if focus_profile == "foundation_model_company":
-        base += [
-            "会员以举手方式表决通过",
-            "中关村自主大模型产业联盟",
-        ]
-    return base
+    rule_cfg = load_rule_cfg()
+    return [x.lower() for x in rule_list(rule_cfg, "profile_negative_patterns", focus_profile)]
 
 
 def is_metric_like_segment(seg: str, focus_profile: str):
@@ -1000,30 +1000,9 @@ def compress_metric_segment(seg: str, title: str, focus_profile: str):
     return out
 
 def profile_positive_metric_keywords(focus_profile: str):
-    base = [
-        "revenue", "revenues", "sales", "gross profit", "operating profit", "non-ifrs",
-        "net profit", "cash flow", "free cash flow", "margin", "growth", "yoy",
-        "收入", "营收", "利润", "毛利", "现金流", "毛利率", "同比", "增长", "客户", "用户",
-        "销量", "交付", "订单", "cloud", "advertising", "games", "vas", "fintech"
-    ]
-    if focus_profile == "internet_platform":
-        base += [
-            "mau", "dau", "social networks", "domestic games", "international games",
-            "video accounts", "payments", "merchant", "cloud services", "ad",
-            "广告", "社交", "游戏", "支付", "云服务", "视频号"
-        ]
-    if focus_profile == "foundation_model_company":
-        base += [
-            "swe-bench", "terminal bench", "sota", "agent api", "api", "benchmark",
-            "50 步", "50-step", "50 step", "dozens of", "glm", "autoglm", "glm-pc",
-            "推理", "基准", "benchmark", "agent", "模型", "api"
-        ]
-    if focus_profile == "automotive_oem":
-        base += [
-            "deliveries", "vehicle sales", "ev sales", "range", "800v", "adas",
-            "acceleration", "takeover", "智驾", "续航", "加速", "接管", "车型"
-        ]
-    return [x.lower() for x in base]
+    rule_cfg = load_rule_cfg()
+    vals = rule_list(rule_cfg, "profile_positive_metric_keywords", focus_profile)
+    return [x.lower() for x in vals]
 
 def looks_like_title_echo(seg: str, title: str):
     s = normalize(seg).strip().lower()
@@ -1042,19 +1021,8 @@ def is_polluted_external_segment(seg: str, focus_profile: str):
     s = normalize(seg).strip().lower()
     if not s:
         return True
-    patterns = [
-        "hkex stock code",
-        "release its annual results",
-        "investor relations -",
-        "sec filings",
-        "your information will be processed",
-        "selecting a year value",
-    ]
-    if focus_profile == "foundation_model_company":
-        patterns += [
-            "英特尔 ai pc 生态大会",
-            "重要合作伙伴受邀出席",
-        ]
+    rule_cfg = load_rule_cfg()
+    patterns = [x.lower() for x in rule_list(rule_cfg, "polluted_external_segment_patterns", focus_profile)]
     return any(p in s for p in patterns)
 
 def _fmt_metric_display_number(x: float):
