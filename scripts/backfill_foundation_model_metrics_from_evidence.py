@@ -1,3 +1,4 @@
+BACKFILL_KIND = "foundation_model_metric_backfill"
 #!/usr/bin/env python3
 import argparse
 import json
@@ -8,10 +9,36 @@ from datetime import date
 import psycopg2
 
 ROOT = Path(__file__).resolve().parents[1]
+RULE_CFG_PATH = ROOT / "config" / "metric_backfill_rule_config.json"
 INSIGHT_STORAGE_PATH = ROOT / "config" / "insight_storage.json"
 
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+def load_rule_cfg():
+    try:
+        return json.loads(RULE_CFG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {"version": 1, "business_metric_backfill": {}, "foundation_model_metric_backfill": {}}
+
+def profile_rule_block(kind: str, focus_profile: str):
+    cfg = load_rule_cfg()
+    block = (cfg.get(kind) or {}).get("company_profiles") or {}
+    return block.get(focus_profile) or {}
+
+def compiled_metric_rules(kind: str, focus_profile: str):
+    block = profile_rule_block(kind, focus_profile)
+    out = []
+    for item in (block.get("metric_patterns") or []):
+        one = dict(item)
+        one["patterns"] = [str(x) for x in (item.get("patterns") or []) if str(x).strip()]
+        out.append(one)
+    return out
+
+def exclude_patterns(kind: str, focus_profile: str):
+    block = profile_rule_block(kind, focus_profile)
+    return [str(x).lower() for x in (block.get("exclude_patterns") or [])]
+
 
 def load_db_cfg():
     raw = load_json(INSIGHT_STORAGE_PATH)

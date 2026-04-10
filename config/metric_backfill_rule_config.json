@@ -1,0 +1,184 @@
+{
+  "version": 1,
+  "business_metric_backfill": {
+    "company_profiles": {
+      "internet_platform": {
+        "metric_patterns": [
+          {
+            "metric_code": "gross_profit",
+            "metric_name": "Gross Profit",
+            "value_unit": "RMB_billion",
+            "patterns": [
+              "gross profit[^\\d]{0,40}([\\d,.]+)\\s*(?:billion|bn)\\s*(?:rmb|人民币)?",
+              "毛利[^\\d]{0,20}([\\d,.]+)\\s*亿元"
+            ]
+          },
+          {
+            "metric_code": "gross_profit_yoy",
+            "metric_name": "Gross Profit YoY",
+            "value_unit": "percent",
+            "patterns": [
+              "gross profit[^\\n]{0,80}?up\\s*([\\d,.]+)\\s*%\\s*(?:yoy|year-on-year)",
+              "毛利[^\\n]{0,40}?同比(?:增长)?\\s*([\\d,.]+)\\s*%"
+            ]
+          },
+          {
+            "metric_code": "operating_profit",
+            "metric_name": "Operating Profit",
+            "value_unit": "RMB_billion",
+            "patterns": [
+              "operating profit[^\\d]{0,40}([\\d,.]+)\\s*(?:billion|bn)\\s*(?:rmb|人民币)?",
+              "经营利润[^\\d]{0,20}([\\d,.]+)\\s*亿元"
+            ]
+          },
+          {
+            "metric_code": "operating_profit_yoy",
+            "metric_name": "Operating Profit YoY",
+            "value_unit": "percent",
+            "patterns": [
+              "operating profit[^\\n]{0,80}?up\\s*([\\d,.]+)\\s*%\\s*(?:yoy|year-on-year)",
+              "经营利润[^\\n]{0,40}?同比(?:增长)?\\s*([\\d,.]+)\\s*%"
+            ]
+          },
+          {
+            "metric_code": "free_cash_flow",
+            "metric_name": "Free Cash Flow",
+            "value_unit": "RMB_billion",
+            "patterns": [
+              "free cash flow[^\\d]{0,40}([\\d,.]+)\\s*(?:billion|bn)\\s*(?:rmb|人民币)?",
+              "自由现金流[^\\d]{0,20}([\\d,.]+)\\s*亿元"
+            ]
+          },
+          {
+            "metric_code": "free_cash_flow_yoy",
+            "metric_name": "Free Cash Flow YoY",
+            "value_unit": "percent",
+            "patterns": [
+              "free cash flow[^\\n]{0,80}?up\\s*([\\d,.]+)\\s*%\\s*(?:yoy|year-on-year)",
+              "自由现金流[^\\n]{0,40}?同比(?:增长)?\\s*([\\d,.]+)\\s*%"
+            ]
+          },
+          {
+            "metric_code": "google_services_revenue",
+            "metric_name": "Google Services Revenue",
+            "value_unit": "USD_billion",
+            "patterns": [
+              "google services revenues?[^\\d]{0,30}([\\d,.]+)\\s*(?:billion|bn)",
+              "google services[^\\d]{0,30}revenue[^\\d]{0,20}([\\d,.]+)\\s*(?:billion|bn)"
+            ]
+          },
+          {
+            "metric_code": "google_services_revenue_yoy",
+            "metric_name": "Google Services Revenue YoY",
+            "value_unit": "percent",
+            "patterns": [
+              "google services revenues?[^\\n]{0,60}(?:increased|grew)\\s*([\\d,.]+)\\s*%",
+              "google services[^\\n]{0,60}([\\d,.]+)\\s*%\\s*(?:growth|yoy)"
+            ]
+          },
+          {
+            "metric_code": "google_cloud_revenue",
+            "metric_name": "Google Cloud Revenue",
+            "value_unit": "USD_billion",
+            "patterns": [
+              "google cloud[^\\d]{0,30}revenues?[^\\d]{0,20}([\\d,.]+)\\s*(?:billion|bn)",
+              "google cloud revenue[^\\d]{0,20}([\\d,.]+)\\s*(?:billion|bn)"
+            ]
+          },
+          {
+            "metric_code": "google_cloud_revenue_yoy",
+            "metric_name": "Google Cloud Revenue YoY",
+            "value_unit": "percent",
+            "patterns": [
+              "google cloud[^\\n]{0,60}(?:increased|grew)\\s*([\\d,.]+)\\s*%",
+              "google cloud[^\\n]{0,60}([\\d,.]+)\\s*%\\s*(?:growth|yoy)"
+            ]
+          },
+          {
+            "metric_code": "google_search_and_other_revenue",
+            "metric_name": "Google Search & Other Revenue",
+            "value_unit": "USD_million",
+            "patterns": [
+              "google search\\s*&\\s*other\\s*\\$\\s*([\\d,.]+)",
+              "google search and other\\s*\\$\\s*([\\d,.]+)"
+            ]
+          },
+          {
+            "metric_code": "advertising_revenue_share",
+            "metric_name": "Advertising Revenue Share",
+            "value_unit": "percent",
+            "patterns": [
+              "more than\\s*([\\d,.]+)\\s*%\\s*of total revenues? from online advertising",
+              "([\\d,.]+)\\s*%\\s*of total revenues? from online advertising"
+            ]
+          },
+          {
+            "metric_code": "paid_subscriptions",
+            "metric_name": "Paid Subscriptions",
+            "value_unit": "million_accounts",
+            "patterns": [
+              "over\\s*([\\d,.]+)\\s*million paid subscriptions",
+              "([\\d,.]+)\\s*million paid subscriptions"
+            ]
+          },
+          {
+            "metric_code": "gemini_users",
+            "metric_name": "Gemini Users",
+            "value_unit": "billion_users",
+            "patterns": [
+              "half a billion users",
+              "([\\d,.]+)\\s*billion users"
+            ],
+            "fixed_value_when_no_capture": 0.5
+          }
+        ],
+        "exclude_patterns": [
+          "just a moment",
+          "skip to main content",
+          "email alert",
+          "privacy policy",
+          "unsubscribe",
+          "cookie",
+          "cookies"
+        ]
+      }
+    }
+  },
+  "foundation_model_metric_backfill": {
+    "company_profiles": {
+      "foundation_model_company": {
+        "metric_patterns": [
+          {
+            "metric_code": "agent_long_horizon_steps",
+            "metric_name": "Agent Long Horizon Steps",
+            "value_unit": "steps",
+            "patterns": [
+              "超过\\s*([\\d,.]+)\\s*步",
+              "([\\d,.]+)\\s*步的长步骤操作",
+              "more than\\s*([\\d,.]+)\\s*steps"
+            ]
+          },
+          {
+            "metric_code": "model_class_size",
+            "metric_name": "Model Class Size",
+            "value_unit": "B_params_class",
+            "patterns": [
+              "([\\d,.]+)B-class",
+              "([\\d,.]+)\\s*B\\s*-class",
+              "([\\d,.]+)B参数级",
+              "([\\d,.]+)\\s*B-class open-source model"
+            ]
+          }
+        ],
+        "exclude_patterns": [
+          "just a moment",
+          "skip to content",
+          "learn more",
+          "cookie",
+          "cookies",
+          "privacy"
+        ]
+      }
+    }
+  }
+}

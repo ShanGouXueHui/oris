@@ -723,3 +723,13 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
   1. backfill_business_metrics_from_evidence.py 规则配置化；
   2. backfill_foundation_model_metrics_from_evidence.py 规则配置化；
   3. official_source_ingest_skill/runner.py 抽取弱正文判定与噪声策略到配置。
+
+## 2026-04-10 15:56:01Z backfill rule externalization progress
+- 已新增 config/metric_backfill_rule_config.json。
+- 已将以下脚本的指标抽取规则迁到配置：
+  - scripts/backfill_business_metrics_from_evidence.py
+  - scripts/backfill_foundation_model_metrics_from_evidence.py
+- 下一步继续收口：
+  1. official_source_ingest_skill/runner.py 的 weak_body_text / noise / metadata 判定配置化；
+  2. company_profile_skill/runner.py 的 evidence scoring / segment gating 配置化；
+  3. 统一形成 ingest -> backfill -> bundle -> polish 全链路配置治理。
