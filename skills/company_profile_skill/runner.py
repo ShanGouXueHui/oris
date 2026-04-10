@@ -15,6 +15,7 @@ from lib.insight_skill_runtime import build_standard_output, load_request
 
 SKILL_NAME = "company_profile_skill"
 QUALITY_CFG_PATH = ROOT / "config" / "company_profile_quality.json"
+COMPANY_PROFILE_RULE_CFG_PATH = ROOT / "config" / "company_profile_skill_rule_config.json"
 
 DEFAULT_REQUEST = {
     "company_name": "Canonical",
@@ -704,6 +705,182 @@ def main():
                 print(json.dumps(json_safe(out), ensure_ascii=False, indent=2))
     finally:
         conn.close()
+
+
+
+# === CONFIG_DRIVEN_COMPANY_PROFILE_RULES_START ===
+def load_company_profile_rule_cfg():
+    try:
+        return json.loads(COMPANY_PROFILE_RULE_CFG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {"version": 1, "generic": {}, "focus_profiles": {}}
+
+def _cp_rule_generic():
+    return (load_company_profile_rule_cfg().get("generic") or {})
+
+def _cp_rule_focus(focus_profile: str):
+    cfg = load_company_profile_rule_cfg()
+    return ((cfg.get("focus_profiles") or {}).get(focus_profile) or {})
+
+def is_low_value_evidence_row(row: dict):
+    cfg = _cp_rule_generic()
+    text = str((row or {}).get("evidence_text") or "").strip().lower()
+    title = str((row or {}).get("evidence_title") or "").strip().lower()
+
+    bad_prefixes = [str(x).lower() for x in (cfg.get("low_value_bad_prefixes") or [])]
+    noise_terms = [str(x).lower() for x in (cfg.get("low_value_noise_terms") or [])]
+    short_seg_max = int(cfg.get("segment_title_short_text_max_len", 40))
+
+    if not text:
+        return True
+
+    for x in bad_prefixes:
+        if text.startswith(x):
+            return True
+
+    for x in noise_terms:
+        if x in text:
+            return True
+
+    if "segment" in title and len(text) < short_seg_max:
+        return True
+
+    return False
+
+def pick_high_value_evidence_rows(rows):
+    rows = rows or []
+    filtered = [r for r in rows if not is_low_value_evidence_row(r)]
+    cfg = _cp_rule_generic()
+
+    type_weights = {str(k): int(v) for k, v in (cfg.get("high_value_type_weights") or {}).items()}
+    kw_weights = {str(k).lower(): int(v) for k, v in (cfg.get("high_value_keyword_weights") or {}).items()}
+    digit_bonus = int(cfg.get("high_value_has_digit_bonus", 2))
+    len_divisor = max(1, int(cfg.get("high_value_len_divisor", 120)))
+    len_cap = int(cfg.get("high_value_len_cap", 3))
+
+    def sort_key(r):
+        text = str(r.get("evidence_text") or "")
+        lower = text.lower()
+        evidence_type = str(r.get("evidence_type") or "")
+        score = 0
+
+        score += int(type_weights.get(evidence_type, 0))
+
+        for kw, w in kw_weights.items():
+            if kw in lower:
+                score += int(w)
+
+        if any(ch.isdigit() for ch in text):
+            score += digit_bonus
+
+        score += min(len(text) // len_divisor, len_cap)
+
+        conf = float(r.get("confidence_score") or 0)
+        return (-score, -conf, -(int(r.get("id") or 0)))
+
+    ranked = sorted(filtered, key=sort_key)
+    if ranked:
+        return ranked[:20]
+    return rows[:20]
+
+def score_segment(seg: str, snapshot_type: str, focus_profile: str, cfg: dict):
+    rule_generic = _cp_rule_generic()
+    rule_focus = _cp_rule_focus(focus_profile)
+
+    quality_generic = (cfg.get("generic") or {})
+    quality_fp = ((cfg.get("focus_profiles") or {}).get(focus_profile) or {})
+
+    noise = []
+    for x in (quality_generic.get("noise_substrings") or []):
+        noise.append(str(x).lower())
+    lower = seg.lower()
+
+    if any(x in lower for x in noise):
+        return -999
+
+    min_len = int(rule_generic.get("min_segment_length", quality_generic.get("min_segment_length", 60)))
+    max_len = int(rule_generic.get("max_segment_length", quality_generic.get("max_segment_length", 1200)))
+
+    if len(seg) < min_len:
+        return -999
+    if len(seg) > max_len:
+        return -999
+
+    score = 0
+    if any(ch.isdigit() for ch in seg):
+        score += int(rule_generic.get("segment_has_digit_bonus", 3))
+
+    for pat in (quality_generic.get("prefer_numeric_regex") or []):
+        try:
+            if re.search(pat, seg, flags=re.I):
+                score += 2
+        except Exception:
+            pass
+
+    merged_keywords = []
+    for kw in (quality_fp.get("keywords") or []):
+        merged_keywords.append(str(kw))
+    for kw in (rule_focus.get("segment_keywords") or []):
+        s = str(kw)
+        if s not in merged_keywords:
+            merged_keywords.append(s)
+
+    for kw in merged_keywords:
+        if str(kw).lower() in lower:
+            score += 2
+
+    type_weights = {str(k): int(v) for k, v in (rule_generic.get("segment_snapshot_type_weights") or {}).items()}
+    score += int(type_weights.get(snapshot_type, 0))
+
+    if len(seg) >= 120:
+        score += 1
+
+    return score
+
+def build_derived_evidence(snapshots, focus_profile: str, company_id):
+    cfg = load_quality_cfg()
+    rule_generic = _cp_rule_generic()
+
+    max_per_source = int(rule_generic.get("max_segments_per_source", 4))
+    max_total = int(rule_generic.get("max_segments_total", 18))
+
+    out = []
+    seen = set()
+
+    for snap in snapshots or []:
+        snapshot_type = snap.get("source_type") or snap.get("snapshot_type") or ""
+        text = read_text_safe(snap.get("parsed_text_storage_path"))
+        if not text:
+            continue
+
+        scored = []
+        for seg in split_candidate_segments(text):
+            score = score_segment(seg, snapshot_type, focus_profile, cfg)
+            if score < 1:
+                continue
+            key = seg[:200]
+            if key in seen:
+                continue
+            seen.add(key)
+            scored.append((score, seg))
+
+        scored.sort(key=lambda x: (-x[0], -len(x[1])))
+        for idx, (_, seg) in enumerate(scored[:max_per_source], 1):
+            out.append({
+                "id": f"derived-{snap.get('id')}-{idx}",
+                "source_snapshot_id": snap.get("id"),
+                "company_id": company_id,
+                "evidence_type": "derived_body_extract",
+                "evidence_title": f"{snap.get('snapshot_title') or snap.get('source_name') or 'Source'} / derived {idx:02d}",
+                "evidence_text": seg,
+                "evidence_number": None,
+                "evidence_unit": None,
+                "evidence_date": None,
+                "confidence_score": 0.85
+            })
+
+    return out[:max_total]
+# === CONFIG_DRIVEN_COMPANY_PROFILE_RULES_END ===
 
 if __name__ == "__main__":
     main()

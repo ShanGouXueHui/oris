@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "generic": {
+    "low_value_bad_prefixes": [
+      "title:",
+      "url:",
+      "publisher:",
+      "source_type:",
+      "captured_at:",
+      "fetch_error:",
+      "content_type:",
+      "final_url:"
+    ],
+    "low_value_noise_terms": [
+      "cookie",
+      "cookies",
+      "privacy policy",
+      "accept cookies",
+      "analytics cookies",
+      "email alert",
+      "unsubscribe",
+      "copyright ©",
+      "all rights reserved",
+      "订阅邮件提醒",
+      "隐私政策"
+    ],
+    "segment_title_short_text_max_len": 40,
+    "high_value_type_weights": {
+      "body_extract": 4,
+      "derived_body_extract": 5,
+      "source_capture": 1
+    },
+    "high_value_keyword_weights": {
+      "revenue": 3,
+      "sales": 3,
+      "deliver": 3,
+      "margin": 3,
+      "profit": 3,
+      "cash flow": 3,
+      "收入": 3,
+      "销量": 3,
+      "交付": 3,
+      "利润": 3,
+      "毛利率": 3,
+      "现金流": 3,
+      "广告": 2,
+      "云": 2,
+      "用户": 2,
+      "订阅": 2,
+      "benchmark": 2,
+      "agent": 2,
+      "api": 2
+    },
+    "high_value_has_digit_bonus": 2,
+    "high_value_len_divisor": 120,
+    "high_value_len_cap": 3,
+    "min_segment_length": 60,
+    "max_segment_length": 1200,
+    "max_segments_per_source": 4,
+    "max_segments_total": 18,
+    "segment_has_digit_bonus": 3,
+    "segment_snapshot_type_weights": {
+      "annual_report": 2,
+      "investor_relations": 2,
+      "official_website": 1,
+      "product_page": 1
+    }
+  },
+  "focus_profiles": {
+    "internet_platform": {
+      "segment_keywords": [
+        "revenue",
+        "gross profit",
+        "operating profit",
+        "cash flow",
+        "advertising",
+        "cloud",
+        "subscriptions",
+        "search",
+        "mau",
+        "dau",
+        "收入",
+        "利润",
+        "现金流",
+        "广告",
+        "云",
+        "用户",
+        "订阅"
+      ]
+    },
+    "foundation_model_company": {
+      "segment_keywords": [
+        "benchmark",
+        "swe-bench",
+        "terminal bench",
+        "api",
+        "agent",
+        "token",
+        "pricing",
+        "enterprise",
+        "customer",
+        "glm",
+        "推理",
+        "基准",
+        "企业客户",
+        "商业化",
+        "token",
+        "价格"
+      ]
+    },
+    "automotive_oem": {
+      "segment_keywords": [
+        "deliveries",
+        "sales",
+        "gross margin",
+        "operating margin",
+        "range",
+        "adas",
+        "takeover",
+        "delivery",
+        "销量",
+        "交付",
+        "毛利率",
+        "续航",
+        "接管",
+        "智驾"
+      ]
+    }
+  }
+}

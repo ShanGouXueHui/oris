@@ -779,3 +779,20 @@ Feishu 现在能收到消息，但收到的是：
   1. company_profile_skill/runner.py 的 segment scoring / evidence gating 配置化；
   2. official_source_ingest_skill/runner.py 的 extract_evidence_segments 进一步配置化；
   3. 统一形成 ingest -> backfill -> bundle -> polish 全链路规则治理。
+
+## 2026-04-10 16:03:25Z company_profile_skill rule externalization progress
+- 已新增 config/company_profile_skill_rule_config.json。
+- 已将 company_profile_skill/runner.py 中以下规则迁到配置：
+  - low value evidence row 判定
+  - high value evidence ranking 权重
+  - segment scoring 权重
+  - derived evidence max_segments_per_source / max_segments_total
+- 当前链路状态：
+  1. official ingest 规则已配置化；
+  2. metric backfill 规则已配置化；
+  3. bundle runner 规则已配置化；
+  4. polish render 规则已配置化；
+  5. company_profile_skill 规则已进入配置治理。
+- 下一步建议：
+  1. 继续收口 official_source_ingest_skill 中 extract_evidence_segments 的分段/优先词；
+  2. 再把 free_research_upgrade 的 deterministic fallback 模板也配置化。
