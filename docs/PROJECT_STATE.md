@@ -761,3 +761,18 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
 - 下一步建议：
   1. 继续收口 official_source_ingest_skill 中 extract_evidence_segments 的分段/优先词；
   2. 再把 free_research_upgrade 的 deterministic fallback 模板也配置化。
+
+## 2026-04-10 16:10:05Z free_research_upgrade fallback config externalization
+- 已新增 config/free_research_upgrade_rule_config.json。
+- 已将 free_research_upgrade.py 的 deterministic fallback 模板、gap finding 默认项、followup search terms 迁到配置。
+- 当前 company-profile 相关主链路已完成配置化覆盖：
+  1. official ingest weak/noise 规则
+  2. metric backfill 规则
+  3. bundle runner 规则
+  4. polish render 规则
+  5. company_profile_skill evidence/segment scoring 规则
+  6. free_research_upgrade deterministic fallback 模板规则
+- 当前剩余重点不再是“规则常量出代码”，而是：
+  1. 提高 foundation_model_company 的可量化指标来源密度；
+  2. 让 official ingest 对更多站点获取到高价值正文；
+  3. 后续视需要把 compare/pipeline 编排参数继续配置化。

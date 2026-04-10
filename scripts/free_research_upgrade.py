@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+FREE_RESEARCH_UPGRADE_RULE_CFG_PATH = ROOT / "config" / "free_research_upgrade_rule_config.json"
 
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
@@ -287,6 +288,165 @@ def main():
         "used_mode": "deterministic_fallback",
         "has_upgrade_json": True
     }, ensure_ascii=False, indent=2))
+
+
+
+# === CONFIG_DRIVEN_FREE_RESEARCH_UPGRADE_START ===
+def load_free_research_upgrade_rule_cfg():
+    try:
+        return json.loads(FREE_RESEARCH_UPGRADE_RULE_CFG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {
+            "version": 1,
+            "generic": {
+                "max_numeric_kpis": 8,
+                "max_gap_findings": 4,
+                "max_followup_search_terms": 6,
+                "summary_templates": {
+                    "line_1": "{company_name} 当前已完成一版基于可得证据的{focus_label}洞察，但仍需继续提高证据密度与量化深度。",
+                    "line_2": "现阶段最核心短板不是写作层，而是源数据层：高价值正文、结构化指标、历年序列和可比口径仍需持续沉淀。",
+                    "line_3": "现有可提炼量化信息包括：{numeric_preview}",
+                    "line_4": "下一步应优先修复：{primary_gap}"
+                }
+            },
+            "focus_profile_display": {
+                "generic_company": "通用公司"
+            },
+            "focus_profiles": {
+                "generic_company": {
+                    "default_gap_findings": [
+                        "当前画像下，仍需继续补强收入、利润、现金流、核心产品与竞争定位等关键证据。"
+                    ],
+                    "followup_search_terms": [
+                        "{company_name} annual report revenue operating profit cash flow"
+                    ]
+                }
+            }
+        }
+
+def _fru_dedupe(items, limit=None):
+    out = []
+    seen = set()
+    for x in items or []:
+        s = str(x or "").strip()
+        if not s:
+            continue
+        if s in seen:
+            continue
+        seen.add(s)
+        out.append(s)
+        if limit is not None and len(out) >= limit:
+            break
+    return out
+
+def _fru_focus_label(focus_profile: str):
+    cfg = load_free_research_upgrade_rule_cfg()
+    labels = cfg.get("focus_profile_display") or {}
+    return labels.get(focus_profile) or focus_profile or "通用公司"
+
+def _fru_profile_cfg(focus_profile: str):
+    cfg = load_free_research_upgrade_rule_cfg()
+    profiles = cfg.get("focus_profiles") or {}
+    return profiles.get(focus_profile) or profiles.get("generic_company") or {}
+
+def _fru_generic_cfg():
+    cfg = load_free_research_upgrade_rule_cfg()
+    return cfg.get("generic") or {}
+
+def _fru_apply_config_postprocess(data):
+    if not isinstance(data, dict):
+        return data
+
+    used_mode = data.get("used_mode")
+    llm_ok = data.get("llm_ok")
+
+    if used_mode not in (None, "deterministic_fallback") and llm_ok is True:
+        return data
+
+    generic = _fru_generic_cfg()
+    company_name = (
+        data.get("company_name")
+        or data.get("entity")
+        or data.get("company")
+        or "目标公司"
+    )
+    focus_profile = (
+        data.get("focus_profile")
+        or data.get("profile")
+        or "generic_company"
+    )
+    focus_label = _fru_focus_label(focus_profile)
+    prof_cfg = _fru_profile_cfg(focus_profile)
+
+    max_numeric = int(generic.get("max_numeric_kpis", 8))
+    max_gap = int(generic.get("max_gap_findings", 4))
+    max_terms = int(generic.get("max_followup_search_terms", 6))
+
+    numeric = _fru_dedupe(
+        (data.get("numeric_kpis") or [])
+        + (data.get("better_numeric_kpis") or []),
+        limit=max_numeric
+    )
+
+    gap_findings = _fru_dedupe(
+        (data.get("gap_findings") or [])
+        + (prof_cfg.get("default_gap_findings") or []),
+        limit=max_gap
+    )
+
+    followup_terms = []
+    if data.get("followup_search_terms"):
+        followup_terms.extend(data.get("followup_search_terms") or [])
+    else:
+        for term in (prof_cfg.get("followup_search_terms") or []):
+            followup_terms.append(str(term).format(company_name=company_name))
+    followup_terms = _fru_dedupe(followup_terms, limit=max_terms)
+
+    tpl = generic.get("summary_templates") or {}
+    exec_summary = [
+        str(tpl.get("line_1", "{company_name} 当前已完成一版基于可得证据的{focus_label}洞察，但仍需继续提高证据密度与量化深度。")).format(
+            company_name=company_name,
+            focus_profile=focus_profile,
+            focus_label=focus_label
+        ),
+        str(tpl.get("line_2", "现阶段最核心短板不是写作层，而是源数据层：高价值正文、结构化指标、历年序列和可比口径仍需持续沉淀。"))
+    ]
+
+    if numeric:
+        exec_summary.append(
+            str(tpl.get("line_3", "现有可提炼量化信息包括：{numeric_preview}")).format(
+                numeric_preview="；".join(numeric[:3])
+            )
+        )
+    if gap_findings:
+        exec_summary.append(
+            str(tpl.get("line_4", "下一步应优先修复：{primary_gap}")).format(
+                primary_gap=gap_findings[0]
+            )
+        )
+
+    exec_summary = _fru_dedupe(exec_summary, limit=4)
+
+    data["company_name"] = company_name
+    data["focus_profile"] = focus_profile
+    data["used_mode"] = data.get("used_mode") or "deterministic_fallback"
+    data["exec_summary"] = exec_summary
+    data["better_exec_summary"] = exec_summary
+    data["numeric_kpis"] = numeric
+    data["gap_findings"] = gap_findings
+    data["followup_search_terms"] = followup_terms
+    data["postprocess_mode"] = "config_driven_deterministic_fallback"
+    data["postprocess_config_path"] = str(FREE_RESEARCH_UPGRADE_RULE_CFG_PATH.relative_to(ROOT))
+    return data
+
+if "dump_json" in globals():
+    _ORIG_dump_json = dump_json
+
+    def dump_json(path, data):
+        if isinstance(data, dict):
+            data = _fru_apply_config_postprocess(data)
+        return _ORIG_dump_json(path, data)
+# === CONFIG_DRIVEN_FREE_RESEARCH_UPGRADE_END ===
 
 if __name__ == "__main__":
     main()

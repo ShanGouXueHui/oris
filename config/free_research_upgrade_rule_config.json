@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "generic": {
+    "max_numeric_kpis": 8,
+    "max_gap_findings": 4,
+    "max_followup_search_terms": 6,
+    "summary_templates": {
+      "line_1": "{company_name} 当前已完成一版基于可得证据的{focus_label}洞察，但仍需继续提高证据密度与量化深度。",
+      "line_2": "现阶段最核心短板不是写作层，而是源数据层：高价值正文、结构化指标、历年序列和可比口径仍需持续沉淀。",
+      "line_3": "现有可提炼量化信息包括：{numeric_preview}",
+      "line_4": "下一步应优先修复：{primary_gap}"
+    }
+  },
+  "focus_profile_display": {
+    "generic_company": "通用公司",
+    "internet_platform": "互联网平台",
+    "foundation_model_company": "基础模型公司",
+    "automotive_oem": "汽车整车"
+  },
+  "focus_profiles": {
+    "internet_platform": {
+      "default_gap_findings": [
+        "互联网平台画像下，仍需持续补强收入、利润、广告、云、用户与订阅等核心经营指标的历年序列。",
+        "应优先补充年报、季报、业绩会材料中的正文段落和表格，而不是导航页或订阅页。"
+      ],
+      "followup_search_terms": [
+        "{company_name} annual report revenue operating profit cash flow",
+        "{company_name} investor relations earnings presentation pdf",
+        "{company_name} advertising revenue cloud revenue paid subscriptions annual report",
+        "{company_name} operating margin segment revenue annual results"
+      ]
+    },
+    "foundation_model_company": {
+      "default_gap_findings": [
+        "基础模型公司画像下，仍需持续补强 API 商业化、企业客户、推理成本、基准成绩与 Agent 落地数据。",
+        "应优先补充官方定价页、企业案例、模型基准与产品发布正文，而不是导航页或泛新闻页。"
+      ],
+      "followup_search_terms": [
+        "{company_name} api pricing enterprise customers benchmark agent",
+        "{company_name} token inference benchmark enterprise api",
+        "{company_name} model pricing benchmark customers agent"
+      ]
+    },
+    "automotive_oem": {
+      "default_gap_findings": [
+        "汽车整车画像下，仍需持续补强销量、交付、ASP、毛利率、现金流与智驾关键指标的连续序列。",
+        "应优先补充年报、季报、交付公告、技术发布会与车型参数表正文。"
+      ],
+      "followup_search_terms": [
+        "{company_name} deliveries revenue gross margin cash flow annual report",
+        "{company_name} investor relations earnings presentation pdf",
+        "{company_name} adas range model sales annual results"
+      ]
+    },
+    "generic_company": {
+      "default_gap_findings": [
+        "当前画像下，仍需继续补强收入、利润、现金流、核心产品与竞争定位等关键证据。",
+        "应优先补充官方年报、季报、产品页和投资者材料正文，而不是导航页或订阅页。"
+      ],
+      "followup_search_terms": [
+        "{company_name} annual report revenue operating profit cash flow",
+        "{company_name} investor relations earnings presentation pdf",
+        "{company_name} annual results pdf"
+      ]
+    }
+  }
+}
