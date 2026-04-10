@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "fetch_provider_order": [
+    "native_http",
+    "firecrawl"
+  ],
+  "pdf_provider_order": [
+    "pdftotext_cli",
+    "pypdf_local"
+  ],
+  "native_http": {
+    "enabled": true,
+    "timeout_seconds": 40,
+    "user_agent": "ORIS-OfficialIngest/1.0"
+  },
+  "firecrawl": {
+    "enabled": false,
+    "api_base": "https://api.firecrawl.dev",
+    "scrape_path": "/v1/scrape",
+    "api_key_env": "FIRECRAWL_API_KEY",
+    "timeout_seconds": 60
+  },
+  "pdf_extract": {
+    "enabled": true,
+    "max_pages": 60,
+    "min_chars_per_page": 20,
+    "strip_nul": true
+  },
+  "quality_gate": {
+    "min_segment_length": 40,
+    "max_segment_length": 1200,
+    "max_segments": 12,
+    "prefer_numeric_segments": true,
+    "drop_cookie_lines": true,
+    "drop_privacy_lines": true,
+    "drop_email_alert_lines": true,
+    "drop_nav_shell_lines": true
+  },
+  "noise_patterns": [
+    "cookie",
+    "cookies",
+    "privacy",
+    "terms",
+    "email alert",
+    "alert sign up",
+    "unsubscribe",
+    "accept all",
+    "manage cookies",
+    "newsletter",
+    "skip to content",
+    "back to top"
+  ],
+  "value_keywords": [
+    "revenue",
+    "sales",
+    "deliveries",
+    "vehicles",
+    "units",
+    "margin",
+    "ebit",
+    "ebitda",
+    "cash flow",
+    "free cash flow",
+    "net profit",
+    "earnings",
+    "guidance",
+    "outlook",
+    "研发",
+    "收入",
+    "营收",
+    "利润",
+    "毛利率",
+    "净利",
+    "销量",
+    "交付",
+    "订单",
+    "资本开支",
+    "现金流",
+    "智能驾驶",
+    "大模型",
+    "云",
+    "AI",
+    "agent",
+    "MaaS",
+    "API"
+  ]
+}

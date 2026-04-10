@@ -240,6 +240,16 @@ def run_company_profile_profile(compiled_case: dict, profiles_cfg: dict, skip_re
     if not target:
         raise RuntimeError("company_profile profile requires detected target_company")
 
+    deliverables = compiled_case.get("deliverables") or []
+    if deliverables and set(deliverables) <= {"chat_md"}:
+        direct_out = run_json([
+            "/usr/bin/python3",
+            str(ROOT / "scripts" / "run_company_profile_direct.py"),
+            "--compiled-case-path",
+            compiled_case.get("compiled_case_path"),
+        ])
+        return direct_out
+
     base_dir = ROOT / "inputs" / "generated_cases" / compiled_case["case_code"] / ts_compact()
     base_dir.mkdir(parents=True, exist_ok=True)
 
@@ -247,13 +257,15 @@ def run_company_profile_profile(compiled_case: dict, profiles_cfg: dict, skip_re
         "entity": target.get("name"),
         "domain": target.get("domain"),
         "region": target.get("region"),
+        "focus_profile": target.get("focus_profile"),
+        "role_tags": target.get("role_tags") or [],
         "time_range": "latest",
         "sources": target.get("sources") or []
     }
 
     ingest_out = run_json([
         "/usr/bin/python3",
-        str(ROOT / "skills" / "official_source_ingest_skill" / "runner.py"),
+        str(ROOT / "skills" / "official_source_ingest_skill" / "runner_providerized.py"),
         "--input-json",
         json.dumps(ingest_payload, ensure_ascii=False)
     ])
@@ -262,6 +274,8 @@ def run_company_profile_profile(compiled_case: dict, profiles_cfg: dict, skip_re
         "company_name": target.get("name"),
         "domain": target.get("domain"),
         "region": target.get("region"),
+        "focus_profile": target.get("focus_profile"),
+        "role_tags": target.get("role_tags") or [],
         "freshness_policy": {
             "same_day_required": True,
             "force_refresh_on_new_prompt": True

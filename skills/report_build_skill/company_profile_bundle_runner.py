@@ -444,6 +444,79 @@ def metric_display_line(row: dict):
     tail = f"（{obs}）" if obs else ""
     return f"{name}: {value}{unit}{tail}".strip()
 
+
+def normalize_metric_unit(unit: str):
+    u = normalize(unit).strip()
+    mapping = {
+        "USD_billion": "亿美元",
+        "million_accounts": "百万账户",
+        "billion_users": "十亿用户",
+        "percent": "%",
+        "count": "个",
+    }
+    return mapping.get(u, u)
+
+def metric_display_line_cn(row: dict):
+    name = normalize(row.get("metric_name") or row.get("metric_code"))
+    value = normalize(row.get("metric_value"))
+    unit = normalize_metric_unit(row.get("metric_unit"))
+    obs = normalize(row.get("observation_date"))
+    if not name or value == "":
+        return ""
+    tail = f"（{obs}）" if obs else ""
+    return f"{name}: {value}{unit}{tail}".strip()
+
+def top_structured_metric_lines(profile: dict, focus_profile: str, limit: int = 8):
+    preferred = metric_taxonomy_for_profile(focus_profile)
+    rows = []
+    block = {
+        "official_source_snapshot_count",
+        "extracted_evidence_segment_count",
+    }
+    for row in profile.get("recent_metric_observations") or []:
+        code = normalize(row.get("metric_code"))
+        if code in block:
+            continue
+        line = metric_display_line_cn(row)
+        if not line:
+            continue
+        rows.append((code, line, row))
+
+    positive_codes = {
+        "revenue", "revenue_yoy", "alphabet_revenue", "alphabet_revenue_yoy",
+        "google_cloud_revenue", "google_cloud_revenue_yoy",
+        "google_services_revenue", "google_services_revenue_yoy",
+        "gross_profit", "gross_profit_yoy",
+        "operating_profit", "operating_profit_yoy",
+        "net_profit", "free_cash_flow",
+        "paid_subscriptions", "gemini_users", "advertising_revenue_share",
+        "cloud_revenue", "cloud_revenue_yoy", "services_revenue", "services_revenue_yoy",
+        "domestic_games_revenue", "domestic_games_revenue_yoy",
+        "social_networks_revenue", "social_networks_revenue_yoy",
+    }
+
+    rank = {str(x).lower(): i for i, x in enumerate(preferred)}
+
+    def sort_key(x):
+        code, line, row = x
+        c = code.lower()
+        pos = 0 if c in positive_codes else 1
+        return (pos, rank.get(c, 9999), -len(line))
+
+    rows.sort(key=sort_key)
+
+    out = []
+    seen = set()
+    for code, line, row in rows:
+        k = line.lower()
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append(line)
+        if len(out) >= limit:
+            break
+    return out
+
 def top_metric_items_by_taxonomy(profile: dict, focus_profile: str, cfg: dict, limit: int = 8):
     preferred = metric_taxonomy_for_profile(focus_profile)
     blocklist = set(cfg.get("metric_blocklist") or [])
@@ -984,6 +1057,45 @@ def is_polluted_external_segment(seg: str, focus_profile: str):
         ]
     return any(p in s for p in patterns)
 
+def _fmt_metric_display_number(x: float):
+    try:
+        x = float(x)
+    except Exception:
+        return str(x)
+    if abs(x - round(x)) < 1e-9:
+        return str(int(round(x)))
+    return f"{x:.1f}".rstrip("0").rstrip(".")
+
+def canonicalize_metric_line(line: str):
+    t = normalize(line).strip()
+    if not t:
+        return ""
+
+    m = re.match(r'^(.*?:)\s*([0-9]+(?:\.[0-9]+)?)([A-Za-z_]+)(（[^）]+）)$', t)
+    if not m:
+        return t
+
+    head, num_s, unit, tail = m.groups()
+    try:
+        num = float(num_s)
+    except Exception:
+        return t
+
+    head = head.strip()
+
+    if unit == "percent":
+        return f"{head} {_fmt_metric_display_number(num)}%{tail}"
+    if unit == "USD_billion":
+        return f"{head} {_fmt_metric_display_number(num)}亿美元{tail}"
+    if unit == "USD_million":
+        return f"{head} {_fmt_metric_display_number(num / 100.0)}亿美元{tail}"
+    if unit == "million_accounts":
+        return f"{head} {_fmt_metric_display_number(num)}百万账户{tail}"
+    if unit == "billion_users":
+        return f"{head} {_fmt_metric_display_number(num)}十亿用户{tail}"
+
+    return t
+
 def build_synthesis(data: dict):
     profile = unified_profile(data)
     focus_profile = pick_focus_profile(data)
@@ -1046,8 +1158,11 @@ def build_synthesis(data: dict):
         pass
 
     evidence_top = top_evidence_items(profile, focus_profile, cfg, limit=int(cfg.get("max_evidence_items", 8)))
-    metrics_top = top_metric_items_by_taxonomy(profile, focus_profile, cfg, limit=int(cfg.get("max_metric_items", 8)))
+    metrics_top = top_structured_metric_lines(profile, focus_profile, limit=int(cfg.get("max_metric_items", 8)))
+    metrics_top = [canonicalize_metric_line(x) for x in metrics_top if normalize(x).strip()]
     derived_kpis = derived_kpis_from_evidence(profile, focus_profile, cfg, limit=int(cfg.get("max_metric_items", 8)))
+    if not metrics_top:
+        metrics_top = top_structured_metric_lines(profile, focus_profile, limit=int(cfg.get("max_metric_items", 8)))
     if not metrics_top:
         metrics_top = derived_kpis
 
@@ -1190,6 +1305,188 @@ def make_pptx(path: Path, sections: dict, company_name: str, focus_profile: str,
     make_pptx_tracking(prs, sections.get("tracking_kpis") or [], palette)
 
     prs.save(path)
+
+
+def metric_should_hide(row: dict):
+    code = normalize(row.get("metric_code")).lower()
+    unit = normalize(row.get("metric_unit"))
+    try:
+        value = float(row.get("metric_value"))
+    except Exception:
+        value = None
+
+    if value is None:
+        return True
+
+    if code in {"official_source_snapshot_count", "extracted_evidence_segment_count"}:
+        return True
+
+    if code == "google_cloud_revenue" and unit == "USD_million" and value > 50000:
+        return True
+
+    if code == "google_services_revenue" and unit == "USD_million" and value > 500000:
+        return True
+
+    if code == "advertising_revenue_share" and not (0 <= value <= 100):
+        return True
+
+    if code.endswith("_yoy") and unit == "percent" and not (-100 <= value <= 1000):
+        return True
+
+    if code == "gemini_users" and not (0 < value <= 10):
+        return True
+
+    if code == "paid_subscriptions" and not (0 < value <= 5000):
+        return True
+
+    return False
+
+
+def metric_priority_for_profile_v2(focus_profile: str):
+    if focus_profile == "internet_platform":
+        return [
+            "google_services_revenue",
+            "google_services_revenue_yoy",
+            "google_cloud_revenue",
+            "google_cloud_revenue_yoy",
+            "google_search_and_other_revenue",
+            "advertising_revenue_share",
+            "paid_subscriptions",
+            "gemini_users",
+            "revenue",
+            "revenue_yoy",
+            "gross_profit",
+            "gross_profit_yoy",
+            "operating_profit",
+            "operating_profit_yoy",
+            "net_profit",
+            "free_cash_flow",
+        ]
+    if focus_profile == "foundation_model_company":
+        return [
+            "api_revenue",
+            "enterprise_customer_count",
+            "monthly_tokens",
+            "benchmark_score",
+            "agent_task_steps",
+            "gemini_users",
+            "revenue",
+            "revenue_yoy",
+        ]
+    if focus_profile == "automotive_oem":
+        return [
+            "vehicle_sales_total",
+            "ev_sales",
+            "revenue",
+            "revenue_yoy",
+            "gross_profit",
+            "operating_profit",
+            "net_profit",
+            "free_cash_flow",
+        ]
+    return [
+        "revenue", "revenue_yoy", "gross_profit", "operating_profit",
+        "net_profit", "free_cash_flow"
+    ]
+
+
+def metric_rank_score_v2(row: dict, focus_profile: str):
+    code = normalize(row.get("metric_code")).lower()
+    unit = normalize(row.get("metric_unit"))
+    try:
+        value = float(row.get("metric_value"))
+    except Exception:
+        value = 0.0
+
+    score = 0
+    if unit in {"USD_billion", "RMB_billion", "percent", "million_accounts", "billion_users"}:
+        score += 20
+    elif unit in {"USD_million", "RMB_million"}:
+        score += 10
+
+    if code.endswith("_yoy") and unit == "percent":
+        score += 6
+
+    if code == "google_cloud_revenue" and unit == "USD_billion" and 0 < value < 500:
+        score += 12
+    if code == "google_services_revenue" and unit == "USD_billion" and 0 < value < 500:
+        score += 12
+    if code == "google_search_and_other_revenue" and unit == "USD_million" and 0 < value < 500000:
+        score += 8
+
+    if focus_profile == "internet_platform":
+        if code in {"google_services_revenue", "google_cloud_revenue", "advertising_revenue_share", "paid_subscriptions", "gemini_users"}:
+            score += 5
+
+    return score
+
+
+def top_structured_metric_lines(profile: dict, focus_profile: str, limit: int = 8):
+    priority = metric_priority_for_profile_v2(focus_profile)
+    rank = {x.lower(): i for i, x in enumerate(priority)}
+
+    best_by_code = {}
+    for row in profile.get("recent_metric_observations") or []:
+        code = normalize(row.get("metric_code")).lower()
+        if not code:
+            continue
+        if metric_should_hide(row):
+            continue
+
+        line = metric_display_line_cn(row)
+        if not line:
+            continue
+
+        candidate = (
+            rank.get(code, 9999),
+            -metric_rank_score_v2(row, focus_profile),
+            line,
+            normalize(row.get("observation_date")),
+            normalize(row.get("source_snapshot_id")),
+            normalize(row.get("evidence_item_id")),
+        )
+        old = best_by_code.get(code)
+        if old is None or candidate < old:
+            best_by_code[code] = candidate
+
+    rows = sorted(best_by_code.values(), key=lambda x: (x[0], x[1], x[2]))
+    out = []
+    for row in rows:
+        line = row[2]
+        out.append(line)
+        if len(out) >= limit:
+            break
+    return out
+
+
+def top_metric_cards(profile: dict, focus_profile: str, cfg: dict, limit: int = 4):
+    lines = top_structured_metric_lines(profile, focus_profile, limit=limit)
+    cards = []
+    for line in lines:
+        title = "关键指标"
+        value = line
+        subtitle = ""
+        if "（" in line and line.endswith("）"):
+            left, right = line.rsplit("（", 1)
+            subtitle = right[:-1]
+        else:
+            left = line
+
+        if ":" in left:
+            title, value = left.split(":", 1)
+            title = title.strip()[:28]
+            value = value.strip()[:34]
+        else:
+            value = left.strip()[:34]
+
+        cards.append({
+            "metric_code": "",
+            "title": title,
+            "value": value,
+            "subtitle": subtitle[:24],
+        })
+    return cards
+
 
 def main():
     ap = argparse.ArgumentParser()

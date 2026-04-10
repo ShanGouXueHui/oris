@@ -1,0 +1,160 @@
+{
+  "default_profile": "generic_company",
+  "profiles": {
+    "generic_company": {
+      "label": "通用公司洞察",
+      "required_metric_codes": [
+        "revenue",
+        "operating_profit",
+        "net_profit",
+        "free_cash_flow"
+      ],
+      "recommended_sections": [
+        "company_positioning",
+        "business_model",
+        "competitive_advantages",
+        "capability_boundaries",
+        "risks",
+        "tracking_metrics"
+      ],
+      "keyword_hints": []
+    },
+    "automotive_oem": {
+      "label": "汽车主机厂洞察",
+      "required_metric_codes": [
+        "vehicle_sales_total",
+        "ev_sales",
+        "revenue",
+        "operating_profit",
+        "net_profit",
+        "free_cash_flow",
+        "r_and_d_expense"
+      ],
+      "recommended_sections": [
+        "brand_positioning",
+        "sales_and_mix",
+        "financial_quality",
+        "technology_stack",
+        "competitive_matrix",
+        "risks",
+        "tracking_metrics"
+      ],
+      "keyword_hints": [
+        "汽车",
+        "车企",
+        "豪华车",
+        "EV",
+        "电动车",
+        "800V",
+        "悬挂",
+        "底盘",
+        "智驾"
+      ]
+    },
+    "internet_platform": {
+      "label": "互联网平台洞察",
+      "required_metric_codes": [
+        "revenue",
+        "operating_profit",
+        "net_profit",
+        "monthly_active_users",
+        "advertising_revenue"
+      ],
+      "recommended_sections": [
+        "platform_positioning",
+        "user_and_ecosystem",
+        "monetization",
+        "ai_strategy",
+        "competitive_matrix",
+        "risks",
+        "tracking_metrics"
+      ],
+      "keyword_hints": [
+        "平台",
+        "社交",
+        "广告",
+        "生态",
+        "用户",
+        "流量"
+      ]
+    },
+    "cloud_ai_platform": {
+      "label": "云与AI平台洞察",
+      "required_metric_codes": [
+        "revenue",
+        "cloud_revenue",
+        "operating_profit",
+        "r_and_d_expense"
+      ],
+      "recommended_sections": [
+        "platform_positioning",
+        "product_stack",
+        "developer_ecosystem",
+        "enterprise_go_to_market",
+        "competitive_matrix",
+        "risks",
+        "tracking_metrics"
+      ],
+      "keyword_hints": [
+        "云",
+        "cloud",
+        "ai平台",
+        "推理",
+        "训练",
+        "模型平台"
+      ]
+    },
+    "foundation_model_company": {
+      "label": "基础模型公司洞察",
+      "required_metric_codes": [
+        "revenue",
+        "api_revenue",
+        "r_and_d_expense",
+        "monthly_tokens",
+        "enterprise_customer_count"
+      ],
+      "recommended_sections": [
+        "model_positioning",
+        "product_and_api",
+        "commercialization",
+        "model_capability",
+        "competitive_matrix",
+        "risks",
+        "tracking_metrics"
+      ],
+      "keyword_hints": [
+        "大模型",
+        "foundation model",
+        "llm",
+        "api",
+        "token",
+        "推理",
+        "训练"
+      ]
+    },
+    "enterprise_software": {
+      "label": "企业软件洞察",
+      "required_metric_codes": [
+        "revenue",
+        "subscription_revenue",
+        "gross_margin",
+        "operating_profit"
+      ],
+      "recommended_sections": [
+        "product_positioning",
+        "business_model",
+        "customer_fit",
+        "competitive_matrix",
+        "risks",
+        "tracking_metrics"
+      ],
+      "keyword_hints": [
+        "saas",
+        "workflow",
+        "automation",
+        "integration",
+        "developer tooling"
+      ]
+    }
+  }
+}

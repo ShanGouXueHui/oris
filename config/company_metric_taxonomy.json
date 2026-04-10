@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "profiles": {
+    "generic_company": {
+      "financial_core": [
+        "revenue",
+        "gross_profit",
+        "operating_profit",
+        "net_profit",
+        "free_cash_flow",
+        "r_and_d_expense",
+        "capex",
+        "cash_and_equivalents",
+        "net_liquidity"
+      ],
+      "operating_core": [
+        "employee_count",
+        "geographic_coverage",
+        "customer_count",
+        "nps",
+        "conversion_rate"
+      ]
+    },
+    "automotive_oem": {
+      "financial_core": [
+        "revenue",
+        "gross_profit",
+        "operating_profit",
+        "net_profit",
+        "free_cash_flow",
+        "r_and_d_expense"
+      ],
+      "product_core": [
+        "vehicle_sales_total",
+        "ev_sales",
+        "asp",
+        "gross_margin_auto",
+        "range_km",
+        "charge_10_80_min",
+        "acceleration_0_100_s",
+        "adas_takeover_per_1000km",
+        "city_noa_coverage"
+      ]
+    },
+    "internet_platform": {
+      "financial_core": [
+        "revenue",
+        "operating_profit",
+        "net_profit",
+        "free_cash_flow",
+        "cloud_revenue",
+        "advertising_revenue"
+      ],
+      "operating_core": [
+        "mau",
+        "dau",
+        "arpu",
+        "payment_volume",
+        "take_rate",
+        "nps",
+        "conversion_rate",
+        "retention_rate"
+      ]
+    },
+    "foundation_model_company": {
+      "financial_core": [
+        "revenue",
+        "api_revenue",
+        "r_and_d_expense"
+      ],
+      "model_core": [
+        "monthly_tokens",
+        "enterprise_customer_count",
+        "inference_cost_per_million_tokens",
+        "reasoning_latency_ms",
+        "benchmark_score",
+        "agent_success_rate"
+      ]
+    },
+    "cloud_ai_platform": {
+      "financial_core": [
+        "revenue",
+        "cloud_revenue",
+        "operating_profit",
+        "r_and_d_expense"
+      ],
+      "platform_core": [
+        "developer_accounts",
+        "enterprise_customer_count",
+        "gpu_capacity",
+        "training_cluster_scale",
+        "inference_throughput",
+        "nps"
+      ]
+    },
+    "enterprise_software": {
+      "financial_core": [
+        "revenue",
+        "subscription_revenue",
+        "gross_margin",
+        "operating_profit"
+      ],
+      "operating_core": [
+        "arr",
+        "nrr",
+        "seat_count",
+        "churn_rate",
+        "renewal_rate",
+        "nps",
+        "ticket_first_response_time",
+        "ticket_resolution_time"
+      ]
+    }
+  }
+}

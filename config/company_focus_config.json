@@ -1,0 +1,29 @@
+{
+  "generic_terms": [
+    "AI Agent",
+    "Workflow Automation",
+    "Integration Platform",
+    "Developer Tooling",
+    "automation",
+    "agent",
+    "platform",
+    "tooling",
+    "workflow"
+  ],
+  "company_aliases": {
+    "n8n": ["n8n", "N8N"],
+    "dify": ["dify", "Dify", "DIFY"],
+    "Akkodis": ["akkodis", "Akkodis", "AKKODIS"],
+    "引望": ["引望"],
+    "华为云": ["华为云", "Huawei Cloud", "huawei cloud"],
+    "北汽": ["北汽", "BAIC", "北京汽车"],
+    "Zapier": ["Zapier", "zapier"],
+    "Make": ["Make", "make"],
+    "Mendix": ["Mendix", "mendix"],
+    "Microsoft Power Automate": [
+      "Microsoft Power Automate",
+      "Power Automate",
+      "power automate"
+    ]
+  }
+}

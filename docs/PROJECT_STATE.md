@@ -673,3 +673,16 @@ ORIS 不能只依赖当前自研实现；必须建立外部成熟能力对标机
   - `docs/DECISIONS/2026-04-09-infer-preflight-refresh-free-routing.md`
   - `docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md`
 <!-- RUNTIME_ROUTING_GOVERNANCE_STATUS:END -->
+
+<!-- ORIS_CAPABILITY_UPGRADE_PLAN:START -->
+## ORIS capability upgrade plan (2026-04-09)
+- 内容层升级方向：从高价值段落洞察，升级到指标序列 + 行业参数 + 跟踪KPI体系
+- 交付层升级方向：从 bullet-style ppt，升级到商务模板化 deck（cards / kpi dashboard / risk matrix / tracking dashboard）
+- 外部 skills 采用策略：
+  - adopt now: agent-browser, chain-of-density, shelv, pdf-generation
+  - keep in-house: evidence scoring, metric normalization, consulting storyline
+- 详见：
+  - docs/ORIS_SKILL_ADOPTION_PLAN_2026-04-09.md
+  - config/company_metric_taxonomy.json
+  - config/presentation_theme.json
+<!-- ORIS_CAPABILITY_UPGRADE_PLAN:END -->

@@ -10,6 +10,7 @@ INNER = ROOT / "scripts" / "run_generic_insight_pipeline.py"
 COMPILER = ROOT / "scripts" / "prompt_to_case_compiler_plus_v3.py"
 RENDER = ROOT / "scripts" / "render_chat_md_from_bundle.py"
 ACCOUNT_CHAT_RENDER = ROOT / "scripts" / "render_account_strategy_chat_md.py"
+MOBILE_RENDER = ROOT / "scripts" / "render_mobile_insight.py"
 SEND = ROOT / "scripts" / "send_feishu_text_message.py"
 REGISTER = ROOT / "scripts" / "register_report_build_delivery.py"
 EXECUTOR = ROOT / "scripts" / "delivery_executor.py"
@@ -235,12 +236,32 @@ def main():
             or payload.get("company_profile_output_json")
             or resolve_bundle_json_path(payload, artifact_paths)
         )
-        if analysis_type == "account_strategy" and payload.get("account_strategy_output_json"):
+        profile_json_path = (
+            (payload.get("generated_case_paths") or {}).get("company_profile_output_path")
+            or payload.get("company_profile_output_json")
+        )
+
+        if analysis_type == "company_profile" and payload.get("chat_reply_path"):
+            md_out = {
+                "ok": True,
+                "markdown_path": payload.get("chat_reply_path"),
+                "preview": payload.get("chat_reply_preview") or "",
+            }
+        elif analysis_type == "account_strategy" and payload.get("account_strategy_output_json"):
             md_out = run_json([
                 sys.executable,
                 str(ACCOUNT_CHAT_RENDER),
                 "--account-json-path",
                 payload["account_strategy_output_json"],
+                "--compiled-case-path",
+                compiled_case["compiled_case_path"]
+            ])
+        elif analysis_type == "company_profile" and profile_json_path:
+            md_out = run_json([
+                sys.executable,
+                str(MOBILE_RENDER),
+                "--profile-json-path",
+                profile_json_path,
                 "--compiled-case-path",
                 compiled_case["compiled_case_path"]
             ])

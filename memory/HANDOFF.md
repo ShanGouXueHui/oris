@@ -706,3 +706,16 @@ Feishu 现在能收到消息，但收到的是：
   2. 让 `runtime_plan.py` 更充分消费 `last_error_class` / `blocked_until`
   3. free eligibility 自动扩容与恢复策略
 <!-- RUNTIME_ROUTING_GOVERNANCE_HANDOFF:END -->
+
+<!-- ORIS_CONTENT_DELIVERY_UPGRADE_HANDOFF:START -->
+## ORIS content + delivery upgrade handoff (2026-04-09)
+- 下一阶段主目标：
+  1. 指标体系升级（历史序列 / 行业参数 / 跟踪KPI）
+  2. 商务PPT模板系统升级
+- 当前不再把某个单公司作为特例处理，而按通用 profile 能力栈推进
+- adopt now skills:
+  - agent-browser
+  - chain-of-density
+  - shelv
+  - pdf-generation
+<!-- ORIS_CONTENT_DELIVERY_UPGRADE_HANDOFF:END -->

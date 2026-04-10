@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "default_theme": "executive_blue",
+  "themes": {
+    "executive_blue": {
+      "label": "Executive Blue",
+      "palette": {
+        "bg": "#F7F9FC",
+        "title": "#0F2747",
+        "text": "#1F2937",
+        "muted": "#6B7280",
+        "accent": "#2563EB",
+        "accent_2": "#0EA5E9",
+        "risk": "#DC2626",
+        "success": "#059669",
+        "card_bg": "#FFFFFF",
+        "divider": "#D1D5DB"
+      }
+    },
+    "modern_tech": {
+      "label": "Modern Tech",
+      "palette": {
+        "bg": "#0B1220",
+        "title": "#E5F0FF",
+        "text": "#D1D5DB",
+        "muted": "#94A3B8",
+        "accent": "#22C55E",
+        "accent_2": "#38BDF8",
+        "risk": "#F97316",
+        "success": "#10B981",
+        "card_bg": "#111827",
+        "divider": "#334155"
+      }
+    },
+    "auto_premium": {
+      "label": "Auto Premium",
+      "palette": {
+        "bg": "#111111",
+        "title": "#F5F5F5",
+        "text": "#E5E7EB",
+        "muted": "#9CA3AF",
+        "accent": "#C8A96B",
+        "accent_2": "#B91C1C",
+        "risk": "#EF4444",
+        "success": "#10B981",
+        "card_bg": "#1A1A1A",
+        "divider": "#3F3F46"
+      }
+    }
+  },
+  "slide_types": [
+    "cover",
+    "executive_summary_cards",
+    "kpi_dashboard",
+    "company_structure",
+    "technology_stack",
+    "competition_matrix",
+    "risk_matrix",
+    "tracking_dashboard",
+    "appendix_sources"
+  ]
+}

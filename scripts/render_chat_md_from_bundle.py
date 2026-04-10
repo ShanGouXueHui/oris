@@ -98,11 +98,21 @@ def main():
     questions = compiled.get("questions") or []
     entities = compiled.get("detected_entities") or []
     entity_names = [x.get("name") for x in entities if isinstance(x, dict) and x.get("name")]
+    focus_profile = first_nonempty(
+        (compiled.get("request") or {}).get("focus_profile"),
+        bundle.get("focus_profile"),
+        "generic_company"
+    )
 
     exec_summary = best_section(
         bundle,
         {"executive_summary", "summary", "overview", "conclusion", "key_messages"},
-        fallback="本次输出已完成重新洞察与结构化整理，建议优先关注联合价值主张、行业竞争格局、技术栈适配、客户场景匹配与下一步落地动作。"
+        fallback="本次输出已完成重新洞察与结构化整理，建议优先关注业务结构、产品能力、竞争位置、风险与跟踪指标。"
+    )
+    company_view = best_section(
+        bundle,
+        {"company_view", "company_positioning", "business_model", "company_layer", "company_analysis"},
+        fallback=""
     )
     industry_comp = best_section(
         bundle,
@@ -114,11 +124,6 @@ def main():
         {"technology_view", "technology_stack_breakdown", "core_technology", "ai_capability", "tech_stack"},
         fallback=""
     )
-    customer_scene = best_section(
-        bundle,
-        {"customer_view", "customer_strategy", "customer_scenario_analysis", "scenarios", "use_cases"},
-        fallback=""
-    )
     reco = best_section(
         bundle,
         {"joint_solution_or_recommendation", "recommendations", "next_steps", "action_plan"},
@@ -126,7 +131,12 @@ def main():
     )
     risks = best_section(
         bundle,
-        {"risks", "risks_and_next_steps", "risk", "constraints"},
+        {"risks", "risks_and_next_steps", "risk", "constraints", "risk_view"},
+        fallback=""
+    )
+    tracking = best_section(
+        bundle,
+        {"tracking_kpis", "tracking_metrics", "kpis"},
         fallback=""
     )
 
@@ -146,7 +156,8 @@ def main():
     lines.append("")
     if entity_names:
         lines.append(f"**涉及主体：** {' / '.join(entity_names)}")
-        lines.append("")
+    lines.append(f"**焦点画像：** {focus_profile}")
+    lines.append("")
     lines.append("## 一、执行摘要")
     lines.append(exec_summary or "暂无可提炼摘要。")
     lines.append("")
@@ -157,32 +168,37 @@ def main():
             lines.append(f"- {q}")
         lines.append("")
 
-    if industry_comp:
-        lines.append("## 三、行业与竞争")
-        lines.append(industry_comp)
+    if company_view:
+        lines.append("## 三、公司与商业模式")
+        lines.append(company_view)
         lines.append("")
 
     if tech_stack:
-        lines.append("## 四、技术栈与能力拆解")
+        lines.append("## 四、技术与产品能力")
         lines.append(tech_stack)
         lines.append("")
 
-    if customer_scene:
-        lines.append("## 五、客户场景与落地机会")
-        lines.append(customer_scene)
-        lines.append("")
-
-    if reco:
-        lines.append("## 六、建议动作")
-        lines.append(reco)
+    if industry_comp:
+        lines.append("## 五、行业与竞争")
+        lines.append(industry_comp)
         lines.append("")
 
     if risks:
-        lines.append("## 七、风险提示")
+        lines.append("## 六、风险提示")
         lines.append(risks)
         lines.append("")
 
-    lines.append("## 八、数据来源链接")
+    if tracking:
+        lines.append("## 七、持续跟踪指标")
+        lines.append(tracking)
+        lines.append("")
+
+    if reco:
+        lines.append("## 八、建议动作")
+        lines.append(reco)
+        lines.append("")
+
+    lines.append("## 九、数据来源链接")
     if dedup:
         for u in dedup[:20]:
             lines.append(f"- {u}")
@@ -197,7 +213,8 @@ def main():
         "ok": True,
         "output_path": str(out_path.relative_to(ROOT)),
         "source_link_count": min(len(dedup), 20),
-        "preview": text[:800]
+        "focus_profile": focus_profile,
+        "preview": text[:1000]
     })
 
 if __name__ == "__main__":

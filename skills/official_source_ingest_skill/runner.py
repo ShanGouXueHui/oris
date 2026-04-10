@@ -5,6 +5,7 @@ import json
 import os
 import re
 import uuid
+from io import BytesIO
 import urllib.request
 import urllib.error
 from datetime import date, datetime, timezone
@@ -18,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SKILL_RUNTIME_PATH = ROOT / "config" / "insight_skill_runtime.json"
 INSIGHT_STORAGE_PATH = ROOT / "config" / "insight_storage.json"
 DEFAULT_TIMEOUT = 30
+OFFICIAL_INGEST_POLICY_PATH = ROOT / "config" / "official_source_ingest_policy.json"
 
 
 def utc_now():
@@ -52,8 +54,9 @@ def text_hash(text: str) -> str:
 
 
 def normalize_text(text: str) -> str:
-    return re.sub(r"\s+", " ", str(text or "")).strip()
-
+    s = str(text or "")
+    s = s.replace("\x00", " ").replace("\ufeff", " ")
+    return re.sub(r"\s+", " ", s).strip()
 
 def to_jsonable(value):
     if isinstance(value, dict):
@@ -66,6 +69,127 @@ def to_jsonable(value):
         return value.isoformat()
     return value
 
+
+
+
+def load_ingest_policy():
+    try:
+        return load_json(OFFICIAL_INGEST_POLICY_PATH)
+    except Exception:
+        return {
+            "pdf_enabled": True,
+            "pdf_max_pages": 25,
+            "max_segments_per_source": 12,
+            "min_segment_length": 24,
+            "noise_substrings": [],
+            "prefer_url_keywords": [],
+            "evidence_priority_keywords": []
+        }
+
+
+def is_noise_text(text: str):
+    s = normalize_text(text).lower()
+    if not s:
+        return True
+    policy = load_ingest_policy()
+    for bad in (policy.get("noise_substrings") or []):
+        if bad.lower() in s:
+            return True
+    return False
+
+
+def extract_pdf_text(raw: bytes):
+    policy = load_ingest_policy()
+    max_pages = int(policy.get("pdf_max_pages", 30))
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(BytesIO(raw), strict=False)
+        try:
+            if getattr(reader, "is_encrypted", False):
+                reader.decrypt("")
+        except Exception:
+            pass
+
+        parts = []
+        for idx, page in enumerate(reader.pages):
+            if idx >= max_pages:
+                break
+
+            best = ""
+            for mode in ("layout", "plain"):
+                try:
+                    if mode == "layout":
+                        one = page.extract_text(extraction_mode="layout") or ""
+                    else:
+                        one = page.extract_text() or ""
+                except TypeError:
+                    try:
+                        one = page.extract_text() or ""
+                    except Exception:
+                        one = ""
+                except Exception:
+                    one = ""
+
+                one = clean_pdf_text(one)
+                if len(one) > len(best):
+                    best = one
+
+            if best:
+                parts.append(best)
+
+        return clean_pdf_text("\n\n".join(parts))
+    except Exception:
+        return ""
+
+def load_ingest_policy():
+    try:
+        return load_json(OFFICIAL_INGEST_POLICY_PATH)
+    except Exception:
+        return {
+            "pdf_enabled": True,
+            "pdf_max_pages": 30,
+            "max_segments_per_source": 10,
+            "min_segment_length": 40,
+            "noise_substrings": [],
+            "metadata_prefixes": [],
+            "evidence_priority_keywords": []
+        }
+
+
+def clean_pdf_text(text: str) -> str:
+    s = str(text or "")
+    s = s.replace("\x00", " ").replace("\ufeff", " ")
+    s = s.replace("\r", "\n")
+    s = s.replace("\t", " ")
+    while "  " in s:
+        s = s.replace("  ", " ")
+    while "\n\n\n" in s:
+        s = s.replace("\n\n\n", "\n\n")
+    return s.strip()
+
+
+def is_metadata_like_text(text: str) -> bool:
+    s = str(text or "").strip()
+    if not s:
+        return True
+    lower = s.lower()
+    policy = load_ingest_policy()
+    for prefix in (policy.get("metadata_prefixes") or []):
+        if lower.startswith(str(prefix).lower()):
+            return True
+    return False
+
+
+def is_noise_text(text: str) -> bool:
+    s = str(text or "").strip()
+    if not s:
+        return True
+    lower = s.lower()
+    policy = load_ingest_policy()
+    for bad in (policy.get("noise_substrings") or []):
+        if str(bad).lower() in lower:
+            return True
+    return False
 
 def skill_cfg():
     data = load_json(SKILL_RUNTIME_PATH)
@@ -141,13 +265,139 @@ def decode_bytes(raw: bytes, content_type: str) -> str:
         if not enc:
             continue
         try:
-            return raw.decode(enc, errors="ignore")
+            return normalize_text(raw.decode(enc, errors="ignore"))
         except Exception:
             continue
-    return raw.decode("utf-8", errors="ignore")
+    return normalize_text(raw.decode("utf-8", errors="ignore"))
+
+
+def run_curl_fetch(url: str, timeout: int = DEFAULT_TIMEOUT):
+    import subprocess
+    cmd = [
+        "curl",
+        "-L",
+        "--compressed",
+        "--max-time", str(timeout),
+        "-A", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+        "-H", "Accept: application/pdf,application/octet-stream;q=0.9,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "-H", "Accept-Language: en-US,en;q=0.9,de;q=0.8,zh-CN;q=0.7",
+        "-H", "Referer: https://group.mercedes-benz.com/investors/",
+        "-D", "-",
+        url,
+    ]
+    r = subprocess.run(cmd, capture_output=True, check=False)
+    if r.returncode != 0:
+        return {
+            "ok": False,
+            "status_code": None,
+            "content_type": "",
+            "final_url": url,
+            "raw_text": "",
+            "raw_bytes": b"",
+            "title": "",
+            "body_text": "",
+            "error": f"curl_returncode={r.returncode}",
+        }
+
+    raw = r.stdout or b""
+    header_end = raw.find(b"\r\n\r\n")
+    sep_len = 4
+    if header_end < 0:
+        header_end = raw.find(b"\n\n")
+        sep_len = 2
+    if header_end < 0:
+        return {
+            "ok": False,
+            "status_code": None,
+            "content_type": "",
+            "final_url": url,
+            "raw_text": "",
+            "raw_bytes": b"",
+            "title": "",
+            "body_text": "",
+            "error": "curl_header_parse_failed",
+        }
+
+    header_blob = raw[:header_end].decode("latin-1", errors="ignore")
+    body = raw[header_end + sep_len:]
+
+    headers = [x for x in header_blob.splitlines() if x.strip()]
+    status_code = None
+    content_type = ""
+    final_url = url
+
+    for line in headers:
+        low = line.lower()
+        if low.startswith("http/"):
+            parts = line.split()
+            if len(parts) >= 2 and parts[1].isdigit():
+                status_code = int(parts[1])
+        elif low.startswith("content-type:"):
+            content_type = line.split(":", 1)[1].strip()
+        elif low.startswith("location:"):
+            final_url = line.split(":", 1)[1].strip()
+
+    text_body = ""
+    title = ""
+    parsed_body = ""
+
+    lowered_ct = (content_type or "").lower()
+    if "pdf" in lowered_ct or url.lower().endswith(".pdf"):
+        try:
+            from pypdf import PdfReader
+            import io
+            reader = PdfReader(io.BytesIO(body))
+            pages = []
+            for page in reader.pages[:15]:
+                try:
+                    pages.append(page.extract_text() or "")
+                except Exception:
+                    pages.append("")
+            parsed_body = "\n".join([x for x in pages if x]).replace("\x00", " ")
+            parsed_body = " ".join(parsed_body.split())
+            title = url.split("/")[-1]
+            text_body = parsed_body
+        except Exception as e:
+            return {
+                "ok": False,
+                "status_code": status_code,
+                "content_type": content_type,
+                "final_url": final_url,
+                "raw_text": "",
+                "raw_bytes": body,
+                "title": "",
+                "body_text": "",
+                "error": f"pdf_parse_error: {type(e).__name__}: {e}",
+            }
+    else:
+        text_body = decode_bytes(body, content_type)
+        if "html" in lowered_ct or "<html" in text_body.lower():
+            parser = HTMLTextExtractor()
+            parser.feed(text_body)
+            title, parsed_body = parser.result()
+        else:
+            parsed_body = text_body
+            title = ""
+
+    return {
+        "ok": True,
+        "status_code": status_code or 200,
+        "content_type": content_type,
+        "final_url": final_url,
+        "raw_text": text_body[:200000] if isinstance(text_body, str) else "",
+        "raw_bytes": body,
+        "title": title,
+        "body_text": (parsed_body or "").replace("\x00", " "),
+        "error": None,
+    }
+
 
 
 def fetch_url(url: str, timeout: int = DEFAULT_TIMEOUT):
+    curl_out = run_curl_fetch(url, timeout=timeout)
+    if curl_out.get("ok"):
+        return curl_out
+
     req = urllib.request.Request(
         url,
         headers={
@@ -177,8 +427,9 @@ def fetch_url(url: str, timeout: int = DEFAULT_TIMEOUT):
                 "content_type": content_type,
                 "final_url": final_url,
                 "raw_text": text,
+                "raw_bytes": raw,
                 "title": title,
-                "body_text": body,
+                "body_text": body.replace("\x00", " ") if isinstance(body, str) else "",
                 "error": None,
             }
     except urllib.error.HTTPError as e:
@@ -188,6 +439,7 @@ def fetch_url(url: str, timeout: int = DEFAULT_TIMEOUT):
             "content_type": "",
             "final_url": url,
             "raw_text": "",
+            "raw_bytes": b"",
             "title": "",
             "body_text": "",
             "error": f"HTTPError: {e.code} {e.reason}",
@@ -199,6 +451,7 @@ def fetch_url(url: str, timeout: int = DEFAULT_TIMEOUT):
             "content_type": "",
             "final_url": url,
             "raw_text": "",
+            "raw_bytes": b"",
             "title": "",
             "body_text": "",
             "error": f"{type(e).__name__}: {e}",
@@ -206,44 +459,64 @@ def fetch_url(url: str, timeout: int = DEFAULT_TIMEOUT):
 
 
 def extract_evidence_segments(body_text: str):
+    policy = load_ingest_policy()
+    min_len = int(policy.get("min_segment_length", 40))
+    max_segments = int(policy.get("max_segments_per_source", 10))
+    priority_words = [str(x).lower() for x in (policy.get("evidence_priority_keywords") or [])]
+
     raw_segments = re.split(r"[\n\r]+|(?<=[。！？!?\.])\s+", body_text or "")
     cleaned = []
     seen = set()
 
-    keyword_re = re.compile(
-        r"(revenue|annual|report|filing|official|company|founded|products?|services?|customers?|employees?|investor|canonical|ubuntu|cloud|ai|公告|财报|年报|官网|公司|产品|服务|收入|增长|发布|客户|员工)",
-        re.IGNORECASE,
-    )
-
     for seg in raw_segments:
-        text = normalize_text(seg)
-        if len(text) < 30:
+        one = clean_pdf_text(seg)
+        if len(one) < min_len:
             continue
-        if text in seen:
+        if "\x00" in one:
             continue
-        seen.add(text)
+        if is_metadata_like_text(one):
+            continue
+        if is_noise_text(one):
+            continue
+        if one in seen:
+            continue
+        seen.add(one)
+
         score = 0
-        if re.search(r"\d", text):
+        lower = one.lower()
+
+        if re.search(r"\d", one):
             score += 2
-        if keyword_re.search(text):
+        if re.search(r"\b(202[0-9]|19[0-9]{2}|20[0-9]{2})\b", one):
             score += 1
-        cleaned.append((score, text))
+        if "%" in one or "€" in one or "$" in one or "亿元" in one or "万辆" in one or "million" in lower or "billion" in lower:
+            score += 2
+
+        for kw in priority_words:
+            if kw and kw in lower:
+                score += 2
+
+        if len(one) >= 80:
+            score += 1
+        if len(one) >= 160:
+            score += 1
+
+        cleaned.append((score, one))
 
     cleaned.sort(key=lambda x: (-x[0], -len(x[1])))
-    picked = [x[1] for x in cleaned[:8]]
+    picked = [x[1] for x in cleaned[:max_segments]]
 
     if not picked:
         fallback = []
         for seg in raw_segments:
-            text = normalize_text(seg)
-            if len(text) >= 30 and text not in fallback:
-                fallback.append(text)
+            one = clean_pdf_text(seg)
+            if len(one) >= min_len and not is_metadata_like_text(one) and not is_noise_text(one) and one not in fallback:
+                fallback.append(one)
             if len(fallback) >= 5:
                 break
         picked = fallback
 
     return picked
-
 
 def default_sources_from_request(req: dict):
     if isinstance(req.get("sources"), list) and req.get("sources"):
@@ -481,7 +754,7 @@ def build_snapshot_plan(req: dict):
         publisher = (src.get("publisher") or entity).strip()
         official_flag = bool(src.get("official_flag", True))
 
-        fetch_result = fetch_url(url) if url else {
+        fetch_result = fetch_url_providerized(url, timeout=DEFAULT_TIMEOUT) if url else {
             "ok": False,
             "status_code": None,
             "content_type": "",
@@ -495,6 +768,18 @@ def build_snapshot_plan(req: dict):
         parsed_title = normalize_text(src.get("title") or fetch_result.get("title") or f"{entity} Source Capture")
         parsed_body = (fetch_result.get("body_text") or "").strip()
         raw_text = fetch_result.get("raw_text") or ""
+
+        weak_body = False
+        try:
+            weak_body = is_weak_body_text(parsed_body, parsed_title)
+        except Exception:
+            weak_body = False
+
+        if weak_body:
+            fetch_result = dict(fetch_result)
+            fetch_result["ok"] = False
+            fetch_result["error"] = fetch_result.get("error") or "weak_body_text"
+            parsed_body = ""
 
         if not parsed_body:
             parsed_body = "\n".join([
@@ -531,9 +816,14 @@ def build_snapshot_plan(req: dict):
         dump_json(raw_storage_path, raw_payload)
         dump_text(parsed_storage_path, parsed_body)
 
-        evidence_segments = extract_evidence_segments(parsed_body)
-        if not evidence_segments:
-            evidence_segments = [parsed_body[:1200]]
+        evidence_segments = []
+        if fetch_result.get("ok"):
+            evidence_segments = extract_evidence_segments(parsed_body)
+
+        if not evidence_segments and fetch_result.get("ok"):
+            fallback_seg = (parsed_body or "")[:1200].strip()
+            if fallback_seg and not is_weak_body_text(fallback_seg, parsed_title):
+                evidence_segments = [fallback_seg]
 
         plans.append({
             "source_name": source_name,
@@ -576,8 +866,14 @@ def build_snapshot_plan(req: dict):
 
 def build_output(req: dict, company_record: dict, run_row: dict | None, plan_rows: list, dry_run: bool):
     source_count = len(plan_rows)
-    evidence_count = sum(len(x.get("evidence_segments") or []) for x in plan_rows)
-    metric_count = sum(2 for _ in plan_rows)
+    if dry_run:
+        evidence_count = sum(len(x.get("evidence_segments") or []) for x in plan_rows)
+        metric_count = sum(2 for _ in plan_rows)
+        citation_count = evidence_count
+    else:
+        evidence_count = sum(len(x.get("evidence_ids") or []) for x in plan_rows)
+        metric_count = sum(len(x.get("metric_ids") or []) for x in plan_rows)
+        citation_count = sum(len(x.get("citation_ids") or []) for x in plan_rows)
 
     if dry_run:
         conclusion = "official_source_ingest_skill dry-run ready; live fetch + body extraction + DB write plan resolved."
@@ -623,7 +919,7 @@ def build_output(req: dict, company_record: dict, run_row: dict | None, plan_row
             {"field": "planned_snapshot_count" if dry_run else "written_snapshot_count", "value": source_count},
             {"field": "planned_evidence_count" if dry_run else "written_evidence_count", "value": evidence_count},
             {"field": "planned_metric_count" if dry_run else "written_metric_count", "value": metric_count},
-            {"field": "planned_citation_count" if dry_run else "written_citation_count", "value": (evidence_count if dry_run else sum(len(row.get("citation_ids") or []) for row in plan_rows))},
+            {"field": "planned_citation_count" if dry_run else "written_citation_count", "value": citation_count},
         ],
         "sources": [{"source_type": x["source_type"], "url": x["url"], "fetch_ok": x["fetch_ok"], "fetch_error": x["fetch_error"]} for x in plan_rows],
         "facts": facts,
@@ -723,6 +1019,240 @@ def insert_citation_link(cur, request_id: str, run_code: str, source_id: int, so
         "auto_generated_from_official_source_ingest_skill",
     ))
     return cur.fetchone()[0]
+
+
+
+# === FORCED_FETCH_V2_START ===
+import subprocess
+import tempfile
+import shutil
+
+def _ff2_strip_nul(text: str) -> str:
+    return (text or "").replace("\x00", "")
+
+def _ff2_clean_text(text: str) -> str:
+    text = _ff2_strip_nul(text).replace("\r", "\n")
+    lines = [x.strip() for x in text.splitlines()]
+    lines = [x for x in lines if x]
+    return "\n".join(lines).strip()
+
+def _ff2_is_pdf(url: str, content_type: str = "") -> bool:
+    u = (url or "").lower()
+    c = (content_type or "").lower()
+    return u.endswith(".pdf") or ".pdf?" in u or "application/pdf" in c
+
+def _ff2_parse_html_text(text: str):
+    parser = HTMLTextExtractor()
+    parser.feed(text)
+    title, body = parser.result()
+    return title, body
+
+def _ff2_extract_pdf_text_from_file(pdf_path: str) -> str:
+    text = ""
+
+    if shutil.which("pdftotext"):
+        txt_path = pdf_path + ".txt"
+        r = subprocess.run(
+            ["pdftotext", "-layout", pdf_path, txt_path],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if Path(txt_path).exists():
+            text = Path(txt_path).read_text(encoding="utf-8", errors="ignore")
+
+    if not _ff2_clean_text(text):
+        try:
+            from pypdf import PdfReader
+            reader = PdfReader(pdf_path)
+            parts = []
+            for page in reader.pages[:400]:
+                try:
+                    parts.append(page.extract_text() or "")
+                except Exception:
+                    continue
+            text = "\n".join(parts)
+        except Exception:
+            text = ""
+
+    return _ff2_clean_text(text)
+
+def _ff2_curl_fetch(url: str, timeout: int = DEFAULT_TIMEOUT):
+    ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+
+    with tempfile.TemporaryDirectory(prefix="oris_ff2_") as td:
+        body_path = Path(td) / "body.bin"
+        meta_path = Path(td) / "meta.txt"
+
+        cmd = [
+            "curl",
+            "-L",
+            "--compressed",
+            "-sS",
+            "-A", ua,
+            "-H", "Accept: text/html,application/xhtml+xml,application/xml,application/pdf;q=0.9,*/*;q=0.8",
+            "-H", "Accept-Language: en-US,en;q=0.9",
+            "-o", str(body_path),
+            "-D", str(meta_path),
+            "--max-time", str(timeout),
+            url,
+        ]
+        r = subprocess.run(cmd, capture_output=True, text=True, check=False)
+
+        raw = body_path.read_bytes() if body_path.exists() else b""
+        headers = meta_path.read_text(encoding="utf-8", errors="ignore") if meta_path.exists() else ""
+
+        content_type = ""
+        final_url = url
+        status_code = None
+
+        for line in headers.splitlines():
+            low = line.lower()
+            if low.startswith("content-type:"):
+                content_type = line.split(":", 1)[1].strip()
+            elif low.startswith("location:"):
+                final_url = line.split(":", 1)[1].strip()
+
+        if r.returncode == 0 and raw:
+            return {
+                "ok": True,
+                "status_code": 200,
+                "content_type": content_type,
+                "final_url": final_url or url,
+                "raw_bytes": raw,
+                "error": None,
+            }
+
+        return {
+            "ok": False,
+            "status_code": status_code,
+            "content_type": content_type,
+            "final_url": final_url or url,
+            "raw_bytes": raw,
+            "error": (r.stderr or "").strip() or "curl_fetch_failed",
+        }
+
+def fetch_url(url: str, timeout: int = DEFAULT_TIMEOUT):
+    # force curl-first; only fallback to urllib if curl binary is unavailable
+    if shutil.which("curl"):
+        c = _ff2_curl_fetch(url, timeout=timeout)
+        if c.get("ok"):
+            raw = c.get("raw_bytes") or b""
+            content_type = c.get("content_type") or ""
+            final_url = c.get("final_url") or url
+
+            if _ff2_is_pdf(final_url, content_type):
+                with tempfile.TemporaryDirectory(prefix="oris_ff2_pdf_") as td:
+                    pdf_path = Path(td) / "source.pdf"
+                    pdf_path.write_bytes(raw)
+                    body = _ff2_extract_pdf_text_from_file(str(pdf_path))
+                title = ""
+                if body:
+                    for line in body.splitlines():
+                        one = normalize_text(line)
+                        if len(one) >= 8:
+                            title = one[:200]
+                            break
+                if not title:
+                    title = Path(final_url).name or "PDF Document"
+                return {
+                    "ok": True,
+                    "status_code": 200,
+                    "content_type": content_type or "application/pdf",
+                    "final_url": final_url,
+                    "raw_text": "",
+                    "title": title,
+                    "body_text": body,
+                    "error": None,
+                }
+
+            text_body = decode_bytes(raw, content_type)
+            title, body = _ff2_parse_html_text(text_body)
+            return {
+                "ok": True,
+                "status_code": 200,
+                "content_type": content_type,
+                "final_url": final_url,
+                "raw_text": _ff2_strip_nul(text_body),
+                "title": title,
+                "body_text": _ff2_strip_nul(body),
+                "error": None,
+            }
+
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "ORIS-InsightIngest/1.0",
+            "Accept": "text/html,application/xhtml+xml,application/xml,text/plain;q=0.9,*/*;q=0.8",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read()
+            content_type = resp.headers.get("Content-Type", "")
+            final_url = resp.geturl()
+            status_code = getattr(resp, "status", 200)
+
+            if _ff2_is_pdf(final_url, content_type):
+                with tempfile.TemporaryDirectory(prefix="oris_ff2_pdf_") as td:
+                    pdf_path = Path(td) / "source.pdf"
+                    pdf_path.write_bytes(raw)
+                    body = _ff2_extract_pdf_text_from_file(str(pdf_path))
+                title = ""
+                if body:
+                    for line in body.splitlines():
+                        one = normalize_text(line)
+                        if len(one) >= 8:
+                            title = one[:200]
+                            break
+                if not title:
+                    title = Path(final_url).name or "PDF Document"
+                return {
+                    "ok": True,
+                    "status_code": status_code,
+                    "content_type": content_type or "application/pdf",
+                    "final_url": final_url,
+                    "raw_text": "",
+                    "title": title,
+                    "body_text": body,
+                    "error": None,
+                }
+
+            text_body = decode_bytes(raw, content_type)
+            title, body = _ff2_parse_html_text(text_body)
+            return {
+                "ok": True,
+                "status_code": status_code,
+                "content_type": content_type,
+                "final_url": final_url,
+                "raw_text": _ff2_strip_nul(text_body),
+                "title": title,
+                "body_text": _ff2_strip_nul(body),
+                "error": None,
+            }
+    except urllib.error.HTTPError as e:
+        return {
+            "ok": False,
+            "status_code": e.code,
+            "content_type": "",
+            "final_url": url,
+            "raw_text": "",
+            "title": "",
+            "body_text": "",
+            "error": f"HTTPError: {e.code} {e.reason}",
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "status_code": None,
+            "content_type": "",
+            "final_url": url,
+            "raw_text": "",
+            "title": "",
+            "body_text": "",
+            "error": f"{type(e).__name__}: {e}",
+        }
+# === FORCED_FETCH_V2_END ===
 
 
 def main():
@@ -857,6 +1387,467 @@ def main():
         print(json.dumps(out, ensure_ascii=False, indent=2))
     finally:
         conn.close()
+
+
+
+
+# === V5_FETCH_AND_SEGMENT_OVERRIDE_START ===
+import subprocess as _sp
+import tempfile as _tf
+import shutil as _sh
+
+def clean_pdf_text(text: str) -> str:
+    text = (text or "").replace("\x00", " ")
+    text = text.replace("\r", "\n")
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+def is_metadata_like_text(text: str) -> bool:
+    low = normalize_text(text).lower()
+    if not low:
+        return True
+    if len(low) < 35:
+        return True
+    bad_prefixes = (
+        "title:",
+        "url:",
+        "publisher:",
+        "source_type:",
+        "captured_at:",
+        "fetch_error:",
+    )
+    if any(low.startswith(x) for x in bad_prefixes):
+        return True
+    bad_terms = (
+        "cookies",
+        "privacy",
+        "unsubscribe",
+        "email alert",
+        "contact sales",
+        "opens in new window",
+    )
+    if any(x in low for x in bad_terms):
+        return True
+    return False
+
+def _browser_headers():
+    return {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/pdf;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+    }
+
+def _curl_fetch_bytes(url: str, timeout: int):
+    cmd = [
+        "curl",
+        "-L",
+        "--compressed",
+        "-A", _browser_headers()["User-Agent"],
+        "-H", f'Accept: {_browser_headers()["Accept"]}',
+        "-H", f'Accept-Language: {_browser_headers()["Accept-Language"]}',
+        "--connect-timeout", str(min(int(timeout), 15)),
+        "--max-time", str(int(timeout)),
+        "-fsSL",
+        url,
+    ]
+    r = _sp.run(cmd, capture_output=True, text=False, check=False)
+    if r.returncode == 0 and r.stdout:
+        return {"ok": True, "raw": r.stdout, "error": None}
+    err = (r.stderr or r.stdout or b"").decode("utf-8", errors="ignore")[:600]
+    return {"ok": False, "raw": b"", "error": f"curl_failed: {err}"}
+
+def _parse_html_or_text(raw: bytes, content_type: str):
+    text = decode_bytes(raw, content_type or "text/html")
+    parser = HTMLTextExtractor()
+    parser.feed(text)
+    title, body = parser.result()
+    body = clean_pdf_text(body or text)
+    return {
+        "raw_text": text,
+        "title": title or "",
+        "body_text": body,
+    }
+
+def _guess_pdf_title(text: str, url: str):
+    for line in (text or "").splitlines():
+        s = normalize_text(line)
+        if len(s) >= 8:
+            return s[:180]
+    return Path(url.split("?", 1)[0]).name or "PDF"
+
+def _pdf_text_from_bytes(raw: bytes) -> str:
+    pdf_text = ""
+    with _tf.TemporaryDirectory() as td:
+        td = Path(td)
+        pdf_path = td / "tmp.pdf"
+        txt_path = td / "tmp.txt"
+        pdf_path.write_bytes(raw)
+
+        if _sh.which("pdftotext"):
+            r = _sp.run(
+                ["pdftotext", "-layout", str(pdf_path), str(txt_path)],
+                capture_output=True,
+                text=False,
+                check=False,
+            )
+            if r.returncode == 0 and txt_path.exists():
+                try:
+                    pdf_text = txt_path.read_text(encoding="utf-8", errors="ignore")
+                except Exception:
+                    pdf_text = txt_path.read_text(errors="ignore")
+
+        if not pdf_text:
+            try:
+                from pypdf import PdfReader
+                reader = PdfReader(str(pdf_path))
+                pages = []
+                for page in reader.pages:
+                    try:
+                        pages.append(page.extract_text() or "")
+                    except Exception:
+                        continue
+                pdf_text = "\n".join(pages)
+            except Exception:
+                pdf_text = ""
+
+    return clean_pdf_text(pdf_text)
+
+def fetch_url_shadowed_postfix_1(url: str, timeout: int = DEFAULT_TIMEOUT):
+    first_error = None
+    is_pdf = url.lower().split("?", 1)[0].endswith(".pdf")
+
+    if not is_pdf:
+        req = urllib.request.Request(url, headers=_browser_headers())
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                raw = resp.read()
+                content_type = resp.headers.get("Content-Type", "")
+                final_url = resp.geturl()
+                status_code = getattr(resp, "status", 200)
+
+                if "application/pdf" in (content_type or "").lower() or raw[:4] == b"%PDF":
+                    pdf_text = _pdf_text_from_bytes(raw)
+                    if pdf_text:
+                        return {
+                            "ok": True,
+                            "status_code": status_code,
+                            "content_type": "application/pdf",
+                            "final_url": final_url,
+                            "raw_text": pdf_text,
+                            "title": _guess_pdf_title(pdf_text, final_url),
+                            "body_text": pdf_text,
+                            "error": None,
+                        }
+
+                parsed = _parse_html_or_text(raw, content_type)
+                if normalize_text(parsed["body_text"]):
+                    return {
+                        "ok": True,
+                        "status_code": status_code,
+                        "content_type": content_type,
+                        "final_url": final_url,
+                        "raw_text": parsed["raw_text"],
+                        "title": parsed["title"],
+                        "body_text": parsed["body_text"],
+                        "error": None,
+                    }
+        except Exception as e:
+            first_error = f"{type(e).__name__}: {e}"
+
+    curl_res = _curl_fetch_bytes(url, timeout)
+    if curl_res["ok"]:
+        raw = curl_res["raw"]
+        final_url = url
+
+        if is_pdf or raw[:4] == b"%PDF":
+            pdf_text = _pdf_text_from_bytes(raw)
+            if normalize_text(pdf_text):
+                return {
+                    "ok": True,
+                    "status_code": 200,
+                    "content_type": "application/pdf",
+                    "final_url": final_url,
+                    "raw_text": pdf_text,
+                    "title": _guess_pdf_title(pdf_text, final_url),
+                    "body_text": pdf_text,
+                    "error": None,
+                }
+
+        parsed = _parse_html_or_text(raw, "text/html")
+        if normalize_text(parsed["body_text"]):
+            return {
+                "ok": True,
+                "status_code": 200,
+                "content_type": "text/html",
+                "final_url": final_url,
+                "raw_text": parsed["raw_text"],
+                "title": parsed["title"],
+                "body_text": parsed["body_text"],
+                "error": None,
+            }
+
+    return {
+        "ok": False,
+        "status_code": None,
+        "content_type": "",
+        "final_url": url,
+        "raw_text": "",
+        "title": "",
+        "body_text": "",
+        "error": first_error or curl_res["error"] or "fetch_failed",
+    }
+
+def extract_evidence_segments(body_text: str):
+    text = clean_pdf_text(body_text)
+    raw_segments = re.split(r'[\n\r]+|(?<=[。！？!?\.])\s+', text or "")
+    seen = set()
+    scored = []
+
+    key_re = re.compile(
+        r"(revenue|ebit|free cash flow|gross profit|net liquidity|unit sales|employees|dividend|share buyback|guidance|ros|roe|mb\.os|software-defined|automated driving|robotaxi|electric|xev|销量|营收|收入|利润|毛利|现金流|分红|回购)",
+        re.I,
+    )
+
+    for seg in raw_segments:
+        one = normalize_text(seg)
+        if not one:
+            continue
+        if one in seen:
+            continue
+        seen.add(one)
+
+        if is_metadata_like_text(one):
+            continue
+
+        score = 0
+        if re.search(r"\d", one):
+            score += 2
+        if re.search(r"[€$¥%]|\b(?:billion|million|thousand|bn|mn)\b", one, re.I):
+            score += 3
+        if key_re.search(one):
+            score += 3
+        if 50 <= len(one) <= 260:
+            score += 1
+        elif len(one) > 320:
+            score -= 1
+
+        if score >= 3:
+            scored.append((score, one))
+
+    scored.sort(key=lambda x: (-x[0], -len(x[1])))
+    picked = [x[1] for x in scored[:12]]
+
+    if picked:
+        return picked
+
+    fallback = []
+    for seg in raw_segments:
+        one = normalize_text(seg)
+        if is_metadata_like_text(one):
+            continue
+        if len(one) >= 60:
+            fallback.append(one)
+        if len(fallback) >= 8:
+            break
+    return fallback
+# === V5_FETCH_AND_SEGMENT_OVERRIDE_END ===
+
+
+
+
+# === ORIS_FETCH_QUALITY_OVERRIDE_20260410_START ===
+def _qnorm(text: str) -> str:
+    return normalize_text(text or "")
+
+def _finance_keywords():
+    return [
+        "revenue", "revenues", "sales", "gross profit", "operating profit", "operating income",
+        "net income", "net profit", "cash flow", "free cash flow", "margin", "cloud", "advertising",
+        "youtube", "google cloud", "search", "subscriptions", "users", "mau", "dau",
+        "收入", "营收", "利润", "毛利", "毛利率", "现金流", "自由现金流", "云", "广告", "用户", "销量", "交付"
+    ]
+
+def is_weak_body_text(body_text: str, title: str = "") -> bool:
+    body = _qnorm(body_text)
+    ttl = _qnorm(title)
+    lower = body.lower()
+
+    if not body:
+        return True
+    if len(body) < 300:
+        return True
+
+    noise_hits = 0
+    noise_terms = [
+        "privacy", "cookies", "unsubscribe", "email address", "investor alert options",
+        "selecting a year value", "upcoming conference appearances", "your information will be processed",
+        "skip to content", "back to top", "view all", "opens in new window"
+    ]
+    for x in noise_terms:
+        if x in lower:
+            noise_hits += 1
+
+    kw_hits = 0
+    for kw in _finance_keywords():
+        if kw.lower() in lower:
+            kw_hits += 1
+
+    if ttl and body.lower() == ttl.lower():
+        return True
+    if ttl and body.lower().startswith(ttl.lower()) and len(body) <= max(len(ttl) + 80, 220):
+        return True
+    if noise_hits >= 2 and kw_hits == 0:
+        return True
+    if kw_hits == 0 and len(body) < 800:
+        return True
+
+    return False
+
+def is_hard_negative_segment(seg: str) -> bool:
+    s = _qnorm(seg).lower()
+    if not s:
+        return True
+
+    bad = [
+        "privacy", "cookies", "unsubscribe", "email address", "investor alert options",
+        "selecting a year value", "upcoming conference appearances", "your information will be processed",
+        "skip to content", "back to top", "view all", "opens in new window",
+        "news (includes earnings date announcements", "earnings date announcements",
+        "form required accessibility fix", "terms (opens in new window)",
+        "about google (opens in new window)", "google products (opens in new window)"
+    ]
+    if any(x in s for x in bad):
+        return True
+
+    if len(s) < 40:
+        return True
+
+    return False
+
+def _segment_score(seg: str) -> int:
+    s = _qnorm(seg)
+    lower = s.lower()
+    score = 0
+
+    if any(ch.isdigit() for ch in s):
+        score += 3
+    if "%" in s:
+        score += 2
+    if re.search(r"(€|\$|¥|rmb|usd|亿元|万元|million|billion|bn|mn)", s, flags=re.I):
+        score += 2
+
+    for kw in _finance_keywords():
+        if kw.lower() in lower:
+            score += 1
+
+    if len(s) >= 120:
+        score += 1
+
+    return score
+
+def extract_evidence_segments(body_text: str):
+    text = clean_pdf_text(body_text)
+    raw_segments = re.split(r'[\n\r]+|(?<=[。！？!?\.])\s+', text or "")
+
+    policy = load_ingest_policy()
+    max_segments = int((policy.get("quality_gate") or {}).get("max_segments", 12))
+    min_len = int((policy.get("quality_gate") or {}).get("min_segment_length", 40))
+    max_len = int((policy.get("quality_gate") or {}).get("max_segment_length", 1200))
+
+    rows = []
+    seen = set()
+
+    for seg in raw_segments:
+        s = _qnorm(seg)
+        if not s:
+            continue
+        if len(s) < min_len or len(s) > max_len:
+            continue
+        if is_hard_negative_segment(s):
+            continue
+
+        key = s[:220].lower()
+        if key in seen:
+            continue
+        seen.add(key)
+
+        sc = _segment_score(s)
+        if sc < 2:
+            continue
+        rows.append((sc, s))
+
+    rows.sort(key=lambda x: (-x[0], -len(x[1])))
+    picked = [x[1] for x in rows[:max_segments]]
+
+    if picked:
+        return picked
+
+    # weak fallback: still try to salvage numeric lines
+    fallback = []
+    for seg in raw_segments:
+        s = _qnorm(seg)
+        if not s or len(s) < min_len:
+            continue
+        if is_hard_negative_segment(s):
+            continue
+        if any(ch.isdigit() for ch in s):
+            fallback.append(s)
+        if len(fallback) >= max_segments:
+            break
+    return fallback
+
+def fetch_url_providerized(url: str, timeout: int = DEFAULT_TIMEOUT):
+    candidates = []
+
+    try:
+        out_native = native_fetch(url, timeout)
+        if out_native:
+            candidates.append(("native", out_native))
+            if out_native.get("ok") and not is_weak_body_text(out_native.get("body_text") or "", out_native.get("title") or ""):
+                return out_native
+    except Exception:
+        pass
+
+    try:
+        out_curl = run_curl_fetch(url, timeout)
+        if out_curl:
+            candidates.append(("curl", out_curl))
+            if out_curl.get("ok") and not is_weak_body_text(out_curl.get("body_text") or "", out_curl.get("title") or ""):
+                return out_curl
+    except Exception:
+        pass
+
+    good = []
+    for name, out in candidates:
+        if not out:
+            continue
+        body = _qnorm(out.get("body_text") or "")
+        title = _qnorm(out.get("title") or "")
+        score = len(body)
+        if out.get("ok"):
+            score += 1000
+        if not is_weak_body_text(body, title):
+            score += 5000
+        good.append((score, out))
+
+    if good:
+        good.sort(key=lambda x: x[0], reverse=True)
+        return good[0][1]
+
+    return {
+        "ok": False,
+        "status_code": None,
+        "content_type": "",
+        "final_url": url,
+        "raw_text": "",
+        "body_text": "",
+        "title": "",
+        "error": "all_fetch_paths_failed"
+    }
+# === ORIS_FETCH_QUALITY_OVERRIDE_20260410_END ===
 
 
 if __name__ == "__main__":

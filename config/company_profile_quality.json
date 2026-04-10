@@ -1,0 +1,101 @@
+{
+  "max_summary_items": 4,
+  "max_evidence_items": 8,
+  "max_metric_items": 8,
+  "min_text_length": 35,
+  "max_text_length": 320,
+  "min_score": 4,
+  "noise_patterns": [
+    "captured_at:",
+    "title:",
+    "url:",
+    "source_type:",
+    "publisher:",
+    "copyright",
+    "cookies",
+    "privacy",
+    "email alert",
+    "unsubscribe",
+    "contact sales",
+    "opens in new window"
+  ],
+  "numeric_patterns": [
+    "€",
+    "$",
+    "%",
+    "billion",
+    "million",
+    "thousand",
+    "bn",
+    "mn"
+  ],
+  "finance_keywords": [
+    "revenue",
+    "ebit",
+    "free cash flow",
+    "cash flow",
+    "gross profit",
+    "operating profit",
+    "net liquidity",
+    "earnings per share",
+    "dividend",
+    "share buyback",
+    "unit sales",
+    "guidance",
+    "income statement",
+    "销量",
+    "营收",
+    "收入",
+    "利润",
+    "毛利",
+    "现金流",
+    "分红",
+    "回购"
+  ],
+  "profile_keywords": {
+    "automotive_oem": [
+      "mb.os",
+      "software-defined vehicle",
+      "robotaxi",
+      "adas",
+      "automated driving",
+      "xev",
+      "electric",
+      "vans",
+      "cars ros",
+      "vans ros",
+      "g-class",
+      "cla",
+      "glc",
+      "unit sales",
+      "range"
+    ],
+    "internet_platform": [
+      "advertising",
+      "games",
+      "cloud",
+      "ai",
+      "payment",
+      "fintech",
+      "social",
+      "ecosystem",
+      "ad conversions",
+      "gross profit"
+    ],
+    "foundation_model_company": [
+      "model",
+      "agent",
+      "api",
+      "maas",
+      "reasoning",
+      "inference",
+      "token",
+      "glm",
+      "open platform"
+    ]
+  },
+  "metric_blocklist": [
+    "official_source_snapshot_count",
+    "extracted_evidence_segment_count"
+  ]
+}

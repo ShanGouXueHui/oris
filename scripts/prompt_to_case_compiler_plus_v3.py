@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = ROOT / "scripts" / "prompt_to_case_compiler_plus_v2.py"
+ENRICHER = ROOT / "scripts" / "company_entity_enricher.py"
 
 sys.path.insert(0, str(ROOT / "scripts"))
 from company_entity_detector import detect_target_company  # noqa: E402
@@ -126,6 +127,23 @@ def should_run_company_precheck(compiled_case: dict):
     return profile_code == "company_profile" or analysis_type == "company_profile"
 
 
+
+def enrich_target_company_binding(binding: dict, prompt_text: str):
+    try:
+        out = run_json([
+            sys.executable,
+            str(ENRICHER),
+            "--input-json",
+            json.dumps({
+                "binding": binding,
+                "prompt_text": prompt_text
+            }, ensure_ascii=False)
+        ])
+        return (out.get("binding") or binding)
+    except Exception:
+        return binding
+
+
 def build_target_company_binding(det: dict):
     canonical = det.get("canonical_name") or det.get("target_company")
     return {
@@ -190,7 +208,7 @@ def apply_company_precheck(compiled_case: dict, prompt_text: str):
         compiled_case["precheck"]["upstream_target_company_cleared"] = True
         return compiled_case
 
-    role_bindings["target_company"] = build_target_company_binding(det)
+    role_bindings["target_company"] = enrich_target_company_binding(build_target_company_binding(det), prompt_text)
     return compiled_case
 
 
