@@ -10,9 +10,6 @@ ROOT = Path(__file__).resolve().parents[1]
 def slugify(name: str) -> str:
     return (name or "").strip().lower().replace(" ", "-") or "company"
 
-def load_json(path: Path):
-    return json.loads(path.read_text(encoding="utf-8"))
-
 def latest_bundle_for(company_name: str):
     slug = slugify(company_name)
     base = ROOT / "outputs" / "report_build" / f"company-profile-{slug}"
@@ -27,6 +24,15 @@ def run_cmd(cmd):
         "stderr": r.stderr,
     }
 
+def try_parse_json(text: str):
+    text = (text or "").strip()
+    if not text:
+        return {}
+    try:
+        return json.loads(text)
+    except Exception:
+        return {"raw_stdout": text[-4000:]}
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input-json-path", required=True)
@@ -40,14 +46,12 @@ def main():
 
     before = latest_bundle_for(company_name)
 
+    # bundle runner 当前只接受 --input-json-path
     bundle_cmd = [
         "python3",
         "skills/report_build_skill/company_profile_bundle_runner.py",
         "--input-json-path", input_json_path,
-        "--company-name", company_name,
     ]
-    if focus_profile:
-        bundle_cmd += ["--focus-profile", focus_profile]
 
     bundle_run = run_cmd(bundle_cmd)
     if bundle_run["returncode"] != 0:
@@ -60,23 +64,22 @@ def main():
         }, ensure_ascii=False, indent=2))
         raise SystemExit(1)
 
+    bundle_obj = try_parse_json(bundle_run["stdout"])
     after = latest_bundle_for(company_name)
+
     if not after:
         print(json.dumps({
             "ok": False,
             "stage": "locate_bundle",
-            "message": "bundle not found after runner execution"
+            "message": "bundle not found after runner execution",
+            "bundle_runner_stdout": bundle_run["stdout"][-2000:]
         }, ensure_ascii=False, indent=2))
         raise SystemExit(1)
-
-    if before and after.resolve() == before.resolve():
-        # allow same latest path only if it exists; still proceed
-        pass
 
     polish_cmd = [
         "python3",
         "scripts/polish_company_profile_bundle.py",
-        "--bundle-json-path", str(after)
+        "--bundle-json-path", str(after),
     ]
     polish_run = run_cmd(polish_cmd)
     if polish_run["returncode"] != 0:
@@ -90,13 +93,7 @@ def main():
         }, ensure_ascii=False, indent=2))
         raise SystemExit(1)
 
-    polish_obj = {}
-    try:
-        polish_obj = json.loads(polish_run["stdout"])
-    except Exception:
-        polish_obj = {
-            "raw_stdout": polish_run["stdout"][-4000:]
-        }
+    polish_obj = try_parse_json(polish_run["stdout"])
 
     print(json.dumps({
         "ok": True,
@@ -104,8 +101,10 @@ def main():
         "company_name": company_name,
         "focus_profile": focus_profile,
         "input_json_path": input_json_path,
+        "previous_bundle_json_path": str(before.relative_to(ROOT)) if before else None,
         "bundle_json_path": str(after.relative_to(ROOT)),
-        "polish_result": polish_obj
+        "bundle_runner_result": bundle_obj,
+        "polish_result": polish_obj,
     }, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":
