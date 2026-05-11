@@ -1,0 +1,85 @@
+{
+  "schema_version": "2026-05-11.phase2",
+  "runtime": {
+    "primary_path": "oris_vnext.task_kernel.TaskKernel",
+    "channel_boundary": "channel_handlers_enqueue_only",
+    "default_ledger_path": "run/dev_employee/task_runs.jsonl",
+    "default_log_dir": "run/dev_employee/logs"
+  },
+  "task_types": {
+    "dev_task": {
+      "description": "Repository-aware engineering task handled by Dev Employee.",
+      "default_worker_profile": "dev_employee",
+      "default_model_role": "coding_planning",
+      "allowed_executors": ["codex_executor", "validation_pipeline"],
+      "requires_human_approval_before_write": true
+    }
+  },
+  "worker_profiles": {
+    "dev_employee": {
+      "description": "Engineering AI employee for repo reading, implementation planning, controlled execution, validation, commit, and handoff updates.",
+      "allowed_task_types": ["dev_task"],
+      "model_roles": {
+        "planning": "coding_planning",
+        "execution_support": "coding_execution_support",
+        "fallback": "free_fallback"
+      },
+      "required_bootstrap_docs": [
+        "README.md",
+        "docs/ORIS_VNEXT_ARCHITECTURE_2026-05-11.md",
+        "docs/DEV_EMPLOYEE_BOOTSTRAP_PROMPT.md",
+        "docs/UPDATED_DEV_EMPLOYEE_PROMPT_2026-05-11.md",
+        "docs/PROJECT_STATE.md",
+        "memory/HANDOFF.md",
+        "docs/ROUTING_POLICY.md",
+        "docs/PROVIDER_ORCHESTRATION.md",
+        "docs/CONFIG_GOVERNANCE.md"
+      ]
+    }
+  },
+  "executors": {
+    "codex_executor": {
+      "kind": "tui_executor",
+      "command": "codex",
+      "default_mode": "dry_run_plan_only",
+      "working_directory_policy": "repo_root_required",
+      "log_subdir": "codex",
+      "forbidden_shell_fragments": ["set -e", "set -eo pipefail", "set -euo pipefail"],
+      "secrets_policy": "env_only_never_log_values"
+    },
+    "validation_pipeline": {
+      "kind": "validation",
+      "log_subdir": "validation",
+      "checks": [
+        {
+          "name": "python_compile_oris_vnext",
+          "command": ["python3", "-m", "compileall", "-q", "oris_vnext", "scripts/dev_employee_smoke.py"],
+          "timeout_seconds": 60
+        },
+        {
+          "name": "dev_employee_smoke",
+          "command": ["python3", "scripts/dev_employee_smoke.py", "--dry-run"],
+          "timeout_seconds": 60
+        }
+      ]
+    }
+  },
+  "execution_ledger": {
+    "storage": "jsonl",
+    "path": "run/dev_employee/task_runs.jsonl",
+    "required_fields": [
+      "task_run_id",
+      "task_type",
+      "worker_profile",
+      "status",
+      "created_at",
+      "updated_at",
+      "request_summary"
+    ]
+  },
+  "github_log_summary": {
+    "repo_summary_pattern": "logs/dev_employee/{yyyymmdd}/{task_code}.summary.md",
+    "repo_validation_pattern": "logs/dev_employee/{yyyymmdd}/{task_code}.validation.txt",
+    "commit_runtime_noise_by_default": false
+  }
+}
