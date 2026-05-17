@@ -57,8 +57,8 @@
           "timeout_seconds": 60
         },
         {
-          "name": "dev_employee_smoke",
-          "command": ["python3", "scripts/dev_employee_smoke.py", "--dry-run"],
+          "name": "dev_employee_smoke_no_ledger",
+          "command": ["python3", "scripts/dev_employee_smoke.py", "--dry-run", "--no-ledger"],
           "timeout_seconds": 60
         }
       ]
