@@ -13,12 +13,17 @@ from typing import Any
 from .bootstrap_reader import BootstrapReader, load_runtime_config
 
 
+DEFAULT_NON_BLOCKING_PREFIXES = ["logs/dev_employee/", "run/", "orchestration/"]
+DEFAULT_NON_BLOCKING_FILES = ["memory/HANDOFF_VNEXT_LATEST.md"]
+
+
 @dataclass(frozen=True)
 class WorktreeStatus:
     dirty: bool
     tracked_modified: list[str]
     untracked: list[str]
     ignored_prefixes: list[str] = field(default_factory=list)
+    ignored_files: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -66,6 +71,10 @@ def load_json_if_exists(path: str | Path) -> dict[str, Any]:
     return raw if isinstance(raw, dict) else {}
 
 
+def is_non_blocking_path(path: str, *, prefixes: list[str], files: list[str]) -> bool:
+    return path in files or any(path.startswith(prefix) for prefix in prefixes)
+
+
 def collect_worktree_status(repo_root: str | Path = ".") -> WorktreeStatus:
     completed = subprocess.run(
         ["git", "status", "--short"],
@@ -76,7 +85,8 @@ def collect_worktree_status(repo_root: str | Path = ".") -> WorktreeStatus:
     )
     tracked_modified: list[str] = []
     untracked: list[str] = []
-    ignored_prefixes = ["logs/dev_employee/", "run/", "orchestration/"]
+    ignored_prefixes = list(DEFAULT_NON_BLOCKING_PREFIXES)
+    ignored_files = list(DEFAULT_NON_BLOCKING_FILES)
     for line in completed.stdout.splitlines():
         if not line.strip():
             continue
@@ -91,6 +101,7 @@ def collect_worktree_status(repo_root: str | Path = ".") -> WorktreeStatus:
         tracked_modified=tracked_modified,
         untracked=untracked,
         ignored_prefixes=ignored_prefixes,
+        ignored_files=ignored_files,
     )
 
 
@@ -111,7 +122,11 @@ def build_planning_packet(
     blocking_dirty = [
         path
         for path in worktree.tracked_modified
-        if not any(path.startswith(prefix) for prefix in worktree.ignored_prefixes)
+        if not is_non_blocking_path(
+            path,
+            prefixes=worktree.ignored_prefixes,
+            files=worktree.ignored_files,
+        )
     ]
     ok = bool(bootstrap.ok) and latest_validation_ok is not False
     return PlanningPacket(
@@ -129,7 +144,7 @@ def build_planning_packet(
         metadata={
             "blocking_dirty_tracked_count": len(blocking_dirty),
             "blocking_dirty_tracked": blocking_dirty,
-            "policy": "dirty worktree is allowed for known runtime files but must be visible before planning",
+            "policy": "dirty worktree is allowed for known runtime/generated files but must be visible before planning",
         },
     )
 
