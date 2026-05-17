@@ -17,6 +17,7 @@ env/
 # Local outputs / temp
 outputs/
 tmp/
+run/
 *.pid
 
 # Local backups
