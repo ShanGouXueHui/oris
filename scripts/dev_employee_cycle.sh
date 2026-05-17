@@ -7,6 +7,7 @@
 ROOT_DIR="${ORIS_REPO_DIR:-$HOME/projects/oris}"
 BRANCH="${ORIS_BRANCH:-main}"
 TASK_CODE="${ORIS_TASK_CODE:-dev_employee_cycle}"
+SELF_HEAL_LOG_DRIFT="${ORIS_SELF_HEAL_LOG_DRIFT:-1}"
 TS="$(date -u +%Y%m%dT%H%M%SZ)"
 DAY="$(date -u +%Y%m%d)"
 LOG_DIR="logs/dev_employee/${DAY}"
@@ -15,11 +16,27 @@ SUMMARY_FILE="${LOG_DIR}/${TASK_CODE}_${TS}.summary.md"
 VALIDATION_FILE="${LOG_DIR}/${TASK_CODE}_${TS}.validation.txt"
 KEY_RESULT_FILE="${RUN_DIR}/key_result.json"
 COMMIT_LOG_FILE="${RUN_DIR}/git_commit_push.log"
+PREFLIGHT_STATUS_FILE="${RUN_DIR}/git_status_preflight.txt"
+SELF_HEAL_FILE="${RUN_DIR}/self_heal_log_drift.txt"
 
 mkdir -p "$ROOT_DIR"
 cd "$ROOT_DIR" || exit 1
 
 mkdir -p "$LOG_DIR" "$RUN_DIR"
+
+git status --short > "$PREFLIGHT_STATUS_FILE" 2>/dev/null || true
+
+# Previous buggy cycle versions appended to already-committed logs after commit.
+# Restore only tracked Dev Employee log files before creating the new log pair.
+# This is intentionally narrow and does not touch business/runtime dirty files.
+if [ "$SELF_HEAL_LOG_DRIFT" = "1" ]; then
+  awk '/^ M logs\/dev_employee\/.*\.(summary\.md|validation\.txt)$/ {print $2}' "$PREFLIGHT_STATUS_FILE" > "$SELF_HEAL_FILE" || true
+  if [ -s "$SELF_HEAL_FILE" ]; then
+    while IFS= read -r tracked_log_file; do
+      git restore -- "$tracked_log_file" 2>/dev/null || true
+    done < "$SELF_HEAL_FILE"
+  fi
+fi
 
 {
   echo "# Dev Employee Cycle Summary"
@@ -28,6 +45,19 @@ mkdir -p "$LOG_DIR" "$RUN_DIR"
   echo "- branch: ${BRANCH}"
   echo "- repo_dir: ${ROOT_DIR}"
   echo "- task_code: ${TASK_CODE}"
+  echo "- self_heal_log_drift: ${SELF_HEAL_LOG_DRIFT}"
+  echo
+  echo "## Preflight status before self-heal"
+  echo
+  echo "\`\`\`text"
+  cat "$PREFLIGHT_STATUS_FILE" || true
+  echo "\`\`\`"
+  echo
+  echo "## Self-healed tracked dev_employee logs"
+  echo
+  echo "\`\`\`text"
+  cat "$SELF_HEAL_FILE" 2>/dev/null || true
+  echo "\`\`\`"
   echo
   echo "## Git pull"
 } > "$SUMMARY_FILE"
@@ -37,6 +67,13 @@ mkdir -p "$LOG_DIR" "$RUN_DIR"
   echo "ROOT_DIR=${ROOT_DIR}"
   echo "BRANCH=${BRANCH}"
   echo "TASK_CODE=${TASK_CODE}"
+  echo "SELF_HEAL_LOG_DRIFT=${SELF_HEAL_LOG_DRIFT}"
+  echo
+  echo "===== git status before self-heal ====="
+  cat "$PREFLIGHT_STATUS_FILE" || true
+  echo
+  echo "===== self-healed tracked dev_employee logs ====="
+  cat "$SELF_HEAL_FILE" 2>/dev/null || true
   echo
   echo "===== git status before pull ====="
   git status --short || true
