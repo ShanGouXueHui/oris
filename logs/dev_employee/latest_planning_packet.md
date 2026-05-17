@@ -1,6 +1,6 @@
 # Dev Employee Planning Packet
 
-- generated_at: `2026-05-17T21:42:30.953423+00:00`
+- generated_at: `2026-05-17T21:47:47.873190+00:00`
 - ok: `True`
 - worker_profile: `dev_employee`
 - bootstrap_ok: `True`
@@ -13,13 +13,12 @@
 - dirty: `True`
 - tracked_modified_count: `10`
 - untracked_count: `8`
-- blocking_dirty_tracked_count: `2`
+- blocking_dirty_tracked_count: `1`
 
 ### Blocking tracked changes
 
 ```text
 config/insight_entity_registry.json
-memory/HANDOFF_VNEXT_LATEST.md
 ```
 
 ## Latest validation checks
