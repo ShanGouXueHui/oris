@@ -34,6 +34,43 @@ class ValidationReport:
             "metadata": self.metadata,
         }
 
+    def to_markdown(self) -> str:
+        lines = [
+            "## Validation report",
+            "",
+            f"- ok: {str(self.ok).lower()}",
+            f"- check_count: {len(self.checks)}",
+            "",
+            "| Check | Return code | Result |",
+            "| --- | ---: | --- |",
+        ]
+        for check in self.checks:
+            result = "pass" if check.returncode == 0 else "fail"
+            lines.append(f"| `{check.name}` | {check.returncode} | {result} |")
+        failed = [check for check in self.checks if check.returncode != 0]
+        if failed:
+            lines.extend(["", "### Failed check details", ""])
+            for check in failed:
+                lines.extend(
+                    [
+                        f"#### {check.name}",
+                        "",
+                        "Command:",
+                        "",
+                        "```text",
+                        " ".join(check.command),
+                        "```",
+                        "",
+                        "stderr tail:",
+                        "",
+                        "```text",
+                        check.stderr[-2000:],
+                        "```",
+                        "",
+                    ]
+                )
+        return "\n".join(lines) + "\n"
+
 
 class ValidationPipeline:
     """Run configured validation checks and preserve machine-readable results."""
@@ -88,3 +125,9 @@ def write_validation_report(path: str | Path, report: ValidationReport) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(report.to_dict(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def write_validation_markdown(path: str | Path, report: ValidationReport) -> None:
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(report.to_markdown(), encoding="utf-8")
