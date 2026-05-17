@@ -53,7 +53,7 @@
       "checks": [
         {
           "name": "python_compile_oris_vnext",
-          "command": ["python3", "-m", "compileall", "-q", "oris_vnext", "scripts/dev_employee_smoke.py", "scripts/dev_employee_codex_gate_smoke.py"],
+          "command": ["python3", "-m", "compileall", "-q", "oris_vnext", "scripts/dev_employee_smoke.py", "scripts/dev_employee_codex_gate_smoke.py", "scripts/dev_employee_ledger_event_smoke.py"],
           "timeout_seconds": 60
         },
         {
@@ -69,6 +69,11 @@
         {
           "name": "codex_executor_gate_smoke",
           "command": ["python3", "scripts/dev_employee_codex_gate_smoke.py"],
+          "timeout_seconds": 60
+        },
+        {
+          "name": "ledger_event_smoke",
+          "command": ["python3", "scripts/dev_employee_ledger_event_smoke.py"],
           "timeout_seconds": 60
         }
       ]
