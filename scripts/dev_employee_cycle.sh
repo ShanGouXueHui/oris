@@ -14,6 +14,7 @@ RUN_DIR="run/dev_employee/cycle/${TS}"
 SUMMARY_FILE="${LOG_DIR}/${TASK_CODE}_${TS}.summary.md"
 VALIDATION_FILE="${LOG_DIR}/${TASK_CODE}_${TS}.validation.txt"
 KEY_RESULT_FILE="${RUN_DIR}/key_result.json"
+COMMIT_LOG_FILE="${RUN_DIR}/git_commit_push.log"
 
 mkdir -p "$ROOT_DIR"
 cd "$ROOT_DIR" || exit 1
@@ -110,6 +111,12 @@ fi
   echo "\`\`\`json"
   printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_rc":%s,"summary_file":"%s","validation_file":"%s"}\n' "$OK" "$TS" "$COMPILE_RC" "$SMOKE_RC" "$VALIDATION_RC" "$SUMMARY_FILE" "$VALIDATION_FILE"
   echo "\`\`\`"
+  echo
+  echo "## Git status captured before log commit"
+  echo
+  echo "\`\`\`text"
+  git status --short
+  echo "\`\`\`"
 } >> "$SUMMARY_FILE"
 
 printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_rc":%s,"summary_file":"%s","validation_file":"%s"}\n' "$OK" "$TS" "$COMPILE_RC" "$SMOKE_RC" "$VALIDATION_RC" "$SUMMARY_FILE" "$VALIDATION_FILE" > "$KEY_RESULT_FILE"
@@ -120,25 +127,23 @@ printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_
   git status --short
 } >> "$VALIDATION_FILE"
 
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py 2>> "$VALIDATION_FILE"
+# Stage only decision-useful logs and known runner/config files. Do not stage runtime noise.
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py 2>> "$COMMIT_LOG_FILE"
 COMMIT_RC=0
 PUSH_RC=0
 if git diff --cached --quiet; then
-  echo "- log_commit: no_changes" >> "$SUMMARY_FILE"
+  echo "no_changes" > "$COMMIT_LOG_FILE"
 else
-  git commit -m "logs(dev-employee): record cycle ${TS}" >> "$VALIDATION_FILE" 2>&1
+  git commit -m "logs(dev-employee): record cycle ${TS}" >> "$COMMIT_LOG_FILE" 2>&1
   COMMIT_RC=$?
   if [ "$COMMIT_RC" -eq 0 ]; then
-    git push origin "$BRANCH" >> "$VALIDATION_FILE" 2>&1
+    git push origin "$BRANCH" >> "$COMMIT_LOG_FILE" 2>&1
     PUSH_RC=$?
   else
     PUSH_RC=99
   fi
-  echo "- log_commit_rc: ${COMMIT_RC}" >> "$SUMMARY_FILE"
-  echo "- log_push_rc: ${PUSH_RC}" >> "$SUMMARY_FILE"
 fi
 
-HEAD_SHA="$(git rev-parse HEAD 2>/dev/null || echo unknown)"
 HEAD_SHORT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
 KEY_RESULT="$(cat "$KEY_RESULT_FILE")"
 
