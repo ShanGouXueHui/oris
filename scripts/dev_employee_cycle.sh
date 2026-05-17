@@ -100,7 +100,7 @@ VALIDATION_JSON=""
   echo
   echo "===== python compile ====="
 } >> "$VALIDATION_FILE"
-python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py >> "$VALIDATION_FILE" 2>&1
+python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py >> "$VALIDATION_FILE" 2>&1
 COMPILE_RC=$?
 echo "- compile_rc: ${COMPILE_RC}" >> "$SUMMARY_FILE"
 
@@ -178,7 +178,7 @@ printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_
 } >> "$VALIDATION_FILE"
 
 # Stage only decision-useful logs and known runner/config files. Do not stage runtime noise.
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py 2>> "$COMMIT_LOG_FILE"
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py oris_vnext/codex_executor.py 2>> "$COMMIT_LOG_FILE"
 COMMIT_RC=0
 PUSH_RC=0
 if git diff --cached --quiet; then
