@@ -128,6 +128,15 @@ def build_planning_packet(
             files=worktree.ignored_files,
         )
     ]
+    blocking_untracked = [
+        path
+        for path in worktree.untracked
+        if not is_non_blocking_path(
+            path,
+            prefixes=worktree.ignored_prefixes,
+            files=worktree.ignored_files,
+        )
+    ]
     ok = bool(bootstrap.ok) and latest_validation_ok is not False
     return PlanningPacket(
         ok=ok,
@@ -144,6 +153,8 @@ def build_planning_packet(
         metadata={
             "blocking_dirty_tracked_count": len(blocking_dirty),
             "blocking_dirty_tracked": blocking_dirty,
+            "blocking_untracked_count": len(blocking_untracked),
+            "blocking_untracked": blocking_untracked,
             "policy": "dirty worktree is allowed for known runtime/generated files but must be visible before planning",
         },
     )
@@ -176,11 +187,18 @@ def write_packet_markdown(path: str | Path, packet: PlanningPacket) -> None:
         f"- tracked_modified_count: `{len(data['worktree']['tracked_modified'])}`",
         f"- untracked_count: `{len(data['worktree']['untracked'])}`",
         f"- blocking_dirty_tracked_count: `{data['metadata']['blocking_dirty_tracked_count']}`",
+        f"- blocking_untracked_count: `{data['metadata']['blocking_untracked_count']}`",
         "",
         "### Blocking tracked changes",
         "",
         "```text",
         "\n".join(data['metadata']['blocking_dirty_tracked']) or "<none>",
+        "```",
+        "",
+        "### Blocking untracked paths",
+        "",
+        "```text",
+        "\n".join(data['metadata']['blocking_untracked']) or "<none>",
         "```",
         "",
         "## Latest validation checks",
