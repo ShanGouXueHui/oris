@@ -165,7 +165,7 @@ printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_
 } >> "$VALIDATION_FILE"
 
 # Stage only decision-useful logs and known runner/config files. Do not stage runtime noise.
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py 2>> "$COMMIT_LOG_FILE"
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py oris_vnext/bootstrap_reader.py 2>> "$COMMIT_LOG_FILE"
 COMMIT_RC=0
 PUSH_RC=0
 if git diff --cached --quiet; then
