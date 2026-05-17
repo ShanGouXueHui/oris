@@ -22,6 +22,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--config", default="config/dev_employee_runtime.json")
     parser.add_argument("--dry-run", action="store_true", help="Do not invoke external executors.")
     parser.add_argument("--output-dir", default="run/dev_employee/smoke")
+    parser.add_argument(
+        "--no-ledger",
+        action="store_true",
+        help="Create the task_run in memory without appending to the execution ledger.",
+    )
     return parser
 
 
@@ -38,7 +43,8 @@ def main() -> int:
             objective="Verify task kernel, worker registry, execution ledger, and CodexExecutor dry-run contract.",
             constraints=["no_secrets", "no_external_write", "dry_run"],
             source="smoke",
-        )
+        ),
+        persist=not args.no_ledger,
     )
 
     prompt_path = output_dir / "codex_prompt.md"
@@ -60,6 +66,7 @@ def main() -> int:
         "model_role": task_run.model_role,
         "executor_plan": task_run.executor_plan,
         "codex_dry_run": executor_result.dry_run,
+        "ledger_written": not args.no_ledger,
         "ledger_path": str(kernel.ledger.path),
     }
     (output_dir / "smoke_result.json").write_text(
