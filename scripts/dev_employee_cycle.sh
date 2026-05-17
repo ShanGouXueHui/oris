@@ -22,6 +22,8 @@ VALIDATION_MD_FILE="${RUN_DIR}/validation_report.md"
 LATEST_INDEX_JSON="logs/dev_employee/latest_cycle_index.json"
 LATEST_INDEX_MD="logs/dev_employee/latest_cycle_index.md"
 LATEST_HANDOFF="memory/HANDOFF_VNEXT_LATEST.md"
+LATEST_PACKET_JSON="logs/dev_employee/latest_planning_packet.json"
+LATEST_PACKET_MD="logs/dev_employee/latest_planning_packet.md"
 
 mkdir -p "$ROOT_DIR"
 cd "$ROOT_DIR" || exit 1
@@ -103,7 +105,7 @@ VALIDATION_JSON=""
   echo
   echo "===== python compile ====="
 } >> "$VALIDATION_FILE"
-python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py >> "$VALIDATION_FILE" 2>&1
+python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_planning_packet_smoke.py >> "$VALIDATION_FILE" 2>&1
 COMPILE_RC=$?
 echo "- compile_rc: ${COMPILE_RC}" >> "$SUMMARY_FILE"
 
@@ -177,10 +179,14 @@ printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_
 python3 - <<PY >> "$VALIDATION_FILE" 2>&1
 from oris_vnext.log_summarizer import summarize_cycle_log, write_summary_json, write_summary_markdown
 from oris_vnext.handoff_updater import render_handoff, write_handoff
+from oris_vnext.planning_packet import build_planning_packet, write_packet_json, write_packet_markdown
 summary = summarize_cycle_log("$SUMMARY_FILE")
 write_summary_json("$LATEST_INDEX_JSON", summary)
 write_summary_markdown("$LATEST_INDEX_MD", summary)
 write_handoff("$LATEST_HANDOFF", render_handoff(summary.to_dict()))
+packet = build_planning_packet(task_summary="Dev Employee latest cycle planning packet", objective="Provide a single repo-aware planning input for the next Dev Employee iteration.")
+write_packet_json("$LATEST_PACKET_JSON", packet)
+write_packet_markdown("$LATEST_PACKET_MD", packet)
 PY
 
 {
@@ -190,7 +196,7 @@ PY
 } >> "$VALIDATION_FILE"
 
 # Stage only decision-useful logs and known runner/config files. Do not stage runtime noise.
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" "$LATEST_INDEX_JSON" "$LATEST_INDEX_MD" "$LATEST_HANDOFF" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_handoff_updater_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py oris_vnext/codex_executor.py oris_vnext/ledger_events.py oris_vnext/log_summarizer.py oris_vnext/handoff_updater.py 2>> "$COMMIT_LOG_FILE"
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" "$LATEST_INDEX_JSON" "$LATEST_INDEX_MD" "$LATEST_HANDOFF" "$LATEST_PACKET_JSON" "$LATEST_PACKET_MD" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_planning_packet_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py oris_vnext/codex_executor.py oris_vnext/ledger_events.py oris_vnext/log_summarizer.py oris_vnext/handoff_updater.py oris_vnext/planning_packet.py 2>> "$COMMIT_LOG_FILE"
 COMMIT_RC=0
 PUSH_RC=0
 if git diff --cached --quiet; then
@@ -209,7 +215,7 @@ fi
 HEAD_SHORT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
 KEY_RESULT="$(cat "$KEY_RESULT_FILE")"
 
-echo "GITHUB_LOG_REF=${HEAD_SHORT} ${SUMMARY_FILE} ${VALIDATION_FILE} ${LATEST_INDEX_JSON} ${LATEST_HANDOFF}"
+echo "GITHUB_LOG_REF=${HEAD_SHORT} ${SUMMARY_FILE} ${VALIDATION_FILE} ${LATEST_INDEX_JSON} ${LATEST_HANDOFF} ${LATEST_PACKET_JSON}"
 echo "KEY_RESULT=${KEY_RESULT}"
 
 if [ "$OK" = "true" ] && [ "$COMMIT_RC" -eq 0 ] && [ "$PUSH_RC" -eq 0 ]; then
