@@ -2,7 +2,7 @@
 
 # ORIS Dev Employee single-command cycle runner.
 # Purpose: pull latest code, run validation/smoke, write decision-useful logs,
-# commit/push logs, and print a compact KEY_RESULT for the next iteration.
+# commit/push logs, and print only compact GitHub log references for iteration.
 
 ROOT_DIR="${ORIS_REPO_DIR:-$HOME/projects/oris}"
 BRANCH="${ORIS_BRANCH:-main}"
@@ -63,7 +63,6 @@ VALIDATION_JSON=""
 } >> "$VALIDATION_FILE"
 python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py >> "$VALIDATION_FILE" 2>&1
 COMPILE_RC=$?
-
 echo "- compile_rc: ${COMPILE_RC}" >> "$SUMMARY_FILE"
 
 {
@@ -75,7 +74,6 @@ SMOKE_RC=$?
 cat "$RUN_DIR/smoke.stdout" >> "$VALIDATION_FILE"
 cat "$RUN_DIR/smoke.stderr" >> "$VALIDATION_FILE"
 SMOKE_JSON="$(tail -n 1 "$RUN_DIR/smoke.stdout" 2>/dev/null || true)"
-
 echo "- smoke_rc: ${SMOKE_RC}" >> "$SUMMARY_FILE"
 echo "- smoke_json: ${SMOKE_JSON}" >> "$SUMMARY_FILE"
 
@@ -97,7 +95,6 @@ PY
 VALIDATION_RC=$?
 VALIDATION_JSON="$(tail -n 1 run/dev_employee/cycle_validation_stdout.json 2>/dev/null || true)"
 cat run/dev_employee/cycle_validation_stdout.json >> "$VALIDATION_FILE" 2>/dev/null || true
-
 echo "- validation_rc: ${VALIDATION_RC}" >> "$SUMMARY_FILE"
 echo "- validation_json: ${VALIDATION_JSON}" >> "$SUMMARY_FILE"
 
@@ -113,12 +110,6 @@ fi
   echo "\`\`\`json"
   printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_rc":%s,"summary_file":"%s","validation_file":"%s"}\n' "$OK" "$TS" "$COMPILE_RC" "$SMOKE_RC" "$VALIDATION_RC" "$SUMMARY_FILE" "$VALIDATION_FILE"
   echo "\`\`\`"
-  echo
-  echo "## Last ledger lines"
-  echo
-  echo "\`\`\`jsonl"
-  tail -n 5 run/dev_employee/task_runs.jsonl 2>/dev/null || true
-  echo "\`\`\`"
 } >> "$SUMMARY_FILE"
 
 printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_rc":%s,"summary_file":"%s","validation_file":"%s"}\n' "$OK" "$TS" "$COMPILE_RC" "$SMOKE_RC" "$VALIDATION_RC" "$SUMMARY_FILE" "$VALIDATION_FILE" > "$KEY_RESULT_FILE"
@@ -129,10 +120,10 @@ printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_
   git status --short
 } >> "$VALIDATION_FILE"
 
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh 2>> "$VALIDATION_FILE"
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py 2>> "$VALIDATION_FILE"
+COMMIT_RC=0
+PUSH_RC=0
 if git diff --cached --quiet; then
-  COMMIT_RC=0
-  PUSH_RC=0
   echo "- log_commit: no_changes" >> "$SUMMARY_FILE"
 else
   git commit -m "logs(dev-employee): record cycle ${TS}" >> "$VALIDATION_FILE" 2>&1
@@ -147,14 +138,14 @@ else
   echo "- log_push_rc: ${PUSH_RC}" >> "$SUMMARY_FILE"
 fi
 
+HEAD_SHA="$(git rev-parse HEAD 2>/dev/null || echo unknown)"
+HEAD_SHORT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
 KEY_RESULT="$(cat "$KEY_RESULT_FILE")"
-echo "KEY_RESULT=${KEY_RESULT}"
-echo "SUMMARY_FILE=${SUMMARY_FILE}"
-echo "VALIDATION_FILE=${VALIDATION_FILE}"
-echo "LAST_LEDGER="
-tail -n 3 run/dev_employee/task_runs.jsonl 2>/dev/null || true
 
-if [ "$OK" = "true" ]; then
+echo "GITHUB_LOG_REF=${HEAD_SHORT} ${SUMMARY_FILE} ${VALIDATION_FILE}"
+echo "KEY_RESULT=${KEY_RESULT}"
+
+if [ "$OK" = "true" ] && [ "$COMMIT_RC" -eq 0 ] && [ "$PUSH_RC" -eq 0 ]; then
   exit 0
 fi
 exit 1
