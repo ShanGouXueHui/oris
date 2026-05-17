@@ -18,6 +18,7 @@ KEY_RESULT_FILE="${RUN_DIR}/key_result.json"
 COMMIT_LOG_FILE="${RUN_DIR}/git_commit_push.log"
 PREFLIGHT_STATUS_FILE="${RUN_DIR}/git_status_preflight.txt"
 SELF_HEAL_FILE="${RUN_DIR}/self_heal_log_drift.txt"
+VALIDATION_MD_FILE="${RUN_DIR}/validation_report.md"
 
 mkdir -p "$ROOT_DIR"
 cd "$ROOT_DIR" || exit 1
@@ -122,12 +123,19 @@ echo "- smoke_json: ${SMOKE_JSON}" >> "$SUMMARY_FILE"
 python3 - <<'PY' > "run/dev_employee/cycle_validation_stdout.json" 2>> "$VALIDATION_FILE"
 import json
 from pathlib import Path
-from oris_vnext.validation import ValidationPipeline, load_runtime_config, write_validation_report
+from oris_vnext.validation import (
+    ValidationPipeline,
+    load_runtime_config,
+    write_validation_markdown,
+    write_validation_report,
+)
 cfg = load_runtime_config("config/dev_employee_runtime.json")
 report = ValidationPipeline(cfg).run()
 out = Path("run/dev_employee/cycle_validation_report.json")
+md_out = Path("run/dev_employee/cycle_validation_report.md")
 write_validation_report(out, report)
-print(json.dumps({"ok": report.ok, "check_count": len(report.checks), "report_path": str(out)}, ensure_ascii=False, sort_keys=True))
+write_validation_markdown(md_out, report)
+print(json.dumps({"ok": report.ok, "check_count": len(report.checks), "report_path": str(out), "markdown_path": str(md_out)}, ensure_ascii=False, sort_keys=True))
 raise SystemExit(0 if report.ok else 1)
 PY
 VALIDATION_RC=$?
@@ -135,6 +143,7 @@ VALIDATION_JSON="$(tail -n 1 run/dev_employee/cycle_validation_stdout.json 2>/de
 cat run/dev_employee/cycle_validation_stdout.json >> "$VALIDATION_FILE" 2>/dev/null || true
 echo "- validation_rc: ${VALIDATION_RC}" >> "$SUMMARY_FILE"
 echo "- validation_json: ${VALIDATION_JSON}" >> "$SUMMARY_FILE"
+cp run/dev_employee/cycle_validation_report.md "$VALIDATION_MD_FILE" 2>/dev/null || true
 
 OK=false
 if [ "$PULL_RC" -eq 0 ] && [ "$PULL2_RC" -eq 0 ] && [ "$COMPILE_RC" -eq 0 ] && [ "$SMOKE_RC" -eq 0 ] && [ "$VALIDATION_RC" -eq 0 ]; then
@@ -142,6 +151,10 @@ if [ "$PULL_RC" -eq 0 ] && [ "$PULL2_RC" -eq 0 ] && [ "$COMPILE_RC" -eq 0 ] && [
 fi
 
 {
+  echo
+  if [ -s "$VALIDATION_MD_FILE" ]; then
+    cat "$VALIDATION_MD_FILE"
+  fi
   echo
   echo "## Key result"
   echo
@@ -165,7 +178,7 @@ printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_
 } >> "$VALIDATION_FILE"
 
 # Stage only decision-useful logs and known runner/config files. Do not stage runtime noise.
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py oris_vnext/bootstrap_reader.py 2>> "$COMMIT_LOG_FILE"
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json scripts/dev_employee_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py 2>> "$COMMIT_LOG_FILE"
 COMMIT_RC=0
 PUSH_RC=0
 if git diff --cached --quiet; then
