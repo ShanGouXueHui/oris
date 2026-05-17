@@ -1,0 +1,170 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-17T21:42:30.953423+00:00",
+  "repo_root": "/home/admin/projects/oris",
+  "worker_profile": "dev_employee",
+  "task_summary": "Dev Employee latest cycle planning packet",
+  "objective": "Provide a single repo-aware planning input for the next Dev Employee iteration.",
+  "bootstrap_ok": true,
+  "latest_validation_ok": true,
+  "worktree": {
+    "dirty": true,
+    "tracked_modified": [
+      "config/insight_entity_registry.json",
+      "logs/dev_employee/latest_cycle_index.json",
+      "logs/dev_employee/latest_cycle_index.md",
+      "memory/HANDOFF_VNEXT_LATEST.md",
+      "orchestration/active_routing.json",
+      "orchestration/execution_log.jsonl",
+      "orchestration/feishu_event_dedupe.json",
+      "orchestration/free_eligibility.json",
+      "orchestration/runtime_plan.json",
+      "orchestration/runtime_state.json"
+    ],
+    "untracked": [
+      "inputs/manual_refresh/",
+      "logs/dev_employee/20260517/dev_employee_cycle_20260517T214227Z.summary.md",
+      "logs/dev_employee/20260517/dev_employee_cycle_20260517T214227Z.validation.txt",
+      "scripts/feishu_account_strategy_trigger.py",
+      "scripts/run_account_strategy_case_pipeline.py",
+      "scripts/run_account_strategy_trigger_loop.sh",
+      "scripts/run_insight_queue_worker_loop.sh.disabled",
+      "skills/official_source_ingest_skill/runner_providerized.py"
+    ],
+    "ignored_prefixes": [
+      "logs/dev_employee/",
+      "run/",
+      "orchestration/"
+    ]
+  },
+  "latest_cycle_index": {
+    "source_file": "logs/dev_employee/20260517/dev_employee_cycle_20260517T214227Z.summary.md",
+    "generated_at": "2026-05-17T21:42:30.948362+00:00",
+    "timestamp_utc": "20260517T214227Z",
+    "ok": true,
+    "check_count": 6,
+    "checks": [
+      {
+        "name": "python_compile_oris_vnext",
+        "returncode": 0,
+        "result": "pass"
+      },
+      {
+        "name": "dev_employee_bootstrap_reader",
+        "returncode": 0,
+        "result": "pass"
+      },
+      {
+        "name": "dev_employee_smoke_no_ledger",
+        "returncode": 0,
+        "result": "pass"
+      },
+      {
+        "name": "codex_executor_gate_smoke",
+        "returncode": 0,
+        "result": "pass"
+      },
+      {
+        "name": "ledger_event_smoke",
+        "returncode": 0,
+        "result": "pass"
+      },
+      {
+        "name": "log_summarizer_smoke",
+        "returncode": 0,
+        "result": "pass"
+      }
+    ],
+    "key_result": {
+      "ok": true,
+      "timestamp_utc": "20260517T214227Z",
+      "compile_rc": 0,
+      "smoke_rc": 0,
+      "validation_rc": 0,
+      "summary_file": "logs/dev_employee/20260517/dev_employee_cycle_20260517T214227Z.summary.md",
+      "validation_file": "logs/dev_employee/20260517/dev_employee_cycle_20260517T214227Z.validation.txt"
+    },
+    "metadata": {
+      "timestamp_utc": "20260517T214227Z",
+      "branch": "main",
+      "repo_dir": "/home/admin/projects/oris",
+      "task_code": "dev_employee_cycle",
+      "self_heal_log_drift": "1",
+      "git_checkout_rc": "0",
+      "git_pull_rc": "0",
+      "compile_rc": "0",
+      "smoke_rc": "0",
+      "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-444354a0e64c\", \"worker_profile\": \"dev_employee\"}",
+      "validation_rc": "0",
+      "validation_json": "{\"check_count\": 6, \"markdown_path\": \"run/dev_employee/cycle_validation_report.md\", \"ok\": true, \"report_path\": \"run/dev_employee/cycle_validation_report.json\"}",
+      "ok": "true",
+      "check_count": "6"
+    }
+  },
+  "bootstrap_report": {
+    "ok": true,
+    "checked_at": "2026-05-17T21:42:30.949057+00:00",
+    "repo_root": "/home/admin/projects/oris",
+    "worker_profile": "dev_employee",
+    "required_count": 9,
+    "missing_count": 0,
+    "docs": [
+      {
+        "path": "README.md",
+        "exists": true,
+        "size_bytes": 597
+      },
+      {
+        "path": "docs/ORIS_VNEXT_ARCHITECTURE_2026-05-11.md",
+        "exists": true,
+        "size_bytes": 8513
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_BOOTSTRAP_PROMPT.md",
+        "exists": true,
+        "size_bytes": 1496
+      },
+      {
+        "path": "docs/UPDATED_DEV_EMPLOYEE_PROMPT_2026-05-11.md",
+        "exists": true,
+        "size_bytes": 1817
+      },
+      {
+        "path": "docs/PROJECT_STATE.md",
+        "exists": true,
+        "size_bytes": 35548
+      },
+      {
+        "path": "memory/HANDOFF.md",
+        "exists": true,
+        "size_bytes": 35495
+      },
+      {
+        "path": "docs/ROUTING_POLICY.md",
+        "exists": true,
+        "size_bytes": 2483
+      },
+      {
+        "path": "docs/PROVIDER_ORCHESTRATION.md",
+        "exists": true,
+        "size_bytes": 2448
+      },
+      {
+        "path": "docs/CONFIG_GOVERNANCE.md",
+        "exists": true,
+        "size_bytes": 2407
+      }
+    ],
+    "metadata": {
+      "source": "config/dev_employee_runtime.json"
+    }
+  },
+  "metadata": {
+    "blocking_dirty_tracked_count": 2,
+    "blocking_dirty_tracked": [
+      "config/insight_entity_registry.json",
+      "memory/HANDOFF_VNEXT_LATEST.md"
+    ],
+    "policy": "dirty worktree is allowed for known runtime files but must be visible before planning"
+  }
+}
