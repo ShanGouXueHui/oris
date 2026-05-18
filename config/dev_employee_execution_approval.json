@@ -1,0 +1,17 @@
+{
+  "schema_version": "2026-05-18.execution_approval.v1",
+  "enabled": false,
+  "approved_task_run_id": null,
+  "approved_mode": "dry_run_plan_only",
+  "approval_note": "Default state. Dev Employee execution packet generation is allowed, but Codex execution must remain disabled until this file is deliberately changed and reviewed.",
+  "allowed_modes": [
+    "dry_run_plan_only",
+    "approved_codex_execution"
+  ],
+  "required_safety_checks": [
+    "latest_validation_ok",
+    "bootstrap_ok",
+    "blocking_dirty_tracked_count_zero",
+    "blocking_untracked_count_zero"
+  ]
+}
