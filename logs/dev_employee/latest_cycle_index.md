@@ -1,10 +1,10 @@
 # Dev Employee Latest Cycle Index
 
-- source_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.summary.md`
-- generated_at: `2026-05-18T20:13:04.343212+00:00`
-- timestamp_utc: `20260518T201301Z`
+- source_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T202741Z.summary.md`
+- generated_at: `2026-05-18T20:27:44.709762+00:00`
+- timestamp_utc: `20260518T202741Z`
 - ok: `True`
-- check_count: `6`
+- check_count: `9`
 
 | Check | Return code | Result |
 | --- | ---: | --- |
@@ -14,3 +14,6 @@
 | `codex_executor_gate_smoke` | 0 | pass |
 | `ledger_event_smoke` | 0 | pass |
 | `log_summarizer_smoke` | 0 | pass |
+| `planning_packet_smoke` | 0 | pass |
+| `execution_packet_smoke` | 0 | pass |
+| `execution_approval_smoke` | 0 | pass |

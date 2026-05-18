@@ -5,12 +5,12 @@ It is intended as the first short entry point after the larger project handoff f
 
 ## Latest cycle
 
-- generated_at: `2026-05-18T20:13:04.343626+00:00`
-- cycle_timestamp_utc: `20260518T201301Z`
+- generated_at: `2026-05-18T20:27:44.710196+00:00`
+- cycle_timestamp_utc: `20260518T202741Z`
 - ok: `True`
-- source_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.summary.md`
-- summary_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.summary.md`
-- validation_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.validation.txt`
+- source_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T202741Z.summary.md`
+- summary_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T202741Z.summary.md`
+- validation_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T202741Z.validation.txt`
 
 ## Validation checks
 
@@ -22,6 +22,9 @@ It is intended as the first short entry point after the larger project handoff f
 | `codex_executor_gate_smoke` | 0 | pass |
 | `ledger_event_smoke` | 0 | pass |
 | `log_summarizer_smoke` | 0 | pass |
+| `planning_packet_smoke` | 0 | pass |
+| `execution_packet_smoke` | 0 | pass |
+| `execution_approval_smoke` | 0 | pass |
 
 ## Current Dev Employee kernel capabilities
 

@@ -23,6 +23,9 @@
 - codex_executor_gate_smoke: rc=0 result=pass
 - ledger_event_smoke: rc=0 result=pass
 - log_summarizer_smoke: rc=0 result=pass
+- planning_packet_smoke: rc=0 result=pass
+- execution_packet_smoke: rc=0 result=pass
+- execution_approval_smoke: rc=0 result=pass
 
 ## Worktree policy snapshot
 
