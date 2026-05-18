@@ -1,0 +1,25 @@
+{
+  "schema_version": "2026-05-18.worktree_policy.v1",
+  "non_blocking_prefixes": [
+    "logs/dev_employee/",
+    "run/",
+    "orchestration/"
+  ],
+  "non_blocking_files": [
+    "memory/HANDOFF_VNEXT_LATEST.md"
+  ],
+  "legacy_review_prefixes": [
+    "inputs/manual_refresh/"
+  ],
+  "legacy_review_files": [
+    "scripts/feishu_account_strategy_trigger.py",
+    "scripts/run_account_strategy_case_pipeline.py",
+    "scripts/run_account_strategy_trigger_loop.sh",
+    "scripts/run_insight_queue_worker_loop.sh.disabled",
+    "skills/official_source_ingest_skill/runner_providerized.py"
+  ],
+  "notes": {
+    "non_blocking": "Generated or runtime files that should be visible but should not block Dev Employee vNext planning.",
+    "legacy_review": "Historical insight/runtime files that require separate review before either commit, archive, or discard; they should not block Dev Employee kernel work."
+  }
+}
