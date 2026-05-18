@@ -1,0 +1,36 @@
+{
+  "schema_version": "2026-05-18.commercial_readiness.v1",
+  "required_artifacts": [
+    "logs/dev_employee/latest_cycle_index.json",
+    "logs/dev_employee/latest_planning_packet.json",
+    "logs/dev_employee/latest_execution_packet.json",
+    "memory/HANDOFF_VNEXT_LATEST.md"
+  ],
+  "required_validation_checks": [
+    "python_compile_oris_vnext",
+    "dev_employee_bootstrap_reader",
+    "dev_employee_smoke_no_ledger",
+    "codex_executor_gate_smoke",
+    "ledger_event_smoke",
+    "log_summarizer_smoke",
+    "planning_packet_smoke",
+    "execution_packet_smoke",
+    "execution_approval_smoke",
+    "execution_approval_exporter"
+  ],
+  "hard_gates": {
+    "latest_cycle_ok": true,
+    "bootstrap_ok": true,
+    "latest_validation_ok": true,
+    "blocking_dirty_tracked_count": 0,
+    "blocking_untracked_count": 0,
+    "real_execution_default": "disabled",
+    "approval_enabled": false,
+    "execution_packet_mode": "dry_run_plan_only"
+  },
+  "commercial_status_levels": {
+    "green": "All required readiness gates pass. Safe to continue toward controlled pilot.",
+    "yellow": "Core loop passes but one or more non-critical launch-readiness items need review.",
+    "red": "A hard gate failed. Do not proceed to commercial pilot."
+  }
+}
