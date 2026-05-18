@@ -1,7 +1,7 @@
 {
-  "source_file": "logs/dev_employee/20260517/dev_employee_cycle_20260517T214744Z.summary.md",
-  "generated_at": "2026-05-17T21:47:47.868643+00:00",
-  "timestamp_utc": "20260517T214744Z",
+  "source_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T193101Z.summary.md",
+  "generated_at": "2026-05-18T19:31:04.610762+00:00",
+  "timestamp_utc": "20260518T193101Z",
   "ok": true,
   "check_count": 6,
   "checks": [
@@ -38,15 +38,15 @@
   ],
   "key_result": {
     "ok": true,
-    "timestamp_utc": "20260517T214744Z",
+    "timestamp_utc": "20260518T193101Z",
     "compile_rc": 0,
     "smoke_rc": 0,
     "validation_rc": 0,
-    "summary_file": "logs/dev_employee/20260517/dev_employee_cycle_20260517T214744Z.summary.md",
-    "validation_file": "logs/dev_employee/20260517/dev_employee_cycle_20260517T214744Z.validation.txt"
+    "summary_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T193101Z.summary.md",
+    "validation_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T193101Z.validation.txt"
   },
   "metadata": {
-    "timestamp_utc": "20260517T214744Z",
+    "timestamp_utc": "20260518T193101Z",
     "branch": "main",
     "repo_dir": "/home/admin/projects/oris",
     "task_code": "dev_employee_cycle",
@@ -55,7 +55,7 @@
     "git_pull_rc": "0",
     "compile_rc": "0",
     "smoke_rc": "0",
-    "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-05987803c41a\", \"worker_profile\": \"dev_employee\"}",
+    "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-166d31e00bf9\", \"worker_profile\": \"dev_employee\"}",
     "validation_rc": "0",
     "validation_json": "{\"check_count\": 6, \"markdown_path\": \"run/dev_employee/cycle_validation_report.md\", \"ok\": true, \"report_path\": \"run/dev_employee/cycle_validation_report.json\"}",
     "ok": "true",

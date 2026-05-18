@@ -1,6 +1,6 @@
 # Dev Employee Planning Packet
 
-- generated_at: `2026-05-17T21:47:47.873190+00:00`
+- generated_at: `2026-05-18T19:31:04.615239+00:00`
 - ok: `True`
 - worker_profile: `dev_employee`
 - bootstrap_ok: `True`
@@ -12,13 +12,25 @@
 
 - dirty: `True`
 - tracked_modified_count: `10`
-- untracked_count: `8`
+- untracked_count: `7`
 - blocking_dirty_tracked_count: `1`
+- blocking_untracked_count: `6`
 
 ### Blocking tracked changes
 
 ```text
 config/insight_entity_registry.json
+```
+
+### Blocking untracked paths
+
+```text
+inputs/manual_refresh/
+scripts/feishu_account_strategy_trigger.py
+scripts/run_account_strategy_case_pipeline.py
+scripts/run_account_strategy_trigger_loop.sh
+scripts/run_insight_queue_worker_loop.sh.disabled
+skills/official_source_ingest_skill/runner_providerized.py
 ```
 
 ## Latest validation checks
