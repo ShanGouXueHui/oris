@@ -53,7 +53,20 @@
       "checks": [
         {
           "name": "python_compile_oris_vnext",
-          "command": ["python3", "-m", "compileall", "-q", "oris_vnext", "scripts/dev_employee_smoke.py", "scripts/dev_employee_codex_gate_smoke.py", "scripts/dev_employee_ledger_event_smoke.py", "scripts/dev_employee_log_summarizer_smoke.py"],
+          "command": [
+            "python3",
+            "-m",
+            "compileall",
+            "-q",
+            "oris_vnext",
+            "scripts/dev_employee_smoke.py",
+            "scripts/dev_employee_codex_gate_smoke.py",
+            "scripts/dev_employee_ledger_event_smoke.py",
+            "scripts/dev_employee_log_summarizer_smoke.py",
+            "scripts/dev_employee_planning_packet_smoke.py",
+            "scripts/dev_employee_execution_packet_smoke.py",
+            "scripts/dev_employee_execution_approval_smoke.py"
+          ],
           "timeout_seconds": 60
         },
         {
@@ -79,6 +92,21 @@
         {
           "name": "log_summarizer_smoke",
           "command": ["python3", "scripts/dev_employee_log_summarizer_smoke.py"],
+          "timeout_seconds": 60
+        },
+        {
+          "name": "planning_packet_smoke",
+          "command": ["python3", "scripts/dev_employee_planning_packet_smoke.py"],
+          "timeout_seconds": 60
+        },
+        {
+          "name": "execution_packet_smoke",
+          "command": ["python3", "scripts/dev_employee_execution_packet_smoke.py"],
+          "timeout_seconds": 60
+        },
+        {
+          "name": "execution_approval_smoke",
+          "command": ["python3", "scripts/dev_employee_execution_approval_smoke.py"],
           "timeout_seconds": 60
         }
       ]
