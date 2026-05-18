@@ -12,6 +12,7 @@
     "inputs/manual_refresh/"
   ],
   "legacy_review_files": [
+    "config/insight_entity_registry.json",
     "scripts/feishu_account_strategy_trigger.py",
     "scripts/run_account_strategy_case_pipeline.py",
     "scripts/run_account_strategy_trigger_loop.sh",
@@ -20,6 +21,7 @@
   ],
   "notes": {
     "non_blocking": "Generated or runtime files that should be visible but should not block Dev Employee vNext planning.",
-    "legacy_review": "Historical insight/runtime files that require separate review before either commit, archive, or discard; they should not block Dev Employee kernel work."
+    "legacy_review": "Historical insight/runtime files that require separate review before either commit, archive, or discard; they should not block Dev Employee kernel work.",
+    "insight_entity_registry": "Tracked local entity-registry expansion is treated as legacy insight review material until a dedicated insight-data decision commits or reverts it."
   }
 }
