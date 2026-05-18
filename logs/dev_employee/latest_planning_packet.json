@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-05-18T20:55:27.481316+00:00",
+  "generated_at": "2026-05-18T20:57:39.905321+00:00",
   "repo_root": "/home/admin/projects/oris",
   "worker_profile": "dev_employee",
   "task_summary": "Dev Employee latest cycle planning packet",
@@ -23,8 +23,8 @@
     ],
     "untracked": [
       "inputs/manual_refresh/",
-      "logs/dev_employee/20260518/dev_employee_cycle_20260518T205524Z.summary.md",
-      "logs/dev_employee/20260518/dev_employee_cycle_20260518T205524Z.validation.txt",
+      "logs/dev_employee/20260518/dev_employee_cycle_20260518T205736Z.summary.md",
+      "logs/dev_employee/20260518/dev_employee_cycle_20260518T205736Z.validation.txt",
       "logs/dev_employee/latest_execution_approval.json",
       "logs/dev_employee/latest_execution_approval.md",
       "scripts/feishu_account_strategy_trigger.py",
@@ -54,11 +54,11 @@
     ]
   },
   "latest_cycle_index": {
-    "source_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T205524Z.summary.md",
-    "generated_at": "2026-05-18T20:55:27.476562+00:00",
-    "timestamp_utc": "20260518T205524Z",
+    "source_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T205736Z.summary.md",
+    "generated_at": "2026-05-18T20:57:39.899652+00:00",
+    "timestamp_utc": "20260518T205736Z",
     "ok": true,
-    "check_count": 10,
+    "check_count": 11,
     "checks": [
       {
         "name": "python_compile_oris_vnext",
@@ -109,19 +109,24 @@
         "name": "execution_approval_exporter",
         "returncode": 0,
         "result": "pass"
+      },
+      {
+        "name": "commercial_readiness_smoke",
+        "returncode": 0,
+        "result": "pass"
       }
     ],
     "key_result": {
       "ok": true,
-      "timestamp_utc": "20260518T205524Z",
+      "timestamp_utc": "20260518T205736Z",
       "compile_rc": 0,
       "smoke_rc": 0,
       "validation_rc": 0,
-      "summary_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T205524Z.summary.md",
-      "validation_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T205524Z.validation.txt"
+      "summary_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T205736Z.summary.md",
+      "validation_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T205736Z.validation.txt"
     },
     "metadata": {
-      "timestamp_utc": "20260518T205524Z",
+      "timestamp_utc": "20260518T205736Z",
       "branch": "main",
       "repo_dir": "/home/admin/projects/oris",
       "task_code": "dev_employee_cycle",
@@ -130,16 +135,16 @@
       "git_pull_rc": "0",
       "compile_rc": "0",
       "smoke_rc": "0",
-      "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-4f2f2c75576c\", \"worker_profile\": \"dev_employee\"}",
+      "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-6c9c62814038\", \"worker_profile\": \"dev_employee\"}",
       "validation_rc": "0",
-      "validation_json": "{\"check_count\": 10, \"markdown_path\": \"run/dev_employee/cycle_validation_report.md\", \"ok\": true, \"report_path\": \"run/dev_employee/cycle_validation_report.json\"}",
+      "validation_json": "{\"check_count\": 11, \"markdown_path\": \"run/dev_employee/cycle_validation_report.md\", \"ok\": true, \"report_path\": \"run/dev_employee/cycle_validation_report.json\"}",
       "ok": "true",
-      "check_count": "10"
+      "check_count": "11"
     }
   },
   "bootstrap_report": {
     "ok": true,
-    "checked_at": "2026-05-18T20:55:27.477319+00:00",
+    "checked_at": "2026-05-18T20:57:39.900425+00:00",
     "repo_root": "/home/admin/projects/oris",
     "worker_profile": "dev_employee",
     "required_count": 9,

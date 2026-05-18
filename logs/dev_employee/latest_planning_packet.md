@@ -1,6 +1,6 @@
 # Dev Employee Planning Packet
 
-- generated_at: `2026-05-18T20:55:27.481316+00:00`
+- generated_at: `2026-05-18T20:57:39.905321+00:00`
 - ok: `True`
 - worker_profile: `dev_employee`
 - bootstrap_ok: `True`
@@ -56,3 +56,4 @@ skills/official_source_ingest_skill/runner_providerized.py
 | `execution_packet_smoke` | 0 | pass |
 | `execution_approval_smoke` | 0 | pass |
 | `execution_approval_exporter` | 0 | pass |
+| `commercial_readiness_smoke` | 0 | pass |
