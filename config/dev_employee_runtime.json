@@ -65,7 +65,8 @@
             "scripts/dev_employee_log_summarizer_smoke.py",
             "scripts/dev_employee_planning_packet_smoke.py",
             "scripts/dev_employee_execution_packet_smoke.py",
-            "scripts/dev_employee_execution_approval_smoke.py"
+            "scripts/dev_employee_execution_approval_smoke.py",
+            "scripts/dev_employee_export_execution_approval.py"
           ],
           "timeout_seconds": 60
         },
@@ -107,6 +108,11 @@
         {
           "name": "execution_approval_smoke",
           "command": ["python3", "scripts/dev_employee_execution_approval_smoke.py"],
+          "timeout_seconds": 60
+        },
+        {
+          "name": "execution_approval_exporter",
+          "command": ["python3", "scripts/dev_employee_export_execution_approval.py"],
           "timeout_seconds": 60
         }
       ]
