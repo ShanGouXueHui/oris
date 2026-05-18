@@ -26,6 +26,7 @@
 - planning_packet_smoke: rc=0 result=pass
 - execution_packet_smoke: rc=0 result=pass
 - execution_approval_smoke: rc=0 result=pass
+- execution_approval_exporter: rc=0 result=pass
 
 ## Worktree policy snapshot
 

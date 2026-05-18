@@ -1,12 +1,12 @@
 {
   "ok": true,
-  "generated_at": "2026-05-18T20:38:42.185825+00:00",
+  "generated_at": "2026-05-18T20:44:32.585702+00:00",
   "mode": "dry_run_plan_only",
   "approved_for_real_execution": false,
   "task_summary": "Dev Employee latest cycle planning packet",
   "objective": "Provide a single repo-aware planning input for the next Dev Employee iteration.",
   "planning_packet_path": "logs/dev_employee/latest_planning_packet.json",
-  "codex_prompt_path": "run/dev_employee/cycle/20260518T203838Z/execution_packet/codex_prompt.md",
+  "codex_prompt_path": "run/dev_employee/cycle/20260518T204429Z/execution_packet/codex_prompt.md",
   "expected_outputs": [
     "codex_prompt.md",
     "execution_packet.json",
@@ -29,7 +29,7 @@
   },
   "planning_snapshot": {
     "ok": true,
-    "generated_at": "2026-05-18T20:38:42.184821+00:00",
+    "generated_at": "2026-05-18T20:44:32.581417+00:00",
     "repo_root": "/home/admin/projects/oris",
     "worker_profile": "dev_employee",
     "task_summary": "Dev Employee latest cycle planning packet",
@@ -52,8 +52,10 @@
       ],
       "untracked": [
         "inputs/manual_refresh/",
-        "logs/dev_employee/20260518/dev_employee_cycle_20260518T203838Z.summary.md",
-        "logs/dev_employee/20260518/dev_employee_cycle_20260518T203838Z.validation.txt",
+        "logs/dev_employee/20260518/dev_employee_cycle_20260518T204429Z.summary.md",
+        "logs/dev_employee/20260518/dev_employee_cycle_20260518T204429Z.validation.txt",
+        "logs/dev_employee/latest_execution_approval.json",
+        "logs/dev_employee/latest_execution_approval.md",
         "scripts/feishu_account_strategy_trigger.py",
         "scripts/run_account_strategy_case_pipeline.py",
         "scripts/run_account_strategy_trigger_loop.sh",
@@ -81,11 +83,11 @@
       ]
     },
     "latest_cycle_index": {
-      "source_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T203838Z.summary.md",
-      "generated_at": "2026-05-18T20:38:42.180354+00:00",
-      "timestamp_utc": "20260518T203838Z",
+      "source_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T204429Z.summary.md",
+      "generated_at": "2026-05-18T20:44:32.576858+00:00",
+      "timestamp_utc": "20260518T204429Z",
       "ok": true,
-      "check_count": 9,
+      "check_count": 10,
       "checks": [
         {
           "name": "python_compile_oris_vnext",
@@ -131,19 +133,24 @@
           "name": "execution_approval_smoke",
           "returncode": 0,
           "result": "pass"
+        },
+        {
+          "name": "execution_approval_exporter",
+          "returncode": 0,
+          "result": "pass"
         }
       ],
       "key_result": {
         "ok": true,
-        "timestamp_utc": "20260518T203838Z",
+        "timestamp_utc": "20260518T204429Z",
         "compile_rc": 0,
         "smoke_rc": 0,
         "validation_rc": 0,
-        "summary_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T203838Z.summary.md",
-        "validation_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T203838Z.validation.txt"
+        "summary_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T204429Z.summary.md",
+        "validation_file": "logs/dev_employee/20260518/dev_employee_cycle_20260518T204429Z.validation.txt"
       },
       "metadata": {
-        "timestamp_utc": "20260518T203838Z",
+        "timestamp_utc": "20260518T204429Z",
         "branch": "main",
         "repo_dir": "/home/admin/projects/oris",
         "task_code": "dev_employee_cycle",
@@ -152,16 +159,16 @@
         "git_pull_rc": "0",
         "compile_rc": "0",
         "smoke_rc": "0",
-        "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-3edad8734d59\", \"worker_profile\": \"dev_employee\"}",
+        "smoke_json": "{\"codex_dry_run\": true, \"executor_plan\": [\"codex_executor\", \"validation_pipeline\"], \"ledger_path\": \"run/dev_employee/task_runs.jsonl\", \"ledger_written\": true, \"model_role\": \"coding_planning\", \"ok\": true, \"task_run_id\": \"dev-a8ea2b9325b0\", \"worker_profile\": \"dev_employee\"}",
         "validation_rc": "0",
-        "validation_json": "{\"check_count\": 9, \"markdown_path\": \"run/dev_employee/cycle_validation_report.md\", \"ok\": true, \"report_path\": \"run/dev_employee/cycle_validation_report.json\"}",
+        "validation_json": "{\"check_count\": 10, \"markdown_path\": \"run/dev_employee/cycle_validation_report.md\", \"ok\": true, \"report_path\": \"run/dev_employee/cycle_validation_report.json\"}",
         "ok": "true",
-        "check_count": "9"
+        "check_count": "10"
       }
     },
     "bootstrap_report": {
       "ok": true,
-      "checked_at": "2026-05-18T20:38:42.181093+00:00",
+      "checked_at": "2026-05-18T20:44:32.577626+00:00",
       "repo_root": "/home/admin/projects/oris",
       "worker_profile": "dev_employee",
       "required_count": 9,
@@ -236,7 +243,7 @@
         "skills/official_source_ingest_skill/runner_providerized.py"
       ],
       "non_blocking_tracked_count": 9,
-      "non_blocking_untracked_count": 2,
+      "non_blocking_untracked_count": 4,
       "worktree_policy_path": "config/dev_employee_worktree_policy.json",
       "policy": "worktree paths are classified by config/dev_employee_worktree_policy.json before planning"
     }

@@ -1,6 +1,6 @@
 # Dev Employee Planning Packet
 
-- generated_at: `2026-05-18T20:38:42.184821+00:00`
+- generated_at: `2026-05-18T20:44:32.581417+00:00`
 - ok: `True`
 - worker_profile: `dev_employee`
 - bootstrap_ok: `True`
@@ -12,7 +12,7 @@
 
 - dirty: `True`
 - tracked_modified_count: `10`
-- untracked_count: `8`
+- untracked_count: `10`
 - blocking_dirty_tracked_count: `0`
 - blocking_untracked_count: `0`
 - legacy_review_tracked_count: `1`
@@ -55,3 +55,4 @@ skills/official_source_ingest_skill/runner_providerized.py
 | `planning_packet_smoke` | 0 | pass |
 | `execution_packet_smoke` | 0 | pass |
 | `execution_approval_smoke` | 0 | pass |
+| `execution_approval_exporter` | 0 | pass |
