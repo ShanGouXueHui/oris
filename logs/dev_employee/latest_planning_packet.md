@@ -1,6 +1,6 @@
 # Dev Employee Planning Packet
 
-- generated_at: `2026-05-18T19:53:08.157130+00:00`
+- generated_at: `2026-05-18T20:08:46.690240+00:00`
 - ok: `True`
 - worker_profile: `dev_employee`
 - bootstrap_ok: `True`
