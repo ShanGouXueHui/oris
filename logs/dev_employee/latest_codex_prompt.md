@@ -28,6 +28,7 @@
 - execution_approval_smoke: rc=0 result=pass
 - execution_approval_exporter: rc=0 result=pass
 - commercial_readiness_smoke: rc=0 result=pass
+- commercial_readiness_exporter: rc=0 result=pass
 
 ## Worktree policy snapshot
 

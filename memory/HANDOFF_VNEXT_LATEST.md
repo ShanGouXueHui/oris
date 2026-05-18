@@ -5,12 +5,12 @@ It is intended as the first short entry point after the larger project handoff f
 
 ## Latest cycle
 
-- generated_at: `2026-05-18T21:03:12.557431+00:00`
-- cycle_timestamp_utc: `20260518T210309Z`
+- generated_at: `2026-05-18T21:07:16.290998+00:00`
+- cycle_timestamp_utc: `20260518T210712Z`
 - ok: `True`
-- source_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T210309Z.summary.md`
-- summary_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T210309Z.summary.md`
-- validation_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T210309Z.validation.txt`
+- source_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T210712Z.summary.md`
+- summary_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T210712Z.summary.md`
+- validation_file: `logs/dev_employee/20260518/dev_employee_cycle_20260518T210712Z.validation.txt`
 
 ## Validation checks
 
@@ -27,6 +27,7 @@ It is intended as the first short entry point after the larger project handoff f
 | `execution_approval_smoke` | 0 | pass |
 | `execution_approval_exporter` | 0 | pass |
 | `commercial_readiness_smoke` | 0 | pass |
+| `commercial_readiness_exporter` | 0 | pass |
 
 ## Current Dev Employee kernel capabilities
 
