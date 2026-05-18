@@ -92,3 +92,44 @@ def write_approval_result(path: str | Path, result: dict[str, Any]) -> None:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def render_approval_markdown(result: dict[str, Any]) -> str:
+    safety = result.get("safety", {}) if isinstance(result.get("safety"), dict) else {}
+    approval = result.get("approval", {}) if isinstance(result.get("approval"), dict) else {}
+    lines = [
+        "# Dev Employee Execution Approval Result",
+        "",
+        f"- allowed: `{result.get('allowed')}`",
+        f"- enabled: `{result.get('enabled')}`",
+        f"- approved_mode: `{result.get('approved_mode')}`",
+        f"- mode_ok: `{result.get('mode_ok')}`",
+        f"- required_safety_ok: `{result.get('required_safety_ok')}`",
+        f"- task_ok: `{result.get('task_ok')}`",
+        f"- task_run_id: `{result.get('task_run_id')}`",
+        f"- approved_task_run_id: `{result.get('approved_task_run_id')}`",
+        "",
+        "## Safety checks",
+        "",
+        "| Check | Result |",
+        "| --- | --- |",
+    ]
+    for name, value in safety.items():
+        lines.append(f"| `{name}` | `{value}` |")
+    lines.extend(
+        [
+            "",
+            "## Approval config",
+            "",
+            f"- source: `{approval.get('metadata', {}).get('source') if isinstance(approval.get('metadata'), dict) else ''}`",
+            f"- note: {approval.get('approval_note', '')}",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def write_approval_markdown(path: str | Path, result: dict[str, Any]) -> None:
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(render_approval_markdown(result), encoding="utf-8")
