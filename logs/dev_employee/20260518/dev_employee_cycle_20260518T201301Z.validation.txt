@@ -1,0 +1,87 @@
+===== ORIS DEV EMPLOYEE CYCLE 20260518T201301Z =====
+ROOT_DIR=/home/admin/projects/oris
+BRANCH=main
+TASK_CODE=dev_employee_cycle
+SELF_HEAL_LOG_DRIFT=1
+
+===== git status before self-heal =====
+ M config/insight_entity_registry.json
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/feishu_event_dedupe.json
+ M orchestration/free_eligibility.json
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? inputs/manual_refresh/
+?? scripts/feishu_account_strategy_trigger.py
+?? scripts/run_account_strategy_case_pipeline.py
+?? scripts/run_account_strategy_trigger_loop.sh
+?? scripts/run_insight_queue_worker_loop.sh.disabled
+?? skills/official_source_ingest_skill/runner_providerized.py
+
+===== self-healed tracked dev_employee logs =====
+
+===== git status before pull =====
+ M config/insight_entity_registry.json
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/feishu_event_dedupe.json
+ M orchestration/free_eligibility.json
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? inputs/manual_refresh/
+?? logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.summary.md
+?? logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.validation.txt
+?? scripts/feishu_account_strategy_trigger.py
+?? scripts/run_account_strategy_case_pipeline.py
+?? scripts/run_account_strategy_trigger_loop.sh
+?? scripts/run_insight_queue_worker_loop.sh.disabled
+?? skills/official_source_ingest_skill/runner_providerized.py
+
+===== git pull =====
+Already on 'main'
+M	config/insight_entity_registry.json
+M	orchestration/active_routing.json
+M	orchestration/execution_log.jsonl
+M	orchestration/feishu_event_dedupe.json
+M	orchestration/free_eligibility.json
+M	orchestration/runtime_plan.json
+M	orchestration/runtime_state.json
+Your branch is up to date with 'origin/main'.
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+===== python compile =====
+
+===== dev employee smoke =====
+{"codex_dry_run": true, "executor_plan": ["codex_executor", "validation_pipeline"], "ledger_path": "run/dev_employee/task_runs.jsonl", "ledger_written": true, "model_role": "coding_planning", "ok": true, "task_run_id": "dev-b8b10d6f93c1", "worker_profile": "dev_employee"}
+
+===== validation pipeline =====
+{"check_count": 6, "markdown_path": "run/dev_employee/cycle_validation_report.md", "ok": true, "report_path": "run/dev_employee/cycle_validation_report.json"}
+
+===== git diff summary before log commit =====
+ M config/insight_entity_registry.json
+ M logs/dev_employee/latest_cycle_index.json
+ M logs/dev_employee/latest_cycle_index.md
+ M logs/dev_employee/latest_execution_packet.json
+ M logs/dev_employee/latest_execution_packet.md
+ M logs/dev_employee/latest_planning_packet.json
+ M logs/dev_employee/latest_planning_packet.md
+ M logs/dev_employee/latest_worktree_review.json
+ M logs/dev_employee/latest_worktree_review.md
+ M memory/HANDOFF_VNEXT_LATEST.md
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/feishu_event_dedupe.json
+ M orchestration/free_eligibility.json
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? inputs/manual_refresh/
+?? logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.summary.md
+?? logs/dev_employee/20260518/dev_employee_cycle_20260518T201301Z.validation.txt
+?? scripts/feishu_account_strategy_trigger.py
+?? scripts/run_account_strategy_case_pipeline.py
+?? scripts/run_account_strategy_trigger_loop.sh
+?? scripts/run_insight_queue_worker_loop.sh.disabled
+?? skills/official_source_ingest_skill/runner_providerized.py
