@@ -15,6 +15,16 @@ from .bootstrap_reader import BootstrapReader, load_runtime_config
 
 DEFAULT_NON_BLOCKING_PREFIXES = ["logs/dev_employee/", "run/", "orchestration/"]
 DEFAULT_NON_BLOCKING_FILES = ["memory/HANDOFF_VNEXT_LATEST.md"]
+DEFAULT_LEGACY_REVIEW_PREFIXES: list[str] = []
+DEFAULT_LEGACY_REVIEW_FILES: list[str] = []
+
+
+@dataclass(frozen=True)
+class WorktreePolicy:
+    non_blocking_prefixes: list[str]
+    non_blocking_files: list[str]
+    legacy_review_prefixes: list[str]
+    legacy_review_files: list[str]
 
 
 @dataclass(frozen=True)
@@ -24,6 +34,8 @@ class WorktreeStatus:
     untracked: list[str]
     ignored_prefixes: list[str] = field(default_factory=list)
     ignored_files: list[str] = field(default_factory=list)
+    legacy_review_prefixes: list[str] = field(default_factory=list)
+    legacy_review_files: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -71,11 +83,22 @@ def load_json_if_exists(path: str | Path) -> dict[str, Any]:
     return raw if isinstance(raw, dict) else {}
 
 
-def is_non_blocking_path(path: str, *, prefixes: list[str], files: list[str]) -> bool:
+def load_worktree_policy(path: str | Path = "config/dev_employee_worktree_policy.json") -> WorktreePolicy:
+    raw = load_json_if_exists(path)
+    return WorktreePolicy(
+        non_blocking_prefixes=[str(item) for item in raw.get("non_blocking_prefixes", DEFAULT_NON_BLOCKING_PREFIXES)],
+        non_blocking_files=[str(item) for item in raw.get("non_blocking_files", DEFAULT_NON_BLOCKING_FILES)],
+        legacy_review_prefixes=[str(item) for item in raw.get("legacy_review_prefixes", DEFAULT_LEGACY_REVIEW_PREFIXES)],
+        legacy_review_files=[str(item) for item in raw.get("legacy_review_files", DEFAULT_LEGACY_REVIEW_FILES)],
+    )
+
+
+def path_matches(path: str, *, prefixes: list[str], files: list[str]) -> bool:
     return path in files or any(path.startswith(prefix) for prefix in prefixes)
 
 
-def collect_worktree_status(repo_root: str | Path = ".") -> WorktreeStatus:
+def collect_worktree_status(repo_root: str | Path = ".", *, policy: WorktreePolicy | None = None) -> WorktreeStatus:
+    policy = policy or load_worktree_policy()
     completed = subprocess.run(
         ["git", "status", "--short"],
         cwd=str(repo_root),
@@ -85,8 +108,6 @@ def collect_worktree_status(repo_root: str | Path = ".") -> WorktreeStatus:
     )
     tracked_modified: list[str] = []
     untracked: list[str] = []
-    ignored_prefixes = list(DEFAULT_NON_BLOCKING_PREFIXES)
-    ignored_files = list(DEFAULT_NON_BLOCKING_FILES)
     for line in completed.stdout.splitlines():
         if not line.strip():
             continue
@@ -100,8 +121,10 @@ def collect_worktree_status(repo_root: str | Path = ".") -> WorktreeStatus:
         dirty=bool(tracked_modified or untracked),
         tracked_modified=tracked_modified,
         untracked=untracked,
-        ignored_prefixes=ignored_prefixes,
-        ignored_files=ignored_files,
+        ignored_prefixes=policy.non_blocking_prefixes,
+        ignored_files=policy.non_blocking_files,
+        legacy_review_prefixes=policy.legacy_review_prefixes,
+        legacy_review_files=policy.legacy_review_files,
     )
 
 
@@ -113,29 +136,43 @@ def build_planning_packet(
     task_summary: str = "Dev Employee planning packet",
     objective: str = "Build a repo-aware planning input for the next Dev Employee iteration.",
     latest_index_path: str | Path = "logs/dev_employee/latest_cycle_index.json",
+    worktree_policy_path: str | Path = "config/dev_employee_worktree_policy.json",
 ) -> PlanningPacket:
     config = load_runtime_config(config_path)
     bootstrap = BootstrapReader(config, repo_root=repo_root).verify(worker_profile)
     latest_index = load_json_if_exists(latest_index_path)
     latest_validation_ok = latest_index.get("ok") if latest_index else None
-    worktree = collect_worktree_status(repo_root)
+    policy = load_worktree_policy(worktree_policy_path)
+    worktree = collect_worktree_status(repo_root, policy=policy)
+    non_blocking_tracked = [
+        path
+        for path in worktree.tracked_modified
+        if path_matches(path, prefixes=policy.non_blocking_prefixes, files=policy.non_blocking_files)
+    ]
+    legacy_review_tracked = [
+        path
+        for path in worktree.tracked_modified
+        if path_matches(path, prefixes=policy.legacy_review_prefixes, files=policy.legacy_review_files)
+    ]
     blocking_dirty = [
         path
         for path in worktree.tracked_modified
-        if not is_non_blocking_path(
-            path,
-            prefixes=worktree.ignored_prefixes,
-            files=worktree.ignored_files,
-        )
+        if path not in non_blocking_tracked and path not in legacy_review_tracked
+    ]
+    non_blocking_untracked = [
+        path
+        for path in worktree.untracked
+        if path_matches(path, prefixes=policy.non_blocking_prefixes, files=policy.non_blocking_files)
+    ]
+    legacy_review_untracked = [
+        path
+        for path in worktree.untracked
+        if path_matches(path, prefixes=policy.legacy_review_prefixes, files=policy.legacy_review_files)
     ]
     blocking_untracked = [
         path
         for path in worktree.untracked
-        if not is_non_blocking_path(
-            path,
-            prefixes=worktree.ignored_prefixes,
-            files=worktree.ignored_files,
-        )
+        if path not in non_blocking_untracked and path not in legacy_review_untracked
     ]
     ok = bool(bootstrap.ok) and latest_validation_ok is not False
     return PlanningPacket(
@@ -155,7 +192,14 @@ def build_planning_packet(
             "blocking_dirty_tracked": blocking_dirty,
             "blocking_untracked_count": len(blocking_untracked),
             "blocking_untracked": blocking_untracked,
-            "policy": "dirty worktree is allowed for known runtime/generated files but must be visible before planning",
+            "legacy_review_tracked_count": len(legacy_review_tracked),
+            "legacy_review_tracked": legacy_review_tracked,
+            "legacy_review_untracked_count": len(legacy_review_untracked),
+            "legacy_review_untracked": legacy_review_untracked,
+            "non_blocking_tracked_count": len(non_blocking_tracked),
+            "non_blocking_untracked_count": len(non_blocking_untracked),
+            "worktree_policy_path": str(worktree_policy_path),
+            "policy": "worktree paths are classified by config/dev_employee_worktree_policy.json before planning",
         },
     )
 
@@ -188,6 +232,8 @@ def write_packet_markdown(path: str | Path, packet: PlanningPacket) -> None:
         f"- untracked_count: `{len(data['worktree']['untracked'])}`",
         f"- blocking_dirty_tracked_count: `{data['metadata']['blocking_dirty_tracked_count']}`",
         f"- blocking_untracked_count: `{data['metadata']['blocking_untracked_count']}`",
+        f"- legacy_review_tracked_count: `{data['metadata']['legacy_review_tracked_count']}`",
+        f"- legacy_review_untracked_count: `{data['metadata']['legacy_review_untracked_count']}`",
         "",
         "### Blocking tracked changes",
         "",
@@ -199,6 +245,12 @@ def write_packet_markdown(path: str | Path, packet: PlanningPacket) -> None:
         "",
         "```text",
         "\n".join(data['metadata']['blocking_untracked']) or "<none>",
+        "```",
+        "",
+        "### Legacy review paths",
+        "",
+        "```text",
+        "\n".join(data['metadata']['legacy_review_tracked'] + data['metadata']['legacy_review_untracked']) or "<none>",
         "```",
         "",
         "## Latest validation checks",
@@ -220,6 +272,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--objective", default="Build a repo-aware planning input for the next Dev Employee iteration.")
     parser.add_argument("--json-out", default="run/dev_employee/planning_packet.json")
     parser.add_argument("--md-out", default="run/dev_employee/planning_packet.md")
+    parser.add_argument("--worktree-policy", default="config/dev_employee_worktree_policy.json")
     return parser
 
 
@@ -231,6 +284,7 @@ def main() -> int:
         worker_profile=args.worker_profile,
         task_summary=args.task_summary,
         objective=args.objective,
+        worktree_policy_path=args.worktree_policy,
     )
     write_packet_json(args.json_out, packet)
     write_packet_markdown(args.md_out, packet)
