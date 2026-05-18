@@ -1,6 +1,6 @@
 # Dev Employee Planning Packet
 
-- generated_at: `2026-05-18T19:50:03.020039+00:00`
+- generated_at: `2026-05-18T19:53:08.157130+00:00`
 - ok: `True`
 - worker_profile: `dev_employee`
 - bootstrap_ok: `True`
@@ -13,15 +13,15 @@
 - dirty: `True`
 - tracked_modified_count: `10`
 - untracked_count: `8`
-- blocking_dirty_tracked_count: `1`
+- blocking_dirty_tracked_count: `0`
 - blocking_untracked_count: `0`
-- legacy_review_tracked_count: `0`
+- legacy_review_tracked_count: `1`
 - legacy_review_untracked_count: `6`
 
 ### Blocking tracked changes
 
 ```text
-config/insight_entity_registry.json
+<none>
 ```
 
 ### Blocking untracked paths
@@ -33,6 +33,7 @@ config/insight_entity_registry.json
 ### Legacy review paths
 
 ```text
+config/insight_entity_registry.json
 inputs/manual_refresh/
 scripts/feishu_account_strategy_trigger.py
 scripts/run_account_strategy_case_pipeline.py
