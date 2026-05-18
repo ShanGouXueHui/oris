@@ -26,6 +26,9 @@ LATEST_PACKET_JSON="logs/dev_employee/latest_planning_packet.json"
 LATEST_PACKET_MD="logs/dev_employee/latest_planning_packet.md"
 LATEST_WORKTREE_REVIEW_JSON="logs/dev_employee/latest_worktree_review.json"
 LATEST_WORKTREE_REVIEW_MD="logs/dev_employee/latest_worktree_review.md"
+LATEST_EXECUTION_PACKET_JSON="logs/dev_employee/latest_execution_packet.json"
+LATEST_EXECUTION_PACKET_MD="logs/dev_employee/latest_execution_packet.md"
+LATEST_CODEX_PROMPT="logs/dev_employee/latest_codex_prompt.md"
 
 mkdir -p "$ROOT_DIR"
 cd "$ROOT_DIR" || exit 1
@@ -107,7 +110,7 @@ VALIDATION_JSON=""
   echo
   echo "===== python compile ====="
 } >> "$VALIDATION_FILE"
-python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_planning_packet_smoke.py >> "$VALIDATION_FILE" 2>&1
+python3 -m compileall -q oris_vnext scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_planning_packet_smoke.py scripts/dev_employee_execution_packet_smoke.py >> "$VALIDATION_FILE" 2>&1
 COMPILE_RC=$?
 echo "- compile_rc: ${COMPILE_RC}" >> "$SUMMARY_FILE"
 
@@ -179,10 +182,13 @@ fi
 printf '{"ok":%s,"timestamp_utc":"%s","compile_rc":%s,"smoke_rc":%s,"validation_rc":%s,"summary_file":"%s","validation_file":"%s"}\n' "$OK" "$TS" "$COMPILE_RC" "$SMOKE_RC" "$VALIDATION_RC" "$SUMMARY_FILE" "$VALIDATION_FILE" > "$KEY_RESULT_FILE"
 
 python3 - <<PY >> "$VALIDATION_FILE" 2>&1
+import shutil
+from pathlib import Path
 from oris_vnext.log_summarizer import summarize_cycle_log, write_summary_json, write_summary_markdown
 from oris_vnext.handoff_updater import render_handoff, write_handoff
 from oris_vnext.planning_packet import build_planning_packet, write_packet_json, write_packet_markdown
 from oris_vnext.worktree_review import build_worktree_review, write_review_json, write_review_markdown
+from oris_vnext.execution_packet import build_execution_packet, write_execution_packet
 summary = summarize_cycle_log("$SUMMARY_FILE")
 write_summary_json("$LATEST_INDEX_JSON", summary)
 write_summary_markdown("$LATEST_INDEX_MD", summary)
@@ -193,6 +199,11 @@ write_packet_markdown("$LATEST_PACKET_MD", packet)
 review = build_worktree_review(planning_packet_path="$LATEST_PACKET_JSON")
 write_review_json("$LATEST_WORKTREE_REVIEW_JSON", review)
 write_review_markdown("$LATEST_WORKTREE_REVIEW_MD", review)
+execution_packet = build_execution_packet(planning_packet_path="$LATEST_PACKET_JSON", output_dir="$RUN_DIR/execution_packet")
+write_execution_packet("$RUN_DIR/execution_packet", execution_packet)
+shutil.copyfile(Path("$RUN_DIR/execution_packet") / "execution_packet.json", "$LATEST_EXECUTION_PACKET_JSON")
+shutil.copyfile(Path("$RUN_DIR/execution_packet") / "execution_packet.md", "$LATEST_EXECUTION_PACKET_MD")
+shutil.copyfile(Path("$RUN_DIR/execution_packet") / "codex_prompt.md", "$LATEST_CODEX_PROMPT")
 PY
 
 {
@@ -202,7 +213,7 @@ PY
 } >> "$VALIDATION_FILE"
 
 # Stage only decision-useful logs and known runner/config files. Do not stage runtime noise.
-git add "$SUMMARY_FILE" "$VALIDATION_FILE" "$LATEST_INDEX_JSON" "$LATEST_INDEX_MD" "$LATEST_HANDOFF" "$LATEST_PACKET_JSON" "$LATEST_PACKET_MD" "$LATEST_WORKTREE_REVIEW_JSON" "$LATEST_WORKTREE_REVIEW_MD" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json config/dev_employee_worktree_policy.json scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_planning_packet_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py oris_vnext/codex_executor.py oris_vnext/ledger_events.py oris_vnext/log_summarizer.py oris_vnext/handoff_updater.py oris_vnext/planning_packet.py oris_vnext/worktree_review.py 2>> "$COMMIT_LOG_FILE"
+git add "$SUMMARY_FILE" "$VALIDATION_FILE" "$LATEST_INDEX_JSON" "$LATEST_INDEX_MD" "$LATEST_HANDOFF" "$LATEST_PACKET_JSON" "$LATEST_PACKET_MD" "$LATEST_WORKTREE_REVIEW_JSON" "$LATEST_WORKTREE_REVIEW_MD" "$LATEST_EXECUTION_PACKET_JSON" "$LATEST_EXECUTION_PACKET_MD" "$LATEST_CODEX_PROMPT" .gitignore scripts/dev_employee_cycle.sh config/dev_employee_runtime.json config/dev_employee_worktree_policy.json scripts/dev_employee_smoke.py scripts/dev_employee_codex_gate_smoke.py scripts/dev_employee_ledger_event_smoke.py scripts/dev_employee_log_summarizer_smoke.py scripts/dev_employee_planning_packet_smoke.py scripts/dev_employee_execution_packet_smoke.py oris_vnext/bootstrap_reader.py oris_vnext/validation.py oris_vnext/codex_executor.py oris_vnext/ledger_events.py oris_vnext/log_summarizer.py oris_vnext/handoff_updater.py oris_vnext/planning_packet.py oris_vnext/worktree_review.py oris_vnext/execution_packet.py 2>> "$COMMIT_LOG_FILE"
 COMMIT_RC=0
 PUSH_RC=0
 if git diff --cached --quiet; then
@@ -221,7 +232,7 @@ fi
 HEAD_SHORT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
 KEY_RESULT="$(cat "$KEY_RESULT_FILE")"
 
-echo "GITHUB_LOG_REF=${HEAD_SHORT} ${SUMMARY_FILE} ${VALIDATION_FILE} ${LATEST_INDEX_JSON} ${LATEST_HANDOFF} ${LATEST_PACKET_JSON} ${LATEST_WORKTREE_REVIEW_JSON}"
+echo "GITHUB_LOG_REF=${HEAD_SHORT} ${SUMMARY_FILE} ${VALIDATION_FILE} ${LATEST_INDEX_JSON} ${LATEST_HANDOFF} ${LATEST_PACKET_JSON} ${LATEST_WORKTREE_REVIEW_JSON} ${LATEST_EXECUTION_PACKET_JSON}"
 echo "KEY_RESULT=${KEY_RESULT}"
 
 if [ "$OK" = "true" ] && [ "$COMMIT_RC" -eq 0 ] && [ "$PUSH_RC" -eq 0 ]; then
