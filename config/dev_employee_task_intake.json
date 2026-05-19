@@ -1,0 +1,24 @@
+{
+  "schema_version": "2026-05-19.task_intake.v1",
+  "default_repo": "ShanGouXueHui/oris",
+  "default_worker_profile": "dev_employee",
+  "default_task_type": "dev_task",
+  "default_source": "pilot_manual",
+  "output_dir": "run/dev_employee/task_intake",
+  "required_fields": [
+    "request_summary",
+    "objective"
+  ],
+  "default_constraints": [
+    "read_github_docs_first",
+    "dry_run_plan_only",
+    "no_secret_logging",
+    "no_unapproved_real_execution",
+    "small_reversible_changes",
+    "validate_before_commit"
+  ],
+  "classification": {
+    "allowed_task_types": ["dev_task"],
+    "blocked_task_types": ["direct_long_running_channel_execution", "unapproved_real_execution"]
+  }
+}
