@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-05-19T19:36:13.699397+00:00",
+  "status": "green",
+  "ok": true,
+  "gates": [
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_cycle_index.json",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_planning_packet.json",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_execution_packet.json",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:memory/HANDOFF_VNEXT_LATEST.md",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:python_compile_oris_vnext",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:dev_employee_bootstrap_reader",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:dev_employee_smoke_no_ledger",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:codex_executor_gate_smoke",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:ledger_event_smoke",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:log_summarizer_smoke",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:planning_packet_smoke",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:execution_packet_smoke",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:execution_approval_smoke",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "validation_check:execution_approval_exporter",
+      "ok": true,
+      "expected": "pass",
+      "actual": "pass",
+      "severity": "hard"
+    },
+    {
+      "name": "latest_cycle_ok",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "bootstrap_ok",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "latest_validation_ok",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "blocking_dirty_tracked_count",
+      "ok": true,
+      "expected": 0,
+      "actual": 0,
+      "severity": "hard"
+    },
+    {
+      "name": "blocking_untracked_count",
+      "ok": true,
+      "expected": 0,
+      "actual": 0,
+      "severity": "hard"
+    },
+    {
+      "name": "execution_packet_mode",
+      "ok": true,
+      "expected": "dry_run_plan_only",
+      "actual": "dry_run_plan_only",
+      "severity": "hard"
+    },
+    {
+      "name": "approval_enabled",
+      "ok": true,
+      "expected": false,
+      "actual": false,
+      "severity": "hard"
+    },
+    {
+      "name": "real_execution_allowed",
+      "ok": true,
+      "expected": false,
+      "actual": false,
+      "severity": "hard"
+    }
+  ],
+  "metadata": {
+    "config_path": "config/dev_employee_commercial_readiness.json",
+    "latest_index_path": "logs/dev_employee/latest_cycle_index.json",
+    "planning_packet_path": "logs/dev_employee/latest_planning_packet.json",
+    "execution_packet_path": "logs/dev_employee/latest_execution_packet.json",
+    "approval_allowed": false,
+    "legacy_review_tracked_count": 1,
+    "legacy_review_untracked_count": 6
+  }
+}
