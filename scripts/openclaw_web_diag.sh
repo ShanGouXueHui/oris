@@ -76,7 +76,7 @@ cat > "$OUT_MD" <<EOF
 - gateway: http://127.0.0.1:18789/
 - free_mesh: http://127.0.0.1:8789/v1
 
-See JSON: \\`$OUT_JSON\\`
+See JSON: \`$OUT_JSON\`
 EOF
 
 git add "$OUT_JSON" "$OUT_MD" scripts/openclaw_web_diag.sh
