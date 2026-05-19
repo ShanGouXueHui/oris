@@ -1,8 +1,52 @@
 {
   "version": 1,
-  "generated_at": null,
-  "verified_free_models": {},
-  "verified_free_model_ids": [],
+  "generated_at": "2026-05-20T00:00:00+00:00",
+  "verified_free_models": {
+    "qwen3.6-plus": {
+      "provider_id": "alibaba_bailian",
+      "source": "configured_free_pool",
+      "notes": "Free candidate currently used by ORIS routing; subject to provider free window and health probes."
+    },
+    "qwen-coder-turbo-0919": {
+      "provider_id": "alibaba_bailian",
+      "source": "configured_free_pool",
+      "notes": "Coding role free candidate currently used by ORIS routing; subject to provider free window and health probes."
+    },
+    "hunyuan-turbos-latest": {
+      "provider_id": "tencent_hunyuan",
+      "source": "configured_free_pool",
+      "notes": "Free candidate backup."
+    },
+    "models/gemini-2.5-flash-lite": {
+      "provider_id": "gemini",
+      "source": "configured_free_pool",
+      "notes": "Gemini Flash Lite free-tier candidate backup."
+    },
+    "models/gemini-flash-lite-latest": {
+      "provider_id": "gemini",
+      "source": "configured_free_pool",
+      "notes": "Gemini Flash Lite latest free-tier candidate backup."
+    },
+    "openrouter/free": {
+      "provider_id": "openrouter",
+      "source": "configured_free_pool",
+      "notes": "OpenRouter free router only; openrouter/auto is intentionally excluded from free routing."
+    }
+  },
+  "verified_free_model_ids": [
+    "qwen3.6-plus",
+    "qwen-coder-turbo-0919",
+    "hunyuan-turbos-latest",
+    "models/gemini-2.5-flash-lite",
+    "models/gemini-flash-lite-latest",
+    "openrouter/free"
+  ],
   "provider_overrides": {},
-  "model_overrides": {}
+  "model_overrides": {
+    "openrouter/auto": {
+      "free_candidate": false,
+      "exclude_from_free_routing": true,
+      "notes": "Mixed-cost router; do not use for free-only roles."
+    }
+  }
 }
