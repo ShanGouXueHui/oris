@@ -4,7 +4,7 @@
 - mode: `dry_run_plan_only`
 - approved_for_real_execution: `False`
 - planning_packet_path: `logs/dev_employee/latest_planning_packet.json`
-- codex_prompt_path: `run/dev_employee/cycle/20260519T194528Z/execution_packet/codex_prompt.md`
+- codex_prompt_path: `run/dev_employee/cycle/20260519T194655Z/execution_packet/codex_prompt.md`
 
 ## Constraints
 
