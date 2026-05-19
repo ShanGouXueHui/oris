@@ -1,0 +1,25 @@
+{
+  "schema_version": "2026-05-19.task_status.v1",
+  "default_state": "planned",
+  "allowed_states": [
+    "planned",
+    "reviewed",
+    "approved_for_plan",
+    "ready_for_execution_packet",
+    "blocked",
+    "done"
+  ],
+  "state_flow": [
+    "planned",
+    "reviewed",
+    "approved_for_plan",
+    "ready_for_execution_packet"
+  ],
+  "latest_status_json": "logs/dev_employee/latest_task_status.json",
+  "latest_status_md": "logs/dev_employee/latest_task_status.md",
+  "policy": {
+    "real_execution_enabled": false,
+    "manual_review_required": true,
+    "github_audit_required": true
+  }
+}
