@@ -22,6 +22,9 @@ PLAN_AUDIT_RC=$?
 python3 scripts/dev_employee_export_commercial_readiness.py
 READINESS_RC=$?
 
+python3 scripts/dev_employee_export_operator_dashboard.py
+DASHBOARD_RC=$?
+
 git add \
   logs/dev_employee/latest_task_list.json \
   logs/dev_employee/latest_task_list.md \
@@ -33,12 +36,15 @@ git add \
   logs/dev_employee/latest_plan_audit.md \
   logs/dev_employee/latest_commercial_readiness.json \
   logs/dev_employee/latest_commercial_readiness.md \
+  logs/dev_employee/latest_operator_dashboard.json \
+  logs/dev_employee/latest_operator_dashboard.md \
   scripts/dev_employee_cycle_full.sh \
   scripts/dev_employee_export_task_list.py \
   scripts/dev_employee_export_task_status.py \
   scripts/dev_employee_export_task_binding.py \
   scripts/dev_employee_export_plan_audit.py \
   scripts/dev_employee_export_commercial_readiness.py \
+  scripts/dev_employee_export_operator_dashboard.py \
   oris_vnext/task_binding.py \
   oris_vnext/plan_audit.py \
   oris_vnext/commercial_readiness.py \
@@ -59,10 +65,10 @@ if ! git diff --cached --quiet; then
 fi
 
 HEAD_SHORT="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
-echo "FULL_CYCLE_REF=${HEAD_SHORT} logs/dev_employee/latest_task_list.json logs/dev_employee/latest_task_status.json logs/dev_employee/latest_task_binding.json logs/dev_employee/latest_plan_audit.json logs/dev_employee/latest_commercial_readiness.json"
-echo "FULL_CYCLE_RESULT={\"cycle_rc\":${CYCLE_RC},\"task_list_rc\":${TASK_LIST_RC},\"task_status_rc\":${TASK_STATUS_RC},\"binding_rc\":${BINDING_RC},\"plan_audit_rc\":${PLAN_AUDIT_RC},\"readiness_rc\":${READINESS_RC},\"commit_rc\":${COMMIT_RC},\"push_rc\":${PUSH_RC}}"
+echo "FULL_CYCLE_REF=${HEAD_SHORT} logs/dev_employee/latest_task_list.json logs/dev_employee/latest_task_status.json logs/dev_employee/latest_task_binding.json logs/dev_employee/latest_plan_audit.json logs/dev_employee/latest_commercial_readiness.json logs/dev_employee/latest_operator_dashboard.json"
+echo "FULL_CYCLE_RESULT={\"cycle_rc\":${CYCLE_RC},\"task_list_rc\":${TASK_LIST_RC},\"task_status_rc\":${TASK_STATUS_RC},\"binding_rc\":${BINDING_RC},\"plan_audit_rc\":${PLAN_AUDIT_RC},\"readiness_rc\":${READINESS_RC},\"dashboard_rc\":${DASHBOARD_RC},\"commit_rc\":${COMMIT_RC},\"push_rc\":${PUSH_RC}}"
 
-if [ "$CYCLE_RC" -eq 0 ] && [ "$TASK_LIST_RC" -eq 0 ] && [ "$TASK_STATUS_RC" -eq 0 ] && [ "$BINDING_RC" -eq 0 ] && [ "$PLAN_AUDIT_RC" -eq 0 ] && [ "$READINESS_RC" -eq 0 ] && [ "$COMMIT_RC" -eq 0 ] && [ "$PUSH_RC" -eq 0 ]; then
+if [ "$CYCLE_RC" -eq 0 ] && [ "$TASK_LIST_RC" -eq 0 ] && [ "$TASK_STATUS_RC" -eq 0 ] && [ "$BINDING_RC" -eq 0 ] && [ "$PLAN_AUDIT_RC" -eq 0 ] && [ "$READINESS_RC" -eq 0 ] && [ "$DASHBOARD_RC" -eq 0 ] && [ "$COMMIT_RC" -eq 0 ] && [ "$PUSH_RC" -eq 0 ]; then
   exit 0
 fi
 exit 1
