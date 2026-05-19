@@ -1,0 +1,61 @@
+{
+  "ok": true,
+  "created_at": "2026-05-19T20:13:07.264115+00:00",
+  "request_summary": "Pilot task intake smoke from operator",
+  "objective": "Validate controlled pilot task intake path without real Codex execution.",
+  "repo": "ShanGouXueHui/oris",
+  "task_type": "dev_task",
+  "source": "pilot_manual",
+  "constraints": [
+    "read_github_docs_first",
+    "dry_run_plan_only",
+    "no_secret_logging",
+    "no_unapproved_real_execution",
+    "small_reversible_changes",
+    "validate_before_commit"
+  ],
+  "task_run_id": "dev-dc0442e08aec",
+  "task_run": {
+    "task_run_id": "dev-dc0442e08aec",
+    "task_type": "dev_task",
+    "worker_profile": "dev_employee",
+    "status": "planned",
+    "created_at": "2026-05-19T20:13:07.263618+00:00",
+    "updated_at": "2026-05-19T20:13:07.263618+00:00",
+    "request_summary": "Pilot task intake smoke from operator",
+    "repo": "ShanGouXueHui/oris",
+    "objective": "Validate controlled pilot task intake path without real Codex execution.",
+    "model_role": "coding_planning",
+    "executor_plan": [
+      "codex_executor",
+      "validation_pipeline"
+    ],
+    "constraints": [
+      "read_github_docs_first",
+      "dry_run_plan_only",
+      "no_secret_logging",
+      "no_unapproved_real_execution",
+      "small_reversible_changes",
+      "validate_before_commit"
+    ],
+    "source": "pilot_manual",
+    "metadata": {
+      "exporter": "dev_employee_export_task_intake",
+      "required_bootstrap_docs": [
+        "README.md",
+        "docs/ORIS_VNEXT_ARCHITECTURE_2026-05-11.md",
+        "docs/DEV_EMPLOYEE_BOOTSTRAP_PROMPT.md",
+        "docs/UPDATED_DEV_EMPLOYEE_PROMPT_2026-05-11.md",
+        "docs/PROJECT_STATE.md",
+        "memory/HANDOFF.md",
+        "docs/ROUTING_POLICY.md",
+        "docs/PROVIDER_ORCHESTRATION.md",
+        "docs/CONFIG_GOVERNANCE.md"
+      ],
+      "human_approval_before_write": true
+    }
+  },
+  "metadata": {
+    "persist_task_run": true
+  }
+}
