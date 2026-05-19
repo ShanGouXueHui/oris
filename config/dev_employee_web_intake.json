@@ -1,0 +1,17 @@
+{
+  "schema_version": "2026-05-19.web_intake.v1",
+  "host": "127.0.0.1",
+  "port": 18801,
+  "title": "ORIS Dev Employee Intake",
+  "default_source": "web_manual",
+  "auto_run_full_cycle": false,
+  "outputs": {
+    "latest_task_intake_json": "logs/dev_employee/latest_task_intake.json",
+    "latest_task_intake_md": "logs/dev_employee/latest_task_intake.md"
+  },
+  "security": {
+    "bind_localhost_by_default": true,
+    "public_exposure_requires_reverse_proxy_auth": true,
+    "token_env_var": "ORIS_DEV_WEB_TOKEN"
+  }
+}
