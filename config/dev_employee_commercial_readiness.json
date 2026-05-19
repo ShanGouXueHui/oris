@@ -6,6 +6,8 @@
     "logs/dev_employee/latest_execution_packet.json",
     "logs/dev_employee/latest_task_intake.json",
     "logs/dev_employee/latest_task_intake.md",
+    "logs/dev_employee/latest_task_binding.json",
+    "logs/dev_employee/latest_task_binding.md",
     "memory/HANDOFF_VNEXT_LATEST.md"
   ],
   "required_validation_checks": [
