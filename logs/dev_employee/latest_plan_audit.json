@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-19T20:52:07.715362+00:00",
+  "recommendation": "plan_only_ok",
+  "task_run_id": "dev-dc0442e08aec",
+  "request_summary": "Pilot task intake smoke from operator",
+  "objective": "Validate controlled pilot task intake path without real Codex execution.",
+  "mode": "dry_run_plan_only",
+  "readiness_status": "green",
+  "signals": [
+    {
+      "name": "task_binding_ok",
+      "ok": true,
+      "detail": "binding.ok=True"
+    },
+    {
+      "name": "packet_ok",
+      "ok": true,
+      "detail": "packet.ok=True"
+    },
+    {
+      "name": "readiness_green",
+      "ok": true,
+      "detail": "readiness.status=green"
+    },
+    {
+      "name": "task_reviewed",
+      "ok": true,
+      "detail": "task_status.state=reviewed"
+    },
+    {
+      "name": "safe_mode",
+      "ok": true,
+      "detail": "mode=dry_run_plan_only"
+    },
+    {
+      "name": "permission_closed",
+      "ok": true,
+      "detail": "permission=False"
+    }
+  ],
+  "source_files": {
+    "task_binding": "logs/dev_employee/latest_task_binding.json",
+    "packet": "logs/dev_employee/latest_execution_packet.json",
+    "readiness": "logs/dev_employee/latest_commercial_readiness.json",
+    "task_status": "logs/dev_employee/latest_task_status.json"
+  },
+  "metadata": {
+    "task_state": "reviewed",
+    "legacy_review_tracked_count": 1,
+    "legacy_review_untracked_count": 6
+  }
+}
