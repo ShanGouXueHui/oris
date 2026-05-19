@@ -1,6 +1,6 @@
 # Dev Employee Commercial Readiness Report
 
-- generated_at: `2026-05-19T20:30:17.007762+00:00`
+- generated_at: `2026-05-19T20:40:09.500925+00:00`
 - status: `green`
 - ok: `True`
 - approval_allowed: `False`
@@ -16,6 +16,8 @@
 | `artifact_exists:logs/dev_employee/latest_task_intake.md` | `True` | `True` | `True` |
 | `artifact_exists:logs/dev_employee/latest_task_binding.json` | `True` | `True` | `True` |
 | `artifact_exists:logs/dev_employee/latest_task_binding.md` | `True` | `True` | `True` |
+| `artifact_exists:logs/dev_employee/latest_task_list.json` | `True` | `True` | `True` |
+| `artifact_exists:logs/dev_employee/latest_task_list.md` | `True` | `True` | `True` |
 | `artifact_exists:memory/HANDOFF_VNEXT_LATEST.md` | `True` | `True` | `True` |
 | `validation_check:python_compile_oris_vnext` | `True` | `pass` | `pass` |
 | `validation_check:dev_employee_bootstrap_reader` | `True` | `pass` | `pass` |
