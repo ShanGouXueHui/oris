@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T20:55:36.827410+00:00",
+  "generated_at": "2026-05-19T21:00:13.991100+00:00",
   "status": "green",
   "ok": true,
   "gates": [
@@ -75,6 +75,20 @@
     },
     {
       "name": "artifact_exists:logs/dev_employee/latest_task_status.md",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_operator_dashboard.json",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_operator_dashboard.md",
       "ok": true,
       "expected": true,
       "actual": true,
