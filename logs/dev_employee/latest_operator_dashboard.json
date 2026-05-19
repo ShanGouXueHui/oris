@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-19T20:58:04.054008+00:00",
+  "commercial_status": "green",
+  "cycle_ok": true,
+  "validation_check_count": 12,
+  "task_count": 1,
+  "task_run_id": "dev-dc0442e08aec",
+  "task_state": "reviewed",
+  "plan_recommendation": "plan_only_ok",
+  "execution_mode": "dry_run_plan_only",
+  "approval_allowed": false,
+  "legacy_review_tracked_count": 1,
+  "legacy_review_untracked_count": 6,
+  "source_files": {
+    "commercial_readiness": "logs/dev_employee/latest_commercial_readiness.json",
+    "task_list": "logs/dev_employee/latest_task_list.json",
+    "task_status": "logs/dev_employee/latest_task_status.json",
+    "task_binding": "logs/dev_employee/latest_task_binding.json",
+    "plan_audit": "logs/dev_employee/latest_plan_audit.json",
+    "cycle_index": "logs/dev_employee/latest_cycle_index.json",
+    "execution_packet": "logs/dev_employee/latest_execution_packet.json"
+  }
+}
