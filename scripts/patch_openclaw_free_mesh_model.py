@@ -39,8 +39,18 @@ def model_summary(data: dict[str, Any]) -> dict[str, Any]:
     defaults = ((data.get("agents") or {}).get("defaults") or {})
     return {
         "agents.defaults.model": defaults.get("model"),
+        "agents.defaults.models": defaults.get("models"),
         "agents.defaults.models_keys": sorted((defaults.get("models") or {}).keys()) if isinstance(defaults.get("models"), dict) else None,
     }
+
+
+def clean_model_entry(value: Any) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+    allowed = {}
+    if isinstance(value.get("alias"), str):
+        allowed["alias"] = value["alias"]
+    return allowed
 
 
 def patch_config(data: dict[str, Any]) -> dict[str, Any]:
@@ -51,16 +61,12 @@ def patch_config(data: dict[str, Any]) -> dict[str, Any]:
         models = {}
         defaults["models"] = models
 
-    old_entry = models.get(OLD_MODEL, {}) if isinstance(models.get(OLD_MODEL), dict) else {}
-    models[LOGICAL_MODEL] = {
-        "alias": "ORIS Free Mesh",
-        "notes": "Logical model routed by ORIS runtime_plan free-model failover chain.",
-    }
     if OLD_MODEL in models:
-        models[OLD_MODEL] = {
-            **old_entry,
-            "disabled_note": "Replaced as default by ORIS Free Mesh logical model. Kept for rollback only.",
-        }
+        old_entry = clean_model_entry(models.get(OLD_MODEL))
+        old_entry.setdefault("alias", "OpenRouter")
+        models[OLD_MODEL] = old_entry
+
+    models[LOGICAL_MODEL] = {"alias": "ORIS Free Mesh"}
 
     model = defaults.setdefault("model", {})
     if not isinstance(model, dict):
