@@ -1,0 +1,23 @@
+{
+  "schema_version": "2026-05-19.task_queue.v1",
+  "queue_root": "run/dev_employee/task_queue",
+  "pending_dir": "run/dev_employee/task_queue/pending",
+  "accepted_dir": "run/dev_employee/task_queue/accepted",
+  "blocked_dir": "run/dev_employee/task_queue/blocked",
+  "latest_index_json": "logs/dev_employee/latest_task_queue_index.json",
+  "latest_index_md": "logs/dev_employee/latest_task_queue_index.md",
+  "default_status": "pending",
+  "allowed_statuses": [
+    "pending",
+    "accepted",
+    "blocked",
+    "planned",
+    "done"
+  ],
+  "policy": {
+    "real_execution_enabled": false,
+    "single_worker_only": true,
+    "channel_handlers_enqueue_only": true,
+    "manual_cycle_required": true
+  }
+}
