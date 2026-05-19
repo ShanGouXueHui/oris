@@ -12,6 +12,8 @@
     "logs/dev_employee/latest_task_list.md",
     "logs/dev_employee/latest_task_status.json",
     "logs/dev_employee/latest_task_status.md",
+    "logs/dev_employee/latest_operator_dashboard.json",
+    "logs/dev_employee/latest_operator_dashboard.md",
     "memory/HANDOFF_VNEXT_LATEST.md"
   ],
   "required_validation_checks": [
