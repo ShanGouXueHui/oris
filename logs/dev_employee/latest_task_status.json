@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-19T20:45:38.089582+00:00",
+  "task_run_id": "dev-dc0442e08aec",
+  "state": "reviewed",
+  "previous_state": "planned",
+  "request_summary": "Pilot task intake smoke from operator",
+  "objective": "Validate controlled pilot task intake path without real Codex execution.",
+  "execution_mode": "dry_run_plan_only",
+  "approved_for_real_execution": false,
+  "source_files": {
+    "task_binding": "logs/dev_employee/latest_task_binding.json",
+    "task_status_config": "config/dev_employee_task_status.json"
+  },
+  "policy": {
+    "real_execution_enabled": false,
+    "manual_review_required": true,
+    "github_audit_required": true
+  }
+}
