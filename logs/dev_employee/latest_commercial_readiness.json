@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T20:28:03.846753+00:00",
+  "generated_at": "2026-05-19T20:30:17.007762+00:00",
   "status": "green",
   "ok": true,
   "gates": [
@@ -33,6 +33,20 @@
     },
     {
       "name": "artifact_exists:logs/dev_employee/latest_task_intake.md",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_task_binding.json",
+      "ok": true,
+      "expected": true,
+      "actual": true,
+      "severity": "hard"
+    },
+    {
+      "name": "artifact_exists:logs/dev_employee/latest_task_binding.md",
       "ok": true,
       "expected": true,
       "actual": true,

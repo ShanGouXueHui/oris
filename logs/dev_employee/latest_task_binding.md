@@ -1,7 +1,7 @@
 # Dev Employee Task Planning Binding
 
 - ok: `True`
-- generated_at: `2026-05-19T20:28:03.807405+00:00`
+- generated_at: `2026-05-19T20:30:16.970568+00:00`
 - task_run_id: `dev-dc0442e08aec`
 - request_summary: Pilot task intake smoke from operator
 - objective: Validate controlled pilot task intake path without real Codex execution.
