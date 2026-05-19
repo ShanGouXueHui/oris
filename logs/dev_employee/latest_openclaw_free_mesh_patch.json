@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "recorded_at": "2026-05-19T22:34:12+00:00",
+  "component": "openclaw_gateway_default_model",
+  "config_path": "/home/admin/.openclaw/openclaw.json",
+  "backup_path": "/tmp/openclaw.json.backup.20260519T223409Z",
+  "before": {
+    "agents.defaults.model.primary": "openrouter/auto",
+    "agents.defaults.models_keys": ["openrouter/auto"]
+  },
+  "after": {
+    "agents.defaults.model.primary": "oris/free-auto",
+    "agents.defaults.models_keys": ["openrouter/auto", "oris/free-auto"]
+  },
+  "service_status": {
+    "openclaw_gateway": "active_running",
+    "oris_free_mesh_api": "active_running",
+    "dashboard_probe": "https://control.orisfy.com returned HTTP 401 Basic Auth as expected"
+  },
+  "free_mesh_api_probe": {
+    "health": "ok",
+    "models": [
+      "oris/free-auto",
+      "oris/free-cn",
+      "oris/free-coding",
+      "oris/free-fallback",
+      "oris/free-report"
+    ]
+  },
+  "routing_principle": "OpenClaw binds to logical model oris/free-auto only; real provider/model selection is owned by ORIS runtime_plan free-model failover chain.",
+  "next_step": "Keep future logs in GitHub fixed artifacts; avoid pasting long service logs into chat."
+}
