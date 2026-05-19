@@ -1,6 +1,6 @@
 # Dev Employee Commercial Readiness Report
 
-- generated_at: `2026-05-19T20:49:46.013439+00:00`
+- generated_at: `2026-05-19T20:53:50.549916+00:00`
 - status: `green`
 - ok: `True`
 - approval_allowed: `False`
