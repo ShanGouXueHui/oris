@@ -1,0 +1,34 @@
+{
+  "schema_version": "2026-05-19.pilot_mode.v1",
+  "pilot_enabled": true,
+  "mode": "controlled_human_approval",
+  "allowed_interfaces": [
+    "github_logs",
+    "manual_shell_cycle"
+  ],
+  "disabled_interfaces": [
+    "unattended_codex_execution",
+    "channel_direct_long_running_execution"
+  ],
+  "required_artifacts": [
+    "logs/dev_employee/latest_cycle_index.json",
+    "logs/dev_employee/latest_planning_packet.json",
+    "logs/dev_employee/latest_execution_packet.json",
+    "logs/dev_employee/latest_commercial_readiness.json",
+    "memory/HANDOFF_VNEXT_LATEST.md"
+  ],
+  "required_status": {
+    "commercial_readiness": "green",
+    "real_execution_allowed": false,
+    "approval_enabled": false,
+    "blocking_dirty_tracked_count": 0,
+    "blocking_untracked_count": 0
+  },
+  "operator_rules": [
+    "Run scripts/dev_employee_cycle.sh manually before each iteration.",
+    "Return only GITHUB_LOG_REF and KEY_RESULT to the operator conversation.",
+    "Use GitHub logs as the source of truth for continuation.",
+    "Do not enable unattended Codex execution during controlled pilot mode.",
+    "Keep legacy insight files in legacy_review until a separate insight decision is made."
+  ]
+}
