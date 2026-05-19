@@ -1,5 +1,5 @@
 version: 1
-updated_at: null
+updated_at: 2026-05-20
 
 global:
   strategy: weighted-fallback
@@ -7,21 +7,21 @@ global:
   max_probe_age_minutes: 1440
   latency_bias: medium
   availability_bias: high
-  cost_bias: high
+  cost_bias: no_cost_candidates
   prefer_secret_managed_credentials: true
 
 roles:
   primary_general:
     ordered_candidates:
-      - openrouter/auto
       - qwen3.6-plus
       - hunyuan-turbos-latest
-      - models/gemini-2.5-flash
+      - models/gemini-2.5-flash-lite
+      - models/gemini-flash-lite-latest
       - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
       avoid_status: [down]
-      allow_free_candidates_only: false
+      allow_free_candidates_only: true
 
   free_fallback:
     ordered_candidates:
@@ -44,28 +44,32 @@ roles:
     rules:
       require_health_status: [healthy, degraded, unknown]
       minimum_context_window: null
-
       allow_free_candidates_only: true
+
   coding:
     ordered_candidates:
       - qwen-coder-turbo-0919
-      - openrouter/auto
-      - models/gemini-2.5-flash
+      - qwen3.6-plus
+      - models/gemini-2.5-flash-lite
+      - models/gemini-flash-lite-latest
+      - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
       prefer_tool_capable: true
+      allow_free_candidates_only: true
 
   cn_candidate_pool:
     ordered_candidates:
       - qwen3.6-plus
       - hunyuan-turbos-latest
       - glm-4.7-flash
-      - glm-4.7
-      - models/gemini-2.5-flash
+      - models/gemini-2.5-flash-lite
+      - models/gemini-flash-lite-latest
       - openrouter/free
     rules:
       require_health_status: [healthy, degraded, unknown]
       allow_unconfigured: false
+      allow_free_candidates_only: true
 
 replacement_policy:
   auto_replace_when:

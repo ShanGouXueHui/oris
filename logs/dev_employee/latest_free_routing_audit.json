@@ -1,0 +1,108 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-19T21:37:45.806348+00:00",
+  "forbidden_models": [
+    "openrouter/auto"
+  ],
+  "findings": [
+    {
+      "artifact": "active_routing",
+      "role": "primary_general",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "free_candidate": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "active_routing",
+      "role": "free_fallback",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "free_candidate": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "active_routing",
+      "role": "report_generation",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "free_candidate": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "active_routing",
+      "role": "coding",
+      "ok": true,
+      "selected_model": "qwen-coder-turbo-0919",
+      "free_candidate": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "active_routing",
+      "role": "cn_candidate_pool",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "free_candidate": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "runtime_plan",
+      "role": "primary_general",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "execution_primary": "qwen3.6-plus",
+      "free_verified": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "runtime_plan",
+      "role": "free_fallback",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "execution_primary": "qwen3.6-plus",
+      "free_verified": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "runtime_plan",
+      "role": "report_generation",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "execution_primary": "qwen3.6-plus",
+      "free_verified": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "runtime_plan",
+      "role": "coding",
+      "ok": true,
+      "selected_model": "qwen-coder-turbo-0919",
+      "execution_primary": "qwen-coder-turbo-0919",
+      "free_verified": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    },
+    {
+      "artifact": "runtime_plan",
+      "role": "cn_candidate_pool",
+      "ok": true,
+      "selected_model": "qwen3.6-plus",
+      "execution_primary": "qwen3.6-plus",
+      "free_verified": true,
+      "provider_id": "alibaba_bailian",
+      "reason": "ok"
+    }
+  ],
+  "source_files": {
+    "active_routing": "/home/admin/projects/oris/orchestration/active_routing.json",
+    "runtime_plan": "/home/admin/projects/oris/orchestration/runtime_plan.json"
+  }
+}
