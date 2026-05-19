@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-19T20:36:51.935864+00:00",
+  "item_count": 1,
+  "items": [
+    {
+      "task_run_id": "dev-dc0442e08aec",
+      "request_summary": "Pilot task intake smoke from operator",
+      "objective": "Validate controlled pilot task intake path without real Codex execution.",
+      "task_type": "dev_task",
+      "source": "pilot_manual",
+      "status": "planned",
+      "source_file": "logs/dev_employee/latest_task_intake.json"
+    }
+  ]
+}
