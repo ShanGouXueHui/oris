@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-05-20T00:12:08.788594+00:00",
+  "generated_at": "2026-05-20T00:16:54.697358+00:00",
   "agent_dir": "/home/admin/.openclaw/agents/main/agent",
   "models_path": "/home/admin/.openclaw/agents/main/agent/models.json",
   "auth_profiles_path": "/home/admin/.openclaw/agents/main/agent/auth-profiles.json",
@@ -2115,6 +2115,29 @@
           }
         ],
         "apiKey": "***MASKED***"
+      },
+      "oris": {
+        "baseUrl": "http://127.0.0.1:8789/v1",
+        "api": "openai-completions",
+        "apiKey": "***MASKED***",
+        "models": [
+          {
+            "id": "free-auto",
+            "name": "ORIS Free Mesh Auto",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 200000,
+            "maxTokens": "***MASKED***"
+          }
+        ]
       }
     }
   },
@@ -2139,7 +2162,7 @@
   },
   "openclaw_models_status": {
     "rc": 0,
-    "stdout": "Config warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nConfig        : ~/.openclaw/openclaw.json\nAgent dir     : ~/.openclaw/agents/main/agent\nDefault       : openrouter/auto\nFallbacks (0) : -\nImage model   : -\nImage fallbacks (0): -\nAliases (1)   : OpenRouter -> openrouter/auto\nConfigured models (1): openrouter/auto\n\nAuth overview\nAuth store    : ~/.openclaw/agents/main/agent/auth-profiles.json\nShell env     : off\nProviders w/ OAuth/tokens (0): -\n- deepseek effective=env:sk-23750...b92209b9 | env=sk-23750...b92209b9 | source=env: DEEPSEEK_API_KEY\n- google effective=env:AIzaSyAW...aLHg9yg0 | env=AIzaSyAW...aLHg9yg0 | source=env: GEMINI_API_KEY\n- huggingface effective=env:hf_VnDAZ...UcdrPSkn | env=hf_VnDAZ...UcdrPSkn | source=env: HUGGINGFACE_HUB_TOKEN\n- modelstudio-api-key effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- modelstudio-api-key-cn effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- modelstudio-standard-api-key effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- modelstudio-standard-api-key-cn effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- openrouter effective=profiles:~/.openclaw/agents/main/agent/auth-profiles.json | profiles=1 (oauth=0, token=0, api_key=1) | openrouter:default=ref(file:/models/providers/openrouter/apiKey) | env=sk-or-v1...1a43e1d3 | source=env: OPENROUTER_API_KEY\n- qwen effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- qwen-dashscope effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n\nOAuth/token status\n- none\n",
+    "stdout": "Config warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nConfig        : ~/.openclaw/openclaw.json\nAgent dir     : ~/.openclaw/agents/main/agent\nDefault       : oris/free-auto\nFallbacks (0) : -\nImage model   : -\nImage fallbacks (0): -\nAliases (2)   : OpenRouter -> openrouter/auto, ORIS Free Mesh -> oris/free-auto\nConfigured models (2): openrouter/auto, oris/free-auto\n\nAuth overview\nAuth store    : ~/.openclaw/agents/main/agent/auth-profiles.json\nShell env     : off\nProviders w/ OAuth/tokens (0): -\n- deepseek effective=env:sk-23750...b92209b9 | env=sk-23750...b92209b9 | source=env: DEEPSEEK_API_KEY\n- google effective=env:AIzaSyAW...aLHg9yg0 | env=AIzaSyAW...aLHg9yg0 | source=env: GEMINI_API_KEY\n- huggingface effective=env:hf_VnDAZ...UcdrPSkn | env=hf_VnDAZ...UcdrPSkn | source=env: HUGGINGFACE_HUB_TOKEN\n- modelstudio-api-key effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- modelstudio-api-key-cn effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- modelstudio-standard-api-key effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- modelstudio-standard-api-key-cn effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- openrouter effective=profiles:~/.openclaw/agents/main/agent/auth-profiles.json | profiles=1 (oauth=0, token=0, api_key=1) | openrouter:default=ref(file:/models/providers/openrouter/apiKey) | env=sk-or-v1...1a43e1d3 | source=env: OPENROUTER_API_KEY\n- qwen effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n- qwen-dashscope effective=env:sk-37d53...293823da | env=sk-37d53...293823da | source=env: DASHSCOPE_API_KEY\n\nMissing auth\n- oris `openclaw configure` or set an API key env var.\n\nOAuth/token status\n- none\n",
     "stderr": ""
   },
   "openclaw_models_list": {

@@ -1,6 +1,6 @@
 # OpenClaw Agent Model Schema Export
 
-- generated_at: `2026-05-20T00:12:08.788594+00:00`
+- generated_at: `2026-05-20T00:16:54.697358+00:00`
 - agent_dir: `/home/admin/.openclaw/agents/main/agent`
 - models_path: `/home/admin/.openclaw/agents/main/agent/models.json`
 - auth_profiles_path: `/home/admin/.openclaw/agents/main/agent/auth-profiles.json`
