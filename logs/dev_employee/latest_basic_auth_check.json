@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "timestamp_utc": "20260520T143303Z",
+  "auth_file": "/etc/nginx/.htpasswd-openclaw",
+  "username": "Oris",
+  "password": "not_recorded",
+  "nginx_test_rc": 0,
+  "http_code_with_basic_auth": "200",
+  "dashboard": "https://control.orisfy.com/",
+  "note": "Password was reset interactively and is not stored in logs."
+}
