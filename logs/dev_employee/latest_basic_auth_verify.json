@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "timestamp_utc": "20260520T151116Z",
+  "auth_file": "/etc/nginx/.htpasswd-openclaw",
+  "users": [
+    "Oris",
+    "admin"
+  ],
+  "password": "not_recorded",
+  "nginx_test_rc": 0,
+  "http_oris": "200",
+  "http_admin": "200",
+  "dashboard": "https://control.orisfy.com/",
+  "note": "If curl is 200/302 but browser still prompts, clear browser cached Basic Auth credentials or use a new incognito window."
+}
