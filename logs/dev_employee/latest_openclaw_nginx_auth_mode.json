@@ -1,0 +1,25 @@
+{
+  "ok": false,
+  "timestamp_utc": "20260520T152402Z",
+  "conf": "/etc/nginx/sites-enabled/control.orisfy.com.conf",
+  "backup": "/tmp/control.orisfy.com.conf.before-openclaw-auth-mode.20260520T152402Z",
+  "nginx_test_rc": 1,
+  "nginx_test_output": "nginx: [emerg] \"auth_basic\" directive is duplicate in /etc/nginx/sites-enabled/control.orisfy.com.conf:103\nnginx: configuration file /etc/nginx/nginx.conf test failed",
+  "mode": "nginx_basic_auth_disabled_for_openclaw_gateway_block",
+  "security_note": "OpenClaw gateway token/device pairing remains active; Nginx Basic Auth remains for other configured API locations.",
+  "public_dashboard_head": {
+    "rc": 0,
+    "stdout": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   188    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\nHTTP/2 401 \nserver: nginx/1.18.0 (Ubuntu)\ndate: Wed, 20 May 2026 15:24:04 GMT\ncontent-type: text/html\ncontent-length: 188\nwww-authenticate: Basic realm=\"Restricted\"\nx-content-type-options: nosniff\nreferrer-policy: no-referrer\npermissions-policy: camera=(), microphone=(), geolocation=()\nx-frame-options: DENY\ncache-control: no-cache\n\n",
+    "stderr": ""
+  },
+  "local_gateway_head": {
+    "rc": 0,
+    "stdout": "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\nHTTP/1.1 200 OK\nX-Content-Type-Options: nosniff\nReferrer-Policy: no-referrer\nPermissions-Policy: camera=(), microphone=(self), geolocation=()\nX-Frame-Options: DENY\nContent-Security-Policy: default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; worker-src 'self'; connect-src 'self' ws: wss: https://api.openai.com https://tweakcn.com\nContent-Type: text/html; charset=utf-8\nCache-Control: no-cache\nDate: Wed, 20 May 2026 15:24:04 GMT\nConnection: keep-alive\nKeep-Alive: timeout=5\n\n",
+    "stderr": ""
+  },
+  "nginx_openclaw_block": {
+    "rc": 0,
+    "stdout": "98-    # ORIS_REPORT_DOWNLOAD_END\n99-\n100-    location / {\n101-        auth_basic \"Restricted\";\n102-        auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n103-        auth_basic off;\n104:        proxy_pass http://127.0.0.1:18789;\n105-        proxy_http_version 1.1;\n106-        proxy_set_header Upgrade $http_upgrade;\n107-        proxy_set_header Connection \"upgrade\";\n108-        proxy_set_header Host $host;\n109-        proxy_set_header X-Real-IP $remote_addr;\n110-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n111-        proxy_set_header X-Forwarded-Proto $scheme;\n112-        proxy_set_header X-Forwarded-Host $host;\n113-        proxy_read_timeout 3600s;\n114-        proxy_send_timeout 3600s;\n115-        proxy_buffering off;\n116-    }\n117-}\n",
+    "stderr": ""
+  }
+}
