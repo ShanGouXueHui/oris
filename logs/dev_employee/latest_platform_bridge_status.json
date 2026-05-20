@@ -1,0 +1,47 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-20T21:56:00.085032+00:00",
+  "openclaw_gateway_active": "active",
+  "free_mesh_api_active": "active",
+  "openclaw_model_summary": {
+    "primary_model": "openrouter/auto",
+    "model_keys": [
+      "openrouter/auto"
+    ],
+    "openrouter_baseUrl": "http://127.0.0.1:8789/v1",
+    "openrouter_api": "openai-completions",
+    "openrouter_has_apiKey": true,
+    "openrouter_auto_model": {
+      "id": "auto",
+      "name": "ORIS Free Mesh Auto",
+      "reasoning": false,
+      "input": [
+        "text"
+      ],
+      "cost": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "contextWindow": 200000,
+      "maxTokens": 4096
+    }
+  },
+  "free_mesh_probe": {
+    "ok": true,
+    "text_preview": "ORIS_FREE_MESH_OK",
+    "model": "openrouter/auto",
+    "oris": {
+      "used_model": "qwen3.6-plus",
+      "used_provider": "alibaba_bailian",
+      "routing": "runtime_plan_free_mesh"
+    },
+    "error": false,
+    "status": null
+  },
+  "free_routing_audit_ok": true,
+  "commercial_readiness_status": "green",
+  "commercial_readiness_ok": true,
+  "design_principle": "OpenClaw uses schema-native openrouter/auto while provider baseUrl points to ORIS Free Mesh; real model selection is controlled by ORIS runtime_plan."
+}
