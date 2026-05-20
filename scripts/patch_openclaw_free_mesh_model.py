@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 CONFIG_PATH = Path.home() / ".openclaw" / "openclaw.json"
-LOGICAL_MODEL = "oris/free-auto"
+LOGICAL_MODEL = "openrouter/auto"
 OLD_MODEL = "openrouter/auto"
 
 

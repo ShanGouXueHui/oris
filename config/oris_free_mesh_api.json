@@ -3,13 +3,13 @@
   "host": "127.0.0.1",
   "port": 8789,
   "logical_models": {
-    "oris/free-auto": "primary_general",
+    "openrouter/auto": "primary_general",
     "oris/free-coding": "coding",
     "oris/free-report": "report_generation",
     "oris/free-fallback": "free_fallback",
     "oris/free-cn": "cn_candidate_pool"
   },
-  "default_model": "oris/free-auto",
+  "default_model": "openrouter/auto",
   "auth": {
     "secrets_path": "~/.openclaw/secrets.json",
     "secret_json_path": ["services", "oris_api", "bearerToken"],

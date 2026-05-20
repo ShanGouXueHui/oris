@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T21:37:45.733331+00:00",
+  "generated_at": "2026-05-20T21:20:59.810021+00:00",
   "source_files": {
     "registry": "/home/admin/projects/oris/orchestration/provider_registry.json",
     "snapshot": "/home/admin/projects/oris/orchestration/provider_health_snapshot.json",

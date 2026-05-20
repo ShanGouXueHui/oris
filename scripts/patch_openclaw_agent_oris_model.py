@@ -23,7 +23,7 @@ OPENCLAW_CONFIG_PATH = Path.home() / ".openclaw" / "openclaw.json"
 SECRETS_PATH = Path.home() / ".openclaw" / "secrets.json"
 PROVIDER_ID = "oris"
 MODEL_ID = "free-auto"
-LOGICAL_MODEL = "oris/free-auto"
+LOGICAL_MODEL = "openrouter/auto"
 BASE_URL = "http://127.0.0.1:8789/v1"
 
 

@@ -142,7 +142,7 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as exc:
             send_json(self, 400, {"error": {"code": "invalid_json", "message": str(exc)}})
             return
-        logical_model, role = model_to_role(str(body.get("model") or "oris/free-auto"))
+        logical_model, role = model_to_role(str(body.get("model") or "openrouter/auto"))
         prompt = messages_to_prompt(body.get("messages"))
         if not prompt:
             send_json(self, 400, {"error": {"code": "missing_messages", "message": "messages are required"}})

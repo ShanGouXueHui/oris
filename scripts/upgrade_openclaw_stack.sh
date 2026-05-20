@@ -93,7 +93,7 @@ payload = {
   "expected": {
     "gateway": "active",
     "free_mesh_api": "active",
-    "openclaw_primary_model": "oris/free-auto",
+    "openclaw_primary_model": "openrouter/auto",
     "dashboard_public_head": "401 Basic Auth or 200 after auth"
   }
 }

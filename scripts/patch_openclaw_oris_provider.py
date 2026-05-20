@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Register ORIS Free Mesh as an OpenClaw provider/model.
 
-OpenClaw accepts agents.defaults.models['oris/free-auto'] only when the real
+OpenClaw accepts agents.defaults.models['openrouter/auto'] only when the real
 provider registry also contains models.providers['oris'].models[]. This script
 adds the minimal provider/model registry entry and keeps the default logical
-model as oris/free-auto.
+model as openrouter/auto.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 CONFIG_PATH = Path.home() / ".openclaw" / "openclaw.json"
-LOGICAL_MODEL = "oris/free-auto"
+LOGICAL_MODEL = "openrouter/auto"
 PROVIDER_ID = "oris"
 PROVIDER_MODEL_ID = "free-auto"
 BASE_URL = "http://127.0.0.1:8789/v1"

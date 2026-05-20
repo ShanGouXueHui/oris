@@ -111,7 +111,7 @@ def patch_openclaw_default(data: dict[str, Any]) -> dict[str, Any]:
         models = {}
         defaults["models"] = models
     models[MODEL_KEY] = {"alias": "ORIS Free Mesh"}
-    models.pop("oris/free-auto", None)
+    models.pop("openrouter/auto", None)
 
     model = defaults.setdefault("model", {})
     if not isinstance(model, dict):

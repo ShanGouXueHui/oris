@@ -9,7 +9,7 @@ from typing import Any
 
 
 LOGICAL_MODELS = {
-    "oris/free-auto": "primary_general",
+    "openrouter/auto": "primary_general",
     "oris/free-coding": "coding",
     "oris/free-report": "report_generation",
     "oris/free-fallback": "free_fallback",
@@ -26,7 +26,7 @@ def load_json(path: str | Path) -> dict[str, Any]:
 
 
 def model_to_role(model: str | None) -> tuple[str, str]:
-    logical_model = model or "oris/free-auto"
+    logical_model = model or "openrouter/auto"
     return logical_model, LOGICAL_MODELS.get(logical_model, "primary_general")
 
 

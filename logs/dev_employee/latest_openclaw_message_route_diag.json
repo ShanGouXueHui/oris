@@ -33,7 +33,7 @@
   },
   "free_mesh_probe": {
     "rc": 0,
-    "stdout": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"oris/free-auto\",\n  \"oris\": {\n    \"used_model\": \"qwen3.6-plus\",\n    \"used_provider\": \"alibaba_bailian\",\n    \"routing\": \"runtime_plan_free_mesh\"\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
+    "stdout": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"qwen3.6-plus\",\n    \"used_provider\": \"alibaba_bailian\",\n    \"routing\": \"runtime_plan_free_mesh\"\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
     "stderr": ""
   },
   "execution_log_tail": {

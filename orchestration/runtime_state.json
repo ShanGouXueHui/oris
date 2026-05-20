@@ -1,16 +1,16 @@
 {
   "version": 1,
-  "updated_at": "2026-04-09T12:50:12.776336+00:00",
+  "updated_at": "2026-05-20T21:20:59.843343+00:00",
   "models": {
     "qwen3.6-plus": {
-      "total_successes": 14,
+      "total_successes": 30,
       "total_failures": 3,
       "consecutive_failures": 0,
       "last_result": "success",
-      "last_role": "report_generation",
+      "last_role": "primary_general",
       "last_error": null,
       "last_failure_at": "2026-04-05T23:06:16.943586+00:00",
-      "last_success_at": "2026-04-09T12:50:00.149244+00:00",
+      "last_success_at": "2026-05-20T21:20:45.966453+00:00",
       "blocked_until": null,
       "last_error_class": null,
       "last_provider_id": "alibaba_bailian"

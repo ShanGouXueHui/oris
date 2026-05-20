@@ -33,7 +33,7 @@ def read_token() -> str:
 
 def post_chat(prompt: str) -> dict:
     body = {
-        "model": "oris/free-auto",
+        "model": "openrouter/auto",
         "messages": [
             {"role": "user", "content": prompt}
         ],

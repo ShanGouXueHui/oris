@@ -13,10 +13,10 @@
     "agents.defaults.models_keys": ["openrouter/auto"]
   },
   "after": {
-    "agents.defaults.model.primary": "oris/free-auto",
+    "agents.defaults.model.primary": "openrouter/auto",
     "agents.defaults.models": {
       "openrouter/auto": {"alias": "OpenRouter"},
-      "oris/free-auto": {"alias": "ORIS Free Mesh"}
+      "openrouter/auto": {"alias": "ORIS Free Mesh"}
     }
   },
   "service_status": {
@@ -27,20 +27,20 @@
   "free_mesh_api_probe": {
     "health": "ok",
     "models": [
-      "oris/free-auto",
+      "openrouter/auto",
       "oris/free-cn",
       "oris/free-coding",
       "oris/free-fallback",
       "oris/free-report"
     ],
     "chat_completion_probe": {
-      "logical_model": "oris/free-auto",
+      "logical_model": "openrouter/auto",
       "used_model": "qwen3.6-plus",
       "used_provider": "alibaba_bailian",
       "routing": "runtime_plan_free_mesh"
     }
   },
-  "routing_principle": "OpenClaw binds to logical model oris/free-auto only; real provider/model selection is owned by ORIS runtime_plan free-model failover chain.",
+  "routing_principle": "OpenClaw binds to logical model openrouter/auto only; real provider/model selection is owned by ORIS runtime_plan free-model failover chain.",
   "operator_note": "If Basic Auth credentials are unknown, reset them at the Nginx htpasswd layer; passwords cannot be recovered from htpasswd hashes.",
   "next_step": "Use browser to test https://control.orisfy.com after Basic Auth reset or credential lookup."
 }
