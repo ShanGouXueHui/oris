@@ -1,0 +1,45 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-20T00:03:27.548449+00:00",
+  "config_path": "/home/admin/.openclaw/openclaw.json",
+  "top_level_keys": [
+    "agents",
+    "auth",
+    "channels",
+    "gateway",
+    "hooks",
+    "meta",
+    "models",
+    "plugins",
+    "secrets",
+    "session",
+    "tools",
+    "wizard"
+  ],
+  "agents_defaults": {
+    "workspace": "/home/admin/.openclaw/workspace",
+    "models": {
+      "openrouter/auto": {
+        "alias": "OpenRouter"
+      }
+    },
+    "model": {
+      "primary": "openrouter/auto"
+    }
+  },
+  "models_root_keys": [
+    "providers"
+  ],
+  "models_providers_type": "dict",
+  "models_providers_keys": [],
+  "models_providers_redacted": {},
+  "auth_profiles_keys": [
+    "openrouter:default"
+  ],
+  "auth_profiles_redacted": {
+    "openrouter:default": {
+      "provider": "openrouter",
+      "mode": "api_key"
+    }
+  }
+}
