@@ -1,11 +1,11 @@
 {
   "ok": true,
-  "generated_at": "2026-05-22T21:13:53.096899+00:00",
+  "generated_at": "2026-05-22T21:18:54.356699+00:00",
   "target_ms": 15000,
   "sample_count": 3,
   "success_count": 3,
-  "p50_ms": 4086,
-  "max_ms": 50479,
+  "p50_ms": 4295,
+  "max_ms": 4644,
   "used_providers": [
     "gemini"
   ],
@@ -14,9 +14,9 @@
   ],
   "samples": [
     {
-      "elapsed_ms": 50479,
+      "elapsed_ms": 4091,
       "rc": 0,
-      "stdout_preview": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\"\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
+      "stdout_preview": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\",\n    \"latency_ms\": 4038,\n    \"slow\": false\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
       "stderr_preview": "",
       "ok": true,
       "text_preview": "ORIS_FREE_MESH_OK",
@@ -28,9 +28,9 @@
       "status": null
     },
     {
-      "elapsed_ms": 4007,
+      "elapsed_ms": 4644,
       "rc": 0,
-      "stdout_preview": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\"\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
+      "stdout_preview": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\",\n    \"latency_ms\": 4592,\n    \"slow\": false\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
       "stderr_preview": "",
       "ok": true,
       "text_preview": "ORIS_FREE_MESH_OK",
@@ -42,9 +42,9 @@
       "status": null
     },
     {
-      "elapsed_ms": 4086,
+      "elapsed_ms": 4295,
       "rc": 0,
-      "stdout_preview": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\"\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
+      "stdout_preview": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\",\n    \"latency_ms\": 4243,\n    \"slow\": false\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
       "stderr_preview": "",
       "ok": true,
       "text_preview": "ORIS_FREE_MESH_OK",
