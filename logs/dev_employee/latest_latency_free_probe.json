@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "text_preview": "ORIS_FREE_MESH_OK",
+  "model": "openrouter/auto",
+  "oris": {
+    "used_model": "models/gemini-2.5-flash-lite",
+    "used_provider": "gemini",
+    "routing": "runtime_plan_free_mesh"
+  },
+  "error": false,
+  "status": null
+}

@@ -1,6 +1,6 @@
 # ORIS Free Routing Audit
 
-- generated_at: `2026-05-22T20:56:25.115037+00:00`
+- generated_at: `2026-05-22T20:59:48.855661+00:00`
 - ok: `True`
 
 | Artifact | Role | OK | Selected / Primary | Provider | Reason |
