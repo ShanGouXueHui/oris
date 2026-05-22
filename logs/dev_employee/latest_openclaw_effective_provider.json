@@ -1,0 +1,4452 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-22T21:54:28.027192+00:00",
+  "refs": [
+    {
+      "path": "/home/admin/.openclaw/openclaw.json",
+      "hits": [
+        "openrouter",
+        "provider"
+      ],
+      "content": {
+        "agents": {
+          "defaults": {
+            "workspace": "/home/admin/.openclaw/workspace",
+            "models": {
+              "openrouter/auto": {
+                "alias": "ORIS Free Mesh"
+              }
+            },
+            "model": {
+              "primary": "openrouter/auto"
+            }
+          }
+        },
+        "gateway": {
+          "mode": "local",
+          "auth": {
+            "mode": "token",
+            "token": "***MASKED***"
+          },
+          "port": 18789,
+          "bind": "loopback",
+          "tailscale": {
+            "mode": "off",
+            "resetOnExit": false
+          },
+          "controlUi": {
+            "allowInsecureAuth": false,
+            "allowedOrigins": [
+              "https://control.orisfy.com",
+              "http://control.orisfy.com"
+            ]
+          },
+          "nodes": {
+            "denyCommands": [
+              "camera.snap",
+              "camera.clip",
+              "screen.record",
+              "contacts.add",
+              "calendar.add",
+              "reminders.add",
+              "sms.send",
+              "sms.search"
+            ]
+          },
+          "trustedProxies": [
+            "127.0.0.1",
+            "::1"
+          ]
+        },
+        "session": {
+          "dmScope": "per-channel-peer"
+        },
+        "tools": {
+          "profile": "coding",
+          "web": {
+            "search": {
+              "provider": "duckduckgo",
+              "enabled": true
+            }
+          }
+        },
+        "auth": {
+          "profiles": {
+            "openrouter:default": {
+              "provider": "openrouter",
+              "mode": "api_key"
+            }
+          }
+        },
+        "plugins": {
+          "entries": {
+            "duckduckgo": {
+              "enabled": true
+            },
+            "feishu": {
+              "enabled": true
+            }
+          }
+        },
+        "hooks": {
+          "internal": {
+            "enabled": true,
+            "entries": {
+              "session-memory": {
+                "enabled": true
+              }
+            }
+          }
+        },
+        "wizard": {
+          "lastRunAt": "2026-04-03T01:58:29.864Z",
+          "lastRunVersion": "2026.4.2",
+          "lastRunCommand": "onboard",
+          "lastRunMode": "local"
+        },
+        "meta": {
+          "lastTouchedVersion": "2026.5.19",
+          "lastTouchedAt": "2026-05-22T21:29:47.395Z"
+        },
+        "secrets": "***MASKED***",
+        "channels": {
+          "feishu": {
+            "enabled": true,
+            "connectionMode": "websocket",
+            "defaultAccount": "main",
+            "dmPolicy": "pairing",
+            "groupPolicy": "allowlist",
+            "typingIndicator": false,
+            "resolveSenderNames": false,
+            "accounts": {
+              "main": {
+                "name": "ORIS",
+                "appId": "cli_a945babe6838dbd9",
+                "appSecret": "***MASKED***"
+              }
+            }
+          }
+        },
+        "models": {
+          "providers": {}
+        }
+      }
+    },
+    {
+      "path": "/home/admin/.openclaw/agents/main/agent/models.json",
+      "hits": [
+        "openrouter",
+        "127.0.0.1:8789",
+        "baseUrl",
+        "apiKey",
+        "provider"
+      ],
+      "content": {
+        "providers": {
+          "openrouter": {
+            "baseUrl": "http://127.0.0.1:8789/v1",
+            "api": "openai-completions",
+            "models": [
+              {
+                "id": "auto",
+                "name": "ORIS Free Mesh Auto",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 200000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openrouter/hunter-alpha",
+                "name": "Hunter Alpha",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openrouter/healer-alpha",
+                "name": "Healer Alpha",
+                "reasoning": true,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              }
+            ],
+            "apiKey": "***MASKED***"
+          },
+          "huggingface": {
+            "baseUrl": "https://router.huggingface.co/v1",
+            "api": "openai-completions",
+            "models": [
+              {
+                "id": "deepseek-ai/DeepSeek-V4-Pro",
+                "name": "deepseek-ai/DeepSeek-V4-Pro",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V4-Flash",
+                "name": "deepseek-ai/DeepSeek-V4-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.6-35B-A3B",
+                "name": "Qwen/Qwen3.6-35B-A3B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-4-31B-it",
+                "name": "google/gemma-4-31B-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-4-26B-A4B-it",
+                "name": "google/gemma-4-26B-A4B-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-5.1",
+                "name": "zai-org/GLM-5.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 202752,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2.6",
+                "name": "moonshotai/Kimi-K2.6",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.1-8B-Instruct",
+                "name": "meta-llama/Llama-3.1-8B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 16384,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-9B",
+                "name": "Qwen/Qwen3.5-9B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openai/gpt-oss-120b",
+                "name": "GPT-OSS 120B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openai/gpt-oss-20b",
+                "name": "openai/gpt-oss-20b",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-7B-Instruct",
+                "name": "Qwen/Qwen2.5-7B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2.7",
+                "name": "MiniMaxAI/MiniMax-M2.7",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "inclusionAI/Ling-2.6-1T",
+                "name": "inclusionAI/Ling-2.6-1T",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2.5",
+                "name": "moonshotai/Kimi-K2.5",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+                "name": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.2-1B-Instruct",
+                "name": "meta-llama/Llama-3.2-1B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "stepfun-ai/Step-3.5-Flash",
+                "name": "stepfun-ai/Step-3.5-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1",
+                "name": "DeepSeek R1",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 3,
+                  "output": 7,
+                  "cacheRead": 3,
+                  "cacheWrite": 3
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-Next",
+                "name": "Qwen/Qwen3-Coder-Next",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-8B",
+                "name": "Qwen/Qwen3-8B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-35B-A3B",
+                "name": "Qwen/Qwen3.5-35B-A3B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-VL-72B-Instruct",
+                "name": "Qwen/Qwen2.5-VL-72B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Meta-Llama-3-8B-Instruct",
+                "name": "meta-llama/Meta-Llama-3-8B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/QwQ-32B",
+                "name": "Qwen/QwQ-32B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+                "name": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2.5",
+                "name": "MiniMaxAI/MiniMax-M2.5",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.7-Flash",
+                "name": "zai-org/GLM-4.7-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 200000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openai/gpt-oss-safeguard-20b",
+                "name": "openai/gpt-oss-safeguard-20b",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-8B-Instruct",
+                "name": "Qwen/Qwen3-VL-8B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-5.1-FP8",
+                "name": "zai-org/GLM-5.1-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 202752,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-4B-Instruct-2507",
+                "name": "Qwen/Qwen3-4B-Instruct-2507",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-397B-A17B",
+                "name": "Qwen/Qwen3.5-397B-A17B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-5",
+                "name": "zai-org/GLM-5",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 202800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3",
+                "name": "deepseek-ai/DeepSeek-V3",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 64000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-122B-A10B",
+                "name": "Qwen/Qwen3.5-122B-A10B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-27B",
+                "name": "Qwen/Qwen3.5-27B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-3-27b-it",
+                "name": "google/gemma-3-27b-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2-Instruct-0905",
+                "name": "moonshotai/Kimi-K2-Instruct-0905",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-14B",
+                "name": "Qwen/Qwen3-14B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+                "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "swiss-ai/Apertus-8B-Instruct-2509",
+                "name": "swiss-ai/Apertus-8B-Instruct-2509",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+                "name": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3-0324",
+                "name": "deepseek-ai/DeepSeek-V3-0324",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "utter-project/EuroLLM-22B-Instruct-2512",
+                "name": "utter-project/EuroLLM-22B-Instruct-2512",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2-Instruct",
+                "name": "moonshotai/Kimi-K2-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+                "name": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-4B-Thinking-2507",
+                "name": "Qwen/Qwen3-4B-Thinking-2507",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.2",
+                "name": "deepseek-ai/DeepSeek-V3.2",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+                "name": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+                "name": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-32B",
+                "name": "Qwen/Qwen3-32B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-Coder-3B-Instruct",
+                "name": "Qwen/Qwen2.5-Coder-3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "alpindale/WizardLM-2-8x22B",
+                "name": "alpindale/WizardLM-2-8x22B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 65535,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-earth",
+                "name": "CohereLabs/tiny-aya-earth",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                "name": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Sao10K/L3-8B-Stheno-v3.2",
+                "name": "Sao10K/L3-8B-Stheno-v3.2",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "katanemo/Arch-Router-1.5B",
+                "name": "katanemo/Arch-Router-1.5B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+                "name": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+                "name": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.1-Terminus",
+                "name": "deepseek-ai/DeepSeek-V3.1-Terminus",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/AutoGLM-Phone-9B-Multilingual",
+                "name": "zai-org/AutoGLM-Phone-9B-Multilingual",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 65536,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2-Thinking",
+                "name": "moonshotai/Kimi-K2-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.3-70B-Instruct",
+                "name": "meta-llama/Llama-3.3-70B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6V-Flash",
+                "name": "zai-org/GLM-4.6V-Flash",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.7-FP8",
+                "name": "zai-org/GLM-4.7-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "swiss-ai/Apertus-70B-Instruct-2509",
+                "name": "swiss-ai/Apertus-70B-Instruct-2509",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.1-70B-Instruct",
+                "name": "meta-llama/Llama-3.1-70B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+                "name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-72B-Instruct",
+                "name": "Qwen/Qwen2.5-72B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-30B-A3B",
+                "name": "Qwen/Qwen3-30B-A3B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/c4ai-command-r-08-2024",
+                "name": "CohereLabs/c4ai-command-r-08-2024",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-235B-A22B",
+                "name": "Qwen/Qwen3-235B-A22B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+                "name": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Meta-Llama-3-70B-Instruct",
+                "name": "meta-llama/Meta-Llama-3-70B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/aya-expanse-32b",
+                "name": "CohereLabs/aya-expanse-32b",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5",
+                "name": "zai-org/GLM-4.5",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+                "name": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+                "name": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/c4ai-command-r7b-12-2024",
+                "name": "CohereLabs/c4ai-command-r7b-12-2024",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5-Air",
+                "name": "zai-org/GLM-4.5-Air",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "allenai/Olmo-3-7B-Instruct",
+                "name": "allenai/Olmo-3-7B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Sao10K/L3-70B-Euryale-v2.1",
+                "name": "Sao10K/L3-70B-Euryale-v2.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/c4ai-command-r7b-arabic-02-2025",
+                "name": "CohereLabs/c4ai-command-r7b-arabic-02-2025",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6",
+                "name": "zai-org/GLM-4.6",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "dicta-il/DictaLM-3.0-24B-Thinking",
+                "name": "dicta-il/DictaLM-3.0-24B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Sao10K/L3-8B-Lunaris-v1",
+                "name": "Sao10K/L3-8B-Lunaris-v1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/command-a-reasoning-08-2025",
+                "name": "CohereLabs/command-a-reasoning-08-2025",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.7",
+                "name": "zai-org/GLM-4.7",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4-32B-0414",
+                "name": "zai-org/GLM-4-32B-0414",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/command-a-translate-08-2025",
+                "name": "CohereLabs/command-a-translate-08-2025",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5V-FP8",
+                "name": "zai-org/GLM-4.5V-FP8",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "baidu/ERNIE-4.5-VL-424B-A47B-Base-PT",
+                "name": "baidu/ERNIE-4.5-VL-424B-A47B-Base-PT",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 123000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-Prover-V2-671B",
+                "name": "deepseek-ai/DeepSeek-Prover-V2-671B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 160000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-global",
+                "name": "CohereLabs/tiny-aya-global",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5V",
+                "name": "zai-org/GLM-4.5V",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 65536,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+                "name": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-0528",
+                "name": "deepseek-ai/DeepSeek-R1-0528",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-water",
+                "name": "CohereLabs/tiny-aya-water",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6V",
+                "name": "zai-org/GLM-4.6V",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-Guard-4-12B",
+                "name": "meta-llama/Llama-Guard-4-12B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M1-80k",
+                "name": "MiniMaxAI/MiniMax-M1-80k",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1000000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-fire",
+                "name": "CohereLabs/tiny-aya-fire",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6V-FP8",
+                "name": "zai-org/GLM-4.6V-FP8",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-3n-E4B-it",
+                "name": "google/gemma-3n-E4B-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "baidu/ERNIE-4.5-300B-A47B-Base-PT",
+                "name": "baidu/ERNIE-4.5-300B-A47B-Base-PT",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 123000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+                "name": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/aya-vision-32b",
+                "name": "CohereLabs/aya-vision-32b",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+                "name": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+                "name": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepcogito/cogito-671b-v2.1",
+                "name": "deepcogito/cogito-671b-v2.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.1",
+                "name": "DeepSeek V3.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0.6,
+                  "output": 1.25,
+                  "cacheRead": 0.6,
+                  "cacheWrite": 0.6
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepcogito/cogito-671b-v2.1-FP8",
+                "name": "deepcogito/cogito-671b-v2.1-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.2-Exp",
+                "name": "deepseek-ai/DeepSeek-V3.2-Exp",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "EssentialAI/rnj-1-instruct",
+                "name": "EssentialAI/rnj-1-instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2",
+                "name": "MiniMaxAI/MiniMax-M2",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "pearl-ai/Gemma-4-31B-it-pearl",
+                "name": "pearl-ai/Gemma-4-31B-it-pearl",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "XiaomiMiMo/MiMo-V2-Flash",
+                "name": "XiaomiMiMo/MiMo-V2-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2.1",
+                "name": "MiniMaxAI/MiniMax-M2.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              }
+            ],
+            "apiKey": "***MASKED***"
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/admin/.openclaw/agents/main/agent/auth-profiles.json",
+      "hits": [
+        "openrouter",
+        "apiKey",
+        "provider"
+      ],
+      "content": {
+        "version": 1,
+        "profiles": {
+          "openrouter:default": {
+            "type": "api_key",
+            "provider": "openrouter",
+            "keyRef": "***MASKED***"
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/admin/.openclaw/agents/main/agent/auth-state.json",
+      "hits": [
+        "openrouter"
+      ],
+      "content": {
+        "version": 1,
+        "lastGood": {
+          "openrouter": "openrouter:default"
+        },
+        "usageStats": {
+          "openrouter:default": {
+            "lastUsed": 1779311471068,
+            "errorCount": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/admin/.openclaw/agents/main/agent/auth-profiles.json",
+      "hits": [
+        "openrouter",
+        "apiKey",
+        "provider"
+      ],
+      "content": {
+        "version": 1,
+        "profiles": {
+          "openrouter:default": {
+            "type": "api_key",
+            "provider": "openrouter",
+            "keyRef": "***MASKED***"
+          }
+        }
+      }
+    },
+    {
+      "path": "/home/admin/.openclaw/agents/main/agent/models.json",
+      "hits": [
+        "openrouter",
+        "127.0.0.1:8789",
+        "baseUrl",
+        "apiKey",
+        "provider"
+      ],
+      "content": {
+        "providers": {
+          "openrouter": {
+            "baseUrl": "http://127.0.0.1:8789/v1",
+            "api": "openai-completions",
+            "models": [
+              {
+                "id": "auto",
+                "name": "ORIS Free Mesh Auto",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 200000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openrouter/hunter-alpha",
+                "name": "Hunter Alpha",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openrouter/healer-alpha",
+                "name": "Healer Alpha",
+                "reasoning": true,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              }
+            ],
+            "apiKey": "***MASKED***"
+          },
+          "huggingface": {
+            "baseUrl": "https://router.huggingface.co/v1",
+            "api": "openai-completions",
+            "models": [
+              {
+                "id": "deepseek-ai/DeepSeek-V4-Pro",
+                "name": "deepseek-ai/DeepSeek-V4-Pro",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V4-Flash",
+                "name": "deepseek-ai/DeepSeek-V4-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.6-35B-A3B",
+                "name": "Qwen/Qwen3.6-35B-A3B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-4-31B-it",
+                "name": "google/gemma-4-31B-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-4-26B-A4B-it",
+                "name": "google/gemma-4-26B-A4B-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-5.1",
+                "name": "zai-org/GLM-5.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 202752,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2.6",
+                "name": "moonshotai/Kimi-K2.6",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.1-8B-Instruct",
+                "name": "meta-llama/Llama-3.1-8B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 16384,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-9B",
+                "name": "Qwen/Qwen3.5-9B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openai/gpt-oss-120b",
+                "name": "GPT-OSS 120B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openai/gpt-oss-20b",
+                "name": "openai/gpt-oss-20b",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-7B-Instruct",
+                "name": "Qwen/Qwen2.5-7B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2.7",
+                "name": "MiniMaxAI/MiniMax-M2.7",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "inclusionAI/Ling-2.6-1T",
+                "name": "inclusionAI/Ling-2.6-1T",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2.5",
+                "name": "moonshotai/Kimi-K2.5",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+                "name": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.2-1B-Instruct",
+                "name": "meta-llama/Llama-3.2-1B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "stepfun-ai/Step-3.5-Flash",
+                "name": "stepfun-ai/Step-3.5-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1",
+                "name": "DeepSeek R1",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 3,
+                  "output": 7,
+                  "cacheRead": 3,
+                  "cacheWrite": 3
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-Next",
+                "name": "Qwen/Qwen3-Coder-Next",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-8B",
+                "name": "Qwen/Qwen3-8B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-35B-A3B",
+                "name": "Qwen/Qwen3.5-35B-A3B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-VL-72B-Instruct",
+                "name": "Qwen/Qwen2.5-VL-72B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Meta-Llama-3-8B-Instruct",
+                "name": "meta-llama/Meta-Llama-3-8B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/QwQ-32B",
+                "name": "Qwen/QwQ-32B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+                "name": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2.5",
+                "name": "MiniMaxAI/MiniMax-M2.5",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.7-Flash",
+                "name": "zai-org/GLM-4.7-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 200000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "openai/gpt-oss-safeguard-20b",
+                "name": "openai/gpt-oss-safeguard-20b",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-8B-Instruct",
+                "name": "Qwen/Qwen3-VL-8B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-5.1-FP8",
+                "name": "zai-org/GLM-5.1-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 202752,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-4B-Instruct-2507",
+                "name": "Qwen/Qwen3-4B-Instruct-2507",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-397B-A17B",
+                "name": "Qwen/Qwen3.5-397B-A17B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-5",
+                "name": "zai-org/GLM-5",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 202800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3",
+                "name": "deepseek-ai/DeepSeek-V3",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 64000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-122B-A10B",
+                "name": "Qwen/Qwen3.5-122B-A10B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3.5-27B",
+                "name": "Qwen/Qwen3.5-27B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-3-27b-it",
+                "name": "google/gemma-3-27b-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2-Instruct-0905",
+                "name": "moonshotai/Kimi-K2-Instruct-0905",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-14B",
+                "name": "Qwen/Qwen3-14B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+                "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "swiss-ai/Apertus-8B-Instruct-2509",
+                "name": "swiss-ai/Apertus-8B-Instruct-2509",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+                "name": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3-0324",
+                "name": "deepseek-ai/DeepSeek-V3-0324",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "utter-project/EuroLLM-22B-Instruct-2512",
+                "name": "utter-project/EuroLLM-22B-Instruct-2512",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2-Instruct",
+                "name": "moonshotai/Kimi-K2-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+                "name": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-4B-Thinking-2507",
+                "name": "Qwen/Qwen3-4B-Thinking-2507",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.2",
+                "name": "deepseek-ai/DeepSeek-V3.2",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+                "name": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+                "name": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-32B",
+                "name": "Qwen/Qwen3-32B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-Coder-3B-Instruct",
+                "name": "Qwen/Qwen2.5-Coder-3B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "alpindale/WizardLM-2-8x22B",
+                "name": "alpindale/WizardLM-2-8x22B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 65535,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-earth",
+                "name": "CohereLabs/tiny-aya-earth",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                "name": "Qwen/Qwen2.5-Coder-32B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Sao10K/L3-8B-Stheno-v3.2",
+                "name": "Sao10K/L3-8B-Stheno-v3.2",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "katanemo/Arch-Router-1.5B",
+                "name": "katanemo/Arch-Router-1.5B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+                "name": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+                "name": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.1-Terminus",
+                "name": "deepseek-ai/DeepSeek-V3.1-Terminus",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/AutoGLM-Phone-9B-Multilingual",
+                "name": "zai-org/AutoGLM-Phone-9B-Multilingual",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 65536,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "moonshotai/Kimi-K2-Thinking",
+                "name": "moonshotai/Kimi-K2-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.3-70B-Instruct",
+                "name": "meta-llama/Llama-3.3-70B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6V-Flash",
+                "name": "zai-org/GLM-4.6V-Flash",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.7-FP8",
+                "name": "zai-org/GLM-4.7-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "swiss-ai/Apertus-70B-Instruct-2509",
+                "name": "swiss-ai/Apertus-70B-Instruct-2509",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-3.1-70B-Instruct",
+                "name": "meta-llama/Llama-3.1-70B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+                "name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen2.5-72B-Instruct",
+                "name": "Qwen/Qwen2.5-72B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-30B-A3B",
+                "name": "Qwen/Qwen3-30B-A3B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/c4ai-command-r-08-2024",
+                "name": "CohereLabs/c4ai-command-r-08-2024",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-235B-A22B",
+                "name": "Qwen/Qwen3-235B-A22B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 40960,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+                "name": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Meta-Llama-3-70B-Instruct",
+                "name": "meta-llama/Meta-Llama-3-70B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/aya-expanse-32b",
+                "name": "CohereLabs/aya-expanse-32b",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5",
+                "name": "zai-org/GLM-4.5",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+                "name": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+                "name": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/c4ai-command-r7b-12-2024",
+                "name": "CohereLabs/c4ai-command-r7b-12-2024",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5-Air",
+                "name": "zai-org/GLM-4.5-Air",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "allenai/Olmo-3-7B-Instruct",
+                "name": "allenai/Olmo-3-7B-Instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Sao10K/L3-70B-Euryale-v2.1",
+                "name": "Sao10K/L3-70B-Euryale-v2.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/c4ai-command-r7b-arabic-02-2025",
+                "name": "CohereLabs/c4ai-command-r7b-arabic-02-2025",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6",
+                "name": "zai-org/GLM-4.6",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "dicta-il/DictaLM-3.0-24B-Thinking",
+                "name": "dicta-il/DictaLM-3.0-24B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Sao10K/L3-8B-Lunaris-v1",
+                "name": "Sao10K/L3-8B-Lunaris-v1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/command-a-reasoning-08-2025",
+                "name": "CohereLabs/command-a-reasoning-08-2025",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.7",
+                "name": "zai-org/GLM-4.7",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4-32B-0414",
+                "name": "zai-org/GLM-4-32B-0414",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/command-a-translate-08-2025",
+                "name": "CohereLabs/command-a-translate-08-2025",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5V-FP8",
+                "name": "zai-org/GLM-4.5V-FP8",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "baidu/ERNIE-4.5-VL-424B-A47B-Base-PT",
+                "name": "baidu/ERNIE-4.5-VL-424B-A47B-Base-PT",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 123000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-Prover-V2-671B",
+                "name": "deepseek-ai/DeepSeek-Prover-V2-671B",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 160000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-global",
+                "name": "CohereLabs/tiny-aya-global",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.5V",
+                "name": "zai-org/GLM-4.5V",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 65536,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+                "name": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+                "reasoning": true,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-0528",
+                "name": "deepseek-ai/DeepSeek-R1-0528",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-water",
+                "name": "CohereLabs/tiny-aya-water",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6V",
+                "name": "zai-org/GLM-4.6V",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "meta-llama/Llama-Guard-4-12B",
+                "name": "meta-llama/Llama-Guard-4-12B",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1048576,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M1-80k",
+                "name": "MiniMaxAI/MiniMax-M1-80k",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 1000000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/tiny-aya-fire",
+                "name": "CohereLabs/tiny-aya-fire",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "zai-org/GLM-4.6V-FP8",
+                "name": "zai-org/GLM-4.6V-FP8",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "google/gemma-3n-E4B-it",
+                "name": "google/gemma-3n-E4B-it",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+                "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 8192,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "baidu/ERNIE-4.5-300B-A47B-Base-PT",
+                "name": "baidu/ERNIE-4.5-300B-A47B-Base-PT",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 123000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+                "name": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "CohereLabs/aya-vision-32b",
+                "name": "CohereLabs/aya-vision-32b",
+                "reasoning": false,
+                "input": [
+                  "text",
+                  "image"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+                "name": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+                "reasoning": true,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+                "name": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepcogito/cogito-671b-v2.1",
+                "name": "deepcogito/cogito-671b-v2.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.1",
+                "name": "DeepSeek V3.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0.6,
+                  "output": 1.25,
+                  "cacheRead": 0.6,
+                  "cacheWrite": 0.6
+                },
+                "contextWindow": 131072,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepcogito/cogito-671b-v2.1-FP8",
+                "name": "deepcogito/cogito-671b-v2.1-FP8",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "deepseek-ai/DeepSeek-V3.2-Exp",
+                "name": "deepseek-ai/DeepSeek-V3.2-Exp",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 163840,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "EssentialAI/rnj-1-instruct",
+                "name": "EssentialAI/rnj-1-instruct",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32768,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2",
+                "name": "MiniMaxAI/MiniMax-M2",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "pearl-ai/Gemma-4-31B-it-pearl",
+                "name": "pearl-ai/Gemma-4-31B-it-pearl",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 32000,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "XiaomiMiMo/MiMo-V2-Flash",
+                "name": "XiaomiMiMo/MiMo-V2-Flash",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 262144,
+                "maxTokens": "***MASKED***"
+              },
+              {
+                "id": "MiniMaxAI/MiniMax-M2.1",
+                "name": "MiniMaxAI/MiniMax-M2.1",
+                "reasoning": false,
+                "input": [
+                  "text"
+                ],
+                "cost": {
+                  "input": 0,
+                  "output": 0,
+                  "cacheRead": 0,
+                  "cacheWrite": 0
+                },
+                "contextWindow": 204800,
+                "maxTokens": "***MASKED***"
+              }
+            ],
+            "apiKey": "***MASKED***"
+          }
+        }
+      }
+    }
+  ],
+  "grep_masked": {
+    "rc": 0,
+    "stdout": "/home/admin/.openclaw/openclaw.json:6:        \"openrouter/auto\": {\n/home/admin/.openclaw/openclaw.json:11:        \"primary\": \"openrouter/auto\"\n/home/admin/.openclaw/openclaw.json:58:        \"provider\": \"duckduckgo\",\n/home/admin/.openclaw/openclaw.json:65:      \"openrouter:default\": {\n/home/admin/.openclaw/openclaw.json:66:        \"provider\": \"openrouter\",\n/home/admin/.openclaw/openclaw.json:102:    \"providers\": {\n/home/admin/.openclaw/openclaw.json:125:            \"provider\": \"localfile\",\n/home/admin/.openclaw/openclaw.json:133:    \"providers\": {}\n/home/admin/.openclaw/agents/main/agent/auth-state.json:4:    \"openrouter\": \"openrouter:default\"\n/home/admin/.openclaw/agents/main/agent/auth-state.json:7:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_002356:5:    \"openrouter\": \"openrouter:default\"\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_002356:8:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:4:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:6:      \"provider\": \"openrouter\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:9:        \"provider\": \"localfile\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:10:        \"id\": \"/models/providers/openrouter/apiKey\"\n/home/admin/.openclaw/agents/main/agent/models.json:2:  \"providers\": {\n/home/admin/.openclaw/agents/main/agent/models.json:3:    \"openrouter\": {\n/home/admin/.openclaw/agents/main/agent/models.json:4:      \"baseUrl\": \"http://127.0.0.1:8789/v1\",\n/home/admin/.openclaw/agents/main/agent/models.json:24:          \"id\": \"openrouter/hunter-alpha\",\n/home/admin/.openclaw/agents/main/agent/models.json:40:          \"id\": \"openrouter/healer-alpha\",\n/home/admin/.openclaw/agents/main/agent/models.json:60:      \"baseUrl\": \"https://router.huggingface.co/v1\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:4:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:6:      \"provider\": \"openrouter\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:11:    \"openrouter\": \"openrouter:default\"\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:14:    \"openrouter:default\": {\n",
+    "stderr": ""
+  },
+  "gateway_status": {
+    "rc": 0,
+    "stdout": "Service: systemd user (enabled)\nFile logs: /tmp/openclaw/openclaw-2026-05-23.log\nCommand: /home/admin/.npm-global/bin/openclaw gateway --port 18789\nService file: ~/.config/systemd/user/openclaw-gateway.service\n\nConfig (cli): ~/.openclaw/openclaw.json\nConfig (service): ~/.openclaw/openclaw.json\n\nGateway: bind=loopback (127.0.0.1), port=18789 (service args)\nProbe target: ws://127.0.0.1:18789\nDashboard: http://127.0.0.1:18789/\nProbe note: Loopback-only gateway; only local clients can connect.\n\nCLI version: 2026.5.19 (~/.npm-global/bin/openclaw)\nGateway version: 2026.5.19\n\nRuntime: running (pid 59073, state active, sub running, last exit 0, reason 0)\nConnectivity probe: ok\nCapability: admin-capable\n\nListening: 127.0.0.1:18789\nTroubles: run openclaw status\nTroubleshooting: https://docs.openclaw.ai/troubleshooting\n",
+    "stderr": "Service config looks out of date or non-standard.\nService config issue: Gateway service PATH missing required dirs: /home/admin/.local/bin\nRecommendation: run \"openclaw doctor\" (or \"openclaw doctor --repair\").\nConfig warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nConfig warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\n"
+  },
+  "gateway_logs_tail": {
+    "rc": 0,
+    "stdout": "API key.\"\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.529+08:00 [model-fallback/decision] model fallback decision: decision=candidate_failed requested=openrouter/openrouter/auto candidate=openrouter/openrouter/auto reason=billing next=none detail=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78cedcde0c0742d3d89beba345b39e592ed12beef0634b1ec5f and adjust the key's monthly limit\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.670+08:00 Embedded agent failed before reply: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ systemd[962]: Stopping OpenClaw Gateway (managed by ORIS)...\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.830+08:00 [gateway] signal SIGTERM received\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.849+08:00 [gateway] received SIGTERM; shutting down\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.886+08:00 [shutdown] started: gateway stopping\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.983+08:00 Config warnings:\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: - plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:08.003+08:00 [gmail-watcher] gmail watcher stopped\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:08.219+08:00 [ws] webchat disconnected code=1012 reason=service restart conn=19974bf7-a9e9-4cf2-8b29-7a66d581b9d9\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:08.224+08:00 [shutdown] completed cleanly in 338ms\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ systemd[962]: Stopped OpenClaw Gateway (managed by ORIS).\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ systemd[962]: openclaw-gateway.service: Consumed 25.648s CPU time.\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ systemd[962]: Started OpenClaw Gateway (managed by ORIS).\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.295+08:00 [gateway] loading configuration…\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.409+08:00 [gateway] resolving authentication…\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.430+08:00 [gateway] starting...\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:10.001+08:00 [gateway] auto-enabled plugins for this runtime without writing config:\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: - openrouter/auto model configured, enabled automatically.\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:10.993+08:00 [gateway] starting HTTP server...\nMay 23 05:48:11 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:11.233+08:00 [health-monitor] started (interval: 300s, startup-grace: 60s, channel-connect-grace: 120s)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.239+08:00 [gateway] agent model: openrouter/openrouter/auto (thinking=medium, fast=off)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.242+08:00 [gateway] http server listening (8 plugins: browser, canvas, device-pair, duckduckgo, file-transfer, memory-core, phone-control, talk-voice; 3.8s)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.245+08:00 [gateway] log file: /tmp/openclaw/openclaw-2026-05-23.log\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.356+08:00 [gateway] starting channels and sidecars...\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.502+08:00 [hooks] loaded 5 internal hook handlers\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.744+08:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.817+08:00 [gateway] ready\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.824+08:00 [heartbeat] started\nMay 23 05:48:15 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:15.483+08:00 [ws] webchat connected conn=906b0dcb-d452-4c6b-8bbc-a3dd545458e5 remote=127.0.0.1 client=openclaw-control-ui webchat vcontrol-ui\nMay 23 05:48:15 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:15.775+08:00 [ws] ⇄ res ✓ health 58ms cached=true conn=906b0dcb…58e5 id=370c187e…b523\nMay 23 05:48:15 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:15.829+08:00 [ws] ⇄ res ✓ agents.list 112ms conn=906b0dcb…58e5 id=0c495c5e…b791\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.312+08:00 [ws] ⇄ res ✓ models.authStatus 186ms conn=906b0dcb…58e5 id=679ad567…955b\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.582+08:00 [ws] ⇄ res ✓ commands.list 262ms conn=906b0dcb…58e5 id=2b2cf651…6753\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.601+08:00 [ws] ⇄ res ✓ chat.history 284ms conn=906b0dcb…58e5 id=72d1810c…4a5f\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.648+08:00 [ws] ⇄ res ✓ models.list 330ms conn=906b0dcb…58e5 id=d0ad2347…839d\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.657+08:00 [ws] ⇄ res ✓ sessions.list 340ms conn=906b0dcb…58e5 id=44b311dc…bbc1\nMay 23 05:50:26 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:26.036+08:00 [ws] ⇄ res ✓ sessions.create 50ms conn=906b0dcb…58e5 id=e950d906…00a7\nMay 23 05:50:26 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:26.051+08:00 [hooks/session-memory] Session context saved to ~/.openclaw/workspace/memory/2026-05-23-0550.md\nMay 23 05:50:26 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:26.672+08:00 [ws] ⇄ res ✓ commands.list 186ms conn=906b0dcb…58e5 id=e7faced1…c5b3\nMay 23 05:50:26 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:26.842+08:00 [ws] ⇄ res ✓ models.authStatus 165ms conn=906b0dcb…58e5 id=43bb027a…dcfb\nMay 23 05:50:27 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:27.009+08:00 [ws] ⇄ res ✓ commands.list 334ms conn=906b0dcb…58e5 id=bda63f87…e8e1\nMay 23 05:50:27 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:27.013+08:00 [ws] ⇄ res ✓ models.list 338ms conn=906b0dcb…58e5 id=805f4700…db52\nMay 23 05:50:27 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:27.017+08:00 [ws] ⇄ res ✓ sessions.list 342ms conn=906b0dcb…58e5 id=be3e3436…4b4c\nMay 23 05:50:27 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:27.030+08:00 [ws] ⇄ res ✓ chat.history 354ms conn=906b0dcb…58e5 id=0192e6c8…db59\nMay 23 05:50:27 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:27.034+08:00 [ws] ⇄ res ✓ chat.history 358ms conn=906b0dcb…58e5 id=d8e22973…d823\nMay 23 05:50:29 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:29.970+08:00 [ws] ⇄ res ✓ commands.list 130ms conn=906b0dcb…58e5 id=e9d174e0…455e\nMay 23 05:50:30 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:30.093+08:00 [ws] ⇄ res ✓ commands.list 118ms conn=906b0dcb…58e5 id=977cb8b3…f330\nMay 23 05:50:30 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:30.096+08:00 [ws] ⇄ res ✓ models.list 121ms conn=906b0dcb…58e5 id=8b73faaa…9b0c\nMay 23 05:50:30 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:30.100+08:00 [ws] ⇄ res ✓ sessions.list 124ms conn=906b0dcb…58e5 id=f5e5d830…a239\nMay 23 05:50:30 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:30.106+08:00 [ws] ⇄ res ✓ chat.history 269ms conn=906b0dcb…58e5 id=23da1077…aa8b\nMay 23 05:50:30 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:30.110+08:00 [ws] ⇄ res ✓ chat.history 135ms conn=906b0dcb…58e5 id=ff6626ff…4d0f\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.438+08:00 [ws] ⇄ res ✓ commands.list 115ms conn=906b0dcb…58e5 id=e150ccf9…7345\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.562+08:00 [ws] ⇄ res ✓ commands.list 119ms conn=906b0dcb…58e5 id=15a267c9…fe54\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.565+08:00 [ws] ⇄ res ✓ models.list 123ms conn=906b0dcb…58e5 id=a612b45c…f99e\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.568+08:00 [ws] ⇄ res ✓ sessions.list 127ms conn=906b0dcb…58e5 id=25412d8e…9f23\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.574+08:00 [ws] ⇄ res ✓ chat.history 252ms conn=906b0dcb…58e5 id=098648f4…d398\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.576+08:00 [ws] ⇄ res ✓ chat.history 135ms conn=906b0dcb…58e5 id=d9b079ad…cf97\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.397+08:00 [agent/embedded] embedded run agent end: runId=29ff0d10-e30b-46af-99b6-06e7875be74c isError=true model=openrouter/auto provider=openrouter error=⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key. rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.426+08:00 [agent/embedded] embedded run failover decision: runId=29ff0d10-e30b-46af-99b6-06e7875be74c stage=assistant decision=surface_error reason=billing from=openrouter/openrouter/auto profile=sha256:ac092b59b472 rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.430+08:00 [diagnostic] lane task error: lane=main durationMs=2488 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.432+08:00 [diagnostic] lane task error: lane=session:agent:main:dashboard:151ef3a8-7a47-45bd-b81d-b1658ec88e18 durationMs=2491 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.439+08:00 [model-fallback/decision] model fallback decision: decision=candidate_failed requested=openrouter/openrouter/auto candidate=openrouter/openrouter/auto reason=billing next=none detail=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78cedcde0c0742d3d89beba345b39e592ed12beef0634b1ec5f and adjust the key's monthly limit\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.585+08:00 Embedded agent failed before reply: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\n",
+    "stderr": ""
+  },
+  "diagnosis_hint": "If logs still show public OpenRouter 402 while models.json baseUrl is local, inspect auth-profiles.json and provider profile resolution."
+}
