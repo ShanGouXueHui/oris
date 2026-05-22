@@ -1,0 +1,105 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-22T22:44:12.883315+00:00",
+  "target_project": "oris-dev-smoke-app",
+  "target_path": "/home/admin/projects/oris-dev-smoke-app",
+  "requested_skills": [
+    "git_project_bootstrap",
+    "github_project_workflow",
+    "python_fastapi_smoke",
+    "oris_registry_update"
+  ],
+  "missing_skills": [],
+  "policy": {
+    "auto_install_default": false,
+    "allow_plan_generation": true,
+    "allow_safe_apply_when_explicitly_enabled": true,
+    "require_human_approval_for_system_packages": true,
+    "require_human_approval_for_network_services": true,
+    "forbidden_targets": [
+      "private_keys",
+      "production_secrets",
+      ".env",
+      "systemd_production_services",
+      "nginx_production_sites"
+    ]
+  },
+  "apply_requested": false,
+  "applied": false,
+  "items": [
+    {
+      "skill": "git_project_bootstrap",
+      "description": "Create or verify an independent Git project workspace.",
+      "safe_auto_install": false,
+      "install_scope": null,
+      "required_commands": [
+        "git"
+      ],
+      "command_status": {
+        "git": true
+      },
+      "missing_commands": [],
+      "python_packages": [],
+      "requires_human_approval": true,
+      "notes": "Git should already be available on the server."
+    },
+    {
+      "skill": "github_project_workflow",
+      "description": "Push and verify project changes through GitHub remotes.",
+      "safe_auto_install": false,
+      "install_scope": null,
+      "required_commands": [
+        "git",
+        "ssh"
+      ],
+      "command_status": {
+        "git": true,
+        "ssh": true
+      },
+      "missing_commands": [],
+      "python_packages": [],
+      "requires_human_approval": true,
+      "notes": "Requires existing GitHub SSH access. Do not create or expose credentials."
+    },
+    {
+      "skill": "python_fastapi_smoke",
+      "description": "Build and test a minimal Python FastAPI service.",
+      "safe_auto_install": true,
+      "install_scope": "project_venv_only",
+      "required_commands": [
+        "python3"
+      ],
+      "command_status": {
+        "python3": true
+      },
+      "missing_commands": [],
+      "python_packages": [
+        "fastapi",
+        "uvicorn",
+        "pytest",
+        "httpx"
+      ],
+      "requires_human_approval": false,
+      "notes": "Install packages only inside the target project virtualenv."
+    },
+    {
+      "skill": "oris_registry_update",
+      "description": "Update ORIS project_registry for a new or existing project.",
+      "safe_auto_install": false,
+      "install_scope": null,
+      "required_commands": [
+        "python3",
+        "git"
+      ],
+      "command_status": {
+        "python3": true,
+        "git": true
+      },
+      "missing_commands": [],
+      "python_packages": [],
+      "requires_human_approval": true,
+      "notes": "Only update orchestration/project_registry.json and logs/dev_employee."
+    }
+  ],
+  "decision": "plan_only. Installation is intentionally not applied by this script."
+}
