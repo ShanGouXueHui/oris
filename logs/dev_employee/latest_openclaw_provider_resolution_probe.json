@@ -1,0 +1,2300 @@
+{
+  "ok": true,
+  "generated_at": "2026-05-22T21:59:13.674344+00:00",
+  "files": {
+    "openclaw_json": {
+      "agents": {
+        "defaults": {
+          "workspace": "/home/admin/.openclaw/workspace",
+          "models": {
+            "openrouter/auto": {
+              "alias": "ORIS Free Mesh"
+            }
+          },
+          "model": {
+            "primary": "openrouter/auto"
+          }
+        }
+      },
+      "gateway": {
+        "mode": "local",
+        "auth": {
+          "mode": "token",
+          "token": "***MASKED***"
+        },
+        "port": 18789,
+        "bind": "loopback",
+        "tailscale": {
+          "mode": "off",
+          "resetOnExit": false
+        },
+        "controlUi": {
+          "allowInsecureAuth": false,
+          "allowedOrigins": [
+            "https://control.orisfy.com",
+            "http://control.orisfy.com"
+          ]
+        },
+        "nodes": {
+          "denyCommands": [
+            "camera.snap",
+            "camera.clip",
+            "screen.record",
+            "contacts.add",
+            "calendar.add",
+            "reminders.add",
+            "sms.send",
+            "sms.search"
+          ]
+        },
+        "trustedProxies": [
+          "127.0.0.1",
+          "::1"
+        ]
+      },
+      "session": {
+        "dmScope": "per-channel-peer"
+      },
+      "tools": {
+        "profile": "coding",
+        "web": {
+          "search": {
+            "provider": "duckduckgo",
+            "enabled": true
+          }
+        }
+      },
+      "auth": {
+        "profiles": {
+          "openrouter:default": {
+            "provider": "openrouter",
+            "mode": "api_key"
+          }
+        }
+      },
+      "plugins": {
+        "entries": {
+          "duckduckgo": {
+            "enabled": true
+          },
+          "feishu": {
+            "enabled": true
+          }
+        }
+      },
+      "hooks": {
+        "internal": {
+          "enabled": true,
+          "entries": {
+            "session-memory": {
+              "enabled": true
+            }
+          }
+        }
+      },
+      "wizard": {
+        "lastRunAt": "2026-04-03T01:58:29.864Z",
+        "lastRunVersion": "2026.4.2",
+        "lastRunCommand": "onboard",
+        "lastRunMode": "local"
+      },
+      "meta": {
+        "lastTouchedVersion": "2026.5.19",
+        "lastTouchedAt": "2026-05-22T21:29:47.395Z"
+      },
+      "secrets": "***MASKED***",
+      "channels": {
+        "feishu": {
+          "enabled": true,
+          "connectionMode": "websocket",
+          "defaultAccount": "main",
+          "dmPolicy": "pairing",
+          "groupPolicy": "allowlist",
+          "typingIndicator": false,
+          "resolveSenderNames": false,
+          "accounts": {
+            "main": {
+              "name": "ORIS",
+              "appId": "cli_a945babe6838dbd9",
+              "appSecret": "***MASKED***"
+            }
+          }
+        }
+      },
+      "models": {
+        "providers": {}
+      }
+    },
+    "agent_models_json": {
+      "providers": {
+        "openrouter": {
+          "baseUrl": "http://127.0.0.1:8789/v1",
+          "api": "openai-completions",
+          "models": [
+            {
+              "id": "auto",
+              "name": "ORIS Free Mesh Auto",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 200000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "openrouter/hunter-alpha",
+              "name": "Hunter Alpha",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 1048576,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "openrouter/healer-alpha",
+              "name": "Healer Alpha",
+              "reasoning": true,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            }
+          ],
+          "apiKey": "***MASKED***"
+        },
+        "huggingface": {
+          "baseUrl": "https://router.huggingface.co/v1",
+          "api": "openai-completions",
+          "models": [
+            {
+              "id": "deepseek-ai/DeepSeek-V4-Pro",
+              "name": "deepseek-ai/DeepSeek-V4-Pro",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 1048576,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V4-Flash",
+              "name": "deepseek-ai/DeepSeek-V4-Flash",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 1048576,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3.6-35B-A3B",
+              "name": "Qwen/Qwen3.6-35B-A3B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "google/gemma-4-31B-it",
+              "name": "google/gemma-4-31B-it",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "google/gemma-4-26B-A4B-it",
+              "name": "google/gemma-4-26B-A4B-it",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-5.1",
+              "name": "zai-org/GLM-5.1",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 202752,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "moonshotai/Kimi-K2.6",
+              "name": "moonshotai/Kimi-K2.6",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-3.1-8B-Instruct",
+              "name": "meta-llama/Llama-3.1-8B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 16384,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3.5-9B",
+              "name": "Qwen/Qwen3.5-9B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "openai/gpt-oss-120b",
+              "name": "GPT-OSS 120B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "openai/gpt-oss-20b",
+              "name": "openai/gpt-oss-20b",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen2.5-7B-Instruct",
+              "name": "Qwen/Qwen2.5-7B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32768,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "MiniMaxAI/MiniMax-M2.7",
+              "name": "MiniMaxAI/MiniMax-M2.7",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 204800,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "inclusionAI/Ling-2.6-1T",
+              "name": "inclusionAI/Ling-2.6-1T",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "moonshotai/Kimi-K2.5",
+              "name": "moonshotai/Kimi-K2.5",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+              "name": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-3.2-1B-Instruct",
+              "name": "meta-llama/Llama-3.2-1B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "stepfun-ai/Step-3.5-Flash",
+              "name": "stepfun-ai/Step-3.5-Flash",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1",
+              "name": "DeepSeek R1",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 3,
+                "output": 7,
+                "cacheRead": 3,
+                "cacheWrite": 3
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-Coder-Next",
+              "name": "Qwen/Qwen3-Coder-Next",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-8B",
+              "name": "Qwen/Qwen3-8B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 40960,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3.5-35B-A3B",
+              "name": "Qwen/Qwen3.5-35B-A3B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen2.5-VL-72B-Instruct",
+              "name": "Qwen/Qwen2.5-VL-72B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32768,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Meta-Llama-3-8B-Instruct",
+              "name": "meta-llama/Meta-Llama-3-8B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/QwQ-32B",
+              "name": "Qwen/QwQ-32B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+              "name": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "MiniMaxAI/MiniMax-M2.5",
+              "name": "MiniMaxAI/MiniMax-M2.5",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 204800,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.7-Flash",
+              "name": "zai-org/GLM-4.7-Flash",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 200000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "openai/gpt-oss-safeguard-20b",
+              "name": "openai/gpt-oss-safeguard-20b",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+              "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-VL-8B-Instruct",
+              "name": "Qwen/Qwen3-VL-8B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-5.1-FP8",
+              "name": "zai-org/GLM-5.1-FP8",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 202752,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-4B-Instruct-2507",
+              "name": "Qwen/Qwen3-4B-Instruct-2507",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3.5-397B-A17B",
+              "name": "Qwen/Qwen3.5-397B-A17B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-5",
+              "name": "zai-org/GLM-5",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 202800,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V3",
+              "name": "deepseek-ai/DeepSeek-V3",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 64000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3.5-122B-A10B",
+              "name": "Qwen/Qwen3.5-122B-A10B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3.5-27B",
+              "name": "Qwen/Qwen3.5-27B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+              "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "google/gemma-3-27b-it",
+              "name": "google/gemma-3-27b-it",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "moonshotai/Kimi-K2-Instruct-0905",
+              "name": "moonshotai/Kimi-K2-Instruct-0905",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-14B",
+              "name": "Qwen/Qwen3-14B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 40960,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+              "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "swiss-ai/Apertus-8B-Instruct-2509",
+              "name": "swiss-ai/Apertus-8B-Instruct-2509",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+              "name": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V3-0324",
+              "name": "deepseek-ai/DeepSeek-V3-0324",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 163840,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+              "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "utter-project/EuroLLM-22B-Instruct-2512",
+              "name": "utter-project/EuroLLM-22B-Instruct-2512",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "moonshotai/Kimi-K2-Instruct",
+              "name": "moonshotai/Kimi-K2-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+              "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+              "name": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-4B-Thinking-2507",
+              "name": "Qwen/Qwen3-4B-Thinking-2507",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V3.2",
+              "name": "deepseek-ai/DeepSeek-V3.2",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 163840,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+              "name": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+              "name": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-32B",
+              "name": "Qwen/Qwen3-32B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen2.5-Coder-3B-Instruct",
+              "name": "Qwen/Qwen2.5-Coder-3B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32768,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "alpindale/WizardLM-2-8x22B",
+              "name": "alpindale/WizardLM-2-8x22B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 65535,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/tiny-aya-earth",
+              "name": "CohereLabs/tiny-aya-earth",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+              "name": "Qwen/Qwen2.5-Coder-32B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Sao10K/L3-8B-Stheno-v3.2",
+              "name": "Sao10K/L3-8B-Stheno-v3.2",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "katanemo/Arch-Router-1.5B",
+              "name": "katanemo/Arch-Router-1.5B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+              "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+              "name": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+              "name": "Qwen/Qwen3-VL-235B-A22B-Thinking",
+              "reasoning": true,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V3.1-Terminus",
+              "name": "deepseek-ai/DeepSeek-V3.1-Terminus",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/AutoGLM-Phone-9B-Multilingual",
+              "name": "zai-org/AutoGLM-Phone-9B-Multilingual",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 65536,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "moonshotai/Kimi-K2-Thinking",
+              "name": "moonshotai/Kimi-K2-Thinking",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-3.3-70B-Instruct",
+              "name": "meta-llama/Llama-3.3-70B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.6V-Flash",
+              "name": "zai-org/GLM-4.6V-Flash",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.7-FP8",
+              "name": "zai-org/GLM-4.7-FP8",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "swiss-ai/Apertus-70B-Instruct-2509",
+              "name": "swiss-ai/Apertus-70B-Instruct-2509",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-3.1-70B-Instruct",
+              "name": "meta-llama/Llama-3.1-70B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+              "name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen2.5-72B-Instruct",
+              "name": "Qwen/Qwen2.5-72B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-30B-A3B",
+              "name": "Qwen/Qwen3-30B-A3B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 40960,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/c4ai-command-r-08-2024",
+              "name": "CohereLabs/c4ai-command-r-08-2024",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-235B-A22B",
+              "name": "Qwen/Qwen3-235B-A22B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 40960,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+              "name": "aisingapore/Gemma-SEA-LION-v4-27B-IT",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Meta-Llama-3-70B-Instruct",
+              "name": "meta-llama/Meta-Llama-3-70B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/aya-expanse-32b",
+              "name": "CohereLabs/aya-expanse-32b",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.5",
+              "name": "zai-org/GLM-4.5",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+              "name": "aisingapore/Qwen-SEA-LION-v4-32B-IT",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+              "name": "NousResearch/Hermes-2-Pro-Llama-3-8B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/c4ai-command-r7b-12-2024",
+              "name": "CohereLabs/c4ai-command-r7b-12-2024",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.5-Air",
+              "name": "zai-org/GLM-4.5-Air",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "allenai/Olmo-3-7B-Instruct",
+              "name": "allenai/Olmo-3-7B-Instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Sao10K/L3-70B-Euryale-v2.1",
+              "name": "Sao10K/L3-70B-Euryale-v2.1",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/c4ai-command-r7b-arabic-02-2025",
+              "name": "CohereLabs/c4ai-command-r7b-arabic-02-2025",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.6",
+              "name": "zai-org/GLM-4.6",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 204800,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "dicta-il/DictaLM-3.0-24B-Thinking",
+              "name": "dicta-il/DictaLM-3.0-24B-Thinking",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Sao10K/L3-8B-Lunaris-v1",
+              "name": "Sao10K/L3-8B-Lunaris-v1",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/command-a-reasoning-08-2025",
+              "name": "CohereLabs/command-a-reasoning-08-2025",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.7",
+              "name": "zai-org/GLM-4.7",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 204800,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+              "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 1048576,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4-32B-0414",
+              "name": "zai-org/GLM-4-32B-0414",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/command-a-translate-08-2025",
+              "name": "CohereLabs/command-a-translate-08-2025",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.5V-FP8",
+              "name": "zai-org/GLM-4.5V-FP8",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "baidu/ERNIE-4.5-VL-424B-A47B-Base-PT",
+              "name": "baidu/ERNIE-4.5-VL-424B-A47B-Base-PT",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 123000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-Prover-V2-671B",
+              "name": "deepseek-ai/DeepSeek-Prover-V2-671B",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 160000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/tiny-aya-global",
+              "name": "CohereLabs/tiny-aya-global",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.5V",
+              "name": "zai-org/GLM-4.5V",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 65536,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+              "name": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+              "reasoning": true,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-0528",
+              "name": "deepseek-ai/DeepSeek-R1-0528",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 163840,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/tiny-aya-water",
+              "name": "CohereLabs/tiny-aya-water",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.6V",
+              "name": "zai-org/GLM-4.6V",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "meta-llama/Llama-Guard-4-12B",
+              "name": "meta-llama/Llama-Guard-4-12B",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 1048576,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "MiniMaxAI/MiniMax-M1-80k",
+              "name": "MiniMaxAI/MiniMax-M1-80k",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 1000000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/tiny-aya-fire",
+              "name": "CohereLabs/tiny-aya-fire",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "zai-org/GLM-4.6V-FP8",
+              "name": "zai-org/GLM-4.6V-FP8",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "google/gemma-3n-E4B-it",
+              "name": "google/gemma-3n-E4B-it",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32768,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+              "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 8192,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "baidu/ERNIE-4.5-300B-A47B-Base-PT",
+              "name": "baidu/ERNIE-4.5-300B-A47B-Base-PT",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 123000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+              "name": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "CohereLabs/aya-vision-32b",
+              "name": "CohereLabs/aya-vision-32b",
+              "reasoning": false,
+              "input": [
+                "text",
+                "image"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+              "name": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+              "reasoning": true,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+              "name": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepcogito/cogito-671b-v2.1",
+              "name": "deepcogito/cogito-671b-v2.1",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 163840,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V3.1",
+              "name": "DeepSeek V3.1",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0.6,
+                "output": 1.25,
+                "cacheRead": 0.6,
+                "cacheWrite": 0.6
+              },
+              "contextWindow": 131072,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepcogito/cogito-671b-v2.1-FP8",
+              "name": "deepcogito/cogito-671b-v2.1-FP8",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 163840,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "deepseek-ai/DeepSeek-V3.2-Exp",
+              "name": "deepseek-ai/DeepSeek-V3.2-Exp",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 163840,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "EssentialAI/rnj-1-instruct",
+              "name": "EssentialAI/rnj-1-instruct",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32768,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "MiniMaxAI/MiniMax-M2",
+              "name": "MiniMaxAI/MiniMax-M2",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 204800,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "pearl-ai/Gemma-4-31B-it-pearl",
+              "name": "pearl-ai/Gemma-4-31B-it-pearl",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 32000,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "XiaomiMiMo/MiMo-V2-Flash",
+              "name": "XiaomiMiMo/MiMo-V2-Flash",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 262144,
+              "maxTokens": "***MASKED***"
+            },
+            {
+              "id": "MiniMaxAI/MiniMax-M2.1",
+              "name": "MiniMaxAI/MiniMax-M2.1",
+              "reasoning": false,
+              "input": [
+                "text"
+              ],
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              },
+              "contextWindow": 204800,
+              "maxTokens": "***MASKED***"
+            }
+          ],
+          "apiKey": "***MASKED***"
+        }
+      }
+    },
+    "agent_auth_profiles_json": {
+      "version": 1,
+      "profiles": {
+        "openrouter:default": {
+          "type": "api_key",
+          "provider": "openrouter",
+          "keyRef": "***MASKED***"
+        }
+      }
+    }
+  },
+  "commands": {
+    "openclaw_version": {
+      "rc": 0,
+      "stdout": "OpenClaw 2026.5.19 (a185ca2)\n",
+      "stderr": ""
+    },
+    "openclaw_help": {
+      "rc": 0,
+      "stdout": "\nOpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.\n\nUsage: openclaw [options] [command]\n\nOptions:\n  --container <name>   Run the CLI inside a running Podman/Docker container\n                       named <name> (default: env OPENCLAW_CONTAINER)\n  --dev                Dev profile: isolate state under ~/.openclaw-dev, default\n                       gateway port 19001, and shift derived ports\n                       (browser/canvas)\n  -h, --help           Display help for command\n  --log-level <level>  Global log level override for file + console\n                       (silent|fatal|error|warn|info|debug|trace)\n  --no-color           Disable ANSI colors\n  --profile <name>     Use a named profile (isolates\n                       OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under\n                       ~/.openclaw-<name>)\n  -V, --version        output the version number\n\nCommands:\n  Hint: commands suffixed with * have subcommands. Run <command> --help for details.\n  acp *                Run and manage ACP-backed coding agents\n  agent                Run one agent turn via the Gateway\n  agents *             Manage isolated agents (workspaces, auth, routing)\n  approvals *          Manage exec approvals (gateway or node host)\n  backup *             Create and verify local backup archives for OpenClaw\n                       state\n  capability *         Run provider capability commands (fallback alias: infer)\n  channels *           Add, remove, login, and inspect messaging channels\n  chat                 Open a local terminal UI (alias for tui --local)\n  clawbot *            Legacy clawbot command aliases\n  commitments *        List and manage inferred follow-up commitments\n  completion           Generate shell completion script\n  config *             Non-interactive config helpers\n                       (get/set/unset/file/validate). Default: starts guided\n                       setup.\n  configure            Interactive configuration for credentials, channels,\n                       gateway, and agent defaults\n  crestodian           Open the interactive setup and repair assistant\n  cron *               Schedule and inspect Gateway background jobs\n  daemon *             Manage the Gateway service (legacy alias)\n  dashboard            Open the Control UI with your current token\n  devices *            Device pairing + token management\n  directory *          Lookup contact and group IDs (self, peers, groups) for\n                       supported chat channels\n  dns *                DNS helpers for wide-area discovery (Tailscale + CoreDNS)\n  docs                 Search the live OpenClaw docs\n  doctor               Diagnose and repair config, Gateway, plugin, and channel\n                       problems\n  exec-policy *        Show or synchronize requested exec policy with host\n                       approvals\n  gateway *            Run, inspect, and query the OpenClaw Gateway\n  health               Fetch detailed health from the running Gateway\n  help                 Display help for command\n  hooks *              Manage internal agent hooks\n  infer *              Run provider-backed model, media, search, and embedding\n                       commands\n  logs                 Tail Gateway logs locally or via RPC\n  mcp *                Manage OpenClaw MCP config and channel bridge\n  memory               Search, inspect, and reindex memory files\n  message *            Send, read, and manage channel messages\n  migrate *            Import state from another agent system\n  models *             List, scan, and set model providers\n  node *               Run and manage the headless node host service\n  nodes *              Pair nodes and run node-host commands through the Gateway\n  onboard              Interactive onboarding for gateway, workspace, and skills\n  pairing *            Secure DM pairing (approve inbound requests)\n  plugins *            Install, enable, disable, and inspect plugins\n  proxy *              Run the OpenClaw debug proxy and inspect captured traffic\n  qr                   Generate mobile pairing QR/setup code\n  reset                Reset local config/state (keeps the CLI installed)\n  sandbox *            Manage sandbox containers for agent isolation\n  secrets *            Audit, apply, and reload SecretRef-backed credentials\n  security *           Security tools and local config audits\n  sessions *           List stored conversation sessions\n  setup                Initialize local config and an agent workspace\n  skills *             List, inspect, and install agent skills\n  status               Show Gateway, channel, model, and recent-session status\n  system *             System events, heartbeat, and presence\n  tasks *              Inspect durable background tasks and flows\n  terminal             Open a local terminal UI (alias for tui --local)\n  tui                  Open a terminal UI connected to the Gateway\n  uninstall            Uninstall the gateway service + local data (CLI remains)\n  update *             Update OpenClaw and inspect update channel status\n  webhooks *           Webhook helpers and integrations\n\nExamples:\n  openclaw onboard\n    Run guided setup for a local Gateway, workspace, auth, and channels.\n  openclaw setup\n    Create the baseline config, workspace, and session folders.\n  openclaw configure\n    Change models, Gateway, channels, plugins, skills, and health checks.\n  openclaw status\n    Check Gateway, channel, model, and recent-session status.\n  openclaw doctor --fix\n    Repair common config, service, plugin, and channel problems.\n  openclaw channels add\n    Add or update a chat channel account with guided prompts.\n  openclaw channels status\n    See connected messaging accounts and login state.\n  openclaw --dev gateway\n    Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001.\n  openclaw gateway run --force\n    Start the Gateway and replace anything bound to its port.\n  openclaw models status\n    Show model/provider auth health before running agents.\n  openclaw plugins list\n    Inspect enabled, disabled, and installed plugins.\n  openclaw agent --to +15555550123 --message \"Run summary\" --deliver\n    Run one agent turn through the Gateway and optionally deliver the reply.\n  openclaw message send --channel telegram --target @mychat --message \"Hi\"\n    Send via your Telegram bot.\n\nDocs: https://docs.openclaw.ai/cli\n\n",
+      "stderr": ""
+    },
+    "openclaw_models_help": {
+      "rc": 0,
+      "stdout": "\nOpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.\n\nUsage: openclaw models [options] [command]\n\nModel discovery, scanning, and configuration\n\nOptions:\n  --agent <id>     Agent id to inspect (overrides\n                   OPENCLAW_AGENT_DIR/PI_CODING_AGENT_DIR)\n  -h, --help       Display help for command\n  --status-json    Output JSON (alias for `models status --json`) (default:\n                   false)\n  --status-plain   Plain output (alias for `models status --plain`) (default:\n                   false)\n\nCommands:\n  aliases          Manage model aliases\n  auth             Manage model auth profiles\n  fallbacks        Manage model fallback list\n  image-fallbacks  Manage image model fallback list\n  list             List models (configured by default)\n  scan             Scan OpenRouter free models for tools + images\n  set              Set the default model\n  set-image        Set the image model\n  status           Show configured model state\n\nDocs: https://docs.openclaw.ai/cli/models\n\n",
+      "stderr": ""
+    },
+    "openclaw_agents_help": {
+      "rc": 0,
+      "stdout": "\nOpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.\n\nUsage: openclaw agents [options] [command]\n\nManage isolated agents (workspaces + auth + routing)\n\nOptions:\n  -h, --help    Display help for command\n\nCommands:\n  add           Add a new isolated agent\n  bind          Add routing bindings for an agent\n  bindings      List routing bindings\n  delete        Delete an agent and prune workspace/state\n  list          List configured agents\n  set-identity  Update an agent identity (name/theme/emoji/avatar)\n  unbind        Remove routing bindings for an agent\n\nDocs: https://docs.openclaw.ai/cli/agents\n\n",
+      "stderr": ""
+    },
+    "openclaw_plugins_help": {
+      "rc": 0,
+      "stdout": "\nOpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.\n\nUsage: openclaw plugins [options] [command]\n\nManage OpenClaw plugins and extensions\n\nOptions:\n  -h, --help   Display help for command\n\nCommands:\n  build        Generate simple tool plugin metadata\n  disable      Disable a plugin in config\n  doctor       Report plugin load issues\n  enable       Enable a plugin in config\n  init         Create a simple tool plugin project\n  inspect      Inspect plugin details\n  install      Install a plugin or hook pack (path, archive, npm spec, git repo,\n               clawhub:package, or marketplace entry)\n  list         List discovered plugins\n  marketplace  Inspect Claude-compatible plugin marketplaces\n  registry     Inspect or rebuild the persisted plugin registry\n  search       Search ClawHub plugin packages\n  uninstall    Uninstall a plugin\n  update       Update installed plugins and tracked hook packs\n  validate     Validate simple tool plugin metadata\n\nDocs: https://docs.openclaw.ai/cli/plugins\n\n",
+      "stderr": ""
+    },
+    "openclaw_status": {
+      "rc": 0,
+      "stdout": "Service: systemd user (enabled)\nFile logs: /tmp/openclaw/openclaw-2026-05-23.log\nCommand: /home/admin/.npm-global/bin/openclaw gateway --port 18789\nService file: ~/.config/systemd/user/openclaw-gateway.service\n\nService config looks out of date or non-standard.\nService config issue: Gateway service PATH missing required dirs: /home/admin/.local/bin\nRecommendation: run \"openclaw doctor\" (or \"openclaw doctor --repair\").\nConfig (cli): ~/.openclaw/openclaw.json\nConfig warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nConfig (service): ~/.openclaw/openclaw.json\nConfig warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\n\nGateway: bind=loopback (127.0.0.1), port=18789 (service args)\nProbe target: ws://127.0.0.1:18789\nDashboard: http://127.0.0.1:18789/\nProbe note: Loopback-only gateway; only local clients can connect.\n\nCLI version: 2026.5.19 (~/.npm-global/bin/openclaw)\nGateway version: 2026.5.19\n\nRuntime: running (pid 59073, state active, sub running, last exit 0, reason 0)\nConnectivity probe: ok\nCapability: admin-capable\n\nListening: 127.0.0.1:18789\nTroubles: run openclaw status\nTroubleshooting: https://docs.openclaw.ai/troubleshooting\n",
+      "stderr": ""
+    },
+    "provider_code_grep": {
+      "rc": 0,
+      "stdout": "rams.apiKey),\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:241:\treturn compatibility === \"anthropic\" ? \"anthropic-messages\" : \"openai-completions\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:251:\tconst baseUrl = params.baseUrl.trim();\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:254:\tconst requestedProviderId = explicitProviderId || buildEndpointIdFromUrl(baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:257:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:262:\t\t...providerIdResult.renamed ? { providerIdRenamedFrom: normalizeEndpointId(requestedProviderId) || \"custom\" } : {}\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:266:\tconst baseUrl = normalizeOptionalString(params.baseUrl) ?? \"\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:268:\tif (!baseUrl || !modelId) throw new CustomApiError(\"missing_required\", [\"Auth choice \\\"custom-api-key\\\" requires a base URL and model ID.\", \"Use --custom-base-url and --custom-model-id.\"].join(\"\\n\"));\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:269:\tconst apiKey = normalizeOptionalString(params.apiKey);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:273:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:276:\t\t...apiKey ? { apiKey } : {},\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:282:\tconst baseUrl = normalizeOptionalString(params.baseUrl) ?? \"\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:283:\tif (!URL.canParse(baseUrl)) throw new CustomApiError(\"invalid_base_url\", \"Custom provider base URL must be a valid URL.\");\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:284:\tif (params.compatibility !== \"openai\" && params.compatibility !== \"anthropic\") throw new CustomApiError(\"invalid_compatibility\", \"Custom provider compatibility must be \\\"openai\\\" or \\\"anthropic\\\".\");\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:287:\tconst isAzure = isAzureUrl(baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:288:\tconst isAzureOpenAi = isAzureOpenAiUrl(baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:289:\tconst resolvedBaseUrl = isAzure ? transformAzureConfigUrl(baseUrl) : baseUrl;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:292:\t\tbaseUrl: resolvedBaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:353:\tconst { apiKey: existingApiKey, ...existingProviderRest } = existingProvider ?? {};\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:354:\tconst normalizedApiKey = normalizeOptionalProviderApiKey(params.apiKey) ?? normalizeOptionalProviderApiKey(existingApiKey);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:355:\tconst providerApi = isAzureOpenAi ? \"azure-openai-responses\" : resolveProviderApi(params.compatibility);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:366:\t\t\t\t\tbaseUrl: resolvedBaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-custom-config-CxWkfN8d.js:368:\t\t\t\t\t...normalizedApiKey ? { apiKey: normalizedApiKey } : {},\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2245:\t* @param {string} baseURL The base URL\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2250:\tfunction combineURLs(baseURL, relativeURL) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2251:\t\treturn relativeURL ? baseURL.replace(/\\/?\\/$/, \"\") + \"/\" + relativeURL.replace(/^\\/+/, \"\") : baseURL;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2254:\t* Creates a new URL by combining the baseURL with the requestedURL,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2258:\t* @param {string} baseURL The base URL\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2263:\tfunction buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:2265:\t\tif (baseURL && (isRelativeUrl || allowAbsoluteUrls === false)) return combineURLs(baseURL, requestedURL);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:3115:\t\t\tconst fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:3514:\t\t\tbaseURL: defaultToConfig2,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:3581:\t\tconst baseURL = own(\"baseURL\");\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:3585:\t\tnewConfig.url = buildURL(buildFullPath(baseURL, url, allowAbsoluteUrls), config.params, config.paramsSerializer);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:4285:\t\t\t\tbaseUrl: validators.spelling(\"baseURL\"),\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:4352:\t\t\treturn buildURL(buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls), config.params, config.paramsSerializer);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/dist-CkQ0cN7M.js:4972:\t\t\t\tbaseURL: options.baseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/minimax-vlm-BQ4cGDfY.js:35:\tconst apiKey = normalizeSecretInput(params.apiKey);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/minimax-vlm-BQ4cGDfY.js:36:\tif (!apiKey) throw new Error(\"MiniMax VLM: apiKey required\");\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/minimax-vlm-BQ4cGDfY.js:53:\t\t\tAuthorization: `Bearer ${apiKey}`,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/image-generation-provider-wqlmhhAo.js:36:\t\t\tconst { fetchFn, baseUrl, allowPrivateNetwork, headers, dispatcherPolicy } = await resolveVydraRequestContext({\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/image-generation-provider-wqlmhhAo.js:44:\t\t\t\turl: `${baseUrl}/models/${model}`,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/image-generation-provider-wqlmhhAo.js:61:\t\t\t\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:32:function buildMattermostApiUrl(baseUrl, path) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:33:\tconst normalized = normalizeMattermostBaseUrl(baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:34:\tif (!normalized) throw new Error(\"Mattermost baseUrl is required\");\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:46:\tconst baseUrl = normalizeMattermostBaseUrl(params.baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:47:\tif (!baseUrl) throw new Error(\"Mattermost baseUrl is required\");\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:48:\tconst apiBaseUrl = `${baseUrl}/api/v4`;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:76:\t\tconst url = buildMattermostApiUrl(baseUrl, path);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:93:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:310:\treturn Boolean(mattermost?.baseUrl?.trim() && (hasConfiguredAccountValue(mattermost.botToken) || process.env.MATTERMOST_BOT_TOKEN?.trim()));\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:346:\tconst configUrl = merged.baseUrl?.trim();\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:348:\tconst baseUrl = normalizeMattermostBaseUrl(configUrl || envUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:351:\tconst baseUrlSource = configUrl ? \"config\" : envUrl ? \"env\" : \"none\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:357:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/accounts-CAmTlzHh.js:359:\t\tbaseUrlSource,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:200:\tconst configuredBaseUrl = typeof provider.baseUrl === \"string\" ? provider.baseUrl.trim() : \"\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:208:\tif (normalizedBaseUrl === provider.baseUrl && requestWithPrivateNetworkDefault === provider.request) return provider;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:211:\t\tbaseUrl: normalizedBaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:314:function resolveLmstudioProviderAuthMode(apiKey) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:315:\tconst normalized = normalizeOptionalSecretInput(apiKey);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:321:\treturn hasConfiguredSecretInput(apiKey) ? \"api-key\" : void 0;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:327:\treturn Array.isArray(providerConfig?.models) && providerConfig.models.length > 0 && !resolveLmstudioProviderAuthMode(providerConfig?.apiKey) && !hasLmstudioAuthorizationHeader(providerConfig?.headers);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:333:\tconst apiKey = params.apiKey?.trim();\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:334:\tif (apiKey && !(apiKey === \"lmstudio-local\") && !isNonSecretApiKeyMarker(apiKey)) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:336:\t\theaders.Authorization = `Bearer ${apiKey}`;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:357:\tconst apiKeyInput = (params.config?.models?.providers?.[LMSTUDIO_PROVIDER_ID])?.apiKey;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:358:\tif (apiKeyInput === void 0 || apiKeyInput === null) return;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:359:\tconst path = params.path ?? \"models.providers.lmstudio.apiKey\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:361:\tconst directApiKey = normalizeOptionalSecretInput(apiKeyInput);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:384:\t\tvalue: apiKeyInput,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:425:\tconst [apiKey, headers] = await Promise.all([resolveLmstudioRuntimeApiKey({\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:436:\t\tapiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:463:\t\t\t`Set models.providers.lmstudio.apiKey (for example \"${envMarker}\")`,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:477:\tconst resolvedApiKey = resolved.apiKey?.trim();\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:509:\tconst baseUrl = resolveLmstudioServerBase(params.baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:513:\t\t\turl: `${baseUrl}/api/v1/models`,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:515:\t\t\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:549:\t\tbaseUrl: params.baseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:550:\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:592:\tconst baseUrl = resolveLmstudioServerBase(params.baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:594:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:595:\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:610:\t\turl: `${baseUrl}/api/v1/models/load`,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/models.fetch-CmfkWPWJ.js:614:\t\t\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-CN76ar2l.js:15:\t\tapi: \"openai-completions\",\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/onboard-CN76ar2l.js:16:\t\tbaseUrl: DEEPSEEK_BASE_URL,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:3138:\tif (normalizeLowercaseStringOrEmpty(params.modelApi ?? \"\") === \"openai-completions\" || normalizeLowercaseStringOrEmpty(params.modelApi ?? \"\") === \"anthropic-messages\" || normalizeLowercaseStringOrEmpty(params.modelApi ?? \"\") === \"bedrock-converse-stream\") return true;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:5344:\treturn message.role === \"assistant\" && message.api === \"openai-codex-responses\" && message.provider === \"openai-codex\" && message.stopReason !== \"error\" && message.stopReason !== \"aborted\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:6646:\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:6696:\tif (!requestAuth.apiKey && !requestAuth.headers) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:6705:\t\tapiKey: requestAuth.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7096:\t\tconst apiKey = authResult.apiKey ?? \"\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7132:\t\t\t\t\t\t\t\tapiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7175:\t\t\t\t\t\tapiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7190:\t\t\t\t\t\t\tapiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7727:* @param apiKey - Either a traditional API key string or OAuth JSON\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7730:function parseGeminiAuth(apiKey) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7731:\tif (apiKey.startsWith(\"{\")) try {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7732:\t\tconst parsed = JSON.parse(apiKey);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:7739:\t\t\"x-goog-api-key\": apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8013:\t\t\t\tbaseUrl: stringifyGooglePromptCacheKeyPart(cacheData.baseUrl),\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8042:\tconst response = await params.fetchImpl(`${params.baseUrl}/${params.cachedContent}?updateMask=ttl`, {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8044:\t\theaders: mergeTransportHeaders(parseGeminiAuth(params.apiKey).headers, params.headers),\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8052:\tconst response = await params.fetchImpl(`${params.baseUrl}/cachedContents`, {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8054:\t\theaders: mergeTransportHeaders(parseGeminiAuth(params.apiKey).headers, params.headers),\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8071:\tconst baseUrl = normalizeGoogleApiBaseUrl(params.model.baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8078:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8090:\t\t\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8091:\t\t\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8105:\t\t\t\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8117:\t\tapiKey: params.apiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8118:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8133:\t\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8146:\t\tbaseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8164:\tconst apiKey = params.apiKey?.trim();\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8165:\tif (!systemPrompt || !apiKey) return;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8169:\t\t\tapiKey,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8994:function hasResolvedRuntimeApiKey(apiKey) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8995:\treturn typeof apiKey === \"string\" && apiKey.trim().length > 0;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:8998:\treturn model.provider === \"openai-codex\" && model.api === \"openai-codex-responses\";\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:9084:\t\tconst apiKey = await resolveEmbeddedAgentApiKey({\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:9091:\t\t\tapiKey: apiKey ?? options?.apiKey\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:10860:\treturn normalizeProviderId(params.provider ?? \"\") === \"kimi\" && modelApi === \"anthropic-messages\" || modelApi === \"openai-completions\" || TOOLCALL_REPAIR_RESPONSES_APIS.has(modelApi);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:11822:function isLocalProviderBaseUrl(baseUrl) {\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:11825:\t\thost = new URL(baseUrl).hostname.toLowerCase();\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:11861:\tconst baseUrl = params?.model?.baseUrl;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:11862:\tconst isLocalProvider = typeof baseUrl === \"string\" && baseUrl.length > 0 && isLocalProviderBaseUrl(baseUrl);\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:13226:\t\t\t\t\tbaseUrl: params.model.baseUrl ?? void 0\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:14180:\t\t\t\t\tbaseUrl: params.model.baseUrl,\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/selection-CwzX-GXW.js:14318:\t\t\t\t\t\t\tapiKey: await resolveEmbeddedAgentApiKey({\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:4://#region src/agents/auth-profiles/order.d.ts\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:24://#region src/agents/auth-profiles/display.d.ts\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:31://#region src/agents/auth-profiles/doctor.d.ts\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:39://#region src/agents/auth-profiles/oauth.d.ts\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:41:  apiKey: string;\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:59://#region src/agents/auth-profiles/usage-state.d.ts\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:87: * matches the existing save pattern throughout the auth-profiles module.\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/auth-profiles-CKhN5FKQ.d.ts:93://#region src/agents/auth-profiles/usage.d.ts\n/home/admin/.npm-global/lib/node_modules/openclaw/dist/protocol-CjAsjR7U.js:466:\tapiKey: Type.Optional(Type.String()),\n",
+      "stderr": ""
+    },
+    "agent_file_grep": {
+      "rc": 0,
+      "stdout": "/home/admin/.openclaw/openclaw.json:6:        \"openrouter/auto\": {\n/home/admin/.openclaw/openclaw.json:11:        \"primary\": \"openrouter/auto\"\n/home/admin/.openclaw/openclaw.json:58:        \"provider\": \"duckduckgo\",\n/home/admin/.openclaw/openclaw.json:65:      \"openrouter:default\": {\n/home/admin/.openclaw/openclaw.json:66:        \"provider\": \"openrouter\",\n/home/admin/.openclaw/openclaw.json:102:    \"providers\": {\n/home/admin/.openclaw/openclaw.json:125:            \"provider\": \"localfile\",\n/home/admin/.openclaw/openclaw.json:133:    \"providers\": {}\n/home/admin/.openclaw/agents/main/agent/auth-state.json:4:    \"openrouter\": \"openrouter:default\"\n/home/admin/.openclaw/agents/main/agent/auth-state.json:7:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_002356:5:    \"openrouter\": \"openrouter:default\"\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_002356:8:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:4:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:6:      \"provider\": \"openrouter\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:9:        \"provider\": \"localfile\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json:10:        \"id\": \"/models/providers/openrouter/apiKey\"\n/home/admin/.openclaw/agents/main/agent/models.json:2:  \"providers\": {\n/home/admin/.openclaw/agents/main/agent/models.json:3:    \"openrouter\": {\n/home/admin/.openclaw/agents/main/agent/models.json:4:      \"baseUrl\": \"http://127.0.0.1:8789/v1\",\n/home/admin/.openclaw/agents/main/agent/models.json:24:          \"id\": \"openrouter/hunter-alpha\",\n/home/admin/.openclaw/agents/main/agent/models.json:40:          \"id\": \"openrouter/healer-alpha\",\n/home/admin/.openclaw/agents/main/agent/models.json:57:      \"apiKey\": \"ndIPColEHBhyJvXq25m-WZysdY0QYK2wP37lhy69HiY\"\n/home/admin/.openclaw/agents/main/agent/models.json:60:      \"baseUrl\": \"https://router.huggingface.co/v1\",\n/home/admin/.openclaw/agents/main/agent/models.json:2110:      \"apiKey\": \"HUGGINGFACE_HUB_TOKEN\"\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:4:    \"openrouter:default\": {\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:6:      \"provider\": \"openrouter\",\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:11:    \"openrouter\": \"openrouter:default\"\n/home/admin/.openclaw/agents/main/agent/auth-profiles.json.bak_20260406_001348:14:    \"openrouter:default\": {\n",
+      "stderr": ""
+    },
+    "recent_gateway_errors": {
+      "rc": 0,
+      "stdout": "May 23 05:29:10 iZt4n62qkjefjya5xa097pZ openclaw[57856]: 2026-05-23T05:29:10.774+08:00 [gateway] resolving authentication…\nMay 23 05:29:10 iZt4n62qkjefjya5xa097pZ openclaw[57856]: 2026-05-23T05:29:10.786+08:00 [gateway] auth mode=none explicitly configured; all gateway connections are unauthenticated.\nMay 23 05:29:11 iZt4n62qkjefjya5xa097pZ openclaw[57856]: gateway.auth: Invalid input\nMay 23 05:29:17 iZt4n62qkjefjya5xa097pZ openclaw[57868]: 2026-05-23T05:29:17.774+08:00 [gateway] resolving authentication…\nMay 23 05:29:17 iZt4n62qkjefjya5xa097pZ openclaw[57868]: 2026-05-23T05:29:17.788+08:00 [gateway] auth mode=none explicitly configured; all gateway connections are unauthenticated.\nMay 23 05:29:18 iZt4n62qkjefjya5xa097pZ openclaw[57868]: gateway.auth: Invalid input\nMay 23 05:29:24 iZt4n62qkjefjya5xa097pZ openclaw[57883]: 2026-05-23T05:29:24.760+08:00 [gateway] resolving authentication…\nMay 23 05:29:24 iZt4n62qkjefjya5xa097pZ openclaw[57883]: 2026-05-23T05:29:24.772+08:00 [gateway] auth mode=none explicitly configured; all gateway connections are unauthenticated.\nMay 23 05:29:25 iZt4n62qkjefjya5xa097pZ openclaw[57883]: gateway.auth: Invalid input\nMay 23 05:29:31 iZt4n62qkjefjya5xa097pZ openclaw[57896]: 2026-05-23T05:29:31.752+08:00 [gateway] resolving authentication…\nMay 23 05:29:31 iZt4n62qkjefjya5xa097pZ openclaw[57896]: 2026-05-23T05:29:31.765+08:00 [gateway] auth mode=none explicitly configured; all gateway connections are unauthenticated.\nMay 23 05:29:32 iZt4n62qkjefjya5xa097pZ openclaw[57896]: gateway.auth: Invalid input\nMay 23 05:29:38 iZt4n62qkjefjya5xa097pZ openclaw[58027]: 2026-05-23T05:29:38.845+08:00 [gateway] resolving authentication…\nMay 23 05:29:38 iZt4n62qkjefjya5xa097pZ openclaw[58027]: 2026-05-23T05:29:38.860+08:00 [gateway] auth mode=none explicitly configured; all gateway connections are unauthenticated.\nMay 23 05:29:39 iZt4n62qkjefjya5xa097pZ openclaw[58027]: gateway.auth: Invalid input\nMay 23 05:29:41 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:29:41.417+08:00 [gateway] resolving authentication…\nMay 23 05:29:41 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:29:41.433+08:00 [gateway] auth mode=none explicitly configured; all gateway connections are unauthenticated.\nMay 23 05:29:42 iZt4n62qkjefjya5xa097pZ openclaw[58100]: - openrouter/auto model configured, enabled automatically.\nMay 23 05:29:46 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:29:46.573+08:00 [gateway] agent model: openrouter/openrouter/auto (thinking=medium, fast=off)\nMay 23 05:29:47 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:29:47.877+08:00 [browser/server] No browser auth configured; generated browser control auth credential automatically.\nMay 23 05:29:47 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:29:47.885+08:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)\nMay 23 05:30:01 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:30:01.173+08:00 [ws] ⇄ res ✓ models.authStatus 157ms conn=412b6053…2675 id=9ee713b6…0df4\nMay 23 05:30:01 iZt4n62qkjefjya5xa097pZ openclaw[58100]: 2026-05-23T05:30:01.387+08:00 [ws] ⇄ res ✓ models.list 211ms conn=412b6053…2675 id=762e60a5…d037\nMay 23 05:32:21 iZt4n62qkjefjya5xa097pZ openclaw[58347]: 2026-05-23T05:32:21.609+08:00 [gateway] resolving authentication…\nMay 23 05:32:22 iZt4n62qkjefjya5xa097pZ openclaw[58347]: - openrouter/auto model configured, enabled automatically.\nMay 23 05:32:25 iZt4n62qkjefjya5xa097pZ openclaw[58347]: 2026-05-23T05:32:25.967+08:00 [gateway] agent model: openrouter/openrouter/auto (thinking=medium, fast=off)\nMay 23 05:32:26 iZt4n62qkjefjya5xa097pZ openclaw[58347]: 2026-05-23T05:32:26.379+08:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)\nMay 23 05:32:29 iZt4n62qkjefjya5xa097pZ openclaw[58347]: 2026-05-23T05:32:29.912+08:00 [ws] ⇄ res ✓ models.authStatus 302ms conn=ba8139fa…4381 id=146a7c0e…715b\nMay 23 05:32:30 iZt4n62qkjefjya5xa097pZ openclaw[58347]: 2026-05-23T05:32:30.338+08:00 [ws] ⇄ res ✓ models.list 416ms conn=ba8139fa…4381 id=b1df1b6f…d51c\nMay 23 05:32:40 iZt4n62qkjefjya5xa097pZ openclaw[58347]: 2026-05-23T05:32:40.497+08:00 [ws] ⇄ res ✓ models.list 146ms conn=c4269366…60df id=4c0c746b…96f3\nMay 23 05:35:00 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:00.846+08:00 [gateway] resolving authentication…\nMay 23 05:35:01 iZt4n62qkjefjya5xa097pZ openclaw[58542]: - openrouter/auto model configured, enabled automatically.\nMay 23 05:35:04 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:04.695+08:00 [gateway] agent model: openrouter/openrouter/auto (thinking=medium, fast=off)\nMay 23 05:35:05 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:05.145+08:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)\nMay 23 05:35:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:08.719+08:00 [ws] ⇄ res ✓ models.authStatus 343ms conn=19974bf7…b9d9 id=1586512e…ba22\nMay 23 05:35:09 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:09.141+08:00 [ws] ⇄ res ✓ models.list 416ms conn=19974bf7…b9d9 id=086d4844…434e\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.492+08:00 [agent/embedded] embedded run agent end: runId=b86b908b-fd83-4621-8684-614911f12b16 isError=true model=openrouter/auto provider=openrouter error=⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key. rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.515+08:00 [agent/embedded] embedded run failover decision: runId=b86b908b-fd83-4621-8684-614911f12b16 stage=assistant decision=surface_error reason=billing from=openrouter/openrouter/auto profile=sha256:ac092b59b472 rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.520+08:00 [diagnostic] lane task error: lane=main durationMs=2401 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.522+08:00 [diagnostic] lane task error: lane=session:agent:main:dashboard:5619e3ad-a91e-445d-9b81-6903e6c0f956 durationMs=2405 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.529+08:00 [model-fallback/decision] model fallback decision: decision=candidate_failed requested=openrouter/openrouter/auto candidate=openrouter/openrouter/auto reason=billing next=none detail=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78cedcde0c0742d3d89beba345b39e592ed12beef0634b1ec5f and adjust the key's monthly limit\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.670+08:00 Embedded agent failed before reply: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.409+08:00 [gateway] resolving authentication…\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: - openrouter/auto model configured, enabled automatically.\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.239+08:00 [gateway] agent model: openrouter/openrouter/auto (thinking=medium, fast=off)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.744+08:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.312+08:00 [ws] ⇄ res ✓ models.authStatus 186ms conn=906b0dcb…58e5 id=679ad567…955b\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.648+08:00 [ws] ⇄ res ✓ models.list 330ms conn=906b0dcb…58e5 id=d0ad2347…839d\nMay 23 05:50:26 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:26.842+08:00 [ws] ⇄ res ✓ models.authStatus 165ms conn=906b0dcb…58e5 id=43bb027a…dcfb\nMay 23 05:50:27 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:27.013+08:00 [ws] ⇄ res ✓ models.list 338ms conn=906b0dcb…58e5 id=805f4700…db52\nMay 23 05:50:30 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:30.096+08:00 [ws] ⇄ res ✓ models.list 121ms conn=906b0dcb…58e5 id=8b73faaa…9b0c\nMay 23 05:50:32 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:32.565+08:00 [ws] ⇄ res ✓ models.list 123ms conn=906b0dcb…58e5 id=a612b45c…f99e\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.397+08:00 [agent/embedded] embedded run agent end: runId=29ff0d10-e30b-46af-99b6-06e7875be74c isError=true model=openrouter/auto provider=openrouter error=⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key. rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.426+08:00 [agent/embedded] embedded run failover decision: runId=29ff0d10-e30b-46af-99b6-06e7875be74c stage=assistant decision=surface_error reason=billing from=openrouter/openrouter/auto profile=sha256:ac092b59b472 rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.430+08:00 [diagnostic] lane task error: lane=main durationMs=2488 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.432+08:00 [diagnostic] lane task error: lane=session:agent:main:dashboard:151ef3a8-7a47-45bd-b81d-b1658ec88e18 durationMs=2491 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.439+08:00 [model-fallback/decision] model fallback decision: decision=candidate_failed requested=openrouter/openrouter/auto candidate=openrouter/openrouter/auto reason=billing next=none detail=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78cedcde0c0742d3d89beba345b39e592ed12beef0634b1ec5f and adjust the key's monthly limit\nMay 23 05:50:47 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:50:47.585+08:00 Embedded agent failed before reply: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\n",
+      "stderr": ""
+    }
+  },
+  "question": "Which provider key/schema should be used for a local OpenAI-compatible Free Mesh endpoint instead of OpenClaw's official OpenRouter provider?"
+}
