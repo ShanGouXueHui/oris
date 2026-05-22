@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "timestamp_utc": "20260522T212113Z",
+  "conf": "/etc/nginx/sites-enabled/control.orisfy.com.conf",
+  "auth_file": "/etc/nginx/.htpasswd-openclaw",
+  "backup": "/tmp/control.orisfy.com.conf.restore-single-basic-auth.20260522T212113Z",
+  "username": "oris",
+  "password": "not_recorded",
+  "nginx_test_rc": 0,
+  "http_without_auth": "401",
+  "http_with_auth": "200",
+  "nginx_test_output": "nginx: the configuration file /etc/nginx/nginx.conf syntax is ok\nnginx: configuration file /etc/nginx/nginx.conf test is successful",
+  "auth_extract": "199:    server_name control.orisfy.com;\n200:#     auth_basic off;\n205:    listen 443 ssl http2;\n207:    server_name control.orisfy.com;\n208:    auth_basic \"Restricted\";\n209:    auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n210:#     auth_basic off;\n222:#         auth_basic off;\n223:#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n228:#         auth_basic off;\n229:#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n239:#         auth_basic off;\n240:#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n252:#         auth_basic off;\n253:#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n286:#         auth_basic off;\n300:#         auth_basic off;\n301:#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n302:#         auth_basic off;\n303:        proxy_pass http://127.0.0.1:18789;\n",
+  "note": "Single Basic Auth restored only at HTTPS server level for control.orisfy.com."
+}
