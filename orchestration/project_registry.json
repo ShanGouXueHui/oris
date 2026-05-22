@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-23",
+  "policy": {
+    "oris_repo_role": "platform_orchestration_only",
+    "business_code_policy": "new_business_projects_must_use_separate_github_repositories",
+    "default_projects_root": "/home/admin/projects",
+    "require_explicit_target_project": true,
+    "require_git_status_before_changes": true,
+    "require_commit_and_push_for_completed_changes": true
+  },
+  "projects": {
+    "oris": {
+      "name": "ORIS",
+      "type": "platform",
+      "repo": "git@github.com:ShanGouXueHui/oris.git",
+      "github": "https://github.com/ShanGouXueHui/oris",
+      "local_path": "/home/admin/projects/oris",
+      "default_branch": "main",
+      "allowed_scope": [
+        "docs/",
+        "orchestration/",
+        "scripts/",
+        "logs/dev_employee/",
+        "memory/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "production_credentials"
+      ],
+      "notes": "AI employee platform, routing, provider orchestration, task governance, and operational logs. Do not place new business application code in this repo."
+    },
+    "aideal-cps": {
+      "name": "AIdeal CPS / 智省优选",
+      "type": "product",
+      "repo": "git@github.com:ShanGouXueHui/aideal-cps.git",
+      "github": "https://github.com/ShanGouXueHui/aideal-cps",
+      "local_path": "/home/admin/projects/aideal-cps",
+      "default_branch": "main",
+      "allowed_scope": [
+        "app/",
+        "scripts/",
+        "docs/",
+        "tests/",
+        "alembic/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "wechat_pay_private_key",
+        "jd_app_secret"
+      ],
+      "notes": "Existing product project. Use this repo for AIdeal CPS product changes, not the ORIS platform repo."
+    },
+    "aideal-site": {
+      "name": "AIdeal official site",
+      "type": "site",
+      "repo": "git@github.com:ShanGouXueHui/aideal-site.git",
+      "github": "https://github.com/ShanGouXueHui/aideal-site",
+      "local_path": "/home/admin/projects/aideal-site",
+      "default_branch": "main",
+      "allowed_scope": [
+        "public/",
+        "src/",
+        "docs/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets"
+      ],
+      "notes": "Official site and ICP-facing content should be maintained here."
+    },
+    "kindafeelfy-nolly": {
+      "name": "Nolly / 略懂半解",
+      "type": "product",
+      "repo": "git@github.com:ShanGouXueHui/kindafeelfy-nolly.git",
+      "github": "https://github.com/ShanGouXueHui/kindafeelfy-nolly",
+      "local_path": "/home/admin/projects/kindafeelfy-nolly",
+      "default_branch": "main",
+      "allowed_scope": [
+        "app/",
+        "scripts/",
+        "docs/",
+        "tests/",
+        "alembic/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets"
+      ],
+      "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
+    }
+  }
+}
