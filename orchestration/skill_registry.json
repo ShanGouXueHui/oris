@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-23",
+  "policy": {
+    "auto_install_default": false,
+    "allow_plan_generation": true,
+    "allow_safe_apply_when_explicitly_enabled": true,
+    "require_human_approval_for_system_packages": true,
+    "require_human_approval_for_network_services": true,
+    "forbidden_targets": [
+      "private_keys",
+      "production_secrets",
+      ".env",
+      "systemd_production_services",
+      "nginx_production_sites"
+    ]
+  },
+  "skills": {
+    "git_project_bootstrap": {
+      "description": "Create or verify an independent Git project workspace.",
+      "required_commands": ["git"],
+      "safe_auto_install": false,
+      "notes": "Git should already be available on the server."
+    },
+    "github_project_workflow": {
+      "description": "Push and verify project changes through GitHub remotes.",
+      "required_commands": ["git", "ssh"],
+      "safe_auto_install": false,
+      "notes": "Requires existing GitHub SSH access. Do not create or expose credentials."
+    },
+    "python_fastapi_smoke": {
+      "description": "Build and test a minimal Python FastAPI service.",
+      "required_commands": ["python3"],
+      "python_packages": ["fastapi", "uvicorn", "pytest", "httpx"],
+      "safe_auto_install": true,
+      "install_scope": "project_venv_only",
+      "notes": "Install packages only inside the target project virtualenv."
+    },
+    "node_static_site_smoke": {
+      "description": "Build and test a minimal Node/Vite static site.",
+      "required_commands": ["node", "npm"],
+      "safe_auto_install": false,
+      "notes": "Node runtime installation requires human approval if missing."
+    },
+    "oris_registry_update": {
+      "description": "Update ORIS project_registry for a new or existing project.",
+      "required_commands": ["python3", "git"],
+      "safe_auto_install": false,
+      "notes": "Only update orchestration/project_registry.json and logs/dev_employee."
+    }
+  }
+}
