@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import os
 import json
 import subprocess
 import time
@@ -61,7 +62,16 @@ def get_provider_key(provider_id: str, secrets: dict):
             return value.strip()
     return None
 
-def post_json(url: str, headers: dict, body: dict, timeout: int = 60):
+def provider_timeout_seconds():
+    value = os.getenv("ORIS_PROVIDER_TIMEOUT_SECONDS", "12")
+    try:
+        return max(3, int(value))
+    except Exception:
+        return 12
+
+def post_json(url: str, headers: dict, body: dict, timeout: int | None = None):
+    if timeout is None:
+        timeout = provider_timeout_seconds()
     req = urllib.request.Request(
         url,
         headers=headers,
