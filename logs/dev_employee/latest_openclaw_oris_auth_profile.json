@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "auth_store": "/home/admin/.openclaw/agents/main/agent/auth-profiles.json",
+  "backup": "/tmp/openclaw-auth-profiles-before-oris-20260522T221155Z.json",
+  "profile": "oris:default",
+  "provider": "oris",
+  "mode": "api_key",
+  "api_key_written": true,
+  "api_key_value": "not_recorded"
+}
