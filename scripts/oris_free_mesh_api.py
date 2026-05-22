@@ -8,9 +8,13 @@ scripts/oris_infer.py and the existing runtime_plan failover chain.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+import threading
+import time
 import uuid
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -24,6 +28,22 @@ from oris_vnext.free_mesh_compat import chat_payload, messages_to_prompt, model_
 CONFIG_PATH = REPO_ROOT / "config/oris_free_mesh_api.json"
 INFER_SCRIPT = REPO_ROOT / "scripts/oris_infer.py"
 SECRETS_PATH = Path.home() / ".openclaw" / "secrets.json"
+LATENCY_LOG_PATH = REPO_ROOT / "logs/dev_employee/free_mesh_latency_events.jsonl"
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def latency_threshold_ms() -> int:
+    try:
+        return max(1, int(os.getenv("ORIS_FREE_MESH_SLOW_MS", "15000")))
+    except Exception:
+        return 15000
+
+
+def warmup_enabled() -> bool:
+    return os.getenv("ORIS_FREE_MESH_WARMUP", "1").lower() not in {"0", "false", "no"}
 
 
 def load_json(path: Path) -> dict:
@@ -32,6 +52,12 @@ def load_json(path: Path) -> dict:
     if not isinstance(raw, dict):
         raise ValueError(f"{path} must be a JSON object")
     return raw
+
+
+def append_jsonl(path: Path, record: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as fp:
+        fp.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
 def deep_get(data: dict, keys: list[str]):
@@ -77,7 +103,7 @@ def send_json(handler: BaseHTTPRequestHandler, code: int, payload: dict) -> None
     handler.wfile.write(body)
 
 
-def run_infer(*, role: str, prompt: str, request_id: str) -> tuple[int, dict]:
+def run_infer(*, role: str, prompt: str, request_id: str, source: str = "free_mesh_api") -> tuple[int, dict]:
     cmd = [
         "/usr/bin/python3",
         str(INFER_SCRIPT),
@@ -88,17 +114,75 @@ def run_infer(*, role: str, prompt: str, request_id: str) -> tuple[int, dict]:
         "--request-id",
         request_id,
         "--source",
-        "free_mesh_api",
+        source,
     ]
+    started = time.perf_counter()
     result = subprocess.run(cmd, text=True, capture_output=True, check=False)
+    elapsed_ms = round((time.perf_counter() - started) * 1000)
     stdout = (result.stdout or "").strip()
+    threshold_ms = latency_threshold_ms()
+
     if not stdout:
-        return result.returncode or 2, {"ok": False, "error": "empty_oris_infer_output", "stderr": (result.stderr or "")[-1000:]}
-    try:
-        payload = json.loads(stdout)
-    except json.JSONDecodeError as exc:
-        return 2, {"ok": False, "error": f"invalid_oris_infer_json: {exc}", "stdout": stdout[-1000:]}
+        payload = {"ok": False, "error": "empty_oris_infer_output", "stderr": (result.stderr or "")[-1000:]}
+    else:
+        try:
+            payload = json.loads(stdout)
+        except json.JSONDecodeError as exc:
+            payload = {"ok": False, "error": f"invalid_oris_infer_json: {exc}", "stdout": stdout[-1000:]}
+            result = subprocess.CompletedProcess(result.args, 2, result.stdout, result.stderr)
+
+    if isinstance(payload, dict):
+        payload.setdefault("latency_ms", elapsed_ms)
+        payload.setdefault("slow", elapsed_ms > threshold_ms)
+        append_jsonl(
+            LATENCY_LOG_PATH,
+            {
+                "ts": utc_now(),
+                "request_id": request_id,
+                "source": source,
+                "role": role,
+                "ok": bool(payload.get("ok")),
+                "elapsed_ms": elapsed_ms,
+                "slow": elapsed_ms > threshold_ms,
+                "threshold_ms": threshold_ms,
+                "used_model": payload.get("used_model"),
+                "used_provider": payload.get("used_provider"),
+                "error": payload.get("error"),
+                "status": payload.get("status"),
+            },
+        )
+
     return result.returncode, payload
+
+
+def warmup_once() -> None:
+    request_id = f"free-mesh-warmup-{uuid.uuid4()}"
+    try:
+        run_infer(
+            role="primary_general",
+            prompt="Reply with exactly: ORIS_FREE_MESH_WARMUP_OK",
+            request_id=request_id,
+            source="free_mesh_warmup",
+        )
+    except Exception as exc:
+        append_jsonl(
+            LATENCY_LOG_PATH,
+            {
+                "ts": utc_now(),
+                "request_id": request_id,
+                "source": "free_mesh_warmup",
+                "role": "primary_general",
+                "ok": False,
+                "error": f"warmup_failed: {type(exc).__name__}: {exc}",
+            },
+        )
+
+
+def start_warmup_thread() -> None:
+    if not warmup_enabled():
+        return
+    thread = threading.Thread(target=warmup_once, name="oris-free-mesh-warmup", daemon=True)
+    thread.start()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -149,17 +233,16 @@ class Handler(BaseHTTPRequestHandler):
             return
         rc, infer = run_infer(role=role, prompt=prompt, request_id=request_id)
         if rc == 0 and infer.get("ok"):
-            send_json(
-                self,
-                200,
-                chat_payload(
-                    request_id=request_id,
-                    model=logical_model,
-                    text=infer.get("text", ""),
-                    used_model=infer.get("used_model"),
-                    used_provider=infer.get("used_provider"),
-                ),
+            payload = chat_payload(
+                request_id=request_id,
+                model=logical_model,
+                text=infer.get("text", ""),
+                used_model=infer.get("used_model"),
+                used_provider=infer.get("used_provider"),
             )
+            payload.setdefault("oris", {})["latency_ms"] = infer.get("latency_ms")
+            payload.setdefault("oris", {})["slow"] = infer.get("slow")
+            send_json(self, 200, payload)
             return
         send_json(self, 502, {"error": {"code": "free_mesh_infer_failed", "message": "ORIS inference failed", "details": infer}})
 
@@ -170,6 +253,7 @@ def main() -> int:
     port = int(cfg.get("port", 8789))
     server = ThreadingHTTPServer((host, port), Handler)
     print(json.dumps({"ok": True, "service": "oris-free-mesh-api", "listen": f"http://{host}:{port}"}, ensure_ascii=False))
+    start_warmup_thread()
     server.serve_forever()
     return 0
 
