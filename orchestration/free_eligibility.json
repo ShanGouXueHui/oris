@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T00:00:00+00:00",
+  "generated_at": "2026-05-22T20:55:39.006504+00:00",
   "verified_free_models": {
     "qwen3.6-plus": {
       "provider_id": "alibaba_bailian",
@@ -31,15 +31,27 @@
       "provider_id": "openrouter",
       "source": "configured_free_pool",
       "notes": "OpenRouter free router only; openrouter/auto is intentionally excluded from free routing."
+    },
+    "models/gemini-2.0-flash-lite": {
+      "provider_id": "gemini",
+      "source": "configured_free_pool",
+      "notes": "Gemini 2.0 Flash Lite free-tier low-latency candidate for primary_general/free_fallback."
+    },
+    "hunyuan-large-role-latest": {
+      "provider_id": "tencent_hunyuan",
+      "source": "configured_free_pool",
+      "notes": "Tencent Hunyuan free-tier candidate for primary_general/report fallback."
     }
   },
   "verified_free_model_ids": [
-    "qwen3.6-plus",
-    "qwen-coder-turbo-0919",
+    "hunyuan-large-role-latest",
     "hunyuan-turbos-latest",
+    "models/gemini-2.0-flash-lite",
     "models/gemini-2.5-flash-lite",
     "models/gemini-flash-lite-latest",
-    "openrouter/free"
+    "openrouter/free",
+    "qwen-coder-turbo-0919",
+    "qwen3.6-plus"
   ],
   "provider_overrides": {},
   "model_overrides": {

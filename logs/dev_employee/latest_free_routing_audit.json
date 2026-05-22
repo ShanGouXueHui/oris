@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-05-19T21:37:45.806348+00:00",
+  "generated_at": "2026-05-22T20:56:25.115037+00:00",
   "forbidden_models": [
     "openrouter/auto"
   ],
@@ -9,18 +9,18 @@
       "artifact": "active_routing",
       "role": "primary_general",
       "ok": true,
-      "selected_model": "qwen3.6-plus",
+      "selected_model": "models/gemini-2.0-flash-lite",
       "free_candidate": true,
-      "provider_id": "alibaba_bailian",
+      "provider_id": "gemini",
       "reason": "ok"
     },
     {
       "artifact": "active_routing",
       "role": "free_fallback",
       "ok": true,
-      "selected_model": "qwen3.6-plus",
+      "selected_model": "models/gemini-2.0-flash-lite",
       "free_candidate": true,
-      "provider_id": "alibaba_bailian",
+      "provider_id": "gemini",
       "reason": "ok"
     },
     {
@@ -54,20 +54,20 @@
       "artifact": "runtime_plan",
       "role": "primary_general",
       "ok": true,
-      "selected_model": "qwen3.6-plus",
-      "execution_primary": "qwen3.6-plus",
+      "selected_model": "models/gemini-2.0-flash-lite",
+      "execution_primary": "models/gemini-2.0-flash-lite",
       "free_verified": true,
-      "provider_id": "alibaba_bailian",
+      "provider_id": "gemini",
       "reason": "ok"
     },
     {
       "artifact": "runtime_plan",
       "role": "free_fallback",
       "ok": true,
-      "selected_model": "qwen3.6-plus",
-      "execution_primary": "qwen3.6-plus",
+      "selected_model": "models/gemini-2.0-flash-lite",
+      "execution_primary": "models/gemini-2.0-flash-lite",
       "free_verified": true,
-      "provider_id": "alibaba_bailian",
+      "provider_id": "gemini",
       "reason": "ok"
     },
     {

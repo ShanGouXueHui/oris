@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T21:20:59.810021+00:00",
+  "generated_at": "2026-05-22T20:56:25.053801+00:00",
   "source_files": {
     "registry": "/home/admin/projects/oris/orchestration/provider_registry.json",
     "snapshot": "/home/admin/projects/oris/orchestration/provider_health_snapshot.json",
@@ -9,41 +9,41 @@
   },
   "decisions": {
     "primary_general": {
-      "selected_model": "qwen3.6-plus",
-      "provider_id": "alibaba_bailian",
+      "selected_model": "models/gemini-2.0-flash-lite",
+      "provider_id": "gemini",
       "provider_status": "healthy",
-      "provider_score": 112,
-      "model_score": 127,
+      "provider_score": 110,
+      "model_score": 135,
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
         {
-          "model_id": "qwen3.6-plus",
+          "model_id": "models/gemini-2.0-flash-lite",
           "exists": true,
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": true,
-          "model_score": 127,
+          "model_score": 135,
           "accepted": true
         }
       ]
     },
     "free_fallback": {
-      "selected_model": "qwen3.6-plus",
-      "provider_id": "alibaba_bailian",
+      "selected_model": "models/gemini-2.0-flash-lite",
+      "provider_id": "gemini",
       "provider_status": "healthy",
-      "provider_score": 112,
-      "model_score": 127,
+      "provider_score": 110,
+      "model_score": 135,
       "free_candidate": true,
       "selection_mode": "ordered_candidates",
       "considered": [
         {
-          "model_id": "qwen3.6-plus",
+          "model_id": "models/gemini-2.0-flash-lite",
           "exists": true,
           "provider_status": "healthy",
           "provider_enabled": true,
           "free_candidate": true,
-          "model_score": 127,
+          "model_score": 135,
           "accepted": true
         }
       ]

@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T21:20:59.843567+00:00",
+  "generated_at": "2026-05-22T20:56:25.086973+00:00",
   "plans": {
     "primary_general": {
-      "selected_model": "qwen3.6-plus",
+      "selected_model": "models/gemini-2.0-flash-lite",
       "selected_model_blocked": false,
-      "execution_primary": "qwen3.6-plus",
+      "execution_primary": "models/gemini-2.0-flash-lite",
       "retry_attempts": 2,
       "retry_backoff_seconds": [
         1,
@@ -13,17 +13,17 @@
       ],
       "failover_chain": [
         {
-          "model_id": "qwen3.6-plus",
-          "provider_id": "alibaba_bailian",
-          "provider_score": 112,
-          "model_score": 127,
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
           "affinity_adjustment": 4,
-          "effective_score": 131,
+          "effective_score": 124,
           "free_candidate": true,
           "free_verified": true,
           "blocked": false,
           "blocked_until": null,
-          "consecutive_failures": 0,
+          "consecutive_failures": 1,
           "role_tags": [
             "direct_probe_discovered",
             "free_pool_candidate"
@@ -66,26 +66,26 @@
       ]
     },
     "free_fallback": {
-      "selected_model": "qwen3.6-plus",
+      "selected_model": "models/gemini-2.0-flash-lite",
       "selected_model_blocked": false,
-      "execution_primary": "qwen3.6-plus",
+      "execution_primary": "models/gemini-2.0-flash-lite",
       "retry_attempts": 1,
       "retry_backoff_seconds": [
         1
       ],
       "failover_chain": [
         {
-          "model_id": "qwen3.6-plus",
-          "provider_id": "alibaba_bailian",
-          "provider_score": 112,
-          "model_score": 127,
+          "model_id": "models/gemini-2.0-flash-lite",
+          "provider_id": "gemini",
+          "provider_score": 110,
+          "model_score": 135,
           "affinity_adjustment": 4,
-          "effective_score": 131,
+          "effective_score": 124,
           "free_candidate": true,
           "free_verified": true,
           "blocked": false,
           "blocked_until": null,
-          "consecutive_failures": 0,
+          "consecutive_failures": 1,
           "role_tags": [
             "direct_probe_discovered",
             "free_pool_candidate"
@@ -319,7 +319,7 @@
           "affinity_adjustment": 24,
           "effective_score": 148,
           "free_candidate": true,
-          "free_verified": false,
+          "free_verified": true,
           "blocked": false,
           "blocked_until": null,
           "consecutive_failures": 0,
