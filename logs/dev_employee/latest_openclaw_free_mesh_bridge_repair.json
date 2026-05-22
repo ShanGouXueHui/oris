@@ -1,0 +1,59 @@
+{
+  "ok": true,
+  "timestamp_utc": "20260522T214807Z",
+  "backup_dir": "/tmp/openclaw-free-mesh-bridge-repair-20260522T214807Z",
+  "openclaw_config": {
+    "primary": "openrouter/auto",
+    "model_keys": [
+      "openrouter/auto"
+    ]
+  },
+  "openrouter_provider": {
+    "baseUrl": "http://127.0.0.1:8789/v1",
+    "api": "openai-completions",
+    "has_apiKey": true,
+    "auto_model": {
+      "id": "auto",
+      "name": "ORIS Free Mesh Auto",
+      "reasoning": false,
+      "input": [
+        "text"
+      ],
+      "cost": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      },
+      "contextWindow": 200000,
+      "maxTokens": 4096
+    }
+  },
+  "free_mesh_health": {
+    "rc": 0,
+    "stdout": "{\"ok\": true, \"service\": \"oris-free-mesh-api\"}",
+    "stderr": ""
+  },
+  "restart": {
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "active": "active",
+  "status": {
+    "rc": 0,
+    "stdout": "Service: systemd user (enabled)\nFile logs: /tmp/openclaw/openclaw-2026-05-23.log\nCommand: /home/admin/.npm-global/bin/openclaw gateway --port 18789\nService file: ~/.config/systemd/user/openclaw-gateway.service\n\nConfig (cli): ~/.openclaw/openclaw.json\nConfig (service): ~/.openclaw/openclaw.json\n\nGateway: bind=loopback (127.0.0.1), port=18789 (service args)\nProbe target: ws://127.0.0.1:18789\nDashboard: http://127.0.0.1:18789/\nProbe note: Loopback-only gateway; only local clients can connect.\n\nCLI version: 2026.5.19 (~/.npm-global/bin/openclaw)\nGateway version: 2026.5.19\n\nRuntime: running (pid 59073, state active, sub running, last exit 0, reason 0)\nConnectivity probe: ok\nCapability: admin-capable\n\nListening: 127.0.0.1:18789\nTroubles: run openclaw status\nTroubleshooting: https://docs.openclaw.ai/troubleshooting\n",
+    "stderr": "Service config looks out of date or non-standard.\nService config issue: Gateway service PATH missing required dirs: /home/admin/.local/bin\nRecommendation: run \"openclaw doctor\" (or \"openclaw doctor --repair\").\nConfig warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nConfig warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\n"
+  },
+  "free_mesh_probe": {
+    "rc": 0,
+    "stdout": "{\n  \"ok\": true,\n  \"text_preview\": \"ORIS_FREE_MESH_OK\",\n  \"model\": \"openrouter/auto\",\n  \"oris\": {\n    \"used_model\": \"models/gemini-2.5-flash-lite\",\n    \"used_provider\": \"gemini\",\n    \"routing\": \"runtime_plan_free_mesh\",\n    \"latency_ms\": 50283,\n    \"slow\": true\n  },\n  \"error\": false,\n  \"status\": null\n}\n",
+    "stderr": ""
+  },
+  "recent_gateway_logs": {
+    "rc": 0,
+    "stdout": "6ms conn=19974bf7…b9d9 id=086d4844…434e\nMay 23 05:35:09 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:09.150+08:00 [ws] ⇄ res ✓ sessions.list 426ms conn=19974bf7…b9d9 id=c51ef6b4…33bd\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.492+08:00 [agent/embedded] embedded run agent end: runId=b86b908b-fd83-4621-8684-614911f12b16 isError=true model=openrouter/auto provider=openrouter error=⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key. rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.515+08:00 [agent/embedded] embedded run failover decision: runId=b86b908b-fd83-4621-8684-614911f12b16 stage=assistant decision=surface_error reason=billing from=openrouter/openrouter/auto profile=sha256:ac092b59b472 rawError=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78…\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.520+08:00 [diagnostic] lane task error: lane=main durationMs=2401 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.522+08:00 [diagnostic] lane task error: lane=session:agent:main:dashboard:5619e3ad-a91e-445d-9b81-6903e6c0f956 durationMs=2405 error=\"FailoverError: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\"\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.529+08:00 [model-fallback/decision] model fallback decision: decision=candidate_failed requested=openrouter/openrouter/auto candidate=openrouter/openrouter/auto reason=billing next=none detail=402 This request requires more credits, or fewer max_tokens. You requested up to 4096 tokens, but can only afford 3536. To increase, visit https://openrouter.ai/workspaces/default/keys/7bbe0b8f528ea78cedcde0c0742d3d89beba345b39e592ed12beef0634b1ec5f and adjust the key's monthly limit\nMay 23 05:35:54 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:35:54.670+08:00 Embedded agent failed before reply: ⚠️ openrouter (openrouter/auto) returned a billing error — your API key has run out of credits or has an insufficient balance. Check your openrouter billing dashboard and top up or switch to a different API key.\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ systemd[962]: Stopping OpenClaw Gateway (managed by ORIS)...\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.830+08:00 [gateway] signal SIGTERM received\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.849+08:00 [gateway] received SIGTERM; shutting down\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.886+08:00 [shutdown] started: gateway stopping\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:07.983+08:00 Config warnings:\nMay 23 05:48:07 iZt4n62qkjefjya5xa097pZ openclaw[58542]: - plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:08.003+08:00 [gmail-watcher] gmail watcher stopped\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:08.219+08:00 [ws] webchat disconnected code=1012 reason=service restart conn=19974bf7-a9e9-4cf2-8b29-7a66d581b9d9\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ openclaw[58542]: 2026-05-23T05:48:08.224+08:00 [shutdown] completed cleanly in 338ms\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ systemd[962]: Stopped OpenClaw Gateway (managed by ORIS).\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ systemd[962]: openclaw-gateway.service: Consumed 25.648s CPU time.\nMay 23 05:48:08 iZt4n62qkjefjya5xa097pZ systemd[962]: Started OpenClaw Gateway (managed by ORIS).\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.295+08:00 [gateway] loading configuration…\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.409+08:00 [gateway] resolving authentication…\nMay 23 05:48:09 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:09.430+08:00 [gateway] starting...\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:10.001+08:00 [gateway] auto-enabled plugins for this runtime without writing config:\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: - openrouter/auto model configured, enabled automatically.\nMay 23 05:48:10 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:10.993+08:00 [gateway] starting HTTP server...\nMay 23 05:48:11 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:11.233+08:00 [health-monitor] started (interval: 300s, startup-grace: 60s, channel-connect-grace: 120s)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.239+08:00 [gateway] agent model: openrouter/openrouter/auto (thinking=medium, fast=off)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.242+08:00 [gateway] http server listening (8 plugins: browser, canvas, device-pair, duckduckgo, file-transfer, memory-core, phone-control, talk-voice; 3.8s)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.245+08:00 [gateway] log file: /tmp/openclaw/openclaw-2026-05-23.log\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.356+08:00 [gateway] starting channels and sidecars...\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.502+08:00 [hooks] loaded 5 internal hook handlers\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.744+08:00 [browser/server] Browser control listening on http://127.0.0.1:18791/ (auth=token)\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.817+08:00 [gateway] ready\nMay 23 05:48:13 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:13.824+08:00 [heartbeat] started\nMay 23 05:48:15 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:15.483+08:00 [ws] webchat connected conn=906b0dcb-d452-4c6b-8bbc-a3dd545458e5 remote=127.0.0.1 client=openclaw-control-ui webchat vcontrol-ui\nMay 23 05:48:15 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:15.775+08:00 [ws] ⇄ res ✓ health 58ms cached=true conn=906b0dcb…58e5 id=370c187e…b523\nMay 23 05:48:15 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:15.829+08:00 [ws] ⇄ res ✓ agents.list 112ms conn=906b0dcb…58e5 id=0c495c5e…b791\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.312+08:00 [ws] ⇄ res ✓ models.authStatus 186ms conn=906b0dcb…58e5 id=679ad567…955b\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.582+08:00 [ws] ⇄ res ✓ commands.list 262ms conn=906b0dcb…58e5 id=2b2cf651…6753\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.601+08:00 [ws] ⇄ res ✓ chat.history 284ms conn=906b0dcb…58e5 id=72d1810c…4a5f\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.648+08:00 [ws] ⇄ res ✓ models.list 330ms conn=906b0dcb…58e5 id=d0ad2347…839d\nMay 23 05:48:16 iZt4n62qkjefjya5xa097pZ openclaw[59073]: 2026-05-23T05:48:16.657+08:00 [ws] ⇄ res ✓ sessions.list 340ms conn=906b0dcb…58e5 id=44b311dc…bbc1\n",
+    "stderr": ""
+  },
+  "decision": "OpenClaw-visible openrouter/auto is forced to local ORIS Free Mesh baseUrl to avoid public OpenRouter billing errors."
+}
