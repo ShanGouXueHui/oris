@@ -1,0 +1,11 @@
+===== gh auth status =====
+You are not logged into any GitHub hosts. Run gh auth login to authenticate.
+
+===== gh repo view smoke app =====
+Welcome to GitHub CLI!
+
+To authenticate, please run `gh auth login`.
+
+===== codex available =====
+/home/admin/.npm-global/bin/codex
+codex-cli 0.133.0
