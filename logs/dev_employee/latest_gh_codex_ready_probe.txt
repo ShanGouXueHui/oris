@@ -1,10 +1,12 @@
 ===== gh auth status =====
-You are not logged into any GitHub hosts. Run gh auth login to authenticate.
+github.com
+  ✓ Logged in to github.com as ShanGouXueHui (/home/admin/.config/gh/hosts.yml)
+  ✓ Git operations for github.com configured to use ssh protocol.
+  ✓ Token: *******************
+  
 
 ===== gh repo view smoke app =====
-Welcome to GitHub CLI!
-
-To authenticate, please run `gh auth login`.
+GraphQL: Could not resolve to a Repository with the name 'ShanGouXueHui/oris-dev-smoke-app'. (repository)
 
 ===== codex available =====
 /home/admin/.npm-global/bin/codex
