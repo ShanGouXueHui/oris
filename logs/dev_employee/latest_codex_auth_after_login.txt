@@ -1,0 +1,112 @@
+===== codex login status =====
+Logged in using ChatGPT
+
+===== codex doctor after login =====
+Codex Doctor v0.133.0 · linux-x86_64
+
+Environment
+  ✓ runtime      npm (package /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl, bin /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin, resources /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources, path /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path)
+      version                  0.133.0
+      install method           npm (package /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl, bin /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin, resources /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources, path /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path)
+      commit                   unknown
+      executable               ~/.npm-global/lib/node_m…wn-linux-musl/bin/codex
+  ✓ install      consistent
+      context                  npm (package /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl, bin /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin, resources /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-resources, path /home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path)
+      managed by               npm: yes · bun: no · package root /home/admin/.npm-global/lib/node_modules/@openai/codex
+      PATH entries (2)         ~/.npm-global/bin/codex
+                               ~/.npm-global/bin/codex
+      npm update target        ~/.npm-global/lib/node_modules/@openai/codex
+  ✓ search       file exists (bundled, `/home/admin/.npm-global/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/codex-path/rg`)
+      search command           ~/.npm-global/lib/node_m…inux-musl/codex-path/rg
+      search provider          bundled
+      search command readiness file exists
+  ✓ terminal     unknown · TERM=xterm-256color
+      terminal                 unknown
+      TERM                     xterm-256color
+      stdin is terminal        true
+      stdout is terminal       false
+      stderr is terminal       false
+      terminal size            162x40
+      color output             disabled (stdout is not a terminal)
+      effective locale         en_US.UTF-8
+      SSH_TTY                  present
+      SSH_CONNECTION           present
+      SSH_CLIENT               present
+  ✓ state        state paths and databases are inspectable
+      CODEX_HOME               ~/.codex (dir)
+      log dir                  ~/.codex/log (dir)
+      sqlite home              ~/.codex (dir)
+      state DB                 ~/.codex/state_5.sqlite (missing) · integrity skipped (missing)
+      log DB                   ~/.codex/logs_2.sqlite (missing) · integrity skipped (missing)
+      goals DB                 ~/.codex/goals_1.sqlite (missing) · integrity skipped (missing)
+      active rollouts          0 files · 0 B (avg 0 B)
+      archived rollouts        0 files · 0 B (avg 0 B)
+
+Configuration
+  ✓ config       loaded
+      model                    <default> · openai
+      cwd                      ~/projects/oris
+      config.toml              ~/.codex/config.toml
+      MCP servers              0
+      feature flags            28 enabled · 0 overridden (full list with --all)
+  ✓ auth         auth is configured
+      auth storage mode        File
+      auth file                ~/.codex/auth.json
+      stored auth mode         chatgpt
+      stored API key           false
+      stored ChatGPT tokens    true
+      stored agent identity    false
+  ✓ mcp          no MCP servers configured
+  ✓ sandbox      restricted fs + restricted network · approval OnRequest
+      approval policy          OnRequest
+      filesystem sandbox       restricted
+      network sandbox          restricted
+      linux helper             ~/.codex/tmp/arg0/codex-…k5P/codex-linux-sandbox
+      execve wrapper helper    ~/.codex/tmp/arg0/codex-…5P/codex-execve-wrapper
+
+Updates
+  ✓ updates      update configuration is locally consistent
+      startup update check     true
+      update action            npm install -g @openai/codex
+      version cache            ~/.codex/version.json
+      version cache            missing
+      npm update target        ~/.npm-global/lib/node_modules/@openai/codex
+      latest version           0.133.0
+      latest version status    current version is not older
+
+Connectivity
+  ✓ network      no proxy env vars
+      proxy env vars           none
+  ✓ websocket    connected (HTTP 101 Switching Protocols) · 15s timeout
+      model provider           openai
+      provider name            OpenAI
+      wire API                 responses
+      supports websockets      true
+      proxy env vars           none
+      connect timeout          15000 ms
+      auth mode                chatgpt
+      endpoint                 wss://chatgpt.com/backend-api/<redacted>
+      DNS                      2 IPv4, 2 IPv6, first IPv4
+      handshake result         HTTP 101 Switching Protocols
+      reasoning header         false
+      models etag present      true
+      server model present     false
+  ✓ reachability active provider endpoints are reachable over HTTP
+      reachability mode        ChatGPT auth
+      ChatGPT base URL         https://chatgpt.com/backend-api/ reachable (HTTP 403)
+
+Background Server
+  ○ app-server   not running (ephemeral mode)
+      daemon state dir         ~/.codex/app-server-daemon
+      settings                 ~/.codex/app-server-daemon/settings.json (missing)
+      pid file                 ~/.codex/app-server-daemon/app-server.pid (missing)
+      update-loop pid file     ~/.codex/app-server-daem…/app-server-updater.pid (missing)
+      control socket           ~/.codex/app-server-cont…app-server-control.sock
+      status                   not running
+      mode                     ephemeral
+
+─────────────────────────────────────────────────────────────
+13 ok · 1 idle · 0 warn · 0 fail ok
+
+--summary compact output           --all expand truncated lists
+--json redacted report
