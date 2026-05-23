@@ -1,0 +1,26 @@
+{
+  "task_id": "oris-final-acceptance-api-20260523",
+  "status": "pending_next_chat",
+  "task_type": "new_project_final_acceptance",
+  "target_project": "oris-final-acceptance-api",
+  "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "target_path": "/home/admin/projects/oris-final-acceptance-api",
+  "current_step": "handoff_to_next_chat",
+  "completed_steps": [
+    "validated_codex_cli_auth",
+    "validated_codex_real_filesystem_execution",
+    "validated_github_cli_auth",
+    "validated_oris_dev_smoke_app_repo_creation",
+    "registered_oris_dev_smoke_app_in_project_registry",
+    "archived_autonomous_execution_policy",
+    "archived_current_state",
+    "archived_next_chat_handoff"
+  ],
+  "failed_steps": [],
+  "next_action": "Read handoff files and run final acceptance project through Codex CLI.",
+  "last_error": null,
+  "last_commit_sha": "57b629ee3a1f258f23f70c2b4f5d198178f01d06",
+  "test_result": "smoke project passed remote repo creation and push; final acceptance pending",
+  "blocked_reason": "current chat is too long; continue in a new chat",
+  "updated_at": "2026-05-23"
+}
