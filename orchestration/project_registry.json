@@ -90,6 +90,30 @@
         "secrets"
       ],
       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
+    },
+    "oris-dev-smoke-app": {
+      "name": "ORIS Dev Employee Smoke App",
+      "type": "test_project",
+      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
+      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
+      "local_path": "/home/admin/projects/oris-dev-smoke-app",
+      "default_branch": "main",
+      "allowed_scope": [
+        "README.md",
+        "AGENTS.md",
+        "docs/",
+        "app/",
+        "tests/",
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "private_keys",
+        "production_credentials"
+      ],
+      "notes": "Standalone smoke project used to verify Codex-backed AI dev employee can create, test, commit, and push an independent GitHub repository."
     }
   }
 }
