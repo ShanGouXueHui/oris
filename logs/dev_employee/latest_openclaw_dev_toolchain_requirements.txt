@@ -1,0 +1,195 @@
+===== coding-agent skill info =====
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+🧩 coding-agent △ Needs setup
+
+Delegate coding work to Codex, Claude Code, OpenCode, or Pi as background workers; not simple edits or read-only code lookup.
+
+Details:
+  Source: openclaw-bundled
+  Path: ~/.npm-global/lib/node_modules/openclaw/skills/coding-agent/SKILL.md
+  Visible to model: no
+  Available as command: no
+
+Requirements:
+  Any binaries: ✗ claude, ✗ codex, ✗ opencode, ✗ pi
+  Config: ✗ skills.entries.coding-agent.enabled
+
+Install options:
+  → Install @anthropic-ai/claude-code (npm)
+
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.
+
+===== github skill info =====
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+🐙 github △ Needs setup
+
+GitHub CLI for issues, PRs, CI/check logs, comments, reviews, releases, repos, and gh api queries.
+
+Details:
+  Source: openclaw-bundled
+  Path: ~/.npm-global/lib/node_modules/openclaw/skills/github/SKILL.md
+  Visible to model: no
+  Available as command: no
+
+Requirements:
+  Binaries: ✗ gh
+
+Install options:
+  → Install GitHub CLI (brew)
+
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.
+
+===== gh-issues skill info =====
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+gh-issues △ Needs setup
+
+Fetch GitHub issues, select candidates, spawn background fix agents, open PRs, and optionally process PR review comments.
+
+Details:
+  Source: openclaw-bundled
+  Path: ~/.npm-global/lib/node_modules/openclaw/skills/gh-issues/SKILL.md
+  Visible to model: no
+  Available as command: no
+  Primary env: GH_TOKEN
+
+Requirements:
+  Binaries: ✓ git, ✗ gh
+
+Install options:
+  → Install GitHub CLI (brew)
+
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.
+
+===== acp help =====
+
+OpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.
+
+Usage: openclaw acp [options] [command]
+
+Run an ACP bridge backed by the Gateway
+
+Options:
+  -h, --help               Display help for command
+  --no-prefix-cwd          Do not prefix prompts with the working directory
+  --password <password>    Gateway password (if required)
+  --password-file <path>   Read gateway password from file
+  --provenance <mode>      ACP provenance mode: off, meta, or meta+receipt
+  --require-existing       Fail if the session key/label does not exist
+                           (default: false)
+  --reset-session          Reset the session key before first use (default:
+                           false)
+  --session <key>          Default session key (e.g. agent:main:main)
+  --session-label <label>  Default session label to resolve
+  --token <token>          Gateway token (if required)
+  --token-file <path>      Read gateway token from file
+  --url <url>              Gateway WebSocket URL (defaults to gateway.remote.url
+                           when configured)
+  -v, --verbose            Verbose logging to stderr (default: false)
+
+Commands:
+  client                   Run an interactive ACP client against the local ACP
+                           bridge
+
+Docs: https://docs.openclaw.ai/cli/acp
+
+
+===== node status =====
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+Service: systemd user (disabled)
+Runtime: stopped (state inactive, sub dead, last exit 0, reason 0)
+
+Start with: openclaw node install
+Start with: openclaw node start
+Start with: systemctl --user start openclaw-node.service
+Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+Known: 0 · Paired: 0 · Connected: 0
+
+===== exec policy =====
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+Exec Policy
+┌────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Field          │ Value                                                                                               │
+├────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Config         │ ~/.openclaw/openclaw.json                                                                           │
+│ Approvals      │ ~/.openclaw/exec-approvals.json                                                                     │
+│ Approvals File │ missing                                                                                             │
+└────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+Effective Policy
+┌────────────┬─────────────────────────────┬──────────────────────────────────────────────────┬────────────────────────┐
+│ Scope      │ Requested                   │ Host                                             │ Effective              │
+├────────────┼─────────────────────────────┼──────────────────────────────────────────────────┼────────────────────────┤
+│ tools.exec │ host=auto (OpenClaw         │ security=full (inherits requested tool           │ security=full\nask=off │
+│            │ default                     │ policy)\nask=off (inherits requested tool        │                        │
+│            │ (auto))\nsecurity=full      │ policy)\naskFallback=full (OpenClaw default      │                        │
+│            │ (OpenClaw default           │ (full))                                          │                        │
+│            │ (full))\nask=off (OpenClaw  │                                                  │                        │
+│            │ default (off))              │                                                  │                        │
+└────────────┴─────────────────────────────┴──────────────────────────────────────────────────┴────────────────────────┘
+
+Effective exec policy is the host approvals file intersected with requested tools.exec policy.
+
+===== service file =====
+# /home/admin/.config/systemd/user/openclaw-gateway.service
+[Unit]
+Description=OpenClaw Gateway (managed by ORIS)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=PATH=/home/admin/.npm-global/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/admin/.npm-global/bin/openclaw gateway --port 18789
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+
+===== binaries =====
+/usr/bin/node
+/usr/bin/npm
