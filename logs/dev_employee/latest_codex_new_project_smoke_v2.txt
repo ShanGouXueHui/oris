@@ -1,0 +1,8 @@
+error: unexpected argument '--skip-git-repo-check' found
+
+  tip: 'exec --skip-git-repo-check' exists
+
+Usage: codex [OPTIONS] [PROMPT]
+       codex [OPTIONS] <COMMAND> [ARGS]
+
+For more information, try '--help'.
