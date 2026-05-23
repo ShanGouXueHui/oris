@@ -1,0 +1,39 @@
+===== codex binary =====
+Command 'codex' not found, but can be installed with:
+sudo snap install codex
+Command 'codex' not found, but can be installed with:
+sudo snap install codex
+
+===== npm search/view codex candidates =====
+0.133.0
+0.2.3
+
+===== coding agent info =====
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+🧩 coding-agent ✓ Ready
+
+Delegate coding work to Codex, Claude Code, OpenCode, or Pi as background workers; not simple edits or read-only code lookup.
+
+Details:
+  Source: openclaw-bundled
+  Path: ~/.npm-global/lib/node_modules/openclaw/skills/coding-agent/SKILL.md
+  Visible to model: yes
+  Available as command: yes
+
+Requirements:
+  Any binaries: ✓ claude, ✓ codex, ✓ opencode, ✓ pi
+  Config: ✓ skills.entries.coding-agent.enabled
+
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.
+
+===== openclaw config coding-agent snippet =====
+{
+  "enabled": true
+}
