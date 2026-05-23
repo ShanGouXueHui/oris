@@ -1,0 +1,44 @@
+Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+
+OpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.
+
+Usage: openclaw nodes [options] [command]
+
+Manage gateway-owned nodes (pairing, status, invoke, and media)
+
+Options:
+  -h, --help  Display help for command
+
+Commands:
+  approve     Approve a pending pairing request
+  camera      Capture camera media from a paired node
+  canvas      Capture or render canvas content from a paired node
+  describe    Describe a node (capabilities + supported invoke commands)
+  help        Display help for command
+  invoke      Invoke a command on a paired node
+  list        List pending and paired nodes
+  location    Fetch location from a paired node
+  notify      Send a local notification on a node (mac only)
+  pending     List pending pairing requests
+  push        Send an APNs test push to an iOS node
+  reject      Reject a pending pairing request
+  remove      Remove a paired node entry
+  rename      Rename a paired node (display name override)
+  screen      Capture screen recordings from a paired node
+  status      List known nodes with connection status and capabilities
+
+Examples:
+  openclaw nodes status
+    List known nodes with live status.
+  openclaw nodes pairing pending
+    Show pending node pairing requests.
+  openclaw nodes remove --node <id|name|ip>
+    Remove a stale paired node entry.
+  openclaw nodes invoke --node <id> --command system.which --params '{"name":"uname"}'
+    Invoke a node command directly.
+  openclaw nodes camera snap --node <id>
+    Capture a photo from a node camera.
+
+Docs: https://docs.openclaw.ai/cli/nodes
+

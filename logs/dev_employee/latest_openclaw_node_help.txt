@@ -1,0 +1,34 @@
+
+OpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.
+
+Usage: openclaw node [options] [command]
+
+Run and manage the headless node host service
+
+Options:
+  -h, --help  Display help for command
+
+Commands:
+  help        Display help for command
+  install     Install the node host service (launchd/systemd/schtasks)
+  restart     Restart the node host service (launchd/systemd/schtasks)
+  run         Run the headless node host (foreground)
+  start       Start the node host service (launchd/systemd/schtasks)
+  status      Show node host status
+  stop        Stop the node host service (launchd/systemd/schtasks)
+  uninstall   Uninstall the node host service (launchd/systemd/schtasks)
+
+Examples:
+  openclaw node run --host 127.0.0.1 --port 18789
+    Run the node host in the foreground.
+  openclaw node status
+    Check node host service status.
+  openclaw node install
+    Install the node host service.
+  openclaw node start
+    Start the installed node host service.
+  openclaw node restart
+    Restart the installed node host service.
+
+Docs: https://docs.openclaw.ai/cli/node
+

@@ -1,0 +1,18 @@
+
+OpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.
+
+Usage: openclaw exec-policy [options] [command]
+
+Show or synchronize requested exec policy with host approvals
+
+Options:
+  -h, --help  Display help for command
+
+Commands:
+  help        Display help for command
+  preset      Apply a synchronized preset: "yolo", "cautious", or "deny-all"
+  set         Synchronize local config and host approvals using explicit values
+  show        Show the local config policy, host approvals, and effective merge
+
+Docs: https://docs.openclaw.ai/cli/approvals
+

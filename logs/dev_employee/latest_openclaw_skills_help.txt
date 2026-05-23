@@ -1,0 +1,24 @@
+
+OpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.
+
+Usage: openclaw skills [options] [command]
+
+List and inspect available skills
+
+Options:
+  --agent <id>  Target agent workspace (defaults to cwd-inferred, then default
+                agent)
+  -h, --help    Display help for command
+
+Commands:
+  check         Check which skills are ready, visible, or missing requirements
+  info          Show detailed information about a skill
+  install       Install a skill from ClawHub into the active or shared managed
+                directory
+  list          List all available skills
+  search        Search ClawHub skills
+  update        Update ClawHub-installed skills in the active or shared managed
+                directory
+
+Docs: https://docs.openclaw.ai/cli/skills
+

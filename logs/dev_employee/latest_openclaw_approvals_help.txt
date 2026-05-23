@@ -1,0 +1,17 @@
+
+OpenClaw 2026.5.19 (a185ca2) — All your chats, one OpenClaw.
+
+Usage: openclaw approvals|exec-approvals [options] [command]
+
+Manage exec approvals (gateway or node host)
+
+Options:
+  -h, --help  Display help for command
+
+Commands:
+  allowlist   Edit the per-agent allowlist
+  get         Fetch exec approvals snapshot
+  set         Replace exec approvals with a JSON file
+
+Docs: https://docs.openclaw.ai/cli/approvals
+

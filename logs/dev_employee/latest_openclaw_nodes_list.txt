@@ -1,0 +1,21 @@
+Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+nodes list failed: GatewayTransportError: gateway closed (1006 abnormal closure (no close frame)): no close reason
+Gateway target: ws://127.0.0.1:18789
+Source: local loopback
+Config: /home/admin/.openclaw/openclaw.json
+Bind: loopback
+
+Possible causes:
+- Gateway not yet ready to accept connections (retry after a moment)
+- TLS mismatch (connecting with ws:// to a wss:// gateway, or vice versa)
+- Gateway crashed or was terminated unexpectedly
+Run `openclaw doctor` for diagnostics.

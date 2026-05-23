@@ -1,0 +1,2 @@
+Too many arguments for this command.
+Try: openclaw approvals list --help

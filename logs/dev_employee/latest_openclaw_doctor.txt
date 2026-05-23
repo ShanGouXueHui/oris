@@ -1,0 +1,264 @@
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+██░▄▄▄░██░▄▄░██░▄▄▄██░▀██░██░▄▄▀██░████░▄▄▀██░███░██
+██░███░██░▀▀░██░▄▄▄██░█░█░██░█████░████░▀▀░██░█░█░██
+██░▀▀▀░██░█████░▀▀▀██░██▄░██░▀▀▄██░▀▀░█░██░██▄▀▄▀▄██
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+                       OPENCLAW                       
+ 
+┌  OpenClaw doctor
+│
+◇  Update ───────────────────────────────────────────────────────────────╮
+│                                                                        │
+│  This install is not a git checkout.                                   │
+│  Run `openclaw update` to update via your package manager (npm/pnpm),  │
+│  then rerun doctor.                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+│
+◇  Startup optimization ────────────────────────────────────────────────╮
+│                                                                       │
+│  - NODE_COMPILE_CACHE is not set; repeated CLI runs can be slower on  │
+│    small hosts (Pi/VM).                                               │
+│  - OPENCLAW_NO_RESPAWN is not set to 1; set it when you want routine  │
+│    gateway restarts to stay in-process instead of handing off to a    │
+│    managed supervisor.                                                │
+│  - Suggested env for low-power hosts:                                 │
+│    export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache          │
+│    mkdir -p /var/tmp/openclaw-compile-cache                           │
+│    export OPENCLAW_NO_RESPAWN=1                                       │
+│                                                                       │
+├───────────────────────────────────────────────────────────────────────╯
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+│
+◇  Doctor changes preview ─────────────────────────────────────╮
+│                                                              │
+│  Moved channels.feishu single-account top-level values into  │
+│  channels.feishu.accounts.default.                           │
+│                                                              │
+├──────────────────────────────────────────────────────────────╯
+│
+◇  Doctor warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - Agent "main" is routed from channel "feishu", but the message tool  │
+│    is unavailable for that agent; explicit channel actions such as     │
+│    sendAttachment, upload-file, thread-reply, or reply can fail. Add   │
+│    "message" to the agent tool allowlist, add "group:messaging", or    │
+│    switch the agent to a profile that includes messaging tools.        │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+│
+◇  Doctor warnings ────────────────────────────────────────────────────────╮
+│                                                                          │
+│  - channels.feishu.accounts.default.groupPolicy is "allowlist" but       │
+│    groupAllowFrom (and allowFrom) is empty — all group messages will be  │
+│    silently dropped. Add sender IDs to                                   │
+│    channels.feishu.accounts.default.groupAllowFrom or                    │
+│    channels.feishu.accounts.default.allowFrom, or set groupPolicy to     │
+│    "open".                                                               │
+│                                                                          │
+├──────────────────────────────────────────────────────────────────────────╯
+[?25l│
+◆  Apply recommended config repairs now?
+│  ● Yes / ○ No
+└
+[1A
+[?25h[999D[4A[1B[J◇  Apply recommended config repairs now?
+│  Yes
+│
+◇  Command owner ─────────────────────────────────────────────────────────╮
+│                                                                         │
+│  No command owner is configured.                                        │
+│  A command owner is the human operator account allowed to run           │
+│  owner-only commands and approve dangerous actions, including           │
+│  /diagnostics, /export-trajectory, /config, and exec approvals.         │
+│  DM pairing only lets someone talk to the bot; it does not make that    │
+│  sender the owner for privileged commands.                              │
+│  Fix: set commands.ownerAllowFrom to your channel user id, for example  │
+│  openclaw config set commands.ownerAllowFrom '["telegram:123456789"]'   │
+│  Restart the gateway after changing this if it is already running.      │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────╯
+[?25l│
+◆  Archive 1 orphan transcript file in ~/.openclaw/agents/main/sessions? This 
+│  only renames them to *.deleted.<timestamp>.
+│  ○ Yes / ● No
+└
+[999D[5A[3B[2K[G│  ● Yes / ○ No[2B[999D[5A[1B[J◇  Archive 1 orphan transcript file in ~/.openclaw/agents/main/sessions? This 
+│  only renames them to *.deleted.<timestamp>.
+│  Yes
+[?25h│
+◇  State integrity ───────────────────────────────────────────────────────╮
+│                                                                         │
+│  - Found 1 orphan transcript file in ~/.openclaw/agents/main/sessions.  │
+│    These .jsonl files are no longer referenced by sessions.json, so     │
+│    they are not part of any active session history.                     │
+│    Doctor can archive them safely by renaming each file to              │
+│    *.deleted.<timestamp>.                                               │
+│    Examples:                                                            │
+│    probe-openrouter-2b04d4f4-679a-43f1-b47d-2ff5311abd76.jsonl          │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────╯
+│
+◇  Doctor changes ──────────────────────────────────────────────────────╮
+│                                                                       │
+│  - Archived 1 orphan transcript file in                               │
+│    ~/.openclaw/agents/main/sessions as .deleted timestamped backups.  │
+│                                                                       │
+├───────────────────────────────────────────────────────────────────────╯
+│
+◇  Gateway service config ───────────────────────────────────────╮
+│                                                                │
+│  Gateway service openclaw-gateway.service is running; skipped  │
+│  command/entrypoint rewrites for this doctor pass.             │
+│                                                                │
+├────────────────────────────────────────────────────────────────╯
+│
+◇  Gateway service config ───────────────────────────────────────────────╮
+│                                                                        │
+│  - Gateway service PATH missing required dirs: /home/admin/.local/bin  │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+│
+◇  Gateway service config ────────────────────────────────────────────────╮
+│                                                                         │
+│  Gateway service is running; leaving supervisor metadata unchanged.     │
+│  Stop the service first or use `openclaw gateway install --force` when  │
+│  you want to replace the active launcher.                               │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────╯
+│
+◇  Security ─────────────────────────────────╮
+│                                            │
+│  - No channel security warnings detected.  │
+│  - Run: openclaw security audit --deep     │
+│                                            │
+├────────────────────────────────────────────╯
+│
+◇  Skills status ────────────╮
+│                            │
+│  Eligible: 15              │
+│  Missing requirements: 43  │
+│  Blocked by allowlist: 0   │
+│                            │
+├────────────────────────────╯
+│
+◇  Plugins ──────╮
+│                │
+│  Loaded: 65    │
+│  Imported: 0   │
+│  Disabled: 25  │
+│  Errors: 0     │
+│                │
+├────────────────╯
+│
+◇  Skills ─────────────────────────────────────────────────────────────────╮
+│                                                                          │
+│  Some skills are allowed for this agent but are not usable in the        │
+│  current runtime environment.                                            │
+│  - 1password: bins: op                                                   │
+│    install option: Install 1Password CLI (brew)                          │
+│  - apple-notes: bins: memo; os: darwin                                   │
+│  - apple-reminders: bins: remindctl; os: darwin                          │
+│  - bear-notes: bins: grizzly; os: darwin                                 │
+│  - blogwatcher: bins: blogwatcher                                        │
+│    install option: Install blogwatcher (go)                              │
+│  - blucli: bins: blu                                                     │
+│    install option: Install blucli (go)                                   │
+│  - camsnap: bins: camsnap                                                │
+│    install option: Install camsnap (brew)                                │
+│  - clawhub: bins: clawhub                                                │
+│    install option: Install clawhub (npm)                                 │
+│  - coding-agent: any bins: claude, codex, opencode, pi; config:          │
+│    skills.entries.coding-agent.enabled                                   │
+│    install option: Install @anthropic-ai/claude-code (npm)               │
+│  - discord: config: channels.discord.token                               │
+│  - eightctl: bins: eightctl                                              │
+│    install option: Install eightctl (go)                                 │
+│  - gemini: bins: gemini                                                  │
+│    install option: Install Gemini CLI (brew)                             │
+│  - gh-issues: bins: gh                                                   │
+│    install option: Install GitHub CLI (brew)                             │
+│  - gifgrep: bins: gifgrep                                                │
+│    install option: Install gifgrep (go)                                  │
+│  - github: bins: gh                                                      │
+│    install option: Install GitHub CLI (brew)                             │
+│  - gog: bins: gog                                                        │
+│    install option: Install gog (brew)                                    │
+│  - goplaces: bins: goplaces; env: GOOGLE_PLACES_API_KEY                  │
+│    install option: Install goplaces (brew)                               │
+│  - himalaya: bins: himalaya                                              │
+│    install option: Install Himalaya (brew)                               │
+│  - imsg: bins: imsg; os: darwin                                          │
+│  - mcporter: bins: mcporter                                              │
+│    install option: Install mcporter (npm)                                │
+│  - model-usage: bins: codexbar; os: darwin                               │
+│  - nano-pdf: bins: nano-pdf                                              │
+│    install option: Install nano-pdf (uv)                                 │
+│  - obsidian: bins: obsidian                                              │
+│  - openai-whisper: bins: whisper                                         │
+│    install option: Install OpenAI Whisper (brew)                         │
+│  - openai-whisper-api: env: OPENAI_API_KEY                               │
+│    install option: Install curl (brew)                                   │
+│  - openhue: bins: openhue                                                │
+│    install option: Install OpenHue CLI (brew)                            │
+│  - oracle: bins: oracle                                                  │
+│    install option: Install @steipete/oracle (npm)                        │
+│  - ordercli: bins: ordercli                                              │
+│    install option: Install ordercli (go)                                 │
+│  - peekaboo: bins: peekaboo; os: darwin                                  │
+│  - sag: bins: sag; env: ELEVENLABS_API_KEY                               │
+│    install option: Install sag (brew)                                    │
+│  - session-logs: bins: jq, rg                                            │
+│    install option: Install jq (brew)                                     │
+│  - sherpa-onnx-tts: env: SHERPA_ONNX_RUNTIME_DIR, SHERPA_ONNX_MODEL_DIR  │
+│    install option: Download sherpa-onnx runtime (Linux x64)              │
+│    install option: Download Piper en_US lessac (high)                    │
+│  - slack: config: channels.slack                                         │
+│  - songsee: bins: songsee                                                │
+│    install option: Install songsee (brew)                                │
+│  - sonoscli: bins: sonos                                                 │
+│    install option: Install sonoscli (go)                                 │
+│  - spotify-player: any bins: spogo, spotify_player                       │
+│    install option: Install spogo (brew)                                  │
+│  - summarize: bins: summarize                                            │
+│    install option: Install summarize (brew)                              │
+│  - things-mac: bins: things; os: darwin                                  │
+│  - trello: bins: jq; env: TRELLO_API_KEY, TRELLO_TOKEN                   │
+│    install option: Install jq (brew)                                     │
+│  - video-frames: bins: ffmpeg                                            │
+│    install option: Install ffmpeg (brew)                                 │
+│  - voice-call: config: plugins.entries.voice-call.enabled                │
+│  - wacli: bins: wacli                                                    │
+│    install option: Install wacli (go)                                    │
+│  - xurl: bins: xurl                                                      │
+│    install option: Install xurl (brew)                                   │
+│  Disable unused skills: openclaw doctor --fix                            │
+│  Inspect details: openclaw skills check --agent <id> or openclaw skills  │
+│  info <name> --agent <id>                                                │
+│                                                                          │
+├──────────────────────────────────────────────────────────────────────────╯
+[?25l│
+◆  Disable 43 unavailable skills in config?
+│  ○ Yes / ● No
+└
+[999D[4A[1B[J◇  Disable 43 unavailable skills in config?
+│  No
+[?25hConfig warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+Updated config: ~/.openclaw/openclaw.json
+  Backup: ~/.openclaw/openclaw.json.bak
+Backup: ~/.openclaw/openclaw.json.bak
+│
+└  Doctor complete.
+

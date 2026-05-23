@@ -1,0 +1,140 @@
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+Skills (15/58 ready)
+┌───────────────┬──────────────────────────┬────────────────────────────────────────────────────────┬──────────────────┐
+│ Status        │ Skill                    │ Description                                            │ Source           │
+├───────────────┼──────────────────────────┼────────────────────────────────────────────────────────┼──────────────────┤
+│ △ needs setup │ 🔐 1password             │ Set up and use 1Password CLI for sign-in, desktop      │ openclaw-bundled │
+│               │                          │ integration, and reading or injecting secrets.         │                  │
+│ △ needs setup │ 📝 apple-notes           │ Create, view, edit, delete, search, move, or export    │ openclaw-bundled │
+│               │                          │ Apple Notes via the memo CLI on macOS.                 │                  │
+│ △ needs setup │ ⏰ apple-reminders       │ List, add, edit, complete, or delete Apple Reminders   │ openclaw-bundled │
+│               │                          │ and reminder lists via remindctl.                      │                  │
+│ △ needs setup │ 🐻 bear-notes            │ Create, search, and manage Bear notes via grizzly CLI. │ openclaw-bundled │
+│ △ needs setup │ 📰 blogwatcher           │ Monitor blogs and RSS/Atom feeds for updates using     │ openclaw-bundled │
+│               │                          │ the blogwatcher CLI.                                   │                  │
+│ △ needs setup │ 🫐 blucli                │ BluOS CLI (blu) for discovery, playback, grouping,     │ openclaw-bundled │
+│               │                          │ and volume.                                            │                  │
+│ ✓ ready       │ browser-automation       │ Use when controlling web pages with the OpenClaw       │ openclaw-extra   │
+│               │                          │ browser tool, especially multi-step flows, login       │                  │
+│               │                          │ checks, tab management, or recovery from stale refs/   │                  │
+│               │                          │ timeouts.                                              │                  │
+│ △ needs setup │ 📸 camsnap               │ Capture frames or clips from RTSP/ONVIF cameras.       │ openclaw-bundled │
+│ ✓ ready       │ 🖼️ canvas                │ Present HTML on connected OpenClaw node canvases,      │ openclaw-bundled │
+│               │                          │ navigate/eval/snapshot, and debug canvas host URLs.    │                  │
+│ △ needs setup │ clawhub                  │ Search, install, update, sync, or publish agent        │ openclaw-bundled │
+│               │                          │ skills with the ClawHub CLI and registry.              │                  │
+│ △ needs setup │ 🧩 coding-agent          │ Delegate coding work to Codex, Claude Code, OpenCode,  │ openclaw-bundled │
+│               │                          │ or Pi as background workers; not simple edits or read- │                  │
+│               │                          │ only code lookup.                                      │                  │
+│ ✓ ready       │ 🧭 diagram-maker         │ Create SVG/HTML or Excalidraw diagrams for concepts,   │ openclaw-bundled │
+│               │                          │ architecture, flows, and whiteboards.                  │                  │
+│ △ needs setup │ 🎮 discord               │ Discord message-tool ops: send/read/edit/delete,       │ openclaw-bundled │
+│               │                          │ react, poll, pin, thread, search, presence, media/     │                  │
+│               │                          │ components.                                            │                  │
+│ △ needs setup │ 🛌 eightctl              │ Control Eight Sleep pods (status, temperature,         │ openclaw-bundled │
+│               │                          │ alarms, schedules).                                    │                  │
+│ △ needs setup │ ✨ gemini                │ Gemini CLI one-shot prompts, summaries, generation,    │ openclaw-bundled │
+│               │                          │ skills, hooks, MCP, or Gemma routing.                  │                  │
+│ △ needs setup │ gh-issues                │ Fetch GitHub issues, select candidates, spawn          │ openclaw-bundled │
+│               │                          │ background fix agents, open PRs, and optionally        │                  │
+│               │                          │ process PR review comments.                            │                  │
+│ △ needs setup │ 🧲 gifgrep               │ Search GIF providers with CLI/TUI, download results,   │ openclaw-bundled │
+│               │                          │ and extract stills/sheets.                             │                  │
+│ △ needs setup │ 🐙 github                │ GitHub CLI for issues, PRs, CI/check logs, comments,   │ openclaw-bundled │
+│               │                          │ reviews, releases, repos, and gh api queries.          │                  │
+│ △ needs setup │ 🎮 gog                   │ Google Workspace CLI for Gmail, Calendar, Drive,       │ openclaw-bundled │
+│               │                          │ Contacts, Sheets, and Docs.                            │                  │
+│ △ needs setup │ 📍 goplaces              │ Query Google Places for text search, place details,    │ openclaw-bundled │
+│               │                          │ resolve, reviews, or scriptable JSON via goplaces.     │                  │
+│ ✓ ready       │ healthcheck              │ Audit/harden OpenClaw hosts: SSH, firewall, updates,   │ openclaw-bundled │
+│               │                          │ exposure, backups, disk encryption, gateway security.  │                  │
+│ △ needs setup │ 📧 himalaya              │ Himalaya CLI for IMAP/SMTP mail: list, read, search,   │ openclaw-bundled │
+│               │                          │ compose, reply, forward, copy, move, delete.           │                  │
+│ △ needs setup │ 📨 imsg                  │ iMessage/SMS CLI for listing chats, history, and       │ openclaw-bundled │
+│               │                          │ sending messages via Messages.app.                     │                  │
+│ △ needs setup │ 📦 mcporter              │ List, configure, authenticate, call, and inspect MCP   │ openclaw-bundled │
+│               │                          │ servers/tools with mcporter over HTTP or stdio.        │                  │
+│ ✓ ready       │ 🖼️ meme-maker            │ Search meme templates, suggest formats, and generate   │ openclaw-bundled │
+│               │                          │ local or hosted image memes.                           │                  │
+│ △ needs setup │ 📊 model-usage           │ Summarize CodexBar local cost logs by model for Codex  │ openclaw-bundled │
+│               │                          │ or Claude, including current or full breakdowns.       │                  │
+│ △ needs setup │ 📄 nano-pdf              │ Edit PDFs with natural-language instructions using     │ openclaw-bundled │
+│               │                          │ the nano-pdf CLI.                                      │                  │
+│ ✓ ready       │ node-connect             │ Diagnose OpenClaw Android, iOS, or macOS node          │ openclaw-bundled │
+│               │                          │ pairing, QR/setup code, route, auth, and connection    │                  │
+│               │                          │ failures.                                              │                  │
+│ ✓ ready       │ 🪲 node-inspect-debugger │ Debug Node.js with node inspect, --inspect,            │ openclaw-bundled │
+│               │                          │ breakpoints, CDP, heap, and CPU profiles.              │                  │
+│ ✓ ready       │ 📝 notion                │ Notion CLI/API for pages, Markdown content, data       │ openclaw-bundled │
+│               │                          │ sources, files, comments, search, Workers, and raw     │                  │
+│               │                          │ API calls.                                             │                  │
+│ △ needs setup │ 💎 obsidian              │ Work with Obsidian vaults using the official obsidian  │ openclaw-bundled │
+│               │                          │ CLI: read/search/create/edit notes, tasks, links,      │                  │
+│               │                          │ properties, plugins.                                   │                  │
+│ △ needs setup │ 🎤 openai-whisper        │ Local speech-to-text with the Whisper CLI (no API      │ openclaw-bundled │
+│               │                          │ key).                                                  │                  │
+│ △ needs setup │ 🌐 openai-whisper-api    │ OpenAI Audio Transcriptions API via curl; gpt-4o-      │ openclaw-bundled │
+│               │                          │ transcribe, mini, diarize, or whisper-1.               │                  │
+│ △ needs setup │ 💡 openhue               │ Control Philips Hue lights and scenes via the OpenHue  │ openclaw-bundled │
+│               │                          │ CLI.                                                   │                  │
+│ △ needs setup │ 🧿 oracle                │ Oracle CLI second-model review/debug/refactor/design   │ openclaw-bundled │
+│               │                          │ with selected files, dry-run token checks, API or      │                  │
+│               │                          │ browser engine.                                        │                  │
+│ △ needs setup │ 🛵 ordercli              │ Foodora-only CLI for checking past orders and active   │ openclaw-bundled │
+│               │                          │ order status (Deliveroo WIP).                          │                  │
+│ △ needs setup │ 👀 peekaboo              │ Capture and automate macOS UI with the Peekaboo CLI.   │ openclaw-bundled │
+│ ✓ ready       │ python-debugpy           │ Debug Python with pdb, breakpoint(), post-mortem       │ openclaw-bundled │
+│               │                          │ inspection, and debugpy remote attach.                 │                  │
+│ △ needs setup │ 🔊 sag                   │ ElevenLabs text-to-speech with mac-style say UX.       │ openclaw-bundled │
+│ △ needs setup │ 📜 session-logs          │ Search and analyze your own session logs (older/       │ openclaw-bundled │
+│               │                          │ parent conversations) using jq.                        │                  │
+│ △ needs setup │ 🔉 sherpa-onnx-tts       │ Local text-to-speech via sherpa-onnx (offline, no      │ openclaw-bundled │
+│               │                          │ cloud)                                                 │                  │
+│ ✓ ready       │ skill-creator            │ Create, edit, audit, tidy, validate, or restructure    │ openclaw-bundled │
+│               │                          │ AgentSkills and SKILL.md files.                        │                  │
+│ △ needs setup │ 💬 slack                 │ Slack tool actions: send/read/edit/delete messages,    │ openclaw-bundled │
+│               │                          │ react, pin/unpin, list pins/reactions/emoji, member    │                  │
+│               │                          │ info.                                                  │                  │
+│ △ needs setup │ 🌊 songsee               │ Generate spectrograms and feature-panel                │ openclaw-bundled │
+│               │                          │ visualizations from audio with the songsee CLI.        │                  │
+│ △ needs setup │ 🔊 sonoscli              │ Control Sonos speakers (discover/status/play/volume/   │ openclaw-bundled │
+│               │                          │ group).                                                │                  │
+│ ✓ ready       │ 🧪 spike                 │ Run throwaway prototypes to validate feasibility,      │ openclaw-bundled │
+│               │                          │ compare approaches, and report a verdict.              │                  │
+│ △ needs setup │ 🎵 spotify-player        │ Terminal Spotify playback/search via spogo             │ openclaw-bundled │
+│               │                          │ (preferred) or spotify_player.                         │                  │
+│ △ needs setup │ 🧾 summarize             │ Summarize or transcribe URLs, YouTube/videos,          │ openclaw-bundled │
+│               │                          │ podcasts, articles, transcripts, PDFs, and local       │                  │
+│               │                          │ files.                                                 │                  │
+│ ✓ ready       │ 🪝 taskflow              │ Coordinate multi-step detached tasks as one durable    │ openclaw-bundled │
+│               │                          │ TaskFlow job with owner context, state, waits, and     │                  │
+│               │                          │ child tasks.                                           │                  │
+│ ✓ ready       │ 📥 taskflow-inbox-triage │ Example TaskFlow pattern for inbox triage, intent      │ openclaw-bundled │
+│               │                          │ routing, waiting on replies, and later summaries.      │                  │
+│ △ needs setup │ ✅ things-mac            │ Add, update, list, search, or inspect Things 3 todos,  │ openclaw-bundled │
+│               │                          │ inbox, today, projects, areas, and tags on macOS.      │                  │
+│ ✓ ready       │ 🧵 tmux                  │ Control tmux sessions/panes for interactive CLIs:      │ openclaw-bundled │
+│               │                          │ list, capture output, send keys, paste text, monitor   │                  │
+│               │                          │ prompts.                                               │                  │
+│ △ needs setup │ 📋 trello                │ Manage Trello boards, lists, and cards via the Trello  │ openclaw-bundled │
+│               │                          │ REST API.                                              │                  │
+│ △ needs setup │ 🎬 video-frames          │ Extract frames or short clips from videos using        │ openclaw-bundled │
+│               │                          │ ffmpeg.                                                │                  │
+│ △ needs setup │ 📞 voice-call            │ Start voice calls via the OpenClaw voice-call plugin.  │ openclaw-bundled │
+│ △ needs setup │ 📱 wacli                 │ Send third-party WhatsApp messages or sync/search      │ openclaw-bundled │
+│               │                          │ WhatsApp history via wacli, not normal active chats.   │                  │
+│ ✓ ready       │ ☔ weather               │ Current weather and forecasts with wttr.in via curl    │ openclaw-bundled │
+│               │                          │ for locations, rain, temperature, travel planning.     │                  │
+│ △ needs setup │ 🐦 xurl                  │ xurl CLI for authenticated X posts, replies, reads/    │ openclaw-bundled │
+│               │                          │ search, DMs, media upload, followers, auth status, or  │                  │
+│               │                          │ raw v2 API calls.                                      │                  │
+└───────────────┴──────────────────────────┴────────────────────────────────────────────────────────┴──────────────────┘
+
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.
