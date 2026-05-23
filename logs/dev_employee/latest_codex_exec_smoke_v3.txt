@@ -1,0 +1,28 @@
+===== codex exec smoke v3 =====
+OpenAI Codex v0.133.0
+--------
+workdir: /home/admin/projects/oris
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 019e53dc-82e4-7d61-bb1f-894e5bc231cf
+--------
+user
+Create logs/dev_employee/codex_reality_check.txt with exactly: CODEX_REALITY_CHECK_OK. Then print the file content.
+codex
+I’ll create the requested file under the workspace and then read it back to confirm the exact content.
+exec
+/bin/bash -lc "mkdir -p logs/dev_employee && printf 'CODEX_REALITY_CHECK_OK' > logs/dev_employee/codex_reality_check.txt && cat logs/dev_employee/codex_reality_check.txt" in /home/admin/projects/oris
+ succeeded in 0ms:
+CODEX_REALITY_CHECK_OK
+codex
+CODEX_REALITY_CHECK_OK
+tokens used
+8,178
+CODEX_REALITY_CHECK_OK
+
+===== verify file =====
+CODEX_REALITY_CHECK_OK
