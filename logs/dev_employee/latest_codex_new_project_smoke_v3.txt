@@ -1,0 +1,3785 @@
+OpenAI Codex v0.133.0
+--------
+workdir: /home/admin/projects
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR, /home/admin/projects/oris]
+reasoning effort: none
+reasoning summaries: none
+session id: 019e53ed-eb04-7362-bfa6-525fe9d24177
+--------
+user
+Create a new independent project at /home/admin/projects/oris-dev-smoke-app, not inside the ORIS repo. Use GitHub CLI to create public repo ShanGouXueHui/oris-dev-smoke-app if it does not exist. Build a minimal FastAPI app with app/main.py, tests/test_health.py, requirements.txt, README.md, AGENTS.md, docs/PROJECT_STATE.md. Endpoints: GET /health returns {"ok": true, "service": "oris-dev-smoke-app"}; GET /version returns project name and version. Create a project .venv, install requirements, run python3 -m py_compile app/main.py and pytest -q. Commit and push the project repo. Then update /home/admin/projects/oris/orchestration/project_registry.json by adding key oris-dev-smoke-app without deleting existing projects or policy. Commit and push the ORIS registry update. Return product repo commit SHA, ORIS registry commit SHA, changed files, and test output.
+codex
+I’ll create the standalone app outside the ORIS repo, then handle the ORIS registry as a separate commit so the two histories stay clean. I’ll first inspect the existing workspace and GitHub auth/repo state.
+exec
+/bin/bash -lc 'pwd && ls' in /home/admin/projects
+ succeeded in 0ms:
+/home/admin/projects
+oris
+
+exec
+/bin/bash -lc 'git status --short --branch' in /home/admin/projects/oris
+ succeeded in 0ms:
+## main...origin/main
+ M logs/dev_employee/free_mesh_latency_events.jsonl
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? logs/dev_employee/latest_codex_new_project_smoke_v3.txt
+
+exec
+/bin/bash -lc 'gh auth status' in /home/admin/projects
+ exited 1 in 0ms:
+github.com
+  X github.com: authentication failed
+  - The github.com token in /home/admin/.config/gh/hosts.yml is no longer valid.
+  - To re-authenticate, run: gh auth login -h github.com
+  - To forget about this host, run: gh auth logout -h github.com
+  
+
+codex
+GitHub CLI is installed but the saved GitHub token is invalid, so remote creation/push will likely block until `gh auth login` is repaired. I’m continuing with the local project and tests now, and I’ll attempt the GitHub operations so the failure mode is concrete.
+exec
+/bin/bash -lc 'git remote -v' in /home/admin/projects/oris
+ succeeded in 0ms:
+origin	git@github.com:ShanGouXueHui/oris.git (fetch)
+origin	git@github.com:ShanGouXueHui/oris.git (push)
+
+exec
+/bin/bash -lc 'gh repo view ShanGouXueHui/oris-dev-smoke-app --json name,visibility,url' in /home/admin/projects
+ exited 1 in 0ms:
+Unknown JSON field: "visibility"
+Available fields:
+  assignableUsers
+  codeOfConduct
+  contactLinks
+  createdAt
+  defaultBranchRef
+  deleteBranchOnMerge
+  description
+  diskUsage
+  forkCount
+  fundingLinks
+  hasIssuesEnabled
+  hasProjectsEnabled
+  hasWikiEnabled
+  homepageUrl
+  id
+  isArchived
+  isBlankIssuesEnabled
+  isEmpty
+  isFork
+  isInOrganization
+  isMirror
+  isPrivate
+  isSecurityPolicyEnabled
+  isTemplate
+  isUserConfigurationRepository
+  issueTemplates
+  issues
+  labels
+  languages
+  latestRelease
+  licenseInfo
+  mentionableUsers
+  mergeCommitAllowed
+  milestones
+  mirrorUrl
+  name
+  nameWithOwner
+  openGraphImageUrl
+  owner
+  parent
+  primaryLanguage
+  projects
+  pullRequestTemplates
+  pullRequests
+  pushedAt
+  rebaseMergeAllowed
+  repositoryTopics
+  securityPolicyUrl
+  squashMergeAllowed
+  sshUrl
+  stargazerCount
+  templateRepository
+  updatedAt
+  url
+  usesCustomOpenGraphImage
+  viewerCanAdminister
+  viewerDefaultCommitEmail
+  viewerDefaultMergeMethod
+  viewerHasStarred
+  viewerPermission
+  viewerPossibleCommitEmails
+  viewerSubscription
+  watchers
+
+exec
+/bin/bash -lc "sed -n '1,220p' orchestration/project_registry.json" in /home/admin/projects/oris
+ succeeded in 0ms:
+{
+  "version": 1,
+  "updated_at": "2026-05-23",
+  "policy": {
+    "oris_repo_role": "platform_orchestration_only",
+    "business_code_policy": "new_business_projects_must_use_separate_github_repositories",
+    "default_projects_root": "/home/admin/projects",
+    "require_explicit_target_project": true,
+    "require_git_status_before_changes": true,
+    "require_commit_and_push_for_completed_changes": true
+  },
+  "projects": {
+    "oris": {
+      "name": "ORIS",
+      "type": "platform",
+      "repo": "git@github.com:ShanGouXueHui/oris.git",
+      "github": "https://github.com/ShanGouXueHui/oris",
+      "local_path": "/home/admin/projects/oris",
+      "default_branch": "main",
+      "allowed_scope": [
+        "docs/",
+        "orchestration/",
+        "scripts/",
+        "logs/dev_employee/",
+        "memory/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "production_credentials"
+      ],
+      "notes": "AI employee platform, routing, provider orchestration, task governance, and operational logs. Do not place new business application code in this repo."
+    },
+    "aideal-cps": {
+      "name": "AIdeal CPS / 智省优选",
+      "type": "product",
+      "repo": "git@github.com:ShanGouXueHui/aideal-cps.git",
+      "github": "https://github.com/ShanGouXueHui/aideal-cps",
+      "local_path": "/home/admin/projects/aideal-cps",
+      "default_branch": "main",
+      "allowed_scope": [
+        "app/",
+        "scripts/",
+        "docs/",
+        "tests/",
+        "alembic/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "wechat_pay_private_key",
+        "jd_app_secret"
+      ],
+      "notes": "Existing product project. Use this repo for AIdeal CPS product changes, not the ORIS platform repo."
+    },
+    "aideal-site": {
+      "name": "AIdeal official site",
+      "type": "site",
+      "repo": "git@github.com:ShanGouXueHui/aideal-site.git",
+      "github": "https://github.com/ShanGouXueHui/aideal-site",
+      "local_path": "/home/admin/projects/aideal-site",
+      "default_branch": "main",
+      "allowed_scope": [
+        "public/",
+        "src/",
+        "docs/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets"
+      ],
+      "notes": "Official site and ICP-facing content should be maintained here."
+    },
+    "kindafeelfy-nolly": {
+      "name": "Nolly / 略懂半解",
+      "type": "product",
+      "repo": "git@github.com:ShanGouXueHui/kindafeelfy-nolly.git",
+      "github": "https://github.com/ShanGouXueHui/kindafeelfy-nolly",
+      "local_path": "/home/admin/projects/kindafeelfy-nolly",
+      "default_branch": "main",
+      "allowed_scope": [
+        "app/",
+        "scripts/",
+        "docs/",
+        "tests/",
+        "alembic/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets"
+      ],
+      "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
+    }
+  }
+}
+
+exec
+/bin/bash -lc 'gh repo view ShanGouXueHui/oris-dev-smoke-app --json nameWithOwner,isPrivate,url' in /home/admin/projects
+ exited 1 in 0ms:
+error connecting to api.github.com
+check your internet connection or https://githubstatus.com
+
+codex
+The repo lookup now fails at network access, separate from the invalid auth. I’m going to build and verify everything locally, then I’ll commit what can be committed and report the exact remote operations that could not complete.
+exec
+/bin/bash -lc 'mkdir -p /home/admin/projects/oris-dev-smoke-app/app /home/admin/projects/oris-dev-smoke-app/tests /home/admin/projects/oris-dev-smoke-app/docs' in /home/admin/projects
+ succeeded in 0ms:
+codex
+I’m adding the minimal FastAPI surface, a focused health test, and the requested project documentation. The app will expose a module-level version so `/version` and docs stay aligned.
+apply patch
+patch: completed
+/home/admin/projects/oris-dev-smoke-app/.gitignore
+/home/admin/projects/oris-dev-smoke-app/AGENTS.md
+/home/admin/projects/oris-dev-smoke-app/README.md
+/home/admin/projects/oris-dev-smoke-app/app/__init__.py
+/home/admin/projects/oris-dev-smoke-app/app/main.py
+/home/admin/projects/oris-dev-smoke-app/docs/PROJECT_STATE.md
+/home/admin/projects/oris-dev-smoke-app/requirements.txt
+/home/admin/projects/oris-dev-smoke-app/tests/test_health.py
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+codex
+The app scaffold is in place. Next I’m creating the local virtualenv and installing dependencies exactly from `requirements.txt`; if the package index is unreachable, I’ll capture that output and use any available local environment only as a fallback for diagnostics.
+exec
+/bin/bash -lc 'git init -b main' in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+Initialized empty Git repository in /home/admin/projects/oris-dev-smoke-app/.git/
+
+exec
+/bin/bash -lc 'python3 -m venv .venv' in /home/admin/projects/oris-dev-smoke-app
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+ succeeded in 2752ms:
+exec
+/bin/bash -lc '.venv/bin/pip install -r requirements.txt' in /home/admin/projects/oris-dev-smoke-app
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+codex
+Dependency installation is retrying because DNS/network access is blocked for PyPI. I’m letting it finish so the install result is unambiguous before running the compile/test checks.
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+ exited 1 in 7894ms:
+WARNING: The directory '/home/admin/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fd4a9d5ffa0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /simple/fastapi/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fd4a9d8c3a0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /simple/fastapi/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fd4a9d8ce80>: Failed to establish a new connection: [Errno -2] Name or service not known')': /simple/fastapi/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fd4a9d8d060>: Failed to establish a new connection: [Errno -2] Name or service not known')': /simple/fastapi/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fd4a9d8d210>: Failed to establish a new connection: [Errno -2] Name or service not known')': /simple/fastapi/
+ERROR: Could not find a version that satisfies the requirement fastapi==0.115.6 (from versions: none)
+ERROR: No matching distribution found for fastapi==0.115.6
+
+exec
+/bin/bash -lc '.venv/bin/python -m pytest -q' in /home/admin/projects/oris-dev-smoke-app
+ exited 1 in 0ms:
+/home/admin/projects/oris-dev-smoke-app/.venv/bin/python: No module named pytest
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+try:
+    import fastapi
+    print('fastapi', fastapi.__version__)
+except Exception as exc:
+    print('fastapi import failed:', exc)
+try:
+    import pytest
+    print('pytest', pytest.__version__)
+except Exception as exc:
+    print('pytest import failed:', exc)
+PY" in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+fastapi import failed: No module named 'fastapi'
+pytest import failed: No module named 'pytest'
+
+exec
+/bin/bash -lc 'python3 -m py_compile app/main.py' in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+codex
+`py_compile` passed, but neither the new venv nor the system interpreter has FastAPI/pytest available. I’m checking whether another existing local environment has the wheels/packages already installed so tests can still be run without network.
+exec
+/bin/bash -lc "find /home/admin/projects -maxdepth 3 -type f \\( -name 'pytest' -o -name 'fastapi' \\) 2>/dev/null | head -50" in /home/admin/projects
+ succeeded in 0ms:
+exec
+/bin/bash -lc "find /home/admin/projects -maxdepth 4 -path '*/site-packages/fastapi' -type d 2>/dev/null | head -20" in /home/admin/projects
+ succeeded in 0ms:
+exec
+/bin/bash -lc "find /home/admin/projects -maxdepth 4 -path '*/bin/pytest' -type f 2>/dev/null | head -20" in /home/admin/projects
+ succeeded in 0ms:
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+codex
+No local FastAPI/pytest installation is available elsewhere under `/home/admin/projects`, so the test run is blocked by dependency installation rather than app code. I’m committing the local product repo now, then I’ll update only the ORIS registry file while leaving the existing dirty ORIS runtime/log files untouched.
+exec
+/bin/bash -lc 'git status --short' in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+?? .gitignore
+?? AGENTS.md
+?? README.md
+?? app/
+?? docs/
+?? requirements.txt
+?? tests/
+
+exec
+/bin/bash -lc 'git config user.name && git config user.email' in /home/admin/projects/oris-dev-smoke-app
+ exited 1 in 0ms:
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+exec
+/bin/bash -lc 'git config user.name "Codex" && git config user.email "codex@local" && git add . && git commit -m "Initial FastAPI smoke app"' in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+[main (root-commit) 3754a51] Initial FastAPI smoke app
+ 8 files changed, 82 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 AGENTS.md
+ create mode 100644 README.md
+ create mode 100644 app/__init__.py
+ create mode 100644 app/main.py
+ create mode 100644 docs/PROJECT_STATE.md
+ create mode 100644 requirements.txt
+ create mode 100644 tests/test_health.py
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+exec
+/bin/bash -lc 'gh repo create ShanGouXueHui/oris-dev-smoke-app --public --source=. --remote=origin --push' in /home/admin/projects/oris-dev-smoke-app
+ exited 1 in 0ms:
+error connecting to api.github.com
+check your internet connection or https://githubstatus.com
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+exec
+/bin/bash -lc 'git remote add origin git@github.com:ShanGouXueHui/oris-dev-smoke-app.git && git push -u origin main' in /home/admin/projects/oris-dev-smoke-app
+ exited 128 in 0ms:
+ssh: Could not resolve hostname github.com: Name or service not known
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+
+codex
+The product commit exists locally at `3754a51`, but GitHub creation and push both fail because `github.com` cannot be resolved from this environment. I’m applying the registry addition now as a separate ORIS commit.
+apply patch
+patch: completed
+/home/admin/projects/oris/orchestration/project_registry.json
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+exec
+/bin/bash -lc 'git diff -- orchestration/project_registry.json' in /home/admin/projects/oris
+ succeeded in 0ms:
+diff --git a/orchestration/project_registry.json b/orchestration/project_registry.json
+index cf18345..020e030 100644
+--- a/orchestration/project_registry.json
++++ b/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+exec
+/bin/bash -lc 'git status --short' in /home/admin/projects/oris
+ succeeded in 0ms:
+ M logs/dev_employee/free_mesh_latency_events.jsonl
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/project_registry.json
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? logs/dev_employee/latest_codex_new_project_smoke_v3.txt
+
+exec
+/bin/bash -lc 'python3 -m json.tool orchestration/project_registry.json >/tmp/project_registry.validated.json' in /home/admin/projects/oris
+ succeeded in 0ms:
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+codex
+The registry JSON validates, and the diff is limited to the new `oris-dev-smoke-app` entry. I’m staging only `orchestration/project_registry.json` so the existing ORIS runtime/log changes remain untouched.
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+codex
+The ORIS repo’s `.git/config` is read-only in this sandbox, so setting local Git identity there failed. I’m checking whether ORIS already has usable commit identity configured and will commit with command-scoped identity if needed.
+exec
+/bin/bash -lc 'ls -l .git/config' in /home/admin/projects/oris
+ succeeded in 0ms:
+-rw-rw-r-- 1 admin admin 326 Apr  3 09:48 .git/config
+
+exec
+/bin/bash -lc 'git config user.name; git config user.email; git status --short' in /home/admin/projects/oris
+ succeeded in 0ms:
+ShanGouXueHui
+admin@iZt4n62qkjefjya5xa097pZ
+ M logs/dev_employee/free_mesh_latency_events.jsonl
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/project_registry.json
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? logs/dev_employee/latest_codex_new_project_smoke_v3.txt
+
+exec
+/bin/bash -lc 'git diff --cached --stat' in /home/admin/projects/oris
+ succeeded in 0ms:
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+codex
+The ORIS working tree file is writable, but `.git/index.lock` cannot be created because ORIS git metadata is mounted read-only here. That blocks the ORIS commit locally; I’ll still collect the exact working-tree state and product commit details.
+exec
+/bin/bash -lc 'git rev-parse HEAD && git status --short && git remote -v' in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+3754a51c921e2504bd246e209fe1868f13d55761
+origin	git@github.com:ShanGouXueHui/oris-dev-smoke-app.git (fetch)
+origin	git@github.com:ShanGouXueHui/oris-dev-smoke-app.git (push)
+
+exec
+/bin/bash -lc 'git diff --name-only HEAD' in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+exec
+/bin/bash -lc 'git diff --name-only' in /home/admin/projects/oris
+ succeeded in 0ms:
+logs/dev_employee/free_mesh_latency_events.jsonl
+orchestration/active_routing.json
+orchestration/execution_log.jsonl
+orchestration/project_registry.json
+orchestration/runtime_plan.json
+orchestration/runtime_state.json
+
+exec
+/bin/bash -lc 'git rev-parse HEAD && git status --short' in /home/admin/projects/oris
+ succeeded in 0ms:
+8b7b61c3df5111503075496b337f297106f5a4dc
+ M logs/dev_employee/free_mesh_latency_events.jsonl
+ M orchestration/active_routing.json
+ M orchestration/execution_log.jsonl
+ M orchestration/project_registry.json
+ M orchestration/runtime_plan.json
+ M orchestration/runtime_state.json
+?? logs/dev_employee/latest_codex_new_project_smoke_v3.txt
+
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+exec
+/bin/bash -lc 'touch /home/admin/projects/oris-dev-smoke-app/.git/codex-write-test && rm /home/admin/projects/oris-dev-smoke-app/.git/codex-write-test' in /home/admin/projects
+ succeeded in 0ms:
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+exec
+/bin/bash -lc "git show --name-only --format='%H%n%s' HEAD" in /home/admin/projects/oris-dev-smoke-app
+ succeeded in 0ms:
+3754a51c921e2504bd246e209fe1868f13d55761
+Initial FastAPI smoke app
+
+.gitignore
+AGENTS.md
+README.md
+app/__init__.py
+app/main.py
+docs/PROJECT_STATE.md
+requirements.txt
+tests/test_health.py
+
+exec
+/bin/bash -lc 'git diff -- orchestration/project_registry.json' in /home/admin/projects/oris
+ succeeded in 0ms:
+diff --git a/orchestration/project_registry.json b/orchestration/project_registry.json
+index cf18345..020e030 100644
+--- a/orchestration/project_registry.json
++++ b/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+exec
+/bin/bash -lc '.venv/bin/python -m pytest -q' in /home/admin/projects/oris-dev-smoke-app
+ exited 1 in 0ms:
+/home/admin/projects/oris-dev-smoke-app/.venv/bin/python: No module named pytest
+
+exec
+/bin/bash -lc "python3 -m py_compile app/main.py && echo 'py_compile ok'" in /home/admin/projects/oris-dev-smoke-app
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+ succeeded in 104ms:
+py_compile ok
+
+codex
+Created the independent project at `/home/admin/projects/oris-dev-smoke-app` and committed it locally.
+
+Product repo commit SHA:
+`3754a51c921e2504bd246e209fe1868f13d55761`
+
+ORIS registry commit SHA:
+Not created. `/home/admin/projects/oris/.git` is read-only in this environment, so `git add`/`git commit` cannot create `.git/index.lock`. The registry file itself was updated and JSON-valid.
+
+Remote status:
+`gh repo create` and `git push` failed because `github.com` cannot be resolved from this environment. `gh auth status` also reports the saved token is invalid.
+
+Changed files in product repo:
+```text
+.gitignore
+AGENTS.md
+README.md
+app/__init__.py
+app/main.py
+docs/PROJECT_STATE.md
+requirements.txt
+tests/test_health.py
+```
+
+Changed ORIS file:
+```text
+orchestration/project_registry.json
+```
+
+Verification output:
+```text
+$ python3 -m py_compile app/main.py
+py_compile ok
+```
+
+```text
+$ .venv/bin/pip install -r requirements.txt
+ERROR: Could not find a version that satisfies the requirement fastapi==0.115.6 (from versions: none)
+ERROR: No matching distribution found for fastapi==0.115.6
+```
+
+```text
+$ .venv/bin/python -m pytest -q
+/home/admin/projects/oris-dev-smoke-app/.venv/bin/python: No module named pytest
+```
+
+The app code and registry edit are in place locally; the remaining blockers are network/GitHub auth and the read-only ORIS git metadata.
+diff --git a/oris-dev-smoke-app/.gitignore b/oris-dev-smoke-app/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..a328e971e7b2b2d0d50cc6b8d0814de2078ee919
+--- /dev/null
++++ b/oris-dev-smoke-app/.gitignore
+@@ -0,0 +1,4 @@
++.venv/
++__pycache__/
++.pytest_cache/
++*.py[cod]
+diff --git a/oris-dev-smoke-app/AGENTS.md b/oris-dev-smoke-app/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..df0f1c7ff0a41c17bd1dbb26a9ce05b09bdad9cc
+--- /dev/null
++++ b/oris-dev-smoke-app/AGENTS.md
+@@ -0,0 +1,5 @@
++# Agent Notes
++
++- Keep this project independent from `/home/admin/projects/oris`.
++- Do not commit virtual environments, caches, secrets, or generated runtime logs.
++- Run `python3 -m py_compile app/main.py` and `pytest -q` before committing changes.
+diff --git a/oris-dev-smoke-app/README.md b/oris-dev-smoke-app/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..d36a11972987b3555dd38f7bd0292b7ca17d5961
+--- /dev/null
++++ b/oris-dev-smoke-app/README.md
+@@ -0,0 +1,24 @@
++# oris-dev-smoke-app
++
++Minimal FastAPI smoke app used to verify standalone ORIS-adjacent project setup.
++
++## Endpoints
++
++- `GET /health` returns `{"ok": true, "service": "oris-dev-smoke-app"}`
++- `GET /version` returns the project name and version.
++
++## Local setup
++
++```bash
++python3 -m venv .venv
++. .venv/bin/activate
++pip install -r requirements.txt
++uvicorn app.main:app --reload
++```
++
++## Verification
++
++```bash
++python3 -m py_compile app/main.py
++pytest -q
++```
+diff --git a/oris-dev-smoke-app/app/__init__.py b/oris-dev-smoke-app/app/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..8b137891791fe96927ad78e64b0aad7bded08bdc
+--- /dev/null
++++ b/oris-dev-smoke-app/app/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/oris-dev-smoke-app/app/main.py b/oris-dev-smoke-app/app/main.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1331bc8a7e33826a487c052f80d7a3831cb4ce
+--- /dev/null
++++ b/oris-dev-smoke-app/app/main.py
+@@ -0,0 +1,17 @@
++from fastapi import FastAPI
++
++
++PROJECT_NAME = "oris-dev-smoke-app"
++VERSION = "0.1.0"
++
++app = FastAPI(title=PROJECT_NAME, version=VERSION)
++
++
++@app.get("/health")
++def health() -> dict[str, bool | str]:
++    return {"ok": True, "service": PROJECT_NAME}
++
++
++@app.get("/version")
++def version() -> dict[str, str]:
++    return {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris-dev-smoke-app/docs/PROJECT_STATE.md b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..0fa68d4d51e11c073548eb2e84e6ab7214657b64
+--- /dev/null
++++ b/oris-dev-smoke-app/docs/PROJECT_STATE.md
+@@ -0,0 +1,8 @@
++# Project State
++
++- Name: `oris-dev-smoke-app`
++- Version: `0.1.0`
++- Type: Minimal FastAPI smoke application
++- Local path: `/home/admin/projects/oris-dev-smoke-app`
++- Repository: `https://github.com/ShanGouXueHui/oris-dev-smoke-app`
++- Status: Initial standalone project scaffold
+diff --git a/oris-dev-smoke-app/requirements.txt b/oris-dev-smoke-app/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..12fd4347e785d788dbf3b14c0b4354877ca4c2a2
+--- /dev/null
++++ b/oris-dev-smoke-app/requirements.txt
+@@ -0,0 +1,3 @@
++fastapi==0.115.6
++pytest==8.3.4
++uvicorn==0.34.0
+diff --git a/oris-dev-smoke-app/tests/test_health.py b/oris-dev-smoke-app/tests/test_health.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bf27135e2eb0a26cb9774ea6cd4e3086799396b4
+--- /dev/null
++++ b/oris-dev-smoke-app/tests/test_health.py
+@@ -0,0 +1,20 @@
++from fastapi.testclient import TestClient
++
++from app.main import PROJECT_NAME, VERSION, app
++
++
++client = TestClient(app)
++
++
++def test_health() -> None:
++    response = client.get("/health")
++
++    assert response.status_code == 200
++    assert response.json() == {"ok": True, "service": PROJECT_NAME}
++
++
++def test_version() -> None:
++    response = client.get("/version")
++
++    assert response.status_code == 200
++    assert response.json() == {"name": PROJECT_NAME, "version": VERSION}
+diff --git a/oris/orchestration/project_registry.json b/oris/orchestration/project_registry.json
+index cf183454fc61883b73f79784c963b45588a81e86..020e030b7c8af701cba08fe22c361108996c8d66
+--- a/oris/orchestration/project_registry.json
++++ b/oris/orchestration/project_registry.json
+@@ -90,6 +90,24 @@
+         "secrets"
+       ],
+       "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
++    },
++    "oris-dev-smoke-app": {
++      "name": "ORIS Dev Smoke App",
++      "type": "product",
++      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
++      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
++      "local_path": "/home/admin/projects/oris-dev-smoke-app",
++      "default_branch": "main",
++      "allowed_scope": [
++        "app/",
++        "docs/",
++        "tests/"
++      ],
++      "forbidden_scope": [
++        ".env",
++        "secrets"
++      ],
++      "notes": "Standalone FastAPI smoke app for validating independent product repository setup."
+     }
+   }
+ }
+
+tokens used
+60,140
+Created the independent project at `/home/admin/projects/oris-dev-smoke-app` and committed it locally.
+
+Product repo commit SHA:
+`3754a51c921e2504bd246e209fe1868f13d55761`
+
+ORIS registry commit SHA:
+Not created. `/home/admin/projects/oris/.git` is read-only in this environment, so `git add`/`git commit` cannot create `.git/index.lock`. The registry file itself was updated and JSON-valid.
+
+Remote status:
+`gh repo create` and `git push` failed because `github.com` cannot be resolved from this environment. `gh auth status` also reports the saved token is invalid.
+
+Changed files in product repo:
+```text
+.gitignore
+AGENTS.md
+README.md
+app/__init__.py
+app/main.py
+docs/PROJECT_STATE.md
+requirements.txt
+tests/test_health.py
+```
+
+Changed ORIS file:
+```text
+orchestration/project_registry.json
+```
+
+Verification output:
+```text
+$ python3 -m py_compile app/main.py
+py_compile ok
+```
+
+```text
+$ .venv/bin/pip install -r requirements.txt
+ERROR: Could not find a version that satisfies the requirement fastapi==0.115.6 (from versions: none)
+ERROR: No matching distribution found for fastapi==0.115.6
+```
+
+```text
+$ .venv/bin/python -m pytest -q
+/home/admin/projects/oris-dev-smoke-app/.venv/bin/python: No module named pytest
+```
+
+The app code and registry edit are in place locally; the remaining blockers are network/GitHub auth and the read-only ORIS git metadata.
