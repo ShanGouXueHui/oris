@@ -1,14 +1,14 @@
 {
   "ok": true,
-  "generated_at": "2026-05-23T07:21:59.397277+00:00",
-  "apply": false,
+  "generated_at": "2026-05-23T07:22:57.376777+00:00",
+  "apply": true,
   "safety": {
     "does_not_modify_env_files": true,
     "does_not_modify_nginx": true,
     "does_not_modify_production_services": true,
-    "may_modify_openclaw_user_services": false,
-    "may_install_gh_via_apt": false,
-    "may_install_opencode_via_npm": false
+    "may_modify_openclaw_user_services": true,
+    "may_install_gh_via_apt": true,
+    "may_install_opencode_via_npm": true
   },
   "before": {
     "gh": null,
@@ -23,14 +23,30 @@
       "exists": true,
       "changed": true,
       "before": "[Unit]\nDescription=OpenClaw Gateway (managed by ORIS)\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nType=simple\nEnvironment=PATH=/home/admin/.npm-global/bin:/usr/local/bin:/usr/bin:/bin\nExecStart=/home/admin/.npm-global/bin/openclaw gateway --port 18789\nRestart=always\nRestartSec=5\n\n[Install]\nWantedBy=default.target\n",
-      "after": "[Unit]\nDescription=OpenClaw Gateway (managed by ORIS)\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nType=simple\nEnvironment=PATH=/home/admin/.npm-global/bin:/home/admin/.local/bin:/usr/local/bin:/usr/bin:/bin\nExecStart=/home/admin/.npm-global/bin/openclaw gateway --port 18789\nRestart=always\nRestartSec=5\n\n[Install]\nWantedBy=default.target\n"
+      "after": "[Unit]\nDescription=OpenClaw Gateway (managed by ORIS)\nAfter=network-online.target\nWants=network-online.target\n\n[Service]\nType=simple\nEnvironment=PATH=/home/admin/.npm-global/bin:/home/admin/.local/bin:/usr/local/bin:/usr/bin:/bin\nExecStart=/home/admin/.npm-global/bin/openclaw gateway --port 18789\nRestart=always\nRestartSec=5\n\n[Install]\nWantedBy=default.target\n",
+      "backup": "/home/admin/.config/systemd/user/openclaw-gateway.service.bak.20260523T072257Z"
     },
     "gh_install": [
       {
-        "cmd": "install gh",
+        "cmd": "sudo apt update",
         "rc": 0,
-        "stdout": "planned_only",
-        "stderr": ""
+        "stdout": "Hit:1 http://mirrors.cloud.aliyuncs.com/ubuntu jammy InRelease\nGet:2 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-updates InRelease [128 kB]\nGet:3 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-backports InRelease [127 kB]\nGet:4 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-security InRelease [129 kB]\nHit:5 https://deb.nodesource.com/node_22.x nodistro InRelease\nGet:6 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-updates/main amd64 Packages [3,524 kB]\nGet:7 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-updates/main Translation-en [528 kB]\nGet:8 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-updates/restricted amd64 Packages [6,001 kB]\nGet:9 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-updates/restricted Translation-en [1,143 kB]\nGet:10 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-updates/universe amd64 Packages [1,269 kB]\nGet:11 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-security/main amd64 Packages [3,243 kB]\nGet:12 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-security/main Translation-en [456 kB]\nGet:13 http://mirrors.cloud.aliyuncs.com/ubuntu jammy-security/universe amd64 Packages [1,031 kB]\nFetched 17.6 MB in 3s (6,337 kB/s)\nReading package lists...\nBuilding dependency tree...\nReading state information...\n42 packages can be upgraded. Run 'apt list --upgradable' to see them.\n",
+        "stderr": "\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n",
+        "elapsed_ms": 8821
+      },
+      {
+        "cmd": "sudo apt install -y gh",
+        "rc": 0,
+        "stdout": "Reading package lists...\nBuilding dependency tree...\nReading state information...\nThe following NEW packages will be installed:\n  gh\n0 upgraded, 1 newly installed, 0 to remove and 42 not upgraded.\nNeed to get 6,242 kB of archives.\nAfter this operation, 33.7 MB of additional disk space will be used.\nGet:1 http://mirrors.cloud.aliyuncs.com/ubuntu jammy/universe amd64 gh amd64 2.4.0+dfsg1-2 [6,242 kB]\nFetched 6,242 kB in 1s (4,393 kB/s)\nSelecting previously unselected package gh.\n(Reading database ... \n(Reading database ... 5%\n(Reading database ... 10%\n(Reading database ... 15%\n(Reading database ... 20%\n(Reading database ... 25%\n(Reading database ... 30%\n(Reading database ... 35%\n(Reading database ... 40%\n(Reading database ... 45%\n(Reading database ... 50%\n(Reading database ... 55%\n(Reading database ... 60%\n(Reading database ... 65%\n(Reading database ... 70%\n(Reading database ... 75%\n(Reading database ... 80%\n(Reading database ... 85%\n(Reading database ... 90%\n(Reading database ... 95%\n(Reading database ... 100%\n(Reading database ... 110474 files and directories currently installed.)\nPreparing to unpack .../gh_2.4.0+dfsg1-2_amd64.deb ...\nUnpacking gh (2.4.0+dfsg1-2) ...\nSetting up gh (2.4.0+dfsg1-2) ...\nProcessing triggers for man-db (2.10.2-1) ...\n",
+        "stderr": "\nWARNING: apt does not have a stable CLI interface. Use with caution in scripts.\n\n",
+        "elapsed_ms": 7684
+      },
+      {
+        "cmd": "gh --version || true",
+        "rc": 0,
+        "stdout": "gh version 2.4.0+dfsg1 (2022-03-23 Ubuntu 2.4.0+dfsg1-2)\nhttps://github.com/cli/cli/releases/latest\n",
+        "stderr": "",
+        "elapsed_ms": 17
       }
     ],
     "opencode_install": [
@@ -39,13 +55,21 @@
         "rc": 0,
         "stdout": "1.15.10\n",
         "stderr": "",
-        "elapsed_ms": 1466
+        "elapsed_ms": 979
       },
       {
         "cmd": "npm install -g opencode-ai",
         "rc": 0,
-        "stdout": "planned_only",
-        "stderr": ""
+        "stdout": "\nadded 5 packages in 14s\n",
+        "stderr": "",
+        "elapsed_ms": 13943
+      },
+      {
+        "cmd": "opencode --version || opencode -v || true",
+        "rc": 0,
+        "stdout": "1.15.10\n",
+        "stderr": "",
+        "elapsed_ms": 739
       }
     ],
     "coding_agent_enable": {
@@ -54,12 +78,41 @@
       "before": null,
       "after": {
         "enabled": true
-      }
+      },
+      "backup": "/home/admin/.openclaw/openclaw.json.bak.coding-agent.20260523T072329Z"
+    },
+    "daemon_reload": {
+      "cmd": "systemctl --user daemon-reload",
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_ms": 93
+    },
+    "node_install": {
+      "cmd": "openclaw node install",
+      "rc": 0,
+      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\n\nInstalled systemd service: /home/admin/.config/systemd/user/openclaw-node.service\n",
+      "stderr": "",
+      "elapsed_ms": 2934
+    },
+    "node_start": {
+      "cmd": "openclaw node start",
+      "rc": 0,
+      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nRestarted systemd service: openclaw-node.service\n",
+      "stderr": "",
+      "elapsed_ms": 3826
+    },
+    "gateway_restart": {
+      "cmd": "systemctl --user restart openclaw-gateway.service && sleep 8",
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "elapsed_ms": 9093
     }
   },
   "after": {
-    "gh": null,
-    "opencode": null,
+    "gh": "/usr/bin/gh",
+    "opencode": "/home/admin/.npm-global/bin/opencode",
     "codex": null,
     "claude": null,
     "pi": null
@@ -68,44 +121,44 @@
     "node_status": {
       "cmd": "openclaw node status 2>&1 || true",
       "rc": 0,
-      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nService: systemd user (disabled)\nRuntime: stopped (state inactive, sub dead, last exit 0, reason 0)\n\nStart with: openclaw node install\nStart with: openclaw node start\nStart with: systemctl --user start openclaw-node.service\n",
+      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nService: systemd user (enabled)\nCommand: /usr/bin/node /home/admin/.npm-global/lib/node_modules/openclaw/dist/index.js node run --host 127.0.0.1 --port 18789\nService file: /home/admin/.config/systemd/user/openclaw-node.service\nRuntime: running (pid 68584, state active, sub running, last exit 0, reason 0)\n",
       "stderr": "",
-      "elapsed_ms": 1976
+      "elapsed_ms": 3146
     },
     "nodes_status": {
       "cmd": "openclaw nodes status 2>&1 || true",
       "rc": 0,
       "stdout": "Config warnings:\n- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu\n│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nKnown: 0 · Paired: 0 · Connected: 0\n",
       "stderr": "",
-      "elapsed_ms": 2886
+      "elapsed_ms": 3672
     },
     "skills_check": {
       "cmd": "openclaw skills check --agent main 2>&1 | head -n 240 || true",
       "rc": 0,
-      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nSkills Status Check\nAgent: main\n\nTotal: 58\n✓ Eligible: 15\n✓ Visible to model: 15\n✓ Available as command: 14\nDisabled: 0\nBlocked by allowlist: 0\nExcluded by agent allowlist: 0\n✗ Missing requirements: 43\n\nWhat this means:\n  Eligible: installed and requirements pass; the agent may still exclude it.\n  Visible to model: the agent can see the skill instructions during normal chat.\n  Available as command: people, scripts, or cron jobs can call the skill explicitly.\n\nReady and visible to model:\n  browser-automation\n  🖼️ canvas\n  🧭 diagram-maker\n  healthcheck\n  🖼️ meme-maker\n  node-connect\n  🪲 node-inspect-debugger\n  📝 notion\n  python-debugpy\n  skill-creator\n  🧪 spike\n  🪝 taskflow\n  📥 taskflow-inbox-triage\n  🧵 tmux\n  ☔ weather\n\nMissing requirements:\n  🔐 1password (bins: op)\n  📝 apple-notes (bins: memo; os: darwin)\n  ⏰ apple-reminders (bins: remindctl; os: darwin)\n  🐻 bear-notes (bins: grizzly; os: darwin)\n  📰 blogwatcher (bins: blogwatcher)\n  🫐 blucli (bins: blu)\n  📸 camsnap (bins: camsnap)\n  clawhub (bins: clawhub)\n  🧩 coding-agent (anyBins: claude, codex, opencode, pi; config: skills.entries.coding-agent.enabled)\n  🎮 discord (config: channels.discord.token)\n  🛌 eightctl (bins: eightctl)\n  ✨ gemini (bins: gemini)\n  gh-issues (bins: gh)\n  🧲 gifgrep (bins: gifgrep)\n  🐙 github (bins: gh)\n  🎮 gog (bins: gog)\n  📍 goplaces (bins: goplaces; env: GOOGLE_PLACES_API_KEY)\n  📧 himalaya (bins: himalaya)\n  📨 imsg (bins: imsg; os: darwin)\n  📦 mcporter (bins: mcporter)\n  📊 model-usage (bins: codexbar; os: darwin)\n  📄 nano-pdf (bins: nano-pdf)\n  💎 obsidian (bins: obsidian)\n  🎤 openai-whisper (bins: whisper)\n  🌐 openai-whisper-api (env: OPENAI_API_KEY)\n  💡 openhue (bins: openhue)\n  🧿 oracle (bins: oracle)\n  🛵 ordercli (bins: ordercli)\n  👀 peekaboo (bins: peekaboo; os: darwin)\n  🔊 sag (bins: sag; env: ELEVENLABS_API_KEY)\n  📜 session-logs (bins: jq, rg)\n  🔉 sherpa-onnx-tts (env: SHERPA_ONNX_RUNTIME_DIR, SHERPA_ONNX_MODEL_DIR)\n  💬 slack (config: channels.slack)\n  🌊 songsee (bins: songsee)\n  🔊 sonoscli (bins: sonos)\n  🎵 spotify-player (anyBins: spogo, spotify_player)\n  🧾 summarize (bins: summarize)\n  ✅ things-mac (bins: things; os: darwin)\n  📋 trello (bins: jq; env: TRELLO_API_KEY, TRELLO_TOKEN)\n  🎬 video-frames (bins: ffmpeg)\n  📞 voice-call (config: plugins.entries.voice-call.enabled)\n  📱 wacli (bins: wacli)\n  🐦 xurl (bins: xurl)\n\nTip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.\n",
+      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nSkills Status Check\nAgent: main\n\nTotal: 58\n✓ Eligible: 18\n✓ Visible to model: 18\n✓ Available as command: 17\nDisabled: 0\nBlocked by allowlist: 0\nExcluded by agent allowlist: 0\n✗ Missing requirements: 40\n\nWhat this means:\n  Eligible: installed and requirements pass; the agent may still exclude it.\n  Visible to model: the agent can see the skill instructions during normal chat.\n  Available as command: people, scripts, or cron jobs can call the skill explicitly.\n\nReady and visible to model:\n  browser-automation\n  🖼️ canvas\n  🧩 coding-agent\n  🧭 diagram-maker\n  gh-issues\n  🐙 github\n  healthcheck\n  🖼️ meme-maker\n  node-connect\n  🪲 node-inspect-debugger\n  📝 notion\n  python-debugpy\n  skill-creator\n  🧪 spike\n  🪝 taskflow\n  📥 taskflow-inbox-triage\n  🧵 tmux\n  ☔ weather\n\nMissing requirements:\n  🔐 1password (bins: op)\n  📝 apple-notes (bins: memo; os: darwin)\n  ⏰ apple-reminders (bins: remindctl; os: darwin)\n  🐻 bear-notes (bins: grizzly; os: darwin)\n  📰 blogwatcher (bins: blogwatcher)\n  🫐 blucli (bins: blu)\n  📸 camsnap (bins: camsnap)\n  clawhub (bins: clawhub)\n  🎮 discord (config: channels.discord.token)\n  🛌 eightctl (bins: eightctl)\n  ✨ gemini (bins: gemini)\n  🧲 gifgrep (bins: gifgrep)\n  🎮 gog (bins: gog)\n  📍 goplaces (bins: goplaces; env: GOOGLE_PLACES_API_KEY)\n  📧 himalaya (bins: himalaya)\n  📨 imsg (bins: imsg; os: darwin)\n  📦 mcporter (bins: mcporter)\n  📊 model-usage (bins: codexbar; os: darwin)\n  📄 nano-pdf (bins: nano-pdf)\n  💎 obsidian (bins: obsidian)\n  🎤 openai-whisper (bins: whisper)\n  🌐 openai-whisper-api (env: OPENAI_API_KEY)\n  💡 openhue (bins: openhue)\n  🧿 oracle (bins: oracle)\n  🛵 ordercli (bins: ordercli)\n  👀 peekaboo (bins: peekaboo; os: darwin)\n  🔊 sag (bins: sag; env: ELEVENLABS_API_KEY)\n  📜 session-logs (bins: jq, rg)\n  🔉 sherpa-onnx-tts (env: SHERPA_ONNX_RUNTIME_DIR, SHERPA_ONNX_MODEL_DIR)\n  💬 slack (config: channels.slack)\n  🌊 songsee (bins: songsee)\n  🔊 sonoscli (bins: sonos)\n  🎵 spotify-player (anyBins: spogo, spotify_player)\n  🧾 summarize (bins: summarize)\n  ✅ things-mac (bins: things; os: darwin)\n  📋 trello (bins: jq; env: TRELLO_API_KEY, TRELLO_TOKEN)\n  🎬 video-frames (bins: ffmpeg)\n  📞 voice-call (config: plugins.entries.voice-call.enabled)\n  📱 wacli (bins: wacli)\n  🐦 xurl (bins: xurl)\n\nTip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.\n",
       "stderr": "",
-      "elapsed_ms": 1898
+      "elapsed_ms": 2101
     },
     "coding_agent_info": {
       "cmd": "openclaw skills info coding-agent --agent main 2>&1 || true",
       "rc": 0,
-      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\n🧩 coding-agent △ Needs setup\n\nDelegate coding work to Codex, Claude Code, OpenCode, or Pi as background workers; not simple edits or read-only code lookup.\n\nDetails:\n  Source: openclaw-bundled\n  Path: ~/.npm-global/lib/node_modules/openclaw/skills/coding-agent/SKILL.md\n  Visible to model: no\n  Available as command: no\n\nRequirements:\n  Any binaries: ✗ claude, ✗ codex, ✗ opencode, ✗ pi\n  Config: ✗ skills.entries.coding-agent.enabled\n\nInstall options:\n  → Install @anthropic-ai/claude-code (npm)\n\nTip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.\n",
+      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\n🧩 coding-agent ✓ Ready\n\nDelegate coding work to Codex, Claude Code, OpenCode, or Pi as background workers; not simple edits or read-only code lookup.\n\nDetails:\n  Source: openclaw-bundled\n  Path: ~/.npm-global/lib/node_modules/openclaw/skills/coding-agent/SKILL.md\n  Visible to model: yes\n  Available as command: yes\n\nRequirements:\n  Any binaries: ✓ claude, ✓ codex, ✓ opencode, ✓ pi\n  Config: ✓ skills.entries.coding-agent.enabled\n\nTip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.\n",
       "stderr": "",
-      "elapsed_ms": 1937
+      "elapsed_ms": 3479
     },
     "github_info": {
       "cmd": "openclaw skills info github --agent main 2>&1 || true",
       "rc": 0,
-      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\n🐙 github △ Needs setup\n\nGitHub CLI for issues, PRs, CI/check logs, comments, reviews, releases, repos, and gh api queries.\n\nDetails:\n  Source: openclaw-bundled\n  Path: ~/.npm-global/lib/node_modules/openclaw/skills/github/SKILL.md\n  Visible to model: no\n  Available as command: no\n\nRequirements:\n  Binaries: ✗ gh\n\nInstall options:\n  → Install GitHub CLI (brew)\n\nTip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.\n",
+      "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\n🐙 github ✓ Ready\n\nGitHub CLI for issues, PRs, CI/check logs, comments, reviews, releases, repos, and gh api queries.\n\nDetails:\n  Source: openclaw-bundled\n  Path: ~/.npm-global/lib/node_modules/openclaw/skills/github/SKILL.md\n  Visible to model: yes\n  Available as command: yes\n\nRequirements:\n  Binaries: ✓ gh\n\nTip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.\n",
       "stderr": "",
-      "elapsed_ms": 1912
+      "elapsed_ms": 2744
     },
     "exec_policy": {
       "cmd": "openclaw exec-policy show 2>&1 || true",
       "rc": 0,
       "stdout": "│\n◇  Config warnings ──────────────────────────────────────────────────────╮\n│                                                                        │\n│  - plugins.entries.feishu: plugin not installed: feishu — install the  │\n│    official external plugin with: openclaw plugins install             │\n│    @openclaw/feishu                                                    │\n│                                                                        │\n├────────────────────────────────────────────────────────────────────────╯\nExec Policy\n┌────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────┐\n│ Field          │ Value                                                                                               │\n├────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────┤\n│ Config         │ ~/.openclaw/openclaw.json                                                                           │\n│ Approvals      │ ~/.openclaw/exec-approvals.json                                                                     │\n│ Approvals File │ missing                                                                                             │\n└────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────┘\n\nEffective Policy\n┌────────────┬─────────────────────────────┬──────────────────────────────────────────────────┬────────────────────────┐\n│ Scope      │ Requested                   │ Host                                             │ Effective              │\n├────────────┼─────────────────────────────┼──────────────────────────────────────────────────┼────────────────────────┤\n│ tools.exec │ host=auto (OpenClaw         │ security=full (inherits requested tool           │ security=full\\nask=off │\n│            │ default                     │ policy)\\nask=off (inherits requested tool        │                        │\n│            │ (auto))\\nsecurity=full      │ policy)\\naskFallback=full (OpenClaw default      │                        │\n│            │ (OpenClaw default           │ (full))                                          │                        │\n│            │ (full))\\nask=off (OpenClaw  │                                                  │                        │\n│            │ default (off))              │                                                  │                        │\n└────────────┴─────────────────────────────┴──────────────────────────────────────────────────┴────────────────────────┘\n\nEffective exec policy is the host approvals file intersected with requested tools.exec policy.\n",
       "stderr": "",
-      "elapsed_ms": 1785
+      "elapsed_ms": 1890
     }
   }
 }
