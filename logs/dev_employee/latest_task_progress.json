@@ -1,0 +1,46 @@
+{
+  "task_id": "oris-final-acceptance-api-20260523",
+  "status": "blocked_external_executor_access",
+  "updated_at": "2026-05-24",
+  "target_project": "oris-final-acceptance-api",
+  "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "target_path": "/home/admin/projects/oris-final-acceptance-api",
+  "objective": "Complete standalone FastAPI in-memory task-board API final acceptance through Codex CLI.",
+  "context_files_read": [
+    "memory/dev_employee/CURRENT_STATE_2026-05-23.md",
+    "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-05-23.md",
+    "memory/dev_employee/current_task.json",
+    "memory/dev_employee/current_task.md",
+    "docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md",
+    "orchestration/project_registry.json"
+  ],
+  "remote_repo_check": {
+    "repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "result": "GitHub connector returned 404 / not found"
+  },
+  "runtime_check": {
+    "user": "root",
+    "pwd": "/",
+    "home": "/home/oai",
+    "codex": "not_found",
+    "gh": "not_found",
+    "/home/admin/projects": "not_found"
+  },
+  "completed_steps": [
+    "read_required_github_context",
+    "verified_oris_repo_access",
+    "checked_target_product_repo_remote",
+    "recorded_blocked_state_in_current_task_files",
+    "recorded_latest_task_progress_log"
+  ],
+  "failed_or_unavailable_steps": [
+    "run_codex_cli_on_oris_host",
+    "create_or_update_product_repo",
+    "run_py_compile",
+    "run_pytest",
+    "push_product_commit",
+    "update_project_registry_as_completed"
+  ],
+  "next_action": "Resume from an ORIS host session with /home/admin/projects, Codex CLI, and gh available; then execute the final acceptance project through Codex CLI and update project_registry.json after product tests pass.",
+  "blocked_reason": "This chat runtime has GitHub file access but not the real ORIS host executor. Policy forbids fabricated exec output, product commit SHA, or test results."
+}
