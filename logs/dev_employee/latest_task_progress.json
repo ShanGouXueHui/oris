@@ -1,11 +1,7 @@
 {
-  "task_id": "oris-final-acceptance-api-20260523",
+  "task_id": "formal-test-pydantic-cleanup-v2-20260525",
   "status": "completed",
-  "updated_at": "2026-05-24",
-  "target_project": "oris-final-acceptance-api",
-  "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
-  "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "product_commit_sha": "8f74b23728904889c2b075f0aae48c44165549ae",
-  "test_result": "python3 -m py_compile app/main.py passed; pytest -q passed",
-  "blocked_reason": null
+  "product_commit_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
+  "oris_evidence_pending": true,
+  "updated_at": "2026-05-25T06:02:33+08:00"
 }
