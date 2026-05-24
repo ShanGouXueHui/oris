@@ -1,26 +1,29 @@
 {
   "task_id": "oris-final-acceptance-api-20260523",
-  "status": "pending_next_chat",
+  "status": "blocked_external_executor_access",
   "task_type": "new_project_final_acceptance",
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "handoff_to_next_chat",
+  "current_step": "blocked_before_codex_execution",
   "completed_steps": [
-    "validated_codex_cli_auth",
-    "validated_codex_real_filesystem_execution",
-    "validated_github_cli_auth",
-    "validated_oris_dev_smoke_app_repo_creation",
-    "registered_oris_dev_smoke_app_in_project_registry",
-    "archived_autonomous_execution_policy",
-    "archived_current_state",
-    "archived_next_chat_handoff"
+    "read_required_github_context",
+    "verified_oris_repo_access",
+    "checked_target_product_repo_remote",
+    "searched_installed_repositories_for_target_repo",
+    "confirmed_chat_runtime_is_not_oris_host_executor"
   ],
-  "failed_steps": [],
-  "next_action": "Read handoff files and run final acceptance project through Codex CLI.",
-  "last_error": null,
-  "last_commit_sha": "57b629ee3a1f258f23f70c2b4f5d198178f01d06",
-  "test_result": "smoke project passed remote repo creation and push; final acceptance pending",
-  "blocked_reason": "current chat is too long; continue in a new chat",
+  "failed_steps": [
+    "fetch_target_product_repo_remote",
+    "run_codex_cli_on_oris_host",
+    "create_or_update_product_repo",
+    "run_product_static_check_and_tests",
+    "update_project_registry_after_completion"
+  ],
+  "next_action": "Run the final acceptance implementation from the real ORIS host using Codex CLI at /home/admin/projects, or expose a host-execution tool/session with Codex CLI and GitHub repo creation access.",
+  "last_error": "Target repo ShanGouXueHui/oris-final-acceptance-api returned GitHub 404 through the available connector; the current ChatGPT tool runtime is not /home/admin, has no codex binary, no gh CLI, and cannot execute Codex CLI on the ORIS host.",
+  "last_commit_sha": null,
+  "test_result": "not_run: blocked before real Codex host execution",
+  "blocked_reason": "Final acceptance requires real Codex CLI execution on /home/admin/projects and a product repository. Those execution capabilities are not exposed in this chat environment; fabricating product commits or test output would violate the autonomous execution policy.",
   "updated_at": "2026-05-23"
 }
