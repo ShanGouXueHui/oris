@@ -6,6 +6,13 @@ from pathlib import Path
 
 product_sha = sys.argv[1]
 
+for directory in [
+    "logs/dev_employee",
+    "memory/dev_employee",
+    "orchestration/task_runs",
+]:
+    Path(directory).mkdir(parents=True, exist_ok=True)
+
 registry_path = Path("orchestration/project_registry.json")
 registry = json.loads(registry_path.read_text(encoding="utf-8"))
 registry["updated_at"] = "2026-05-24"
@@ -71,8 +78,6 @@ ORIS registry updated with `oris-final-acceptance-api`.
 """,
     encoding="utf-8",
 )
-
-Path("orchestration/task_runs").mkdir(parents=True, exist_ok=True)
 Path("orchestration/task_runs/oris-final-acceptance-api-20260523.json").write_text(json.dumps(progress, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 current_task = {
