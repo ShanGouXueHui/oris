@@ -1,0 +1,487 @@
+{
+  "audited_at": "2026-05-25T05:29:45+08:00",
+  "candidate": {
+    "name": "Awesome MCP Servers",
+    "repo": "https://github.com/punkpeye/awesome-mcp-servers.git",
+    "type": "mcp_index",
+    "priority": 2,
+    "reason": "MCP server discovery source for tool capability references."
+  },
+  "quarantine_path": "/home/admin/projects/oris/vendor/skill_candidates/punkpeye__awesome-mcp-servers",
+  "commit_sha": "39b5e990fe94734de271a2b13ec1513811da9cdd",
+  "clone_info": {
+    "action": "cloned",
+    "clone_return_code": 0,
+    "clone_stdout": "",
+    "clone_stderr": "Cloning into '/home/admin/projects/oris/vendor/skill_candidates/punkpeye__awesome-mcp-servers'...\n",
+    "reset_return_code": 0,
+    "commit_sha": "39b5e990fe94734de271a2b13ec1513811da9cdd",
+    "remote": "origin\thttps://github.com/punkpeye/awesome-mcp-servers.git (fetch)\norigin\thttps://github.com/punkpeye/awesome-mcp-servers.git (push)"
+  },
+  "scan": {
+    "file_count": 38,
+    "scanned_text_file_count": 8,
+    "manifest_files": [
+      "README.md"
+    ],
+    "install_related_files": [
+      "README-ja.md",
+      "README-ko.md",
+      "README-th.md",
+      "README-zh.md",
+      "README-zh_TW.md"
+    ],
+    "finding_counts": {
+      "sensitive_paths": 37,
+      "credential_keywords": 37
+    },
+    "risk_score_rough": 74,
+    "findings": [
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh_TW.md",
+        "line": 66,
+        "text": "* 📂 - [瀏覽器自動化](#browser-automation)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh_TW.md",
+        "line": 103,
+        "text": "### 📂 <a name=\"browser-automation\"></a>瀏覽器自動化"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh_TW.md",
+        "line": 106,
+        "text": "- [BB-fat/browser-use-rs](https://github.com/BB-fat/browser-use-rs) 🦀 - 由 Rust 打造的輕量級瀏覽器自動化 MCP 伺服器，無需任何外部相依。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh_TW.md",
+        "line": 274,
+        "text": "- [yiwenlu66/PiloTY](https://github.com/yiwenlu66/PiloTY) 🐍 🏠 - 用於PTY操作的AI助手，使智慧體能夠通過有狀態會話、SSH連接和後台進程管理來控制互動式終端"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh_TW.md",
+        "line": 379,
+        "text": "- [SecretiveShell/MCP-timeserver](https://github.com/SecretiveShell/MCP-timeserver) 🐍 🏠 - 訪問任意時區的時間並獲取當前本地時間"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh_TW.md",
+        "line": 421,
+        "text": "- [apify/mcp-server-rag-web-browser](https://github.com/apify/mcp-server-rag-web-browser) 📇 ☁️ - 一個用於 Apify 的 RAG Web 瀏覽器 Actor 的 MCP 伺服器，可以執行網頁搜尋、抓取 URL，並以 Markdown 格式返回內容。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh_TW.md",
+        "line": 422,
+        "text": "- [SecretiveShell/MCP-searxng](https://github.com/SecretiveShell/MCP-searxng) 🐍 🏠 - 用於連接到 searXNG 實例的 MCP 伺服器"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh_TW.md",
+        "line": 560,
+        "text": "- [SecretiveShell/MCP-Bridge](https://github.com/SecretiveShell/MCP-Bridge) 🐍 - OpenAI 中間件代理，用於在任何現有的 OpenAI 相容用戶端中使用 MCP"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 120,
+        "text": "- [YangLiangwei/PersonalizationMCP](https://github.com/YangLiangwei/PersonalizationMCP) 🐍 ☁️ 🏠 🍎 🪟 🐧 - Servidor MCP abrangente de agregação de dados pessoais com integrações Steam, YouTube, Bilibili, Spotify, Reddit e outras plataformas. Po"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 151,
+        "text": "- [BB-fat/browser-use-rs](https://github.com/BB-fat/browser-use-rs) 🦀 - Servidor MCP leve de automação de navegador em Rust, sem dependências externas."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 155,
+        "text": "- [browserbase/mcp-server-browserbase](https://github.com/browserbase/mcp-server-browserbase) 🎖️ 📇 - Automatize interações do navegador na nuvem (por exemplo, navegação web, extração de dados, preenchimento de formulários e mais)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 156,
+        "text": "- [browsermcp/mcp](https://github.com/browsermcp/mcp) 📇 🏠 - Automatize seu navegador Chrome local"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 158,
+        "text": "- [co-browser/browser-use-mcp-server](https://github.com/co-browser/browser-use-mcp-server) 🐍 - browser-use empacotado como um servidor MCP com transporte SSE. Inclui um dockerfile para executar o chromium em docker + um servidor vnc."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 160,
+        "text": "- [eyalzh/browser-control-mcp](https://github.com/eyalzh/browser-control-mcp) 📇 🏠 - Um servidor MCP pareado com uma extensão de navegador que permite clientes LLM controlar o navegador do usuário (Firefox)."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 168,
+        "text": "- [ndthanhdev/mcp-browser-kit](https://github.com/ndthanhdev/mcp-browser-kit) 📇 🏠 - Um servidor MCP para interagir com navegadores compatíveis com manifest v2."
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 302,
+        "text": "- [yiwenlu66/PiloTY](https://github.com/yiwenlu66/PiloTY) 🐍 🏠 - Piloto de IA para operações PTY que permite aos agentes controlar terminais interativos com sessões com estado, conexões SSH e gerenciamento de processos em segundo plano"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 304,
+        "text": "- [freema/mcp-design-system-extractor](https://github.com/freema/mcp-design-system-extractor) 📇 🏠 - Extrai informações de componentes de sistemas de design Storybook. Fornece HTML, estilos, propriedades, dependências, tokens de tema e metad"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 335,
+        "text": "- [8b-is/smart-tree](https://github.com/8b-is/smart-tree) 🦀 🏠 🍎 🪟 🐧 - Visualização de diretório nativa para IA com análise semântica, formatos ultra-comprimidos para consumo de IA e redução de tokens 10x. Suporta modo quântico-semântico com"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 353,
+        "text": "- [bankless/onchain-mcp](https://github.com/Bankless/onchain-mcp/) 📇 ☁️ - API Bankless Onchain para interagir com contratos inteligentes, consultar informações de transações e tokens"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 414,
+        "text": "- [rossshannon/Weekly-Weather-mcp](https://github.com/rossshannon/weekly-weather-mcp.git) 🐍 ☁️ - Servidor MCP para previsão meteorológica semanal que retorna 7 dias completos de previsões meteorológicas detalhadas em qualquer lugar do mundo"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 415,
+        "text": "- [SecretiveShell/MCP-timeserver](https://github.com/SecretiveShell/MCP-timeserver) 🐍 🏠 - Acesse o horário em qualquer fuso horário e obtenha o horário local atual"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-pt_BR.md",
+        "line": 447,
+        "text": "- [apify/mcp-server-rag-web-browser](https://github.com/apify/mcp-server-rag-web-browser) 📇 ☁️ - Um servidor MCP para o Ator RAG Web Browser de código aberto da Apify para realizar pesquisas na web, raspar URLs e retornar conteúdo em Markdo"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 551,
+        "text": "- [tumf/web3-mcp](https://github.com/tumf/web3-mcp) 🐍 ☁️ - Uma implementação de servidor MCP que envolve a Ankr Advanced API. Acesso a NFT, token e dados de blockchain em várias redes, incluindo Ethereum, BSC, Polygon, Avalanche e mais."
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-pt_BR.md",
+        "line": 565,
+        "text": "- [SecretiveShell/MCP-Bridge](https://github.com/SecretiveShell/MCP-Bridge) 🐍 – um proxy middleware openAI para usar mcp em qualquer cliente compatível com openAI"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-th.md",
+        "line": 75,
+        "text": "* 📂 - [การทำงานอัตโนมัติของเบราว์เซอร์](#browser-automation)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-th.md",
+        "line": 139,
+        "text": "- [BB-fat/browser-use-rs](https://github.com/BB-fat/browser-use-rs) 🦀 - เซิร์ฟเวอร์ MCP สำหรับการทำงานอัตโนมัติของเบราว์เซอร์ที่มีน้ำหนักเบา เขียนด้วย Rust และไม่มีการพึ่งพาภายนอก."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-th.md",
+        "line": 143,
+        "text": "- [browserbase/mcp-server-browserbase](https://github.com/browserbase/mcp-server-browserbase) 🎖️ 📇 - ทำงานอัตโนมัติกับเบราว์เซอร์บนคลาวด์ (เช่น การนำทางเว็บ การดึงข้อมูล การกรอกแบบฟอร์ม และอื่นๆ)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-th.md",
+        "line": 307,
+        "text": "- [Jktfe/serveMyAPI](https://github.com/Jktfe/serveMyAPI) 📇 🏠 🍎 - เซิร์ฟเวอร์ MCP (Model Context Protocol) ส่วนบุคคลสำหรับจัดเก็บและเข้าถึงคีย์ API อย่างปลอดภัยในโปรเจ็กต์ต่างๆ โดยใช้ macOS Keychain"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 317,
+        "text": "- [yiwenlu66/PiloTY](https://github.com/yiwenlu66/PiloTY) 🐍 🏠 - นักบิน AI สำหรับการดำเนินงาน PTY ที่ช่วยให้เอเจนต์สามารถควบคุมเทอร์มินัลแบบโต้ตอบด้วยเซสชันที่มีสถานะ การเชื่อมต่อ SSH และการจัดการกระบวนการพื้นหลัง"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-th.md",
+        "line": 398,
+        "text": "- [getalby/nwc-mcp-server](https://github.com/getalby/nwc-mcp-server) 📇 🏠 - การผสานรวมกระเป๋าเงิน Bitcoin Lightning ขับเคลื่อนโดย Nostr Wallet Connect"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 412,
+        "text": "- [kukapay/token-minter-mcp](https://github.com/kukapay/token-minter-mcp) 🐍 ☁️ - เซิร์ฟเวอร์ MCP ที่มีเครื่องมือสำหรับตัวแทน AI เพื่อสร้างโทเค็น ERC-20 ในบล็อกเชนหลายตัว"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 413,
+        "text": "- [kukapay/token-revoke-mcp](https://github.com/kukapay/token-revoke-mcp) 🐍 ☁️ - เซิร์ฟเวอร์ MCP สำหรับตรวจสอบและเพิกถอนการอนุญาตโทเค็น ERC-20 ในบล็อกเชนหลายตัว"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 477,
+        "text": "- [SecretiveShell/MCP-timeserver](https://github.com/SecretiveShell/MCP-timeserver) 🐍 🏠 - เข้าถึงเวลาในเขตเวลาใดก็ได้และรับเวลาท้องถิ่นปัจจุบัน"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-th.md",
+        "line": 509,
+        "text": "- [apify/mcp-server-rag-web-browser](https://github.com/apify/mcp-server-rag-web-browser) 📇 ☁️ - เซิร์ฟเวอร์ MCP สำหรับ RAG Web Browser Actor แบบโอเพ่นซอร์สของ Apify เพื่อทำการค้นหาเว็บ สแครป URL และส่งคืนเนื้อหาในรูปแบบ Markdown"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 531,
+        "text": "- [SecretiveShell/MCP-searxng](https://github.com/SecretiveShell/MCP-searxng) 🐍 🏠 - เซิร์ฟเวอร์ MCP เพื่อเชื่อมต่อกับอินสแตนซ์ searXNG"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 663,
+        "text": "- [SecretiveShell/MCP-wolfram-alpha](https://github.com/SecretiveShell/MCP-wolfram-alpha) 🐍 ☁️ - เซิร์ฟเวอร์ MCP สำหรับสอบถาม API ของ Wolfram Alpha"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-th.md",
+        "line": 725,
+        "text": "- [SecretiveShell/MCP-Bridge](https://github.com/SecretiveShell/MCP-Bridge) 🐍 – พร็อกซี่ middleware OpenAI เพื่อใช้ MCP ในไคลเอนต์ที่เข้ากันได้กับ OpenAI ใดๆ"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ko.md",
+        "line": 73,
+        "text": "* 📂 - [브라우저 자동화](#browser-automation)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ko.md",
+        "line": 111,
+        "text": "### 📂 <a name=\"browser-automation\"></a>브라우저 자동화"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ko.md",
+        "line": 114,
+        "text": "- [BB-fat/browser-use-rs](https://github.com/BB-fat/browser-use-rs) 🦀 - Rust로 작성된 의존성 없는 경량 브라우저 자동화 MCP 서버."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ko.md",
+        "line": 124,
+        "text": "- [@co-browser/browser-use-mcp-server](https://github.com/co-browser/browser-use-mcp-server) 🌐🔮 - SSE 전송을 지원하는 MCP 서버로 패키징된 browser-use. Docker에서 Chromium을 실행하기 위한 Dockerfile + VNC 서버 포함."
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ko.md",
+        "line": 330,
+        "text": "- [yiwenlu66/PiloTY](https://github.com/yiwenlu66/PiloTY) 🐍 🏠 - 상태 유지 세션, SSH 연결, 백그라운드 프로세스 관리로 AI 에이전트가 대화형 터미널을 제어할 수 있게 하는 PTY 작업용 AI 파일럿"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ko.md",
+        "line": 384,
+        "text": "- [kukapay/token-minter-mcp](https://github.com/kukapay/token-minter-mcp) 🐍 ☁️ - 여러 블록체인에서 ERC-20 토큰을 발행하는 도구를 AI 에이전트에게 제공하는 MCP 서버."
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ko.md",
+        "line": 432,
+        "text": "- [SecretiveShell/MCP-timeserver](https://github.com/SecretiveShell/MCP-timeserver) 🐍 🏠 - 모든 시간대의 시간에 접근하고 현재 현지 시간 확인"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ko.md",
+        "line": 476,
+        "text": "- [apify/mcp-server-rag-web-browser](https://github.com/apify/mcp-server-rag-web-browser) 📇 ☁️ - Apify의 오픈 소스 RAG 웹 브라우저 액터를 위한 MCP 서버로 웹 검색, URL 스크래핑 및 마크다운 형식으로 콘텐츠 반환 수행."
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ko.md",
+        "line": 477,
+        "text": "- [SecretiveShell/MCP-searxng](https://github.com/SecretiveShell/MCP-searxng) 🐍 🏠 - searXNG 인스턴스에 연결하기 위한 MCP 서버"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ko.md",
+        "line": 593,
+        "text": "- [SecretiveShell/MCP-wolfram-alpha](https://github.com/SecretiveShell/MCP-wolfram-alpha) 🐍 ☁️ - Wolfram Alpha API 쿼리를 위한 MCP 서버."
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ko.md",
+        "line": 653,
+        "text": "- [SecretiveShell/MCP-Bridge](https://github.com/SecretiveShell/MCP-Bridge) 🐍 – 기존의 모든 openAI 호환 클라이언트에서 mcp를 사용하기 위한 openAI 미들웨어 프록시"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh.md",
+        "line": 83,
+        "text": "* 📂 - [浏览器自动化](#browser-automation)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh.md",
+        "line": 123,
+        "text": "### 📂 <a name=\"browser-automation\"></a>浏览器自动化"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh.md",
+        "line": 126,
+        "text": "- [BB-fat/browser-use-rs](https://github.com/BB-fat/browser-use-rs) 🦀 - 使用 Rust 构建的轻量级浏览器自动化 MCP 服务器，无任何外部依赖。"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh.md",
+        "line": 139,
+        "text": "- [@co-browser/browser-use-mcp-server](https://github.com/co-browser/browser-use-mcp-server) 🌐🔮 - browser-use是一个封装了SSE传输协议的MCP服务器。包含一个dockerfile用于在docker中运行chromium浏览器+VNC服务器。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh.md",
+        "line": 337,
+        "text": "- [yiwenlu66/PiloTY](https://github.com/yiwenlu66/PiloTY) 🐍 🏠 - 用于PTY操作的AI助手，使智能体能够通过有状态会话、SSH连接和后台进程管理来控制交互式终端"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh.md",
+        "line": 420,
+        "text": "- [kukapay/token-minter-mcp](https://github.com/kukapay/token-minter-mcp) 🐍 ☁️ -  一个MCP服务器，为AI代理提供工具以跨多个区块链铸造ERC-20代币。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh.md",
+        "line": 471,
+        "text": "- [SecretiveShell/MCP-timeserver](https://github.com/SecretiveShell/MCP-timeserver) 🐍 🏠 - 访问任意时区的时间并获取当前本地时间"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-zh.md",
+        "line": 519,
+        "text": "- [apify/mcp-server-rag-web-browser](https://github.com/apify/mcp-server-rag-web-browser) 📇 ☁️ - 一个用于 Apify 的 RAG Web 浏览器 Actor 的 MCP 服务器，可以执行网页搜索、抓取 URL，并以 Markdown 格式返回内容。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh.md",
+        "line": 520,
+        "text": "- [SecretiveShell/MCP-searxng](https://github.com/SecretiveShell/MCP-searxng) 🐍 🏠 - 用于连接到 searXNG 实例的 MCP 服务器"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh.md",
+        "line": 645,
+        "text": "- [SecretiveShell/MCP-wolfram-alpha](https://github.com/SecretiveShell/MCP-wolfram-alpha) 🐍 ☁️ - 用于查询Wolfram Alpha API的MCP服务器。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-zh.md",
+        "line": 710,
+        "text": "- [SecretiveShell/MCP-Bridge](https://github.com/SecretiveShell/MCP-Bridge) 🐍 - OpenAI 中间件代理，用于在任何现有的 OpenAI 兼容客户端中使用 MCP"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 77,
+        "text": "* 📂 - [ブラウザ自動化](#browser-automation)"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ja.md",
+        "line": 231,
+        "text": "- [tufantunc/ssh-mcp](https://github.com/tufantunc/ssh-mcp) 📇 🏠 🐧 🪟 - モデルコンテキストプロトコル経由でLinuxおよびWindowsサーバーのSSH制御を公開するMCPサーバー。パスワードまたはSSHキー認証でリモートシェルコマンドを安全に実行。"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ja.md",
+        "line": 332,
+        "text": "- [yiwenlu66/PiloTY](https://github.com/yiwenlu66/PiloTY) 🐍 🏠 - AIエージェントが状態保持セッション、SSH接続、バックグラウンドプロセス管理を使ってインタラクティブターミナルを制御できるPTY操作のAIパイロット"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ja.md",
+        "line": 388,
+        "text": "- [kukapay/token-minter-mcp](https://github.com/kukapay/token-minter-mcp) 🐍 ☁️ - AIエージェントが複数のブロックチェーンでERC-20トークンをミントするためのツールを提供するMCPサーバー"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ja.md",
+        "line": 389,
+        "text": "- [kukapay/token-revoke-mcp](https://github.com/kukapay/token-revoke-mcp) 🐍 ☁️ - 複数のブロックチェーンでERC-20トークンの許可をチェックおよび取り消すためのMCPサーバー"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 516,
+        "text": "- [apify/mcp-server-rag-web-browser](https://github.com/apify/mcp-server-rag-web-browser) 📇 ☁️ - Apify の RAG Web Browser Actor 用の MCP サーバーで、ウェブ検索を実行し、URL をスクレイピングし、Markdown 形式でコンテンツを返します。"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 540,
+        "text": "- [co-browser/attestable-mcp-server](https://github.com/co-browser/attestable-mcp-server) 🐍 🏠 ☁️ 🐧 - Gramine経由で信頼実行環境（TEE）内で実行されるMCPサーバー。[RA-TLS](https://gramine.readthedocs.io/en/stable/attestation.html)を使用したリモート証明を紹介。MCPクライアントが接続前にサーバーを検証"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "README-ja.md",
+        "line": 665,
+        "text": "- [SecretiveShell/MCP-Bridge](https://github.com/SecretiveShell/MCP-Bridge) 🐍 既存のOpenAI互換クライアントでMCPを使用するためのOpenAIミドルウェアプロキシ"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 697,
+        "text": "### 📂 <a name=\"browser-automation\"></a>ブラウザ自動化"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 701,
+        "text": "- [BB-fat/browser-use-rs](https://github.com/BB-fat/browser-use-rs) 🦀 - Rust製で依存関係ゼロの軽量ブラウザ自動化 MCP サーバー。"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 706,
+        "text": "- [browserbase/mcp-server-browserbase](https://github.com/browserbase/mcp-server-browserbase) 🎖️ 📇 - クラウドでのブラウザ相互作用の自動化（ウェブナビゲーション、データ抽出、フォーム入力など）"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 707,
+        "text": "- [browsermcp/mcp](https://github.com/browsermcp/mcp) 📇 🏠 - ローカルChromeブラウザを自動化"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 709,
+        "text": "- [co-browser/browser-use-mcp-server](https://github.com/co-browser/browser-use-mcp-server) 🐍 - SSEトランスポートでMCPサーバーとしてパッケージ化されたbrowser-use。dockerでchromiumを実行するdockerファイル + vncサーバーを含む"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 711,
+        "text": "- [eyalzh/browser-control-mcp](https://github.com/eyalzh/browser-control-mcp) 📇 🏠 - LLMクライアントがユーザーのブラウザ（Firefox）を制御できるブラウザ拡張機能と組み合わせたMCPサーバー"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README-ja.md",
+        "line": 718,
+        "text": "- [ndthanhdev/mcp-browser-kit](https://github.com/ndthanhdev/mcp-browser-kit) 📇 🏠 - manifest v2互換ブラウザとの相互作用のためのMCPサーバー"
+      }
+    ]
+  },
+  "decision": "quarantined_for_review_not_installed"
+}

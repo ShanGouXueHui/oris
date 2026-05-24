@@ -1,0 +1,74 @@
+{
+  "audited_at": "2026-05-25T05:29:35+08:00",
+  "source": "/home/admin/projects/oris/orchestration/skill_candidates_20260525.json",
+  "policy": "download_and_audit_only_never_execute_candidate_code",
+  "reports": [
+    {
+      "name": "ClawHub",
+      "repo": "https://github.com/openclaw/clawhub.git",
+      "commit_sha": "963b0a5719431a182bef07ed1cd4ff09cc6fc1c9",
+      "json": "/home/admin/projects/oris/logs/dev_employee/skill_audit/openclaw__clawhub.json",
+      "markdown": "/home/admin/projects/oris/logs/dev_employee/skill_audit/openclaw__clawhub.md",
+      "risk_score_rough": 100,
+      "finding_counts": {
+        "credential_keywords": 50,
+        "sensitive_paths": 50,
+        "package_hooks": 50,
+        "process_exec": 50,
+        "network_write": 50,
+        "shell_download_exec": 16
+      }
+    },
+    {
+      "name": "Awesome OpenClaw Skills",
+      "repo": "https://github.com/VoltAgent/awesome-openclaw-skills.git",
+      "commit_sha": "bf943408a62c7e16d477c95f40a17f8f4d21a72a",
+      "json": "/home/admin/projects/oris/logs/dev_employee/skill_audit/VoltAgent__awesome-openclaw-skills.json",
+      "markdown": "/home/admin/projects/oris/logs/dev_employee/skill_audit/VoltAgent__awesome-openclaw-skills.md",
+      "risk_score_rough": 100,
+      "finding_counts": {
+        "credential_keywords": 50,
+        "sensitive_paths": 50,
+        "package_hooks": 5,
+        "shell_download_exec": 4
+      }
+    },
+    {
+      "name": "Awesome OpenClaw Skills ZH",
+      "repo": "https://github.com/clawdbot-ai/awesome-openclaw-skills-zh.git",
+      "commit_sha": "ad1e5528ac88fa2934cf3e2a32f84f14c6f82a7c",
+      "json": "/home/admin/projects/oris/logs/dev_employee/skill_audit/clawdbot-ai__awesome-openclaw-skills-zh.json",
+      "markdown": "/home/admin/projects/oris/logs/dev_employee/skill_audit/clawdbot-ai__awesome-openclaw-skills-zh.md",
+      "risk_score_rough": 0,
+      "finding_counts": {}
+    },
+    {
+      "name": "Awesome Agent Skills",
+      "repo": "https://github.com/libukai/awesome-agent-skills.git",
+      "commit_sha": "fef729ae6a8a8bbd1b26e00dc7555064f77916c8",
+      "json": "/home/admin/projects/oris/logs/dev_employee/skill_audit/libukai__awesome-agent-skills.json",
+      "markdown": "/home/admin/projects/oris/logs/dev_employee/skill_audit/libukai__awesome-agent-skills.md",
+      "risk_score_rough": 100,
+      "finding_counts": {
+        "sensitive_paths": 50,
+        "shell_download_exec": 3,
+        "process_exec": 50,
+        "credential_keywords": 50,
+        "network_write": 15,
+        "package_hooks": 6
+      }
+    },
+    {
+      "name": "Awesome MCP Servers",
+      "repo": "https://github.com/punkpeye/awesome-mcp-servers.git",
+      "commit_sha": "39b5e990fe94734de271a2b13ec1513811da9cdd",
+      "json": "/home/admin/projects/oris/logs/dev_employee/skill_audit/punkpeye__awesome-mcp-servers.json",
+      "markdown": "/home/admin/projects/oris/logs/dev_employee/skill_audit/punkpeye__awesome-mcp-servers.md",
+      "risk_score_rough": 74,
+      "finding_counts": {
+        "sensitive_paths": 37,
+        "credential_keywords": 37
+      }
+    }
+  ]
+}

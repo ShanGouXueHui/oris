@@ -1,0 +1,33 @@
+{
+  "audited_at": "2026-05-25T05:29:42+08:00",
+  "candidate": {
+    "name": "Awesome OpenClaw Skills ZH",
+    "repo": "https://github.com/clawdbot-ai/awesome-openclaw-skills-zh.git",
+    "type": "openclaw_skill_index_zh",
+    "priority": 2,
+    "reason": "Chinese OpenClaw skill index candidate source."
+  },
+  "quarantine_path": "/home/admin/projects/oris/vendor/skill_candidates/clawdbot-ai__awesome-openclaw-skills-zh",
+  "commit_sha": "ad1e5528ac88fa2934cf3e2a32f84f14c6f82a7c",
+  "clone_info": {
+    "action": "cloned",
+    "clone_return_code": 0,
+    "clone_stdout": "",
+    "clone_stderr": "Cloning into '/home/admin/projects/oris/vendor/skill_candidates/clawdbot-ai__awesome-openclaw-skills-zh'...\n",
+    "reset_return_code": 0,
+    "commit_sha": "ad1e5528ac88fa2934cf3e2a32f84f14c6f82a7c",
+    "remote": "origin\thttps://github.com/clawdbot-ai/awesome-openclaw-skills-zh.git (fetch)\norigin\thttps://github.com/clawdbot-ai/awesome-openclaw-skills-zh.git (push)"
+  },
+  "scan": {
+    "file_count": 28,
+    "scanned_text_file_count": 0,
+    "manifest_files": [
+      "README.md"
+    ],
+    "install_related_files": [],
+    "finding_counts": {},
+    "risk_score_rough": 0,
+    "findings": []
+  },
+  "decision": "quarantined_for_review_not_installed"
+}

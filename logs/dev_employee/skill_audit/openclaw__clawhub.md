@@ -1,0 +1,123 @@
+# Skill Candidate Audit — ClawHub
+
+- Repo: `https://github.com/openclaw/clawhub.git`
+- Commit: `963b0a5719431a182bef07ed1cd4ff09cc6fc1c9`
+- Audit time: `2026-05-25T05:29:40+08:00`
+- Rough risk score: `100`
+
+## Manifest files
+
+- `.agents/skills/autoreview/SKILL.md`
+- `.agents/skills/clawhub-moderation/SKILL.md`
+- `.agents/skills/clawhub-pr-maintainer/SKILL.md`
+- `.agents/skills/clawhub-ui-proof/SKILL.md`
+- `.agents/skills/convex-create-component/SKILL.md`
+- `.agents/skills/convex-migration-helper/SKILL.md`
+- `.agents/skills/convex-performance-audit/SKILL.md`
+- `.agents/skills/convex-quickstart/SKILL.md`
+- `.agents/skills/convex-setup-auth/SKILL.md`
+- `.agents/skills/convex/SKILL.md`
+- `.agents/skills/crabbox/SKILL.md`
+- `README.md`
+- `docs/README.md`
+- `package.json`
+- `packages/clawhub-mod/README.md`
+- `packages/clawhub-mod/package.json`
+- `packages/clawhub/README.md`
+- `packages/clawhub/package.json`
+- `packages/schema/README.md`
+- `packages/schema/package.json`
+- `rfcs/README.md`
+- `specs/README.md`
+
+## Finding counts
+
+- `credential_keywords`: 50
+- `network_write`: 50
+- `package_hooks`: 50
+- `process_exec`: 50
+- `sensitive_paths`: 50
+- `shell_download_exec`: 16
+
+## Sample findings
+
+- `credential_keywords` `CONTRIBUTING.md:21` — `cp .env.local.example .env.local`
+- `credential_keywords` `CONTRIBUTING.md:24` — `Edit `.env.local` with the following values for **local Convex**:`
+- `credential_keywords` `CONTRIBUTING.md:46` — `4. Copy the Client ID and generate a Client Secret.`
+- `credential_keywords` `CONTRIBUTING.md:58` — `The Convex backend has its own env var store separate from `.env.local`. With the backend running, open a new terminal and set the required variables:`
+- `credential_keywords` `CONTRIBUTING.md:62` — `bunx convex env set AUTH_GITHUB_SECRET <your-client-secret>`
+- `credential_keywords` `CONTRIBUTING.md:74` — `This sets `JWT_PRIVATE_KEY` and `JWKS` on the Convex backend and outputs values you can also save to `.env.local` for reference.`
+- `credential_keywords` `CONTRIBUTING.md:82` — `Change the port if 3000 is already in use, and update `SITE_URL` in both `.env.local` and the Convex backend (`bunx convex env set SITE_URL ...`) to match.`
+- `credential_keywords` `CONTRIBUTING.md:86` — `Use this path for disposable branches, Codex sessions, or parallel worktrees after one source worktree already has a working `.env.local` and `.convex` local Convex setup:`
+- `credential_keywords` `CONTRIBUTING.md:95` — ``setup:worktree` finds a usable source worktree and symlinks `.env.local` plus `.convex` into the current checkout. If discovery picks the wrong source, pass one explicitly:`
+- `credential_keywords` `CONTRIBUTING.md:143` — `Without `OPENAI_API_KEY`, public corpus import still works, but semantic search quality degrades because embeddings fall back to zero vectors.`
+- `credential_keywords` `CONTRIBUTING.md:148` — `- Missing `.env.local` or `.convex`: run `bun run setup:worktree -- --from /path/to/source/worktree`. The source must contain `.env.local` and, for local Convex deployments, `.convex/local/default/config.json`.`
+- `credential_keywords` `CONTRIBUTING.md:149` — `- Wrong local Convex deployment: make sure `CONVEX_DEPLOYMENT` in `.env.local` matches the local Convex deployment in `.convex/local/default/config.json` when using a `local:` deployment.`
+- `credential_keywords` `CONTRIBUTING.md:151` — `- `wt step copy-ignored` reports that `.convex` cannot be copied: this can happen when `.convex` is a symlink to the source worktree. The Worktrunk hook continues; confirm `.env.local`, `.convex`, and `node_modules/.bin/vite` exist before d`
+- `credential_keywords` `CONTRIBUTING.md:162` — `| `OPENAI_API_KEY`                                                          | Embeddings and vector search (falls back to zero vectors) |`
+- `credential_keywords` `CONTRIBUTING.md:163` — `| `VT_API_KEY`                                                              | VirusTotal malware scanning                               |`
+- `credential_keywords` `CONTRIBUTING.md:165` — `| `GITHUB_APP_ID` / `GITHUB_APP_PRIVATE_KEY` / `GITHUB_APP_INSTALLATION_ID` | GitHub backup sync                                        |`
+- `sensitive_paths` `CONTRIBUTING.md:211` — `- Browser smoke or visual behavior changes: `bun run ci:playwright-smoke`, `bun run test:pw:local-auth`, and/or `bun run proof:ui` depending on the touched flow.`
+- `sensitive_paths` `CONTRIBUTING.md:213` — ``bun run ci:pr` is the local aggregate for the non-browser PR gates. See [`specs/ci.md`](specs/ci.md) for the full CI contract.`
+- `credential_keywords` `knip.config.ts:6` — `const includeTests = process.env.KNIP_INCLUDE_TESTS === "1";`
+- `credential_keywords` `CLAUDE.md:39` — `- The workflow uses the `Production` environment for deploy secrets, but it does not wait for a separate approval.`
+- `credential_keywords` `CLAUDE.md:40` — `- Required prod secret: `CONVEX_DEPLOY_KEY` on the `Production` environment. Optional smoke secret: `PLAYWRIGHT_AUTH_STORAGE_STATE_JSON`.`
+- `sensitive_paths` `vite.config.ts:15` — `const convexBrowserPath = join(convexRoot, "dist/esm/browser/index.js");`
+- `sensitive_paths` `vite.config.ts:175` — `"convex/browser": convexBrowserPath,`
+- `sensitive_paths` `vite.config.ts:183` — `include: ["convex/react", "convex/browser"],`
+- `credential_keywords` `package.json:14` — `"check:secrets": "bun scripts/check-staged-secrets.mjs",`
+- `package_hooks` `package.json:49` — `"preinstall": "bunx only-allow bun",`
+- `credential_keywords` `DESIGN.md:13` — `| Token           | Light Mode | Dark Mode | Usage                                           |`
+- `credential_keywords` `DESIGN.md:27` — `4. **Use semantic tokens** (`--accent`, `--ink`, `--surface`) instead of raw colors`
+- `credential_keywords` `DESIGN.md:43` — `| Token       | Size            | Usage                    |`
+- `credential_keywords` `DESIGN.md:343` — `styles.css      # Global styles and design tokens`
+- `sensitive_paths` `DESIGN.md:359` — `- [ ] Text is readable at default browser zoom`
+- `credential_keywords` `README.md:99` — `cp .env.local.example .env.local`
+- `credential_keywords` `README.md:100` — `# edit .env.local — see CONTRIBUTING.md for local Convex values`
+- `credential_keywords` `README.md:131` — `- `AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET`: GitHub OAuth App.`
+- `credential_keywords` `README.md:132` — `- `JWT_PRIVATE_KEY` / `JWKS`: Convex Auth keys.`
+- `credential_keywords` `README.md:133` — `- `OPENAI_API_KEY`: embeddings for search + indexing.`
+- `credential_keywords` `README.md:218` — `- MY_API_KEY`
+- `credential_keywords` `README.md:221` — `primaryEnv: MY_API_KEY`
+- `credential_keywords` `vitest.config.ts:60` — `"convex/lib/tokens.ts",`
+- `credential_keywords` `CHANGELOG.md:83` — `- Web: redesign Settings into focused account, organization, API token, and account deletion views with responsive desktop and mobile layouts (#2134) (thanks @vyctorbrzezowski).`
+- `sensitive_paths` `CHANGELOG.md:96` — `- ClawScan: reduce false positives for scoped uninstall cleanup, declared provider login flows, Basic Auth/base64 handling, and user-directed provider uploads while hard-blocking stealth browser abuse patterns.`
+- `credential_keywords` `CHANGELOG.md:101` — `- ClawScan: include package `openclaw.environment` env/config declarations in package review prompts so declared plugin runtime requirements are not reported as missing (#2013).`
+- `credential_keywords` `CHANGELOG.md:108` — `- Search: recall skill matches by non-first slug/display-name tokens while keeping multi-token queries on the direct recall path constrained to all query tokens (#2140) (thanks @momothemage).`
+- `sensitive_paths` `CHANGELOG.md:155` — `- API: raise public read rate limits to reduce false-positive 429s from browser pages and production smoke tests (thanks @steipete).`
+- `credential_keywords` `CHANGELOG.md:159` — `- Security: broaden static scanner coverage for unsafe credential, subprocess, browser-file, provider-secret, and remote-recipe patterns while hardening prompt-boundary handling.`
+- `sensitive_paths` `CHANGELOG.md:159` — `- Security: broaden static scanner coverage for unsafe credential, subprocess, browser-file, provider-secret, and remote-recipe patterns while hardening prompt-boundary handling.`
+- `credential_keywords` `CHANGELOG.md:173` — `- Security: flag exposed secrets in skill docs and normalize VirusTotal engine stats before caching.`
+- `credential_keywords` `CHANGELOG.md:185` — `- Search: add CJK tokenization support (Chinese/Japanese/Korean) with Intl.Segmenter plus fallback behavior to improve skill query matching (#1596) (thanks @pq-dong).`
+- `credential_keywords` `CHANGELOG.md:190` — `- Packages: use the configured `GITHUB_TOKEN` for trusted-publisher repository identity lookups to avoid anonymous GitHub API rate limits during publish setup (#1820, #1846) (thanks @deepujain).`
+- `credential_keywords` `CHANGELOG.md:196` — `- Search: rank exact slug matches above longer slugs that merely contain all query tokens (#1130) (thanks @QuinnH496).`
+- `credential_keywords` `CHANGELOG.md:198` — `- Search: preserve vector scores across candidate expansion and require all query tokens to match exact-token filters so relevant skills are not crowded out (#1759, #1762) (thanks @LinPower).`
+- `sensitive_paths` `CHANGELOG.md:221` — `- Management: restore capability-tags UI (crypto, requires-wallet, can-make-purchases, etc.) that was silently removed during the initial refactor.`
+- `credential_keywords` `CHANGELOG.md:227` — `- Tailwind: add `@theme` block mapping all CSS design tokens (`--bg`, `--surface`, `--ink`, `--accent`, `--line`, `--radius-*`, etc.) into first-class Tailwind utilities.`
+- `credential_keywords` `CHANGELOG.md:242` — `- API: fix CORS error when `credentials: "include"` conflicts with `Access-Control-Allow-Origin: *` by making credentials conditional on same-origin requests.`
+- `credential_keywords` `CHANGELOG.md:251` — `- Tests: update packageApi tests for conditional credentials and SSR URL resolution.`
+- `credential_keywords` `CHANGELOG.md:289` — `- Admin: add manual unban for banned users (clears `deletedAt` + `banReason`, audit log entry). Revoked API tokens stay revoked.`
+- `credential_keywords` `CHANGELOG.md:292` — `- CI/Security: add TruffleHog pull-request scanning for verified leaked credentials (#505) (thanks @akses0).`
+- `credential_keywords` `CHANGELOG.md:321` — `- CLI: forward optional auth tokens for `search` and `explore` against authenticated registries (#608) (thanks @artdaal).`
+- `sensitive_paths` `CHANGELOG.md:324` — `- CLI: show manual URL guidance when automatic browser opening is unavailable; add regression tests for opener errors (#163) (thanks @aronchick).`
+- `credential_keywords` `CHANGELOG.md:345` — `- HTTP/CORS: add preflight handler + include CORS headers on API/download errors; CLI: include auth token for owner-visible installs/updates (#146) (thanks @Grenghis-Khan).`
+- `credential_keywords` `CHANGELOG.md:346` — `- CLI: clarify `logout` only removes the local token; token remains valid until revoked in the web UI (#166) (thanks @aronchick).`
+- `credential_keywords` `CHANGELOG.md:374` — `- HTTP/CLI: centralize CORS handling and allow tokenized owner-visible reads through the CLI (#296, #297).`
+- `sensitive_paths` `CHANGELOG.md:610` — `- CLI auth: login/logout/whoami; browser loopback auth; token storage; site/registry discovery; config overrides.`
+- `sensitive_paths` `AGENTS.md:36` — `- `bun run test:pw:local-auth` — local Convex/dev-auth browser gate for signed-in/write flows.`
+- `sensitive_paths` `public/api/v1/openapi.json:1843` — `"name": "requiresBrowser",`
+- `process_exec` `convex/packages.ts:185` — `const match = /^@([^/]+)\//.exec(name);`
+- `package_hooks` `convex/packages.ts:2471` — `kind: "install",`
+- `package_hooks` `convex/packages.ts:2493` — `if (event.kind === "install") {`
+- `process_exec` `convex/packages.public.test.ts:4549` — `"import { execSync } from 'node:child_process';\nexecSync('curl http://x');\n",`
+- `package_hooks` `convex/schema.ts:1079` — `kind: v.union(v.literal("download"), v.literal("install")),`
+- `network_write` `convex/llmEval.ts:362` — `response = await fetch("https://api.openai.com/v1/responses", {`
+- `network_write` `convex/llmEval.ts:574` — `response = await fetch("https://api.openai.com/v1/responses", {`
+- `network_write` `convex/llmEval.ts:1286` — `response = await fetch("https://api.openai.com/v1/responses", {`
+- `network_write` `convex/llmEval.ts:1407` — `response = await fetch("https://api.openai.com/v1/responses", {`
+- `network_write` `convex/vt.ts:389` — `const response = await fetch(VIRUSTOTAL_UPLOAD_URL, {`
+- `network_write` `convex/vt.ts:420` — `return await fetch(uploadUrl, {`
+- `network_write` `convex/vt.ts:447` — `const response = await fetch(`https://www.virustotal.com/api/v3/files/${args.sha256hash}`, {`
+- `network_write` `convex/vt.ts:1120` — `const response = await fetch(`https://www.virustotal.com/api/v3/files/${sha256hash}`, {`
+- `sensitive_paths` `convex/search.test.ts:817` — `slug: "wallet-helper",`
+- `sensitive_paths` `convex/search.test.ts:818` — `displayName: "Wallet Helper",`

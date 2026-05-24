@@ -1,0 +1,1216 @@
+{
+  "audited_at": "2026-05-25T05:29:43+08:00",
+  "candidate": {
+    "name": "Awesome Agent Skills",
+    "repo": "https://github.com/libukai/awesome-agent-skills.git",
+    "type": "agent_skill_index",
+    "priority": 2,
+    "reason": "General agent skills discovery source."
+  },
+  "quarantine_path": "/home/admin/projects/oris/vendor/skill_candidates/libukai__awesome-agent-skills",
+  "commit_sha": "fef729ae6a8a8bbd1b26e00dc7555064f77916c8",
+  "clone_info": {
+    "action": "cloned",
+    "clone_return_code": 0,
+    "clone_stdout": "",
+    "clone_stderr": "Cloning into '/home/admin/projects/oris/vendor/skill_candidates/libukai__awesome-agent-skills'...\n",
+    "reset_return_code": 0,
+    "commit_sha": "fef729ae6a8a8bbd1b26e00dc7555064f77916c8",
+    "remote": "origin\thttps://github.com/libukai/awesome-agent-skills.git (fetch)\norigin\thttps://github.com/libukai/awesome-agent-skills.git (push)"
+  },
+  "scan": {
+    "file_count": 2706,
+    "scanned_text_file_count": 172,
+    "manifest_files": [
+      "README.md",
+      "plugins/README.md",
+      "plugins/agent-skills-toolkit/1.0.0/README.md",
+      "plugins/agent-skills-toolkit/1.0.0/skills/skill-creator-pro/SKILL.md",
+      "plugins/agent-skills-toolkit/1.1.0/README.md",
+      "plugins/agent-skills-toolkit/1.1.0/skills/skill-creator-pro/SKILL.md",
+      "plugins/agent-skills-toolkit/1.2.0/README.md",
+      "plugins/agent-skills-toolkit/1.2.0/skills/skill-creator-pro/SKILL.md",
+      "plugins/claude-code-setting/README.md",
+      "plugins/claude-code-setting/skills/mcp-config/SKILL.md",
+      "plugins/vscode-extensions-toolkit/README.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/README.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/SKILL.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-port-monitor-config/SKILL.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-sftp-config/SKILL.md",
+      "skills/obsidian-to-x/SKILL.md",
+      "skills/obsidian-to-x/scripts/node_modules/@types/debug/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/@types/debug/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/@types/mdast/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/@types/mdast/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/@types/ms/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/@types/ms/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/@types/unist/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/@types/unist/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/argparse/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/argparse/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/bail/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/character-entities/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/debug/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/debug/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/decode-named-character-reference/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/dequal/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/devlop/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/esprima/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/esprima/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/extend/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/extend/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/front-matter/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/front-matter/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/get-east-asian-width/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/highlight.js/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/highlight.js/es/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/highlight.js/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/is-plain-obj/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/js-yaml/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/js-yaml/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/longest-streak/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/marked/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/marked/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/mdast-util-from-markdown/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/mdast-util-phrasing/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/mdast-util-to-markdown/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/mdast-util-to-string/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-core-commonmark/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-extension-cjk-friendly-util/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-extension-cjk-friendly-util/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-extension-cjk-friendly/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-extension-cjk-friendly/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-factory-destination/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-factory-label/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-factory-space/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-factory-title/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-factory-whitespace/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-character/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-chunked/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-classify-character/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-combine-extensions/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-decode-numeric-character-reference/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-decode-string/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-encode/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-html-tag-name/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-normalize-identifier/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-resolve-all/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-sanitize-uri/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-subtokenize/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-symbol/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark-util-types/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/micromark/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/ms/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/remark-cjk-friendly/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/remark-cjk-friendly/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/remark-parse/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/remark-stringify/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/sprintf-js/README.md",
+      "skills/obsidian-to-x/scripts/node_modules/sprintf-js/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/trough/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/unified/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/unist-util-is/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/unist-util-stringify-position/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/unist-util-visit-parents/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/unist-util-visit/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/vfile-message/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/vfile/package.json",
+      "skills/obsidian-to-x/scripts/node_modules/zwitch/package.json",
+      "skills/obsidian-to-x/scripts/package.json"
+    ],
+    "install_related_files": [
+      "CLAUDE.md",
+      "README.md",
+      "docs/Claude-Skills-完全构建指南.md",
+      "docs/README_EN.md",
+      "docs/README_JA.md",
+      "docs/excalidraw-mcp-guide.md",
+      "plugins/agent-skills-toolkit/1.0.0/README.md",
+      "plugins/agent-skills-toolkit/1.0.0/skills/skill-creator-pro/SKILL.md",
+      "plugins/agent-skills-toolkit/1.0.0/skills/skill-creator-pro/references/constraints_and_rules.md",
+      "plugins/agent-skills-toolkit/1.1.0/README.md",
+      "plugins/agent-skills-toolkit/1.1.0/skills/skill-creator-pro/SKILL.md",
+      "plugins/agent-skills-toolkit/1.1.0/skills/skill-creator-pro/references/constraints_and_rules.md",
+      "plugins/agent-skills-toolkit/1.2.0/README.md",
+      "plugins/agent-skills-toolkit/1.2.0/skills/skill-creator-pro/SKILL.md",
+      "plugins/agent-skills-toolkit/1.2.0/skills/skill-creator-pro/references/constraints_and_rules.md",
+      "plugins/claude-code-setting/README.md",
+      "plugins/vscode-extensions-toolkit/README.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/README.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/CLI_CICD.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/DOCUMENTATION.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/ENVIRONMENT_MANAGEMENT.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SCRIPTING_TESTING.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SECURITY.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-port-monitor-config/SKILL.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-port-monitor-config/references/troubleshooting.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-sftp-config/SKILL.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-sftp-config/assets/deploy-checklist.md",
+      "plugins/vscode-extensions-toolkit/skills/vscode-sftp-config/references/ssl-security.md",
+      "skills/obsidian-to-x/SKILL.md",
+      "skills/obsidian-to-x/references/articles.md",
+      "skills/obsidian-to-x/references/obsidian-integration.md",
+      "skills/obsidian-to-x/scripts/check-paste-permissions.ts",
+      "skills/obsidian-to-x/scripts/copy-to-clipboard.ts",
+      "skills/obsidian-to-x/scripts/paste-from-clipboard.ts",
+      "skills/obsidian-to-x/scripts/publish-active.sh"
+    ],
+    "finding_counts": {
+      "sensitive_paths": 50,
+      "shell_download_exec": 3,
+      "process_exec": 50,
+      "credential_keywords": 50,
+      "network_write": 15,
+      "package_hooks": 6
+    },
+    "risk_score_rough": 100,
+    "findings": [
+      {
+        "kind": "sensitive_paths",
+        "path": "CLAUDE.md",
+        "line": 50,
+        "text": "- **Excalidraw**: Hand-drawn, casual style, browser-based interaction"
+      },
+      {
+        "kind": "shell_download_exec",
+        "path": "README.md",
+        "line": 109,
+        "text": "curl -fsSL https://skillhub-1388575217.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README.md",
+        "line": 184,
+        "text": "<td><a href=\"https://github.com/vercel-labs/agent-browser\">agent-browser</a></td>"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "README.md",
+        "line": 185,
+        "text": "<td><a href=\"https://github.com/browser-use/browser-use\">browser-use</a></td>"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": ".claude/settings.json",
+        "line": 5,
+        "text": "\"agent-browser@agent-browser\": true,"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 8,
+        "text": "Posts text, images, videos, and long-form articles to X via real Chrome browser (bypasses anti-bot detection)."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 51,
+        "text": "- **Alternative**: Look for `Post composed (preview mode)` or `Browser remains open`"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 52,
+        "text": "- **For X Articles**: Look for `Article composed` or `Browser remains open`"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 152,
+        "text": "| Chrome | Install Chrome or set `X_BROWSER_CHROME_PATH` env var |"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 263,
+        "text": "**Browser Behavior**:"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 264,
+        "text": "- Script opens browser with content filled in"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 265,
+        "text": "- Browser **remains open** for manual review"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 267,
+        "text": "- User manually closes browser when done"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 271,
+        "text": "- Don't wait for task completion (browser stays open indefinitely)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 273,
+        "text": "- **Alternative**: Check for `Post composed (preview mode)` or `Browser remains open`"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 363,
+        "text": "**Note**: Script opens browser with article filled in. User reviews and publishes manually."
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 393,
+        "text": "- `references/browser-automation-lessons.md` - Browser automation patterns and lessons learned (CDP, DraftJS, background tabs)"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 406,
+        "text": "- All scripts fill content into the browser and keep it open for manual review"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/SKILL.md",
+        "line": 407,
+        "text": "- Browser remains open until user manually closes it (except when using `--submit` flag)"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/check-paste-permissions.ts",
+        "line": 1,
+        "text": "import { spawnSync } from 'node:child_process';"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/check-paste-permissions.ts",
+        "line": 33,
+        "text": "log('Chrome', false, 'Not found. Set X_BROWSER_CHROME_PATH env var or install Chrome.');"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 1,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 31,
+        "text": "if (!chromePath) throw new Error('Chrome not found. Set X_BROWSER_CHROME_PATH env var.');"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 43,
+        "text": "const chrome = spawn(chromePath, ["
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 47,
+        "text": "'--no-default-browser-check',"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 92,
+        "text": "console.log('[x-video] Editor not found. Please log in to X in the browser window.');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 170,
+        "text": "console.log('[x-video] Video may still be processing. Please check browser window.');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 182,
+        "text": "console.log('[x-video] Browser stays open for review.');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-video.ts",
+        "line": 199,
+        "text": "console.log(`Post video to X (Twitter) using real Chrome browser"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 1,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 35,
+        "text": "if (!chromePath) throw new Error('Chrome not found. Set X_BROWSER_CHROME_PATH env var.');"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 43,
+        "text": "const chrome = spawn(chromePath, ["
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 47,
+        "text": "'--no-default-browser-check',"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 91,
+        "text": "console.log('[x-quote] Tweet not found or not logged in. Please log in to X in the browser window.');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 174,
+        "text": "console.log('[x-quote] Browser will stay open for 30 seconds for preview...');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 179,
+        "text": "try { await cdp.send('Browser.close', {}, { timeoutMs: 5_000 }); } catch {}"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-quote.ts",
+        "line": 191,
+        "text": "console.log(`Quote a tweet on X (Twitter) using real Chrome browser"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/insert-code-blocks.ts",
+        "line": 147,
+        "text": "try { return eval(expr); } catch { return document.querySelector(expr); }"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/insert-code-blocks.ts",
+        "line": 165,
+        "text": "* WHY: DraftJS maintains its own SelectionState, independent of the browser's DOM"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/insert-code-blocks.ts",
+        "line": 257,
+        "text": "// mouseMoved to end → browser extends DOM selection → selectionchange fires → DraftJS onSelect"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/insert-code-blocks.ts",
+        "line": 369,
+        "text": "// When the dialog's \"Insert\" button is removed from DOM, the browser moves focus"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/obsidian-resolver.ts",
+        "line": 38,
+        "text": "const { spawnSync } = require('node:child_process');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/publish-active.sh",
+        "line": 65,
+        "text": "echo -e \"${GREEN}✅ Done! Review and publish in the browser window.${NC}\""
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 1,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 21,
+        "text": "interface XBrowserOptions {"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 30,
+        "text": "export async function postToX(options: XBrowserOptions): Promise<void> {"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 34,
+        "text": "if (!chromePath) throw new Error('Chrome not found. Set X_BROWSER_CHROME_PATH env var.');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 39,
+        "text": "console.log(`[x-browser] Launching Chrome (profile: ${profileDir})`);"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 41,
+        "text": "const chrome = spawn(chromePath, ["
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 45,
+        "text": "'--no-default-browser-check',"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 74,
+        "text": "console.log('[x-browser] Waiting for X editor...');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 92,
+        "text": "console.log('[x-browser] Editor not found. Please log in to X in the browser window.');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 93,
+        "text": "console.log('[x-browser] Waiting for login...');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 99,
+        "text": "console.log('[x-browser] Typing text...');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 116,
+        "text": "console.log(`[x-browser] Note: X Posts support max ${maxImages} images. Uploading first ${maxImages} of ${images.length} images.`);"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 121,
+        "text": "console.warn(`[x-browser] Image not found: ${imagePath}`);"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 125,
+        "text": "console.log(`[x-browser] Pasting image: ${imagePath}`);"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 128,
+        "text": "console.warn(`[x-browser] Failed to copy image to clipboard: ${imagePath}`);"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 148,
+        "text": "console.log('[x-browser] Pasting from clipboard...');"
+      },
+      {
+        "kind": "sensitive_paths",
+        "path": "skills/obsidian-to-x/scripts/x-post.ts",
+        "line": 164,
+        "text": "console.log(`[x-browser] Image pasted via CDP (background)`);"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/copy-to-clipboard.ts",
+        "line": 1,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/copy-to-clipboard.ts",
+        "line": 59,
+        "text": "const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/copy-to-clipboard.ts",
+        "line": 96,
+        "text": "const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 6,
+        "text": "const tokens = Lexer.lex(markdown, { gfm: true, breaks: true });"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 8,
+        "text": "console.log('=== Blockquote Token ===');"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 9,
+        "text": "if (tokens[0]?.type === 'blockquote') {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 10,
+        "text": "const bq = tokens[0] as any;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 11,
+        "text": "console.log('Blockquote has', bq.tokens.length, 'tokens');"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 13,
+        "text": "if (bq.tokens[0]?.type === 'paragraph') {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 14,
+        "text": "const para = bq.tokens[0];"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 15,
+        "text": "console.log('\\n=== Paragraph Tokens ===');"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 16,
+        "text": "console.log('Paragraph has', para.tokens.length, 'tokens');"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 18,
+        "text": "para.tokens.forEach((token: any, i: number) => {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 19,
+        "text": "console.log(`\\nToken ${i}:`, {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 20,
+        "text": "type: token.type,"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 21,
+        "text": "text: token.text || token.raw,"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 25,
+        "text": "if (para.tokens[0]?.type === 'text') {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 26,
+        "text": "const text = para.tokens[0].text;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/test-annotation-debug.ts",
+        "line": 27,
+        "text": "console.log('\\n=== First Text Token ===');"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/test-code-insertion.ts",
+        "line": 1,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/test-code-insertion.ts",
+        "line": 35,
+        "text": "spawn('open', ['-na', appPath, '--args', ...chromeArgs], { stdio: 'ignore' });"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/test-code-insertion.ts",
+        "line": 37,
+        "text": "spawn(chromePath, chromeArgs, { stdio: 'ignore' });"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-article.ts",
+        "line": 1,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-article.ts",
+        "line": 130,
+        "text": "spawn('open', ['-na', appPath, '--args', ...chromeArgs], { stdio: 'ignore' });"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-article.ts",
+        "line": 132,
+        "text": "spawn(chromePath, chromeArgs, { stdio: 'ignore' });"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/md-to-post.ts",
+        "line": 12,
+        "text": "import { spawn } from 'node:child_process';"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/md-to-post.ts",
+        "line": 37,
+        "text": "const curl = spawn('curl', ['-s', '-L', '-o', outputPath, url]);"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/md-to-post.ts",
+        "line": 105,
+        "text": "while ((match = standardImageRegex.exec(body)) !== null) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/md-to-post.ts",
+        "line": 118,
+        "text": "while ((match = obsidianImageRegex.exec(body)) !== null) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/md-to-post.ts",
+        "line": 141,
+        "text": "while ((match = allImageRegex.exec(body)) !== null) {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 11,
+        "text": "import { Lexer, Marked, type RendererObject, type Tokens } from 'marked';"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 117,
+        "text": "const tokens = Lexer.lex(markdown, { gfm: true, breaks: true });"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 118,
+        "text": "for (const token of tokens) {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 119,
+        "text": "if (token.type === 'heading' && token.depth === 1) {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 120,
+        "text": "return stripWrappingQuotes(token.text);"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 317,
+        "text": "const blockTokens = Lexer.lex(preprocessedMarkdown, { gfm: true, breaks: true });"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 320,
+        "text": "heading({ depth, tokens }: Tokens.Heading): string {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 324,
+        "text": "return `<h2>${this.parser.parseInline(tokens)}</h2>`;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 327,
+        "text": "paragraph({ tokens }: Tokens.Paragraph): string {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 328,
+        "text": "const text = this.parser.parseInline(tokens).trim();"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 333,
+        "text": "blockquote({ tokens }: Tokens.Blockquote): string {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 335,
+        "text": "if (tokens.length > 0 && tokens[0]?.type === 'paragraph') {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 336,
+        "text": "const firstPara = tokens[0] as Tokens.Paragraph;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 337,
+        "text": "if (firstPara.tokens && firstPara.tokens.length > 0) {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 338,
+        "text": "const firstToken = firstPara.tokens[0];"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 339,
+        "text": "if (firstToken?.type === 'text') {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 340,
+        "text": "const textToken = firstToken as Tokens.Text;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 341,
+        "text": "const match = textToken.text.match(/^\\[#\\d+\\]\\s+(.*)$/);"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 345,
+        "text": "textToken.text = `**${titleText}**`;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 347,
+        "text": "firstPara.tokens.shift();"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 353,
+        "text": "return `<blockquote>${this.parser.parse(tokens)}</blockquote>`;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 356,
+        "text": "code({ text, lang = '' }: Tokens.Code): string {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 362,
+        "text": "image({ href, text }: Tokens.Image): string {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 367,
+        "text": "link({ href, title, tokens, text }: Tokens.Link): string {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 368,
+        "text": "const label = tokens?.length ? this.parser.parseInline(tokens) : escapeHtml(text || href || '');"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 387,
+        "text": "const totalBlocks = blockTokens.filter((token) => {"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 388,
+        "text": "if (token.type === 'space') return false;"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/md-to-article.ts",
+        "line": 389,
+        "text": "if (token.type === 'heading' && token.depth === 1) return false;"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/paste-from-clipboard.ts",
+        "line": 1,
+        "text": "import { spawnSync } from 'node:child_process';"
+      },
+      {
+        "kind": "process_exec",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 1,
+        "text": "import { execSync, spawnSync } from 'node:child_process';"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 63,
+        "text": "const override = process.env.X_BROWSER_CHROME_PATH?.trim();"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 75,
+        "text": "if (!process.env.WSL_DISTRO_NAME) { _wslHome = null; return null; }"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 84,
+        "text": "const override = process.env.LIBUKAI_CHROME_PROFILE_DIR?.trim() || process.env.X_BROWSER_PROFILE_DIR?.trim();"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 90,
+        "text": ": process.env.XDG_DATA_HOME || path.join(os.homedir(), '.local', 'share');"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 120,
+        "text": "const fixed = parseInt(process.env.X_BROWSER_DEBUG_PORT || '', 10);"
+      },
+      {
+        "kind": "network_write",
+        "path": "skills/obsidian-to-x/scripts/x-utils.ts",
+        "line": 142,
+        "text": "const res = await fetch(url, { redirect: 'follow' });"
+      },
+      {
+        "kind": "credential_keywords",
+        "path": "docs/Claude-Skills-完全构建指南.md",
+        "line": 74,
+        "text": "这种递进式披露在保持专业能力的同时最大限度地减少了 token 消耗。"
+      },
+      {
+        "kind": "shell_download_exec",
+        "path": "docs/README_EN.md",
+        "line": 109,
+        "text": "curl -fsSL https://skillhub-1251783334.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash"
+      },
+      {
+        "kind": "shell_download_exec",
+        "path": "docs/README_JA.md",
+        "line": 109,
+        "text": "curl -fsSL https://skillhub-1251783334.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/SKILL.md",
+        "line": 157,
+        "text": "exports.validateResponse = function(response, actionName) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/SKILL.md",
+        "line": 202,
+        "text": "-   [ ] Functions exported: `exports.func = function() {}`"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/SKILL.md",
+        "line": 391,
+        "text": "| \"Function not defined\"  | Not exported          | Use `exports.func = function() {}` |"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/README.md",
+        "line": 132,
+        "text": "- Using fetch() instead of axios"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/ADVANCED_FEATURES.md",
+        "line": 549,
+        "text": "exports.addRequestHeaders = function(request) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/ADVANCED_FEATURES.md",
+        "line": 555,
+        "text": "exports.processResponse = function(response) {"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/ADVANCED_FEATURES.md",
+        "line": 665,
+        "text": "const response = await axios.get(`${baseUrl}/users/${userId}`, {"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/ADVANCED_FEATURES.md",
+        "line": 900,
+        "text": "const response = await axios.get(`${baseUrl}/api/unstable`);"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 123,
+        "text": "exports.getDateRange = function(days = 7) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 233,
+        "text": "exports.getDateRange = function(days) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 277,
+        "text": "exports.getDateRangeUTC8 = function(days) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 313,
+        "text": "exports.checkRateLimit = function(maxRequests, windowSeconds) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 354,
+        "text": "exports.validateEmail = function(email) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 358,
+        "text": "exports.validatePhone = function(phone) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 363,
+        "text": "exports.formatTimestamp = function(timestamp) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 368,
+        "text": "exports.generateSignature = function(params, secret) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 531,
+        "text": "exports.formatDate = function(date) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/REQUEST_DEPENDENCIES.md",
+        "line": 536,
+        "text": "exports.formatDate = function(date) {"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+        "line": 43,
+        "text": "const response = await axios.get('https://api.example.com');"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+        "line": 309,
+        "text": "exports.getDateRange = function(days) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+        "line": 365,
+        "text": "│   exports.getDateRange = function() {...}                   │"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+        "line": 582,
+        "text": "const response = axios.get('https://api.example.com');  // Missing await"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+        "line": 594,
+        "text": "const response = await axios.get('https://api.example.com');"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/COMMON_MISTAKES.md",
+        "line": 614,
+        "text": "test(\"Status is 200\", function() {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/DOCUMENTATION.md",
+        "line": 185,
+        "text": "exports.validateResponse = function(response, actionName) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/DOCUMENTATION.md",
+        "line": 512,
+        "text": "exports.functionName = function() { };"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/DOCUMENTATION.md",
+        "line": 583,
+        "text": "- Export function: `exports.functionName = function() {}`"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/DOCUMENTATION.md",
+        "line": 739,
+        "text": "exports.validateResponse = function(response, actionName) {"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/AUTHENTICATION_PATTERNS.md",
+        "line": 306,
+        "text": "const response = await axios.post(...);"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SCRIPTING_TESTING.md",
+        "line": 31,
+        "text": "const config = await axios.get('https://config-service.com/api-config');"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SCRIPTING_TESTING.md",
+        "line": 89,
+        "text": "const response = await axios.post(`${baseUrl}/oauth/token`, {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SCRIPTING_TESTING.md",
+        "line": 261,
+        "text": "exports.validateResponse = function(response, actionName) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SCRIPTING_TESTING.md",
+        "line": 295,
+        "text": "exports.decodeBase64Content = function(base64String) {"
+      },
+      {
+        "kind": "process_exec",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SCRIPTING_TESTING.md",
+        "line": 326,
+        "text": "exports.validateResponse = function(response, actionName) {"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SECURITY.md",
+        "line": 342,
+        "text": "const response = await axios.get(`${vaultAddr}/v1/secret/data/${path}`, {"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SECURITY.md",
+        "line": 393,
+        "text": "const response = await axios.post("
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SYNTAX.md",
+        "line": 381,
+        "text": "const config = await axios.get('https://config.example.com');"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SYNTAX.md",
+        "line": 462,
+        "text": "await axios.get('{{baseUrl}}/health');"
+      },
+      {
+        "kind": "network_write",
+        "path": "plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/references/SYNTAX.md",
+        "line": 567,
+        "text": "const response = await axios.post(`${baseUrl}/oauth/refresh`, {"
+      },
+      {
+        "kind": "package_hooks",
+        "path": "plugins/agent-skills-toolkit/1.0.0/skills/skill-creator-pro/LICENSE.txt",
+        "line": 70,
+        "text": "copyright license to reproduce, prepare Derivative Works of,"
+      },
+      {
+        "kind": "package_hooks",
+        "path": "plugins/agent-skills-toolkit/1.0.0/commands/test-skill.md",
+        "line": 17,
+        "text": "1. **Prepare Test Cases**"
+      },
+      {
+        "kind": "package_hooks",
+        "path": "plugins/agent-skills-toolkit/1.2.0/skills/skill-creator-pro/LICENSE.txt",
+        "line": 70,
+        "text": "copyright license to reproduce, prepare Derivative Works of,"
+      },
+      {
+        "kind": "package_hooks",
+        "path": "plugins/agent-skills-toolkit/1.2.0/commands/test-skill.md",
+        "line": 17,
+        "text": "1. **Prepare Test Cases**"
+      },
+      {
+        "kind": "package_hooks",
+        "path": "plugins/agent-skills-toolkit/1.1.0/skills/skill-creator-pro/LICENSE.txt",
+        "line": 70,
+        "text": "copyright license to reproduce, prepare Derivative Works of,"
+      },
+      {
+        "kind": "package_hooks",
+        "path": "plugins/agent-skills-toolkit/1.1.0/commands/test-skill.md",
+        "line": 17,
+        "text": "1. **Prepare Test Cases**"
+      }
+    ]
+  },
+  "decision": "quarantined_for_review_not_installed"
+}

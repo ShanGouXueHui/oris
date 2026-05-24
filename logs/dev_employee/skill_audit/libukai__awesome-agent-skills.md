@@ -1,0 +1,151 @@
+# Skill Candidate Audit — Awesome Agent Skills
+
+- Repo: `https://github.com/libukai/awesome-agent-skills.git`
+- Commit: `fef729ae6a8a8bbd1b26e00dc7555064f77916c8`
+- Audit time: `2026-05-25T05:29:43+08:00`
+- Rough risk score: `100`
+
+## Manifest files
+
+- `README.md`
+- `plugins/README.md`
+- `plugins/agent-skills-toolkit/1.0.0/README.md`
+- `plugins/agent-skills-toolkit/1.0.0/skills/skill-creator-pro/SKILL.md`
+- `plugins/agent-skills-toolkit/1.1.0/README.md`
+- `plugins/agent-skills-toolkit/1.1.0/skills/skill-creator-pro/SKILL.md`
+- `plugins/agent-skills-toolkit/1.2.0/README.md`
+- `plugins/agent-skills-toolkit/1.2.0/skills/skill-creator-pro/SKILL.md`
+- `plugins/claude-code-setting/README.md`
+- `plugins/claude-code-setting/skills/mcp-config/SKILL.md`
+- `plugins/vscode-extensions-toolkit/README.md`
+- `plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/README.md`
+- `plugins/vscode-extensions-toolkit/skills/vscode-httpyac-config/SKILL.md`
+- `plugins/vscode-extensions-toolkit/skills/vscode-port-monitor-config/SKILL.md`
+- `plugins/vscode-extensions-toolkit/skills/vscode-sftp-config/SKILL.md`
+- `skills/obsidian-to-x/SKILL.md`
+- `skills/obsidian-to-x/scripts/node_modules/@types/debug/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/@types/debug/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/@types/mdast/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/@types/mdast/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/@types/ms/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/@types/ms/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/@types/unist/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/@types/unist/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/argparse/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/argparse/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/bail/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/character-entities/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/debug/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/debug/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/decode-named-character-reference/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/dequal/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/devlop/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/esprima/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/esprima/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/extend/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/extend/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/front-matter/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/front-matter/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/get-east-asian-width/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/highlight.js/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/highlight.js/es/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/highlight.js/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/is-plain-obj/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/js-yaml/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/js-yaml/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/longest-streak/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/marked/README.md`
+- `skills/obsidian-to-x/scripts/node_modules/marked/package.json`
+- `skills/obsidian-to-x/scripts/node_modules/mdast-util-from-markdown/package.json`
+
+## Finding counts
+
+- `credential_keywords`: 50
+- `network_write`: 15
+- `package_hooks`: 6
+- `process_exec`: 50
+- `sensitive_paths`: 50
+- `shell_download_exec`: 3
+
+## Sample findings
+
+- `sensitive_paths` `CLAUDE.md:50` — `- **Excalidraw**: Hand-drawn, casual style, browser-based interaction`
+- `shell_download_exec` `README.md:109` — `curl -fsSL https://skillhub-1388575217.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash`
+- `sensitive_paths` `README.md:184` — `<td><a href="https://github.com/vercel-labs/agent-browser">agent-browser</a></td>`
+- `sensitive_paths` `README.md:185` — `<td><a href="https://github.com/browser-use/browser-use">browser-use</a></td>`
+- `sensitive_paths` `.claude/settings.json:5` — `"agent-browser@agent-browser": true,`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:8` — `Posts text, images, videos, and long-form articles to X via real Chrome browser (bypasses anti-bot detection).`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:51` — `- **Alternative**: Look for `Post composed (preview mode)` or `Browser remains open``
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:52` — `- **For X Articles**: Look for `Article composed` or `Browser remains open``
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:152` — `| Chrome | Install Chrome or set `X_BROWSER_CHROME_PATH` env var |`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:263` — `**Browser Behavior**:`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:264` — `- Script opens browser with content filled in`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:265` — `- Browser **remains open** for manual review`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:267` — `- User manually closes browser when done`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:271` — `- Don't wait for task completion (browser stays open indefinitely)`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:273` — `- **Alternative**: Check for `Post composed (preview mode)` or `Browser remains open``
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:363` — `**Note**: Script opens browser with article filled in. User reviews and publishes manually.`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:393` — `- `references/browser-automation-lessons.md` - Browser automation patterns and lessons learned (CDP, DraftJS, background tabs)`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:406` — `- All scripts fill content into the browser and keep it open for manual review`
+- `sensitive_paths` `skills/obsidian-to-x/SKILL.md:407` — `- Browser remains open until user manually closes it (except when using `--submit` flag)`
+- `process_exec` `skills/obsidian-to-x/scripts/check-paste-permissions.ts:1` — `import { spawnSync } from 'node:child_process';`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/check-paste-permissions.ts:33` — `log('Chrome', false, 'Not found. Set X_BROWSER_CHROME_PATH env var or install Chrome.');`
+- `process_exec` `skills/obsidian-to-x/scripts/x-video.ts:1` — `import { spawn } from 'node:child_process';`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-video.ts:31` — `if (!chromePath) throw new Error('Chrome not found. Set X_BROWSER_CHROME_PATH env var.');`
+- `process_exec` `skills/obsidian-to-x/scripts/x-video.ts:43` — `const chrome = spawn(chromePath, [`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-video.ts:47` — `'--no-default-browser-check',`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-video.ts:92` — `console.log('[x-video] Editor not found. Please log in to X in the browser window.');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-video.ts:170` — `console.log('[x-video] Video may still be processing. Please check browser window.');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-video.ts:182` — `console.log('[x-video] Browser stays open for review.');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-video.ts:199` — `console.log(`Post video to X (Twitter) using real Chrome browser`
+- `process_exec` `skills/obsidian-to-x/scripts/x-quote.ts:1` — `import { spawn } from 'node:child_process';`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-quote.ts:35` — `if (!chromePath) throw new Error('Chrome not found. Set X_BROWSER_CHROME_PATH env var.');`
+- `process_exec` `skills/obsidian-to-x/scripts/x-quote.ts:43` — `const chrome = spawn(chromePath, [`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-quote.ts:47` — `'--no-default-browser-check',`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-quote.ts:91` — `console.log('[x-quote] Tweet not found or not logged in. Please log in to X in the browser window.');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-quote.ts:174` — `console.log('[x-quote] Browser will stay open for 30 seconds for preview...');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-quote.ts:179` — `try { await cdp.send('Browser.close', {}, { timeoutMs: 5_000 }); } catch {}`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-quote.ts:191` — `console.log(`Quote a tweet on X (Twitter) using real Chrome browser`
+- `process_exec` `skills/obsidian-to-x/scripts/insert-code-blocks.ts:147` — `try { return eval(expr); } catch { return document.querySelector(expr); }`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/insert-code-blocks.ts:165` — `* WHY: DraftJS maintains its own SelectionState, independent of the browser's DOM`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/insert-code-blocks.ts:257` — `// mouseMoved to end → browser extends DOM selection → selectionchange fires → DraftJS onSelect`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/insert-code-blocks.ts:369` — `// When the dialog's "Insert" button is removed from DOM, the browser moves focus`
+- `process_exec` `skills/obsidian-to-x/scripts/obsidian-resolver.ts:38` — `const { spawnSync } = require('node:child_process');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/publish-active.sh:65` — `echo -e "${GREEN}✅ Done! Review and publish in the browser window.${NC}"`
+- `process_exec` `skills/obsidian-to-x/scripts/x-post.ts:1` — `import { spawn } from 'node:child_process';`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:21` — `interface XBrowserOptions {`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:30` — `export async function postToX(options: XBrowserOptions): Promise<void> {`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:34` — `if (!chromePath) throw new Error('Chrome not found. Set X_BROWSER_CHROME_PATH env var.');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:39` — `console.log(`[x-browser] Launching Chrome (profile: ${profileDir})`);`
+- `process_exec` `skills/obsidian-to-x/scripts/x-post.ts:41` — `const chrome = spawn(chromePath, [`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:45` — `'--no-default-browser-check',`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:74` — `console.log('[x-browser] Waiting for X editor...');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:92` — `console.log('[x-browser] Editor not found. Please log in to X in the browser window.');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:93` — `console.log('[x-browser] Waiting for login...');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:99` — `console.log('[x-browser] Typing text...');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:116` — `console.log(`[x-browser] Note: X Posts support max ${maxImages} images. Uploading first ${maxImages} of ${images.length} images.`);`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:121` — `console.warn(`[x-browser] Image not found: ${imagePath}`);`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:125` — `console.log(`[x-browser] Pasting image: ${imagePath}`);`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:128` — `console.warn(`[x-browser] Failed to copy image to clipboard: ${imagePath}`);`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:148` — `console.log('[x-browser] Pasting from clipboard...');`
+- `sensitive_paths` `skills/obsidian-to-x/scripts/x-post.ts:164` — `console.log(`[x-browser] Image pasted via CDP (background)`);`
+- `process_exec` `skills/obsidian-to-x/scripts/copy-to-clipboard.ts:1` — `import { spawn } from 'node:child_process';`
+- `process_exec` `skills/obsidian-to-x/scripts/copy-to-clipboard.ts:59` — `const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });`
+- `process_exec` `skills/obsidian-to-x/scripts/copy-to-clipboard.ts:96` — `const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:6` — `const tokens = Lexer.lex(markdown, { gfm: true, breaks: true });`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:8` — `console.log('=== Blockquote Token ===');`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:9` — `if (tokens[0]?.type === 'blockquote') {`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:10` — `const bq = tokens[0] as any;`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:11` — `console.log('Blockquote has', bq.tokens.length, 'tokens');`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:13` — `if (bq.tokens[0]?.type === 'paragraph') {`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:14` — `const para = bq.tokens[0];`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:15` — `console.log('\n=== Paragraph Tokens ===');`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:16` — `console.log('Paragraph has', para.tokens.length, 'tokens');`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:18` — `para.tokens.forEach((token: any, i: number) => {`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:19` — `console.log(`\nToken ${i}:`, {`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:20` — `type: token.type,`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:21` — `text: token.text || token.raw,`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:25` — `if (para.tokens[0]?.type === 'text') {`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:26` — `const text = para.tokens[0].text;`
+- `credential_keywords` `skills/obsidian-to-x/scripts/test-annotation-debug.ts:27` — `console.log('\n=== First Text Token ===');`
+- `process_exec` `skills/obsidian-to-x/scripts/test-code-insertion.ts:1` — `import { spawn } from 'node:child_process';`
