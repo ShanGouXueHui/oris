@@ -5,7 +5,7 @@
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "product_commit_sha": "c2d67fb1c9664b0c2eee943f49f027caf894c2a9",
+  "product_commit_sha": "8f74b23728904889c2b075f0aae48c44165549ae",
   "test_result": "python3 -m py_compile app/main.py passed; pytest -q passed",
   "blocked_reason": null
 }

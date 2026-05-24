@@ -10,7 +10,7 @@ Target repository: `ShanGouXueHui/oris-final-acceptance-api`
 
 Target local path: `/home/admin/projects/oris-final-acceptance-api`
 
-Product commit SHA: `c2d67fb1c9664b0c2eee943f49f027caf894c2a9`
+Product commit SHA: `8f74b23728904889c2b075f0aae48c44165549ae`
 
 Checks passed:
 
