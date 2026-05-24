@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-05-25T05:32:57+08:00",
+  "source_summary": "/home/admin/projects/oris/logs/dev_employee/skill_audit/summary_20260525.json",
+  "policy": "third_party_skills_are_quarantine_only_until_explicitly_promoted",
+  "decisions": [
+    {
+      "name": "ClawHub",
+      "repo": "https://github.com/openclaw/clawhub.git",
+      "commit_sha": "963b0a5719431a182bef07ed1cd4ff09cc6fc1c9",
+      "risk_score_rough": 100,
+      "finding_counts": {
+        "credential_keywords": 50,
+        "sensitive_paths": 50,
+        "package_hooks": 50,
+        "process_exec": 50,
+        "network_write": 50,
+        "shell_download_exec": 16
+      },
+      "decision": "blocked_no_install",
+      "reasons": [
+        "network_write=50",
+        "package_hooks=50",
+        "process_exec=50",
+        "shell_download_exec=16"
+      ],
+      "allowed_uses": [
+        "read-only intelligence extraction",
+        "directory/category discovery",
+        "manual source review in quarantine"
+      ],
+      "forbidden_uses": [
+        "direct production install",
+        "global OpenClaw skill install",
+        "running installer scripts or package hooks",
+        "granting credential or browser-profile access"
+      ]
+    },
+    {
+      "name": "Awesome OpenClaw Skills",
+      "repo": "https://github.com/VoltAgent/awesome-openclaw-skills.git",
+      "commit_sha": "bf943408a62c7e16d477c95f40a17f8f4d21a72a",
+      "risk_score_rough": 100,
+      "finding_counts": {
+        "credential_keywords": 50,
+        "sensitive_paths": 50,
+        "package_hooks": 5,
+        "shell_download_exec": 4
+      },
+      "decision": "blocked_no_install",
+      "reasons": [
+        "package_hooks=5",
+        "shell_download_exec=4"
+      ],
+      "allowed_uses": [
+        "read-only intelligence extraction",
+        "directory/category discovery",
+        "manual source review in quarantine"
+      ],
+      "forbidden_uses": [
+        "direct production install",
+        "global OpenClaw skill install",
+        "running installer scripts or package hooks",
+        "granting credential or browser-profile access"
+      ]
+    },
+    {
+      "name": "Awesome OpenClaw Skills ZH",
+      "repo": "https://github.com/clawdbot-ai/awesome-openclaw-skills-zh.git",
+      "commit_sha": "ad1e5528ac88fa2934cf3e2a32f84f14c6f82a7c",
+      "risk_score_rough": 0,
+      "finding_counts": {},
+      "decision": "intelligence_only_reviewable",
+      "reasons": [
+        "no risk indicators in coarse scan; still not approved for runtime install"
+      ],
+      "allowed_uses": [
+        "read-only intelligence extraction",
+        "directory/category discovery",
+        "manual source review in quarantine"
+      ],
+      "forbidden_uses": [
+        "direct production install",
+        "global OpenClaw skill install",
+        "running installer scripts or package hooks",
+        "granting credential or browser-profile access"
+      ]
+    },
+    {
+      "name": "Awesome Agent Skills",
+      "repo": "https://github.com/libukai/awesome-agent-skills.git",
+      "commit_sha": "fef729ae6a8a8bbd1b26e00dc7555064f77916c8",
+      "risk_score_rough": 100,
+      "finding_counts": {
+        "sensitive_paths": 50,
+        "shell_download_exec": 3,
+        "process_exec": 50,
+        "credential_keywords": 50,
+        "network_write": 15,
+        "package_hooks": 6
+      },
+      "decision": "blocked_no_install",
+      "reasons": [
+        "network_write=15",
+        "package_hooks=6",
+        "process_exec=50",
+        "shell_download_exec=3"
+      ],
+      "allowed_uses": [
+        "read-only intelligence extraction",
+        "directory/category discovery",
+        "manual source review in quarantine"
+      ],
+      "forbidden_uses": [
+        "direct production install",
+        "global OpenClaw skill install",
+        "running installer scripts or package hooks",
+        "granting credential or browser-profile access"
+      ]
+    },
+    {
+      "name": "Awesome MCP Servers",
+      "repo": "https://github.com/punkpeye/awesome-mcp-servers.git",
+      "commit_sha": "39b5e990fe94734de271a2b13ec1513811da9cdd",
+      "risk_score_rough": 74,
+      "finding_counts": {
+        "sensitive_paths": 37,
+        "credential_keywords": 37
+      },
+      "decision": "intelligence_only",
+      "reasons": [
+        "credential_keywords=37",
+        "sensitive_paths=37"
+      ],
+      "allowed_uses": [
+        "read-only intelligence extraction",
+        "directory/category discovery",
+        "manual source review in quarantine"
+      ],
+      "forbidden_uses": [
+        "direct production install",
+        "global OpenClaw skill install",
+        "running installer scripts or package hooks",
+        "granting credential or browser-profile access"
+      ]
+    }
+  ]
+}
