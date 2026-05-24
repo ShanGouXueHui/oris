@@ -1,3 +1,4 @@
-Everything up-to-date
-Branch 'main' set up to track remote branch 'main' from 'origin'.
-c2d67fb1c9664b0c2eee943f49f027caf894c2a9
+PRODUCT_SHA=8f74b23728904889c2b075f0aae48c44165549ae
+origin	git@github.com:ShanGouXueHui/oris-final-acceptance-api.git (fetch)
+origin	git@github.com:ShanGouXueHui/oris-final-acceptance-api.git (push)
+8f74b23 fix(tests): make app importable
