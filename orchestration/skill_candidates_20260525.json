@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-25",
+  "policy": "download_and_audit_only_never_execute_candidate_code",
+  "candidates": [
+    {
+      "name": "ClawHub",
+      "repo": "https://github.com/openclaw/clawhub.git",
+      "type": "openclaw_registry",
+      "priority": 1,
+      "reason": "Official OpenClaw public skill registry and CLI/API reference."
+    },
+    {
+      "name": "Awesome OpenClaw Skills",
+      "repo": "https://github.com/VoltAgent/awesome-openclaw-skills.git",
+      "type": "openclaw_skill_index",
+      "priority": 1,
+      "reason": "Large curated OpenClaw skill index with explicit filtering criteria."
+    },
+    {
+      "name": "Awesome OpenClaw Skills ZH",
+      "repo": "https://github.com/clawdbot-ai/awesome-openclaw-skills-zh.git",
+      "type": "openclaw_skill_index_zh",
+      "priority": 2,
+      "reason": "Chinese OpenClaw skill index candidate source."
+    },
+    {
+      "name": "Awesome Agent Skills",
+      "repo": "https://github.com/libukai/awesome-agent-skills.git",
+      "type": "agent_skill_index",
+      "priority": 2,
+      "reason": "General agent skills discovery source."
+    },
+    {
+      "name": "Awesome MCP Servers",
+      "repo": "https://github.com/punkpeye/awesome-mcp-servers.git",
+      "type": "mcp_index",
+      "priority": 2,
+      "reason": "MCP server discovery source for tool capability references."
+    }
+  ]
+}
