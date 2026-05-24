@@ -1,0 +1,4074 @@
+{
+  "generated_at": "2026-05-25T05:37:14+08:00",
+  "policy": "read_only_intelligence_extraction_no_install_no_execution",
+  "source_quarantine_dir": "/home/admin/projects/oris/vendor/skill_candidates",
+  "counts": {
+    "total_items": 6267,
+    "review_candidate_read_only": 1808,
+    "reject_for_oris_runtime": 1088,
+    "low_priority_intelligence_only": 3371
+  },
+  "tag_counts": {
+    "browser_or_scraping": 401,
+    "coding_agent": 155,
+    "credential_or_secret": 147,
+    "crypto_finance": 199,
+    "devops_cloud": 680,
+    "docs_markdown": 354,
+    "email_calendar": 236,
+    "github_dev_workflow": 575,
+    "research_search": 693,
+    "social_posting": 184
+  },
+  "reviewable_top": [
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "CONTRIBUTING.md",
+      "category": "Entry Format",
+      "name": "skill-name",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/author/skill-name/SKILL.md",
+      "description": "Short description of what it does.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "CONTRIBUTING.md",
+      "category": "Entry Format",
+      "name": "author-skills",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/author",
+      "description": "Brief summary covering all skills.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-commons",
+      "url": "https://clawskills.sh/skills/zanblayde-agent-commons",
+      "description": "Consult, commit, extend, and challenge reasoning chains.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "airadar",
+      "url": "https://clawskills.sh/skills/lopushok9-airadar",
+      "description": "Distill the signal around AI-native tools/apps and their GitHub home bases: fast-growing, hyped, well-funded.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "arxiv-search-collector",
+      "url": "https://clawskills.sh/skills/xukp20-arxiv-search-collector",
+      "description": "Model-driven arXiv retrieval workflow for building a paper set with a manual language parameter: initialize a run.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "auto-pr-merger",
+      "url": "https://clawskills.sh/skills/autogame-17-auto-pr-merger",
+      "description": "This skill automates the workflow of checking out a GitHub.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "azure-devops",
+      "url": "https://clawskills.sh/skills/pals-software-azure-devops",
+      "description": "List Azure DevOps projects, repositories, and branches; create pull requests; manage work items; check build status.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bat-cat",
+      "url": "https://clawskills.sh/skills/arnarsson-bat-cat",
+      "description": "A cat clone with syntax highlighting, line numbers, and Git integration.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "biz-reporter",
+      "url": "https://clawskills.sh/skills/ariktulcha-biz-reporter",
+      "description": "Automated business intelligence reports pulling data from Google Analytics GA4, Google Search Console, Stripe.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "academic-research",
+      "url": "https://clawskills.sh/skills/rogersuperbuilderalpha-academic-research",
+      "description": "Search academic papers and conduct literature reviews using OpenAlex API (free, no key needed)",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "academic-research-hub",
+      "url": "https://clawskills.sh/skills/anisafifi-academic-research-hub",
+      "description": "Use this skill when users need to search academic papers, download research documents, extract citations, or gather.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-chat-ux-v1-4-0",
+      "url": "https://clawskills.sh/skills/maverick-software-agent-chat-ux-v1-4-0",
+      "description": "Multi-agent UX for OpenClaw Control UI — agent selector, per-agent sessions, session history viewer with search.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "skywork-ppt",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/gxcun17/skywork-ppt/SKILL.md",
+      "description": "Generate, imitate, and edit PowerPoint presentations with skywork.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "skywork-music-maker",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/gxcun17/skywork-music-maker/SKILL.md",
+      "description": "Create professional music with Mureka AI.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-zero",
+      "url": "https://clawskills.sh/skills/dowingard-agent-zero-bridge",
+      "description": "Delegate complex coding, research, or autonomous tasks.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentapi",
+      "url": "https://clawskills.sh/skills/gizmo-dev-agentapi",
+      "description": "Browse and search the AgentAPI directory - a curated database of APIs designed for AI agents.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentapi-hub",
+      "url": "https://clawskills.sh/skills/gizmo-dev-agentapi-hub",
+      "description": "Browse and search the AgentAPI directory - a curated database of APIs designed for AI agents.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "duoplus-agent",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/duoplusofficial/duoplus-agent/SKILL.md",
+      "description": "Control DuoPlus cloud phones via ADB.",
+      "priority_tags": [
+        "github_dev_workflow",
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aeo-prompt-frequency-analyzer",
+      "url": "https://clawskills.sh/skills/psyduckler-aeo-prompt-frequency-analyzer",
+      "description": "Analyze what search queries Gemini uses when answering a prompt, by running it multiple times with Google Search.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aeo-prompt-research-free",
+      "url": "https://clawskills.sh/skills/psyduckler-aeo-prompt-research-free",
+      "description": "Discover which AI prompts and topics matter for a brand's Answer Engine Optimization (AEO) using only free tools.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-hq",
+      "url": "https://clawskills.sh/skills/thibautrey-agent-hq",
+      "description": "Deploy the Agent HQ mission-control stack (Express + React + Telegram notifier / Jarvis summary) so other Clawdbot.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-self-governance",
+      "url": "https://clawskills.sh/skills/bowen31337-agent-self-governance",
+      "description": "Self-governance protocol for autonomous agents: WAL (Write-Ahead Log), VBR (Verify Before Reporting), ADL.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentic-devops",
+      "url": "https://clawskills.sh/skills/tkuehnl-agentic-devops",
+      "description": "Production-grade agent DevOps toolkit — Docker, process management, log analysis, and health monitoring.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentmemory",
+      "url": "https://clawskills.sh/skills/badaramoni-agentmemory",
+      "description": "End-to-end encrypted cloud memory for AI agents.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "atxp",
+      "url": "https://clawskills.sh/skills/emilioacc-atxp",
+      "description": "Access ATXP paid API tools for web search, AI image generation, music creation,.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "cad-agent",
+      "url": "https://github.com/clawdbot/skills/tree/main/skills/clawd-maf/cad-agent/SKILL.md",
+      "description": "Rendering server for AI agents doing CAD work.",
+      "priority_tags": [
+        "github_dev_workflow",
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "calorie-visualizer",
+      "url": "https://clawskills.sh/skills/vintlin-calorie-visualizer",
+      "description": "Local calorie logging and visual reporting (auto-refreshes and returns report image after each log)",
+      "priority_tags": [
+        "docs_markdown",
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "skywork-design",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/gxcun17/skywork-design/SKILL.md",
+      "description": "Generate and edit images via Skywork Image for posters, logos and more.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ai-video-remix",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/abu-shotai/ai-video-remix/SKILL.md",
+      "description": "AI-driven video remix from local library using ShotAI.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apple-mail-search",
+      "url": "https://clawskills.sh/skills/mneves75-apple-mail-search",
+      "description": "Fast Apple Mail search via SQLite on macOS.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apple-music",
+      "url": "https://clawskills.sh/skills/tyler6204-apple-music",
+      "description": "Search Apple Music, add songs to library, manage playlists, control.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apple-search-ads-skill",
+      "url": "https://clawskills.sh/skills/trebuhs-apple-search-ads-skill",
+      "description": "Manage Apple Search Ads campaigns, ad groups, keywords, and reports via the asa-cli tool.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "academic-deep-research",
+      "url": "https://clawskills.sh/skills/kesslerio-academic-deep-research",
+      "description": "Transparent, rigorous research with full.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "academic-writing",
+      "url": "https://clawskills.sh/skills/teamolab-academic-writing",
+      "description": "You are an academic writing expert specializing in scholarly papers, literature reviews, research methodology.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "academic-writing-refiner",
+      "url": "https://clawskills.sh/skills/zihan-zhu-academic-writing-refiner",
+      "description": "Refine academic writing for computer science research papers targeting top-tier venues (NeurIPS, ICLR, ICML, AAAI.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aclawdemy",
+      "url": "https://clawskills.sh/skills/nimhar-aclawdemy",
+      "description": "The academic research platform for AI agents.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aerobase-skill",
+      "url": "https://clawskills.sh/skills/kurosh87-aerobase-skill",
+      "description": "Search, score, and compare flights with jetlag impact analysis.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-deep-research",
+      "url": "https://clawskills.sh/skills/24601-agent-deep-research",
+      "description": "Autonomous deep research powered by Google Gemini.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-lightning",
+      "url": "https://clawskills.sh/skills/olmmlo-cmd-agent-lightning",
+      "description": "Microsoft Research's agent training framework.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentic-paper-digest",
+      "url": "https://clawskills.sh/skills/matanle51-agentic-paper-digest",
+      "description": "Fetches and summarizes recent arXiv and Hugging.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentic-paper-digest-skill",
+      "url": "https://clawskills.sh/skills/matanle51-agentic-paper-digest-skill",
+      "description": "Fetches and summarizes recent arXiv.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agnxi-search-skill",
+      "url": "https://clawskills.sh/skills/doanbactam-agnxi-search-skill",
+      "description": "The official search utility for Agnxi.com.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ahmed",
+      "url": "https://clawskills.sh/skills/engahmedsalah358-lgtm-ahmed",
+      "description": "Terminal Spotify playback/search via spogo (preferred)",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "airbnb",
+      "url": "https://clawskills.sh/skills/stveenli-airbnb",
+      "description": "Search Airbnb listings with prices, ratings, and direct links.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "openclaw-free-web-search",
+      "url": "https://clawskills.sh/skills/wd041216-bit-openclaw-free-web-search",
+      "description": "Free, private web search for OpenClaw with self-hosted SearXNG + Scrapling anti-bot + multi-source cross-validation. Zero API keys, zero cost. Tells you how much to trust the answer.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "skywork-search",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/gxcun17/skywork-search/SKILL.md",
+      "description": "AI-powered web search for real-time information — retrieve up-to-date content.",
+      "priority_tags": [
+        "github_dev_workflow",
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "clawddocs",
+      "url": "https://clawskills.sh/skills/nicholasspisak-clawddocs",
+      "description": "Clawdbot documentation expert with decision tree navigation.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "advisory-council",
+      "url": "https://clawskills.sh/skills/ryandeangraves-advisory-council",
+      "description": "**You MUST actually execute the Python command using your shell/exec tool.** Read the real output.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-hardening",
+      "url": "https://clawskills.sh/skills/x1xhlol-agent-hardening",
+      "description": "Test your agent's input sanitization against common injection attacks.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aholake-expense-tracker",
+      "url": "https://clawskills.sh/skills/aholake-aholake-expense-tracker",
+      "description": "Track daily expenses in structured markdown files organized by month.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "audit-code",
+      "url": "https://clawskills.sh/skills/itsnishi-audit-code",
+      "description": "Security-focused code review for hardcoded secrets, dangerous calls, and common vulnerabilities.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apollo",
+      "url": "https://clawskills.sh/skills/jhumanj-apollo",
+      "description": "Interact with Apollo.io REST API (people/org enrichment, search, lists).",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "auto-skill-hunter",
+      "url": "https://clawskills.sh/skills/wanng-ide-auto-skill-hunter",
+      "description": "Proactively discovers, ranks, and installs high-value ClawHub skills by mining unresolved user needs and agent.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "beads",
+      "url": "https://clawskills.sh/skills/rnijhara-beads",
+      "description": "Git-backed issue tracker for AI agents.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bluesky",
+      "url": "https://clawskills.sh/skills/jeffaf-bluesky",
+      "description": "Complete Bluesky CLI: post, reply, like, repost, follow, block, mute, search,.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "socialecho-social-media-management-agent",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/socialecho-net/socialecho-social-media-management-agent/SKILL.md",
+      "description": "SocialEcho API team account article report queries.",
+      "priority_tags": [
+        "github_dev_workflow",
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "atlassian-mcp",
+      "url": "https://clawskills.sh/skills/atakanermis-atlassian-mcp",
+      "description": "Run the Model Context Protocol (MCP) Atlassian server.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "boss-ai-agent",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/tonypk/boss-ai-agent/SKILL.md",
+      "description": "AI management middleware with 14 mentors and 9 culture packs.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aap-passport",
+      "url": "https://clawskills.sh/skills/ira-hash-aap-passport",
+      "description": "Agent Attestation Protocol - The Reverse Turing Test.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ag-model-usage",
+      "url": "https://clawskills.sh/skills/ls18166407597-design-ag-model-usage",
+      "description": "Use CodexBar CLI local cost usage to summarize.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-docs",
+      "url": "https://clawskills.sh/skills/tylervovan-agent-docs",
+      "description": "Create documentation optimized for AI agent consumption.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentbase",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/revmischa/agentbase/SKILL.md",
+      "description": "Shared knowledge base for AI agents via MCP.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "cicd-pipeline",
+      "url": "https://clawskills.sh/skills/gitgoodordietrying-cicd-pipeline",
+      "description": "Create, debug, and manage CI/CD pipelines with GitHub.",
+      "priority_tags": [
+        "github_dev_workflow",
+        "coding_agent",
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "csv-pipeline",
+      "url": "https://clawskills.sh/skills/gitgoodordietrying-csv-pipeline",
+      "description": "Process, transform, analyze, and report on CSV and JSON.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "daily-report",
+      "url": "https://clawskills.sh/skills/visualdeptcreative-daily-report",
+      "description": "Track progress, report metrics, manage memory.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "data-analyst",
+      "url": "https://clawskills.sh/skills/oyi77-data-analyst",
+      "description": "Data visualization, report generation, SQL queries, and spreadsheet.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "skywork-excel",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/gxcun17/skywork-excel/SKILL.md",
+      "description": "AI-powered spreadsheet operations for creating, analyzing and generating reports.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "anime",
+      "url": "https://clawskills.sh/skills/jeffaf-anime",
+      "description": "CLI for AI agents to search and lookup anime info for their humans.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "anime-lookup",
+      "url": "https://clawskills.sh/skills/jeffaf-anime-lookup",
+      "description": "CLI for AI agents to search and lookup anime info for their humans.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "chill-institute",
+      "url": "https://clawskills.sh/skills/baanish-chill-institute",
+      "description": "Use chill.institute (web UI) to search for content and click.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-memory-ultimate",
+      "url": "https://clawskills.sh/skills/globalcaos-agent-memory-ultimate",
+      "description": "Production-ready memory system — daily logs, sleep consolidation, SQLite + FTS5, WhatsApp/ChatGPT/VCF importers.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-wal",
+      "url": "https://clawskills.sh/skills/bowen31337-agent-wal",
+      "description": "Write-Ahead Log protocol for agent state persistence.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bear-notes",
+      "url": "https://clawskills.sh/skills/steipete-bear-notes",
+      "description": "Create, search, and manage Bear notes via grizzly.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bookstack",
+      "url": "https://clawskills.sh/skills/xenofex7-bookstack",
+      "description": "BookStack Wiki & Documentation API integration.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "brainrepo",
+      "url": "https://clawskills.sh/skills/codezz-brainrepo",
+      "description": "Your personal knowledge repository — capture, organize, and retrieve.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "cairn-cli",
+      "url": "https://clawskills.sh/skills/gregoryehill-cairn-cli",
+      "description": "Project management for AI agents using markdown files.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "chaos-mind",
+      "url": "https://clawskills.sh/skills/hargabyte-chaos-mind",
+      "description": "Hybrid search memory system for AI agents.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apple-docs",
+      "url": "https://clawskills.sh/skills/thesethrose-apple-docs",
+      "description": "Query Apple Developer Documentation, APIs, and WWDC videos.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "swiftui-view-refactor",
+      "url": "https://clawskills.sh/skills/steipete-swiftui-view-refactor",
+      "description": "Refactor and review SwiftUI view files.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bahn",
+      "url": "https://clawskills.sh/skills/tobiasbischoff-bahn",
+      "description": "Search Deutsche Bahn train connections using the bahn-cli tool.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "canvas-design",
+      "url": "https://clawskills.sh/skills/seanphan-canvas-design",
+      "description": "Create beautiful visual art in .png and .pdf documents.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "docstrange",
+      "url": "https://clawskills.sh/skills/shhdwi-docstrange",
+      "description": "Document extraction API by Nanonets.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "arc-skill-sandbox",
+      "url": "https://clawskills.sh/skills/trypto1019-arc-skill-sandbox",
+      "description": "Test untrusted skills in an isolated environment before installing.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "calorie-counter",
+      "url": "https://clawskills.sh/skills/cnqso-calorie-counter",
+      "description": "Track daily calorie and protein intake, set goals, and log.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "critpt-solver",
+      "url": "https://clawskills.sh/skills/wanng-ide-critpt-solver",
+      "description": "Validates and executes Python solutions for CritPt benchmark problems.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apple-mail-search-safe",
+      "url": "https://clawskills.sh/skills/gumadeiras-apple-mail-search-safe",
+      "description": "Fast & safe Apple Mail search with body.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "beeper",
+      "url": "https://clawskills.sh/skills/krausefx-beeper",
+      "description": "Search and browse local Beeper chat history.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bookameeting",
+      "url": "https://clawskills.sh/skills/yzlee-bookameeting",
+      "description": "Use this document to connect an AI agent to Book A Meeting via MCP.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "elevenlabs-agents",
+      "url": "https://clawskills.sh/skills/pennyroyaltea-elevenlabs-agents",
+      "description": "Create, manage, and deploy ElevenLabs.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "fivem-dev",
+      "url": "https://clawskills.sh/skills/dktrn9ne-fivem-dev",
+      "description": "FiveM RP server engineering for QBCore, ESX.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "amadeus-hotels",
+      "url": "https://clawskills.sh/skills/kesslerio-amadeus-hotels",
+      "description": "Search hotel prices and availability via Amadeus API.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "amazon-orders",
+      "url": "https://clawskills.sh/skills/pfernandez98-amazon-orders",
+      "description": "Download and query your Amazon order history via an unofficial Python API and CLI.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "black-box",
+      "url": "https://clawskills.sh/skills/lilyjazz-black-box",
+      "description": "Indestructible audit logs for agent actions, stored in TiDB Zero.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "broken-link-checker",
+      "url": "https://clawskills.sh/skills/wanng-ide-broken-link-checker",
+      "description": "verify external URLs (http/https) for availability (200-399 status code).",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "doc-accurate-codegen",
+      "url": "https://clawskills.sh/skills/tobisamaa-doc-accurate-codegen",
+      "description": "Generate code that references actual documentation, preventing hallucination bugs.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "add-watermark-to-pdf",
+      "url": "https://clawskills.sh/skills/crossservicesolutions-add-watermark-to-pdf",
+      "description": "Add a text watermark to one or multiple PDFs by uploading them to the Solutions API, polling until completion.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ai-pdf-builder",
+      "url": "https://clawskills.sh/skills/nextfrontierbuilds-ai-pdf-builder",
+      "description": "AI-powered PDF generator for legal docs, pitch.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "blankfiles",
+      "url": "https://clawskills.sh/skills/seblavoie-blankfiles",
+      "description": "Use blankfiles.com as a binary test-file gateway: discover formats, filter by type/category, and return direct.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "book-reader",
+      "url": "https://clawskills.sh/skills/josharsh-book-reader",
+      "description": "Read books (epub, pdf, txt) from various sources with progress tracking.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "change-pdf-permissions",
+      "url": "https://clawskills.sh/skills/crossservicesolutions-change-pdf-permissions",
+      "description": "Change a PDF’s permission flags (edit, print, copy, forms, annotations, etc.) by uploading it to the Solutions API.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "comms-md",
+      "url": "https://clawskills.sh/skills/stedmanhalliday-comms-md",
+      "description": "Create a COMMS.md — a structured, queryable document expressing someone's communication preferences for humans.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "confluence",
+      "url": "https://clawskills.sh/skills/francisbrero-confluence",
+      "description": "Search and manage Confluence pages and spaces using confluence-cli.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bluente-translate",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/varsmallrookie/bluente-translate/SKILL.md",
+      "description": "Translate your documents with formatting intact in 2 minutes.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "skywork-document",
+      "url": "https://github.com/openclaw/skills/blob/main/skills/gxcun17/skywork-document/SKILL.md",
+      "description": "Generate professional documents from prompts with automatic web search for up-to-date content.",
+      "priority_tags": [
+        "github_dev_workflow",
+        "docs_markdown",
+        "research_search"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "fast-io",
+      "url": "https://clawskills.sh/skills/dbalve-fast-io",
+      "description": "Cloud file management and collaboration platform.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "fastio-skills",
+      "url": "https://clawskills.sh/skills/dbalve-fastio-skills",
+      "description": "Cloud file management and collaboration platform.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "keepmyclaw",
+      "url": "https://clawskills.sh/skills/ryce-keepmyclaw",
+      "description": "Encrypted cloud backup and restore for OpenClaw workspaces.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "paperless",
+      "url": "https://clawskills.sh/skills/nickchristensen-paperless",
+      "description": "Interact with Paperless-NGX document management system via ppls.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "paperless-ngx",
+      "url": "https://clawskills.sh/skills/oskarstark-paperless-ngx",
+      "description": "Interact with Paperless-ngx document management system.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "pinme",
+      "url": "https://clawskills.sh/skills/ntlx-pinme",
+      "description": "Deploy static websites to IPFS with a single command using PinMe CLI.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-security-harness",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/msaleme/agent-security-harness/SKILL.md",
+      "description": "Security testing for AI agent wire protocols and platforms.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "auditing-appstore-readiness",
+      "url": "https://clawskills.sh/skills/tristanmanchester-auditing-appstore-readiness",
+      "description": "Audit an iOS app repo.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "clawaudit",
+      "url": "https://clawskills.sh/skills/tezatezaz-clawaudit",
+      "description": "Official repo for clawaudit, coming soon as an automated security.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "clawdstrike-test",
+      "url": "https://clawskills.sh/skills/misirov-clawdstrike-test",
+      "description": "Security audit and threat model for OpenClaw gateway hosts.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "trentclaw",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/trent-ai-release/trentclaw/SKILL.md",
+      "description": "Finds chained attack paths across config, secrets, and permissions.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "gohome",
+      "url": "https://clawskills.sh/skills/local-gohome",
+      "description": "Use when Moltbot needs to test or operate GoHome via gRPC discovery, metrics,.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "moltbot-docker",
+      "url": "https://clawskills.sh/skills/mkrdiop-moltbot-docker",
+      "description": "Enables the bot to manage Docker containers, images, and stacks.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "hytale",
+      "url": "https://clawskills.sh/skills/newcastlegeek-hytale",
+      "description": "Manage a local Hytale dedicated server using the official downloader.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/smart-home-and-iot.md",
+      "category": "Smart Home & IoT",
+      "name": "fivem-dev",
+      "url": "https://clawskills.sh/skills/dktrn9ne-fivem-dev",
+      "description": "FiveM RP server engineering for QBCore, ESX.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/smart-home-and-iot.md",
+      "category": "Smart Home & IoT",
+      "name": "homey",
+      "url": "https://clawskills.sh/skills/maxsumrall-homey",
+      "description": "Control Athom Homey smart home devices via local (LAN/VPN) or cloud APIs.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [],
+      "recommendation": "review_candidate_read_only"
+    }
+  ],
+  "rejected_sample": [
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "abm-outbound",
+      "url": "https://clawskills.sh/skills/dru-ca-abm-outbound",
+      "description": "Multi-channel ABM automation that turns LinkedIn URLs.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "Agent Browser",
+      "url": "https://clawskills.sh/skills/thesethrose-agent-browser",
+      "description": "A fast Rust-based headless browser automation CLI.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-browser",
+      "url": "https://clawskills.sh/skills/murphykobe-agent-browser-2",
+      "description": "Automates browser interactions for web testing, form.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agresource",
+      "url": "https://clawskills.sh/skills/brianppetty-agresource",
+      "description": "Use this skill to scrape, summarize, and analyze AgResource grain marketing newsletters.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ai-hunter-pro",
+      "url": "https://clawskills.sh/skills/traprapitalianazional-dev-ai-hunter-pro",
+      "description": "A high-performance automation agent that turns global trends into viral social media posts for X (Twitter)",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "adspower-browser",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/adspower/adspower-browser",
+      "description": "Use when the user asks to create or manage AdsPower browsers, groups, tags, proxies, or check status via AdsPower Local API.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "0xwork",
+      "url": "https://clawskills.sh/skills/jkillr-0xwork",
+      "description": "Find and complete paid tasks on the 0xWork decentralized marketplace (Base chain, USDC escrow)",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "actionbook",
+      "url": "https://clawskills.sh/skills/adcentury-actionbook",
+      "description": "Activate when the user needs to interact with any website — browser automation, web scraping, screenshots, form.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentic-browser-0-1-2",
+      "url": "https://clawskills.sh/skills/xyny89-agentic-browser-0-1-2",
+      "description": "Browser automation for AI agents via inference.sh.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "abstract-searcher",
+      "url": "https://clawskills.sh/skills/easonc13-abstract-searcher",
+      "description": "Add abstracts to .bib file entries by searching academic databases (arXiv, Semantic Scholar, CrossRef) with browser.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentkeys",
+      "url": "https://clawskills.sh/skills/alexandr-belogubov-agentkeys",
+      "description": "Secure credential proxy for AI agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agents-skill-podcastifier",
+      "url": "https://clawskills.sh/skills/cerbug45-agents-skill-podcastifier",
+      "description": "Turn incoming text (email/newsletter) into a short TTS podcast with chunking + ffmpeg concat.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aikek",
+      "url": "https://clawskills.sh/skills/vvsotnikov-aikek",
+      "description": "Access AIKEK APIs for crypto/DeFi research and image generation.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aiusd",
+      "url": "https://clawskills.sh/skills/chaunceyliu-aiusd",
+      "description": "AIUSD trading and account management skill.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aiusd-skills",
+      "url": "https://clawskills.sh/skills/chaunceyliu-aiusd-skills",
+      "description": "AIUSD trading and account management skill.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ics-import-on-iphone",
+      "url": "https://clawskills.sh/skills/sbhhbs-ics-import-on-iphone",
+      "description": "Create calendar events by generating valid .ics files when direct calendar access is unavailable.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agenticmail",
+      "url": "https://clawskills.sh/skills/ope-olatunji-agenticmail",
+      "description": "🎀 AgenticMail — Full email, SMS, storage & multi-agent coordination for AI agents. 63 tools.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ai-lead-generator-skill",
+      "url": "https://clawskills.sh/skills/highlander89-ai-lead-generator-skill",
+      "description": "Generate qualified B2B leads for any industry using AI-powered research and LinkedIn/Apollo integration.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "xquik-x-twitter-scraper",
+      "url": "https://clawskills.sh/skills/kriptoburak-xquik-x-twitter-scraper",
+      "description": "X API scraper with 40+ tools for AI agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-browser",
+      "url": "https://clawskills.sh/skills/matrixy-agent-browser-clawdbot",
+      "description": "Headless browser automation CLI optimized for AI agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "13-day-sprint-method",
+      "url": "https://clawskills.sh/skills/galizki-13-day-sprint-method",
+      "description": "Productivity system based on Maya calendar with 13 natural tones for project management and personal development.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "a-share-short-decision",
+      "url": "https://clawskills.sh/skills/kenera-a-share-short-decision",
+      "description": "A-share short-term trading decision skill for 1-5 day horizon.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bandwidth-income",
+      "url": "https://clawskills.sh/skills/mariusfit-bandwidth-income",
+      "description": "Turn your unused internet bandwidth into passive crypto income.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "captcha-ai",
+      "url": "https://clawskills.sh/skills/fusionlabssource-captcha-ai",
+      "description": "Issue ClawPrint reverse-CAPTCHA challenges to verify.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bird",
+      "url": "https://clawskills.sh/skills/steipete-bird",
+      "description": "X/Twitter CLI for reading, searching, and posting via cookies or Sweetistics.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "blog-to-kindle",
+      "url": "https://clawskills.sh/skills/ainekomacx-blog-to-kindle",
+      "description": "Scrape blogs/essay sites and compile into Kindle-friendly.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "brevo",
+      "url": "https://clawskills.sh/skills/yujesyoga-brevo",
+      "description": "Brevo (formerly Sendinblue) email marketing API for managing contacts, lists,.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "postiz",
+      "url": "https://github.com/openclaw/skills/tree/main/skills/nevo-david/postiz/SKILL.md",
+      "description": "Schedule social media posts and threads across 28+ platforms.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "adaptlypost",
+      "url": "https://clawskills.sh/skills/tarasshyn-adaptlypost",
+      "description": "Schedule and manage social media posts across Instagram, X (Twitter), Bluesky, TikTok, Threads, LinkedIn, Facebook.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-earner",
+      "url": "https://clawskills.sh/skills/mmchougule-agent-earner",
+      "description": "Earn USDC and tokens autonomously across ClawTasks and OpenWork.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-registry",
+      "url": "https://clawskills.sh/skills/matrixy-agent-registry",
+      "description": "MANDATORY agent discovery system for token-efficient agent.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "data-enricher",
+      "url": "https://clawskills.sh/skills/visualdeptcreative-data-enricher",
+      "description": "Enrich leads with email addresses and format data.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "facebook-page-manager",
+      "url": "https://clawskills.sh/skills/longmaba-facebook-page-manager",
+      "description": "Manage Facebook Pages via Meta Graph API.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "linkdapi",
+      "url": "https://clawskills.sh/skills/foontinz-linkdapi",
+      "description": "Work with LinkdAPI Python SDK for accessing LinkedIn professional profile.",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "audio-transcribe",
+      "url": "https://clawskills.sh/skills/aktheknight-audio-transcribe",
+      "description": "Auto-transcribe voice messages using faster-whisper (local, no API key needed).",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "betbud-prediction-skill",
+      "url": "https://clawskills.sh/skills/samj12-betbud-prediction-skill",
+      "description": "Scans recent X posts for the most debated/hot topic right now in a given category (e.g., crypto, tech, sports.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "cacheforge-setup",
+      "url": "https://clawskills.sh/skills/tkuehnl-cacheforge-setup",
+      "description": "Set up CacheForge — register, configure upstream, get your API key in 30 seconds.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "calctl",
+      "url": "https://clawskills.sh/skills/rainbat-calctl",
+      "description": "Manage Apple Calendar events via icalBuddy + AppleScript CLI.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "auction-house",
+      "url": "https://clawskills.sh/skills/im-still-thinking-auction-house",
+      "description": "Scout, monitor, and bid on auctions on House (houseproto.fun) — a crypto auction platform on Base.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bookkeeper",
+      "url": "https://clawskills.sh/skills/h4gen-bookkeeper",
+      "description": "Meta-skill for pre-accounting automation by orchestrating gmail, deepread-ocr, stripe-api, and xero.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apikiss",
+      "url": "https://clawskills.sh/skills/theill-apikiss",
+      "description": "Access weather, IP geolocation, SMS, crypto prices, Danish CVR, Whois, phone lookup, UUID, stock data.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "crypto-hackathon",
+      "url": "https://clawskills.sh/skills/swairshah-crypto-hackathon",
+      "description": "Use when participating in the USDC Hackathon, submitting projects, or voting. 3 tracks: SmartContract, Skill.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aa",
+      "url": "https://clawskills.sh/skills/azvast-aa",
+      "description": "This skill enables the agent to **automatically answer Gmail messages on behalf of a client**.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-mail",
+      "url": "https://clawskills.sh/skills/rimelucci-agent-mail",
+      "description": "Email inbox for AI agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-mail-cli",
+      "url": "https://clawskills.sh/skills/rimelucci-agent-mail-cli",
+      "description": "Email inbox for AI agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agenthc-market-intelligence",
+      "url": "https://clawskills.sh/skills/traderhc123-agenthc-market-intelligence",
+      "description": "Real-time stock market data and trading intelligence API. 85 intelligence modules, 40 encoded intelligence skills.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bird-dms",
+      "url": "https://clawskills.sh/skills/tolibear-bird-dms",
+      "description": "An add-on to the Bird skill that lets your agent check its X/Twitter DM.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bitkit-cli",
+      "url": "https://clawskills.sh/skills/ovitrif-bitkit-cli",
+      "description": "Bitcoin Lightning payment CLI for agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "blogburst",
+      "url": "https://clawskills.sh/skills/shensi8312-blogburst",
+      "description": "Turn any article into 10+ social media posts in seconds.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "checkers-sixty60",
+      "url": "https://clawskills.sh/skills/snopoke-checkers-sixty60",
+      "description": "Shop on Checkers.co.za Sixty60 delivery service via browser.",
+      "priority_tags": [],
+      "block_tags": [
+        "browser_or_scraping"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "claudius",
+      "url": "https://clawskills.sh/skills/claudiusaipro-claudius",
+      "description": "Crypto intelligence powered by Claudius.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "clawdbites",
+      "url": "https://clawskills.sh/skills/kylelol-clawdbites",
+      "description": "Extract recipes from Instagram reels.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "crypto-regime-report",
+      "url": "https://clawskills.sh/skills/heyztb-crypto-regime-report",
+      "description": "Generate market regime reports for crypto perpetuals using Supertrend and ADX indicators.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "accli",
+      "url": "https://clawskills.sh/skills/joargp-accli",
+      "description": "This skill should be used when interacting with Apple Calendar on macOS.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "accli-plus",
+      "url": "https://clawhub.ai/gopaljigaur/accli-plus",
+      "description": "Extended Apple Calendar CLI for macOS — adds search, export, dry-run, recurring events, alerts, and full error codes on top of accli.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "advanced-calendar",
+      "url": "https://clawskills.sh/skills/toughworm-advanced-calendar",
+      "description": "Advanced calendar skill with natural language.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "apple-calendar",
+      "url": "https://clawskills.sh/skills/tyler6204-apple-calendar",
+      "description": "Apple Calendar.app integration for macOS.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "brainz-calendar",
+      "url": "https://clawskills.sh/skills/xejrax-brainz-calendar",
+      "description": "Manage Google Calendar events using `gcalcli`.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "calcurse",
+      "url": "https://clawskills.sh/skills/gumadeiras-calcurse",
+      "description": "A text-based calendar and scheduling application.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "calendar-scheduling",
+      "url": "https://clawskills.sh/skills/billylui-calendar-scheduling",
+      "description": "Schedule and book across Google, Outlook, and CalDAV.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "caldav-calendar",
+      "url": "https://clawskills.sh/skills/asleep123-caldav-calendar",
+      "description": "Sync and query CalDAV calendars.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "clippy",
+      "url": "https://clawskills.sh/skills/foeken-clippy",
+      "description": "Microsoft 365 / Outlook CLI for calendar and email.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "fastmail",
+      "url": "https://clawskills.sh/skills/witooh-fastmail",
+      "description": "Manages Fastmail email and calendar via JMAP and CalDAV APIs.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "feishu-calendar",
+      "url": "https://clawskills.sh/skills/autogame-17-feishu-calendar",
+      "description": "Manage Feishu (Lark) Calendars.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "gcal-pro",
+      "url": "https://clawskills.sh/skills/bilalmohamed187-cpu-gcal-pro",
+      "description": "Google Calendar integration for viewing, creating, and managing.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "gog",
+      "url": "https://clawskills.sh/skills/steipete-gog",
+      "description": "Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "google-calendar",
+      "url": "https://clawskills.sh/skills/adrianmiller99-google-calendar",
+      "description": "Interact with Google Calendar via the Google Calendar.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "confidant",
+      "url": "https://clawskills.sh/skills/ericsantos-confidant",
+      "description": "Secure secret handoff from human to AI.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "beacon",
+      "url": "https://clawskills.sh/skills/scottcjn-beacon",
+      "description": "Agent-to-agent protocol for social coordination, crypto payments, and P2P mesh.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "1password",
+      "url": "https://clawskills.sh/skills/steipete-1password",
+      "description": "Set up and use 1Password CLI (op).",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "1claw",
+      "url": "https://clawskills.sh/skills/kmjones1979-1claw",
+      "description": "HSM-backed vault for agent secrets; store, rotate, share securely.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bitwarden",
+      "url": "https://clawskills.sh/skills/asleep123-bitwarden",
+      "description": "Access and manage Bitwarden/Vaultwarden passwords securely.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bitwarden-vault",
+      "url": "https://clawskills.sh/skills/startupbros-bitwarden-vault",
+      "description": "Bitwarden CLI setup, authentication.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "cifer-sdk",
+      "url": "https://clawskills.sh/skills/mohsinriaz17-cifer-sdk",
+      "description": "> **Skill for AI Agents** | Enable quantum-resistant encryption in blockchain applications using the CIFER SDK.",
+      "priority_tags": [],
+      "block_tags": [
+        "crypto_finance"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "credential-manager",
+      "url": "https://clawskills.sh/skills/callmedas69-credential-manager",
+      "description": "MANDATORY security foundation for OpenClaw.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "dashlane",
+      "url": "https://clawskills.sh/skills/gnarco-dashlane",
+      "description": "Access passwords, secure notes, secrets and OTP codes from Dashlane vault.",
+      "priority_tags": [],
+      "block_tags": [
+        "credential_or_secret"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "facebook",
+      "url": "https://clawskills.sh/skills/codedao12-facebook",
+      "description": "OpenClaw skill for Facebook Graph API workflows focused on Pages posting,.",
+      "priority_tags": [],
+      "block_tags": [
+        "social_posting"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "mailchannels",
+      "url": "https://clawskills.sh/skills/ttulttul-mailchannels",
+      "description": "Send email via MailChannels Email API and ingest signed.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "accli",
+      "url": "https://clawskills.sh/skills/joargp-accli",
+      "description": "This skill should be used when interacting with Apple Calendar on macOS.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "accli-plus",
+      "url": "https://clawhub.ai/gopaljigaur/accli-plus",
+      "description": "Extended Apple Calendar CLI for macOS — adds search, export, dry-run, recurring events, alerts, and full error codes on top of accli.",
+      "priority_tags": [
+        "research_search"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "advanced-calendar",
+      "url": "https://clawskills.sh/skills/toughworm-advanced-calendar",
+      "description": "Advanced calendar skill with natural language.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "agency-guardian",
+      "url": "https://clawskills.sh/skills/aranej-agency-guardian",
+      "description": "Gentle reminders to stay human while using AI.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "agent-tinman",
+      "url": "https://clawskills.sh/skills/oliveskin-agent-tinman",
+      "description": "AI security scanner with active prevention - 168 detection.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "apple-calendar",
+      "url": "https://clawskills.sh/skills/tyler6204-apple-calendar",
+      "description": "Apple Calendar.app integration for macOS.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "apple-reminders",
+      "url": "https://clawskills.sh/skills/steipete-apple-reminders",
+      "description": "Manage Apple Reminders via the `remindctl` CLI on macOS.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "belong-events",
+      "url": "https://clawskills.sh/skills/nomadcalendar-belong-events",
+      "description": "Create, discover, and manage events with NFT tickets on the Belong platform.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "brainz-calendar",
+      "url": "https://clawskills.sh/skills/xejrax-brainz-calendar",
+      "description": "Manage Google Calendar events using `gcalcli`.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "broken-link-checker",
+      "url": "https://clawskills.sh/skills/wanng-ide-broken-link-checker",
+      "description": "verify external URLs (http/https) for availability (200-399 status code).",
+      "priority_tags": [
+        "coding_agent"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "calcurse",
+      "url": "https://clawskills.sh/skills/gumadeiras-calcurse",
+      "description": "A text-based calendar and scheduling application.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "calendar-scheduling",
+      "url": "https://clawskills.sh/skills/billylui-calendar-scheduling",
+      "description": "Schedule and book across Google, Outlook, and CalDAV.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "caldav-calendar",
+      "url": "https://clawskills.sh/skills/asleep123-caldav-calendar",
+      "description": "Sync and query CalDAV calendars.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "clippy",
+      "url": "https://clawskills.sh/skills/foeken-clippy",
+      "description": "Microsoft 365 / Outlook CLI for calendar and email.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "creative-thought-partner",
+      "url": "https://clawskills.sh/skills/vincentchan-creative-thought-partner",
+      "description": "A conversational creative thought.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "cron-optimizer",
+      "url": "https://clawskills.sh/skills/autogame-17-cron-optimizer",
+      "description": "Optimizes system cron jobs by removing stale, disabled, or redundant entries to reduce exec noise.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "cron-scheduling",
+      "url": "https://clawskills.sh/skills/gitgoodordietrying-cron-scheduling",
+      "description": "Schedule and manage recurring tasks with cron.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "dharma-ai",
+      "url": "https://clawskills.sh/skills/jigaraero-dharma-ai",
+      "description": "Apply ancient Hindu ethical frameworks from the Ramayana and Mahabharata as behavioral principles for AI agents.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "doc-accurate-codegen",
+      "url": "https://clawskills.sh/skills/tobisamaa-doc-accurate-codegen",
+      "description": "Generate code that references actual documentation, preventing hallucination bugs.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "event-watcher",
+      "url": "https://clawskills.sh/skills/solitaire2015-event-watcher",
+      "description": "Event watcher skill for OpenClaw.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "farmos-equipment",
+      "url": "https://clawskills.sh/skills/brianppetty-farmos-equipment",
+      "description": "Query equipment status, maintenance schedules, and service history for the farm fleet.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "fastmail",
+      "url": "https://clawskills.sh/skills/witooh-fastmail",
+      "description": "Manages Fastmail email and calendar via JMAP and CalDAV APIs.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "feishu-calendar",
+      "url": "https://clawskills.sh/skills/autogame-17-feishu-calendar",
+      "description": "Manage Feishu (Lark) Calendars.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "feishu-whiteboard",
+      "url": "https://clawskills.sh/skills/autogame-17-feishu-whiteboard",
+      "description": "Allows creating and manipulating Feishu Whiteboards.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "finance-tracker",
+      "url": "https://clawskills.sh/skills/salen-project-finance-tracker",
+      "description": "Complete personal finance management.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "firefly-iii",
+      "url": "https://clawskills.sh/skills/pushp1997-firefly-iii",
+      "description": "Manage personal finances via Firefly III API.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "gcal-pro",
+      "url": "https://clawskills.sh/skills/bilalmohamed187-cpu-gcal-pro",
+      "description": "Google Calendar integration for viewing, creating, and managing.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "gog",
+      "url": "https://clawskills.sh/skills/steipete-gog",
+      "description": "Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "google-calendar",
+      "url": "https://clawskills.sh/skills/adrianmiller99-google-calendar",
+      "description": "Interact with Google Calendar via the Google Calendar.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "grazy",
+      "url": "https://clawskills.sh/skills/thomyg-grazy",
+      "description": "grazy - Your Grazer Command Line Companion.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "greek-financial-statements",
+      "url": "https://clawskills.sh/skills/satoshistackalotto-greek-financial-statements",
+      "description": "Greek financial statement generation — P&L, balance sheets, VAT summaries with EGLS integration.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "habib-pdf-to-json",
+      "url": "https://clawskills.sh/skills/dbmoradi60-habib-pdf-to-json",
+      "description": "Extract structured data from construction PDFs.",
+      "priority_tags": [
+        "docs_markdown"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "ibt",
+      "url": "https://clawskills.sh/skills/palxislabs-ibt",
+      "description": "Execution discipline with agency, instinct detection, critical safety rules, and trust layer. v2.5 adds human.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "ii-irc",
+      "url": "https://clawskills.sh/skills/destructatron-ii-irc",
+      "description": "Persistent IRC presence using ii (minimalist file-based IRC client)",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "islamic-skills",
+      "url": "https://clawskills.sh/skills/ilmimris-islamic-skills",
+      "description": "Unified Islamic utilities for prayer times, fasting schedules, and Zakat calculations using a shared configuration.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "jungian-psychologist",
+      "url": "https://clawskills.sh/skills/mikecourt-jungian-psychologist",
+      "description": "Expert in Jungian analytical psychology, depth.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "knhb-hockey",
+      "url": "https://clawskills.sh/skills/tader-knhb-hockey",
+      "description": "Query Dutch field hockey match schedules and results from KNHB Match.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "lark-calendar",
+      "url": "https://clawskills.sh/skills/boyangwang-lark-calendar",
+      "description": "Create, update, and delete calendar events and tasks in Lark.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "macro-regime-detector",
+      "url": "https://clawskills.sh/skills/jamierossouw-macro-regime-detector",
+      "description": "Detect the current macro regime (Risk-On, Risk-Off, Inflationary, Deflationary, Stagflation) using multi-source.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "mcd-cn",
+      "url": "https://clawskills.sh/skills/ryanchen01-mcd-cn",
+      "description": "Query McDonald's China MCP server via the mcd-cn CLI for campaign calendars,.",
+      "priority_tags": [
+        "devops_cloud"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "meeting-prep",
+      "url": "https://clawskills.sh/skills/hougangdev-meeting-prep",
+      "description": "Meeting preparation and daily commit summaries.",
+      "priority_tags": [
+        "github_dev_workflow"
+      ],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "categories/calendar-and-scheduling.md",
+      "category": "Calendar & Scheduling",
+      "name": "morning-email-rollup",
+      "url": "https://clawskills.sh/skills/am-will-morning-email-rollup",
+      "description": "Daily morning rollup of important emails.",
+      "priority_tags": [],
+      "block_tags": [
+        "email_calendar"
+      ],
+      "recommendation": "reject_for_oris_runtime"
+    }
+  ],
+  "low_priority_sample": [
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-team-orchestration",
+      "url": "https://clawskills.sh/skills/arminnaimi-agent-team-orchestration",
+      "description": "Orchestrate multi-agent teams with defined roles, task lifecycles, handoff protocols, and review workflows.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentdo",
+      "url": "https://clawskills.sh/skills/wrannaman-agentdo",
+      "description": "Post tasks for other AI agents to do, or pick up work from the AgentDo task queue (agentdo.dev)",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentgate",
+      "url": "https://clawskills.sh/skills/monteslu-agentgate",
+      "description": "API gateway for personal data with human-in-the-loop write approval.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "alex-session-wrap-up",
+      "url": "https://clawskills.sh/skills/xbillwatsonx-alex-session-wrap-up",
+      "description": "End-of-session automation that commits unpushed work, extracts learnings, detects patterns, and persists rules.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "amazon-product-api-skill",
+      "url": "https://clawskills.sh/skills/phheng-amazon-product-api-skill",
+      "description": "This skill helps users extract structured product listings from Amazon, including titles, ASINs, prices, ratings.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "app-store-screenshot-generation",
+      "url": "https://clawskills.sh/skills/eftalyurtseven-app-store-screenshot-generation",
+      "description": "Generate App Store and Google Play screenshot assets using each::sense AI.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "arc-agent-lifecycle",
+      "url": "https://clawskills.sh/skills/trypto1019-arc-agent-lifecycle",
+      "description": "Manage the lifecycle of autonomous agents and their skills.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "arc-security-audit",
+      "url": "https://clawskills.sh/skills/trypto1019-arc-security-audit",
+      "description": "Comprehensive security audit for an agent's full skill stack.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "arc-skill-gitops",
+      "url": "https://clawskills.sh/skills/trypto1019-arc-skill-gitops",
+      "description": "Automated deployment, rollback, and version management for agent workflows and skills.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "arc-trust-verifier",
+      "url": "https://clawskills.sh/skills/trypto1019-arc-trust-verifier",
+      "description": "Verify skill provenance and build trust scores for ClawHub skills.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "azhua-skill-vetter",
+      "url": "https://clawskills.sh/skills/fatfingererr-azhua-skill-vetter",
+      "description": "Security-first skill vetting for AI agents.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "beeminder",
+      "url": "https://clawskills.sh/skills/ruigomeseu-beeminder",
+      "description": "Beeminder API for goal tracking and commitment devices.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "billy-emergency-repair",
+      "url": "https://clawskills.sh/skills/highlander89-billy-emergency-repair",
+      "description": "- Neill explicitly requests Billy system repair.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "bitbucket-automation",
+      "url": "https://clawskills.sh/skills/sohamganatra-bitbucket-automation",
+      "description": "Automate Bitbucket repositories, pull.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "blinko",
+      "url": "https://clawskills.sh/skills/tolibear-blinko",
+      "description": "Play Blinko (on-chain Plinko) headlessly on Abstract chain.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "0g-compute",
+      "url": "https://clawskills.sh/skills/in-liberty420-0g-compute",
+      "description": "Use cheap, TEE-verified AI models from the 0G Compute Network as OpenClaw providers.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "0protocol",
+      "url": "https://clawskills.sh/skills/0isone-0protocol",
+      "description": "Agents can sign plugins, rotate credentials without losing identity, and publicly attest to behavior.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "2nd-brain",
+      "url": "https://clawskills.sh/skills/coderaven-2nd-brain",
+      "description": "Personal knowledge base for capturing and retrieving information about people, places, restaurants, games, tech.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "2slides-skills",
+      "url": "https://clawskills.sh/skills/javainthinking-2slides-skills",
+      "description": "AI-powered presentation generation using 2slides API.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "3d-cog",
+      "url": "https://clawskills.sh/skills/nitishgargiitd-3d-cog",
+      "description": "Other tools need perfect images.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "3d-model-generation",
+      "url": "https://clawskills.sh/skills/eftalyurtseven-3d-model-generation",
+      "description": "Generate 3D models using each::sense AI.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "a",
+      "url": "https://clawskills.sh/skills/ricketh137-a",
+      "description": "Live stream as an AI VTuber on Lobster.fun.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aade-api-monitor",
+      "url": "https://clawskills.sh/skills/satoshistackalotto-aade-api-monitor",
+      "description": "Real-time monitoring of Greek AADE tax authority systems — tracks deadlines, rate changes, and compliance updates.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "abaddon",
+      "url": "https://clawskills.sh/skills/enochosbot-bot-abaddon",
+      "description": "Red team security mode for OpenClaw.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "acestep-simplemv",
+      "url": "https://clawskills.sh/skills/dumoedss-acestep-simplemv",
+      "description": "Render music videos from audio files and lyrics using Remotion.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "acestep-songwriting",
+      "url": "https://clawskills.sh/skills/dumoedss-acestep-songwriting",
+      "description": "Music songwriting guide for ACE-Step.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "achurch",
+      "url": "https://clawskills.sh/skills/lucasgeeksinthewood-achurch",
+      "description": "A 24/7 digital sanctuary for AI agents and humans — attend.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "active-maintenance",
+      "url": "https://clawskills.sh/skills/xiaowenzhou-active-maintenance",
+      "description": "**Automated system health and memory metabolism for OpenClaw.**.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "adblock-dns",
+      "url": "https://clawskills.sh/skills/picaye-adblock-dns",
+      "description": "Network-wide ad and tracker blocking at the DNS level.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "add-top-openrouter-models",
+      "url": "https://clawskills.sh/skills/chunhualiao-add-top-openrouter-models",
+      "description": "Sync OpenRouter models used by OpenClaw into this installation's config.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "adhd-founder-planner",
+      "url": "https://clawskills.sh/skills/jankutschera-adhd-founder-planner",
+      "description": "This skill should be used when the user asks to 'plan my day', 'help me plan today', 'morning planning', 'what.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "adwhiz",
+      "url": "https://clawskills.sh/skills/iamzifei-adwhiz",
+      "description": "Manage Google Ads campaigns from your AI coding tool. 44 MCP tools for auditing, creating, and optimizing Google.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aeo-prompt-question-finder",
+      "url": "https://clawskills.sh/skills/psyduckler-aeo-prompt-question-finder",
+      "description": "Find question-based Google Autocomplete suggestions for any topic.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aetherlang-claude-code",
+      "url": "https://clawskills.sh/skills/contrario-aetherlang-claude-code",
+      "description": "Use this skill to execute AetherLang V3 AI workflows from Claude Code.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-access-control",
+      "url": "https://clawskills.sh/skills/bowen31337-agent-access-control",
+      "description": "Tiered stranger access control for AI agents.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-audit",
+      "url": "https://clawskills.sh/skills/sharbelayy-agent-audit",
+      "description": "Audit your AI agent setup for performance, cost, and ROI.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-audit-trail",
+      "url": "https://clawskills.sh/skills/roosch269-agent-audit-trail",
+      "description": "Tamper-evident, hash-chained audit logging for AI agents.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-card-signing-auditor",
+      "url": "https://clawskills.sh/skills/andyxinweiminicloud-agent-card-signing-auditor",
+      "description": "Helps audit Agent Card signing practices in A2A protocol implementations.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "1p-shortlink",
+      "url": "https://clawskills.sh/skills/tuanpmt-1p-shortlink",
+      "description": "Create short URLs and submit feature requests using 1p.io.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "2captcha",
+      "url": "https://clawskills.sh/skills/adinvadim-2captcha",
+      "description": "Solve CAPTCHAs using 2Captcha service.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "a-share-real-time-data",
+      "url": "https://clawskills.sh/skills/wangdinglu-a-share-real-time-data",
+      "description": "Fetch China A-share stock market data (bars, realtime quotes, tick-by-tick transactions) via mootdx/TDX protocol.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "accessibility-toolkit",
+      "url": "https://clawskills.sh/skills/cgtreadw-accessibility-toolkit",
+      "description": "Friction-reduction patterns for agents helping.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "activecampaign",
+      "url": "https://clawskills.sh/skills/kesslerio-activecampaign",
+      "description": "ActiveCampaign CRM integration for lead management, deal.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "adcp-advertising",
+      "url": "https://clawskills.sh/skills/edyyy62-adcp-advertising",
+      "description": "Automate advertising campaigns with AI.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "admet-prediction",
+      "url": "https://clawskills.sh/skills/huifer-admet-prediction",
+      "description": "ADMET (Absorption, Distribution, Metabolism, Excretion, Toxicity) prediction for drug candidates.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-daily-planner",
+      "url": "https://clawskills.sh/skills/gpunter-agent-daily-planner",
+      "description": "A structured daily planning and execution tracking system for AI agents.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-device",
+      "url": "https://clawskills.sh/skills/okwasniewski-agent-device",
+      "description": "Automates interactions for iOS simulators/devices and Android emulators/devices.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-step-sequencer",
+      "url": "https://clawskills.sh/skills/gostlightai-agent-step-sequencer",
+      "description": "Multi-step scheduler for in-depth agent requests.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-task-tracker",
+      "url": "https://clawskills.sh/skills/rikouu-agent-task-tracker",
+      "description": "Proactive task state management.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentaudit",
+      "url": "https://clawskills.sh/skills/starbuck100-agentaudit",
+      "description": "Automatic security gate that checks packages against a vulnerability database before installation.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentaudit-skill",
+      "url": "https://clawskills.sh/skills/starbuck100-agentaudit-skill",
+      "description": "Automatic security gate that checks packages against a vulnerability database before installation.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentmail-integration",
+      "url": "https://clawskills.sh/skills/synesthesia-wav-agentmail-integration",
+      "description": "Integrate AgentMail API for AI agent.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ai-meeting-scheduling",
+      "url": "https://clawskills.sh/skills/dheerg-ai-meeting-scheduling",
+      "description": "Booking links fail for groups.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "airtable-automation",
+      "url": "https://clawskills.sh/skills/sohamganatra-airtable-automation",
+      "description": "Automate Airtable tasks via Rube MCP (Composio)",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "airtable-participants",
+      "url": "https://clawskills.sh/skills/austinmao-airtable-participants",
+      "description": "Read and query retreat participant data from the Ceremonia Airtable base.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "ak-rss-24h-brief",
+      "url": "https://clawskills.sh/skills/seandong-ak-rss-24h-brief",
+      "description": "Read RSS/Atom feeds from an OPML list, fetch articles from the last N hours, and generate a Chinese categorized.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "37soul-skill",
+      "url": "https://clawskills.sh/skills/xnjiang-37soul-skill",
+      "description": "Connect your AI agent to 37Soul virtual Host characters and enable.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "acestep",
+      "url": "https://clawskills.sh/skills/dumoedss-acestep",
+      "description": "Use ACE-Step API to generate music, edit songs, and remix music.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aegis-shield",
+      "url": "https://clawskills.sh/skills/deegerwalker-aegis-shield",
+      "description": "Prompt-injection and data-exfiltration screening for untrusted text.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aeo-analytics-free",
+      "url": "https://clawskills.sh/skills/psyduckler-aeo-analytics-free",
+      "description": "Track AI visibility — measure whether a brand is mentioned and cited by AI assistants (Gemini, ChatGPT, Perplexity)",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "aeo-content-free",
+      "url": "https://clawskills.sh/skills/psyduckler-aeo-content-free",
+      "description": "Create or refresh AEO-optimized content that gets cited by AI assistants (Gemini, ChatGPT, Perplexity)",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-analytics",
+      "url": "https://clawskills.sh/skills/dannyshmueli-agent-analytics",
+      "description": "Simple website analytics your AI agent controls end-to-end.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-chat",
+      "url": "https://clawskills.sh/skills/awlevin-agent-chat",
+      "description": "Temporary real-time chat rooms for AI agents.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-dashboard",
+      "url": "https://clawskills.sh/skills/tahseen137-agent-dashboard",
+      "description": "Real-time agent dashboard for OpenClaw.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-dispatch",
+      "url": "https://clawskills.sh/skills/userfrm-agent-dispatch",
+      "description": "Lightweight agent registry and JIT router.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-passport",
+      "url": "https://clawskills.sh/skills/markneville-agent-passport",
+      "description": "OAuth for the agentic era — consent-gating for ALL sensitive agent actions including purchases, emails, file.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-rate-limiter",
+      "url": "https://clawskills.sh/skills/mxmsabundance-agent-rate-limiter",
+      "description": "You know the drill.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-self-assessment",
+      "url": "https://clawskills.sh/skills/roosch269-agent-self-assessment",
+      "description": "Security self-assessment tool for AI agents.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-self-reflection",
+      "url": "https://clawskills.sh/skills/brennerspear-agent-self-reflection",
+      "description": "Periodic self-reflection on recent sessions.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-skills-audit",
+      "url": "https://clawskills.sh/skills/swader-agent-skills-audit",
+      "description": "Run a two-pass, multidisciplinary code audit led by a tie-breaker lead, combining security, performance, UX, DX.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-spawner",
+      "url": "https://clawskills.sh/skills/austineral-agent-spawner",
+      "description": "Spawn a new OpenClaw agent through conversation.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-swarm",
+      "url": "https://clawskills.sh/skills/runeweaverstudios-agent-swarm",
+      "description": "IMPORTANT: OpenRouter is required.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-takeover",
+      "url": "https://clawskills.sh/skills/tracsystems-agent-takeover",
+      "description": "How to perform a live agent takeover of the Clawfinger voice gateway — dial, inject greetings, handle turns.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agent-topology-visualizer",
+      "url": "https://clawskills.sh/skills/gavinnn-m-agent-topology-visualizer",
+      "description": "Generate interactive SVG architecture diagrams for AI agent systems.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentdomainservice",
+      "url": "https://clawskills.sh/skills/gregm711-agentdomainservice",
+      "description": "The world's #1 AI-friendly domain registrar.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentic-security-audit",
+      "url": "https://clawskills.sh/skills/kingrubic-agentic-security-audit",
+      "description": "Audit codebases, infrastructure, AND agentic AI systems for security issues.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "agentpay",
+      "url": "https://clawskills.sh/skills/kar69-96-agentpay",
+      "description": "Buy things from real websites on behalf of your human.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "0x0-messenger",
+      "url": "https://clawskills.sh/skills/eijiac24-0x0-messenger",
+      "description": "Send and receive P2P messages using disposable numbers and PINs.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "12306",
+      "url": "https://clawskills.sh/skills/kirorab-12306",
+      "description": "Query China Railway 12306 for train schedules, remaining tickets, and station info.",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    },
+    {
+      "source_repo_dir": "VoltAgent__awesome-openclaw-skills",
+      "source_file": "README.md",
+      "category": "h3 style",
+      "name": "1sec-security",
+      "url": "https://clawskills.sh/skills/cutmob-1sec-security",
+      "description": "Install, configure, and manage 1-SEC — an open-source, all-in-one cybersecurity platform (16 modules, single binary)",
+      "priority_tags": [],
+      "block_tags": [],
+      "recommendation": "low_priority_intelligence_only"
+    }
+  ]
+}
