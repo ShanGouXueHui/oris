@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-05-23",
+  "updated_at": "2026-05-24",
   "policy": {
     "oris_repo_role": "platform_orchestration_only",
     "business_code_policy": "new_business_projects_must_use_separate_github_repositories",
@@ -114,6 +114,30 @@
         "production_credentials"
       ],
       "notes": "Standalone smoke project used to verify Codex-backed AI dev employee can create, test, commit, and push an independent GitHub repository."
+    },
+    "oris-final-acceptance-api": {
+      "name": "ORIS Final Acceptance API",
+      "type": "test_project",
+      "repo": "git@github.com:ShanGouXueHui/oris-final-acceptance-api.git",
+      "github": "https://github.com/ShanGouXueHui/oris-final-acceptance-api",
+      "local_path": "/home/admin/projects/oris-final-acceptance-api",
+      "default_branch": "main",
+      "allowed_scope": [
+        "README.md",
+        "AGENTS.md",
+        "docs/",
+        "app/",
+        "tests/",
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "private_keys",
+        "production_credentials"
+      ],
+      "notes": "Standalone final acceptance project for validating Codex-backed ORIS AI dev employee execution."
     }
   }
 }
