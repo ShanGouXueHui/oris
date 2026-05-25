@@ -1,8 +1,8 @@
 {
-  "task_id": "bridge-client-smoke-20260526",
+  "task_id": "autonomous-api-tags-20260526",
   "status": "completed",
-  "product_commit_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
-  "product_remote_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
+  "product_commit_sha": "50cf68bcd0912744ebce6f4ca4afb5f40b40ddf8",
+  "product_remote_sha": "50cf68bcd0912744ebce6f4ca4afb5f40b40ddf8",
   "oris_evidence_pending": false,
-  "updated_at": "2026-05-26T03:57:40+08:00"
+  "updated_at": "2026-05-26T04:12:34+08:00"
 }

@@ -1,0 +1,31 @@
+{
+  "task_id": "autonomous-api-tags-20260526",
+  "status": "completed",
+  "updated_at": "2026-05-26T04:12:34+08:00",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_commit_sha": "50cf68bcd0912744ebce6f4ca4afb5f40b40ddf8",
+  "product_remote_sha": "50cf68bcd0912744ebce6f4ca4afb5f40b40ddf8",
+  "checks": {
+    "ok": true,
+    "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-tags-20260526_host_py_compile.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-tags-20260526_host_pytest.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-tags-20260526_host_pytest_werror.txt"
+      }
+    ]
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/autonomous-api-tags-20260526.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-tags-20260526.codex.log"
+}
