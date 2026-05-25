@@ -3,8 +3,8 @@
 
 This server is the narrow bridge between OpenClaw Web/task intake and the
 host-side supervised bridge service. It only creates local queued task JSON
-files. It never executes shell commands, never invokes Codex directly, and never
-pushes GitHub.
+files and exposes read-only task status. It never executes shell commands,
+never invokes Codex directly, and never pushes GitHub.
 """
 
 from __future__ import annotations
@@ -16,11 +16,13 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 ORIS_DIR = Path("/home/admin/projects/oris")
 PROJECTS_DIR = Path("/home/admin/projects")
 QUEUE_DIR = ORIS_DIR / "orchestration" / "dev_employee_queue"
+RUN_DIR = ORIS_DIR / "orchestration" / "task_runs"
+LOG_DIR = ORIS_DIR / "logs" / "dev_employee"
 DEFAULT_CODEX = Path("/home/admin/.npm-global/bin/codex")
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 18891
@@ -38,6 +40,10 @@ def json_response(handler: BaseHTTPRequestHandler, status: int, payload: dict[st
     handler.send_header("Content-Length", str(len(body)))
     handler.end_headers()
     handler.wfile.write(body)
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def safe_resolve(path_value: str, roots: list[Path], must_exist: bool = False) -> Path:
@@ -101,8 +107,61 @@ def auth_ok(handler: BaseHTTPRequestHandler) -> bool:
     return provided == token
 
 
+def task_status(task_id: str) -> dict[str, Any]:
+    if not TASK_ID_RE.match(task_id):
+        raise ValueError("invalid task_id")
+
+    queue_matches = []
+    if QUEUE_DIR.exists():
+        for suffix in ["queued", "running", "done", "failed"]:
+            path = QUEUE_DIR / f"{task_id}.{suffix}.json"
+            if path.exists():
+                try:
+                    queue_matches.append({"suffix": suffix, "path": str(path), "data": read_json(path)})
+                except Exception as exc:
+                    queue_matches.append({"suffix": suffix, "path": str(path), "error": repr(exc)})
+
+    run_files = []
+    if RUN_DIR.exists():
+        for path in sorted(RUN_DIR.glob(f"{task_id}*.json")):
+            try:
+                run_files.append({"path": str(path), "data": read_json(path)})
+            except Exception as exc:
+                run_files.append({"path": str(path), "error": repr(exc)})
+
+    latest = None
+    latest_path = LOG_DIR / "latest_task_progress.json"
+    if latest_path.exists():
+        try:
+            latest = read_json(latest_path)
+        except Exception as exc:
+            latest = {"error": repr(exc)}
+
+    status = "unknown"
+    if run_files:
+        first_data = run_files[0].get("data") or {}
+        status = str(first_data.get("status") or status)
+    elif queue_matches:
+        status = str((queue_matches[0].get("data") or {}).get("status") or queue_matches[0].get("suffix") or status)
+
+    return {
+        "task_id": task_id,
+        "status": status,
+        "queue": queue_matches,
+        "runs": run_files,
+        "latest_task_progress": latest,
+    }
+
+
+def latest_status() -> dict[str, Any]:
+    latest_path = LOG_DIR / "latest_task_progress.json"
+    if not latest_path.exists():
+        return {"status": "not_found", "path": str(latest_path)}
+    return {"status": "ok", "path": str(latest_path), "data": read_json(latest_path)}
+
+
 class Handler(BaseHTTPRequestHandler):
-    server_version = "oris-dev-employee-enqueue/0.1"
+    server_version = "oris-dev-employee-enqueue/0.2"
 
     def log_message(self, fmt: str, *args: Any) -> None:
         print(f"{self.address_string()} - {fmt % args}", flush=True)
@@ -114,6 +173,14 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/queue":
             items = sorted(p.name for p in QUEUE_DIR.glob("*.json")) if QUEUE_DIR.exists() else []
             return json_response(self, 200, {"queue_dir": str(QUEUE_DIR), "items": items})
+        if path == "/latest":
+            return json_response(self, 200, latest_status())
+        if path.startswith("/task/"):
+            task_id = unquote(path.removeprefix("/task/")).strip()
+            try:
+                return json_response(self, 200, task_status(task_id))
+            except Exception as exc:
+                return json_response(self, 400, {"error": type(exc).__name__, "message": str(exc)})
         return json_response(self, 404, {"error": "not_found"})
 
     def do_POST(self) -> None:  # noqa: N802
