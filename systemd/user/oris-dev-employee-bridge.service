@@ -1,0 +1,15 @@
+[Unit]
+Description=ORIS Dev Employee Supervised Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/admin/projects/oris
+ExecStart=/usr/bin/python3 /home/admin/projects/oris/scripts/dev_employee_supervised_bridge_v2.py --watch --interval 10
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target
