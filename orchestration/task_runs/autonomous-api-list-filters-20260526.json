@@ -1,0 +1,33 @@
+{
+  "task_id": "autonomous-api-list-filters-20260526",
+  "status": "completed",
+  "updated_at": "2026-05-26T04:40:52+08:00",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_commit_sha": "343600d47794d56c06bcf2735ac2355865484c19",
+  "product_remote_sha": "343600d47794d56c06bcf2735ac2355865484c19",
+  "checks": {
+    "ok": true,
+    "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-list-filters-20260526_host_py_compile.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-list-filters-20260526_host_pytest.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-list-filters-20260526_host_pytest_werror.txt"
+      }
+    ]
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/autonomous-api-list-filters-20260526.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/autonomous-api-list-filters-20260526.codex.log",
+  "strict_result_schema": true,
+  "task_objective": "为 in-memory task-board API 的 GET /tasks 增加可选过滤能力：支持 status 查询参数，支持 assignee 查询参数，两个参数可以同时使用；没有参数时保持现有行为不变；补充必要测试，旧测试继续通过。"
+}
