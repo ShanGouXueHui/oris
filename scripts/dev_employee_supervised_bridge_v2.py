@@ -233,6 +233,7 @@ def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[st
     failed_path = task_path.with_suffix(".failed.json")
     write_json(failed_path, task)
     task_path.unlink(missing_ok=True)
+    print(f"TASK_FAILED {task['task_id']} {status}")
     return 1
 
 
@@ -271,19 +272,21 @@ def run_task(task_path: Path) -> int:
         done_path = task_path.with_suffix(".done.json")
         write_json(done_path, task)
         task_path.unlink(missing_ok=True)
+        print(f"TASK_COMPLETED {task_id} product={product_result['commit_sha']} oris={oris_result['commit_sha']}")
         return 0
     except Exception as exc:
         return fail_task(task_path, task, "bridge_exception", {"last_error": repr(exc)})
 
 
-def run_once() -> int:
+def run_once(verbose_idle: bool = False) -> int:
     QUEUE_DIR.mkdir(parents=True, exist_ok=True)
     for item in sorted(QUEUE_DIR.glob("*.queued.json")):
         claimed = claim_task(item)
         if claimed:
             print(f"CLAIMED {claimed}")
             return run_task(claimed)
-    print("NO_QUEUED_TASK")
+    if verbose_idle:
+        print("NO_QUEUED_TASK")
     return 0
 
 
@@ -292,12 +295,13 @@ def main() -> int:
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--watch", action="store_true")
     parser.add_argument("--interval", type=int, default=10)
+    parser.add_argument("--verbose-idle", action="store_true", help="print NO_QUEUED_TASK when idle")
     args = parser.parse_args()
     if args.watch:
         while True:
-            run_once()
+            run_once(verbose_idle=args.verbose_idle)
             time.sleep(args.interval)
-    return run_once()
+    return run_once(verbose_idle=True if args.once else args.verbose_idle)
 
 
 if __name__ == "__main__":
