@@ -31,6 +31,13 @@ orchestration/*.out
 orchestration/*_state.json
 orchestration/restore_provider_files.json
 
+# Dev Employee local runtime queue
+orchestration/dev_employee_queue/*.queued.json
+orchestration/dev_employee_queue/*.running.json
+orchestration/dev_employee_queue/*.done.json
+orchestration/dev_employee_queue/*.failed.json
+!orchestration/dev_employee_queue/.gitkeep
+
 # OS / editor
 .DS_Store
 .idea/
