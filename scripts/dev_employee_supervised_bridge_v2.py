@@ -11,6 +11,8 @@ Important host-side rules:
 - Never rely on hardcoded task IDs inside reusable prompts. The bridge injects
   the claimed runtime task descriptor into the Codex prompt and treats that
   runtime descriptor as the authoritative contract.
+- For autonomous tasks with strict_result_schema=true, validate the Codex result
+  contract before host-side checks, Git operations, or evidence completion.
 """
 
 from __future__ import annotations
@@ -23,6 +25,8 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from dev_employee_result_validator import validate_result
 
 ORIS_DIR = Path("/home/admin/projects/oris")
 PROJECTS_DIR = Path("/home/admin/projects")
@@ -89,13 +93,58 @@ def claim_task(path: Path) -> Path | None:
     return claimed
 
 
+def strict_result_schema(task: dict[str, Any]) -> bool:
+    value = task.get("strict_result_schema")
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.lower() in {"1", "true", "yes", "on"}
+    return False
+
+
+def minimum_result_payload(task: dict[str, Any], product_path: str | None, strict: bool) -> dict[str, Any]:
+    task_id = task["task_id"]
+    if not strict:
+        return {
+            "task_id": task_id,
+            "status": "local_checks_passed",
+            "product_path": product_path,
+            "changed_files": [],
+            "check_logs": {},
+            "notes": "Local checks passed; outer supervised bridge must finish final verification.",
+        }
+    return {
+        "task_id": task_id,
+        "status": "local_checks_passed",
+        "product_path": product_path,
+        "plan": ["Inspect durable context", "Design minimal change", "Implement", "Run checks", "Repair failures if any"],
+        "design_summary": "Summarize the selected design and why it satisfies the objective.",
+        "skill_resolution": {
+            "needed": [],
+            "used_existing": [],
+            "downloaded_quarantine": [],
+            "blocked": [],
+        },
+        "changed_files": [],
+        "check_logs": {},
+        "iteration_summary": [{"attempt": 1, "result": "local checks passed"}],
+        "blockers": [],
+        "notes": "Local checks passed; outer supervised bridge must finish final verification.",
+    }
+
+
 def build_runtime_prompt(task: dict[str, Any], base_prompt: str, result_path: Path) -> str:
     task_id = task["task_id"]
     product_path = task.get("expected_product_path") or task.get("product_path")
+    strict = strict_result_schema(task)
     runtime_contract = {
         "task_id": task_id,
         "product_path": product_path,
         "codex_result_path": str(result_path),
+        "strict_result_schema": strict,
+        "task_objective": task.get("task_objective"),
+        "constraints": task.get("constraints", []),
+        "expected_checks": task.get("expected_checks", []),
         "status_required_on_success": "local_checks_passed",
         "outer_bridge_owns": [
             "host-side final checks",
@@ -112,23 +161,14 @@ def build_runtime_prompt(task: dict[str, Any], base_prompt: str, result_path: Pa
         + "It overrides any hardcoded task id or codex_result path that may appear in the reusable prompt above.\n\n"
         + "You MUST write the structured result file exactly to `codex_result_path` below, using exactly this `task_id`. "
         + "Do not write the result to any other task id.\n\n"
+        + "If `strict_result_schema` is true, the result JSON must include the full autonomous evidence fields: "
+        + "plan, design_summary, skill_resolution, changed_files, check_logs, iteration_summary, blockers, and notes.\n\n"
         + "```json\n"
         + json.dumps(runtime_contract, ensure_ascii=False, indent=2)
         + "\n```\n\n"
         + "Minimum required success result JSON:\n\n"
         + "```json\n"
-        + json.dumps(
-            {
-                "task_id": task_id,
-                "status": "local_checks_passed",
-                "product_path": product_path,
-                "changed_files": [],
-                "check_logs": {},
-                "notes": "Local checks passed; outer supervised bridge must finish final verification.",
-            },
-            ensure_ascii=False,
-            indent=2,
-        )
+        + json.dumps(minimum_result_payload(task, product_path, strict), ensure_ascii=False, indent=2)
         + "\n```\n"
     )
 
@@ -163,11 +203,20 @@ def invoke_codex(task: dict[str, Any], log_path: Path, result_path: Path) -> int
         log.write(f"workdir={workdir}\n")
         log.write(f"prompt_path={prompt_path}\n")
         log.write(f"codex_result_path={result_path}\n")
+        log.write(f"strict_result_schema={strict_result_schema(task)}\n")
         log.write("command=codex exec --skip-git-repo-check ...\n\n")
         log.flush()
         proc = subprocess.run(cmd, cwd=str(workdir), env=env, stdout=log, stderr=subprocess.STDOUT, text=True, check=False)
         log.write(f"\nfinished_at={now_iso()}\nreturn_code={proc.returncode}\n")
     return proc.returncode
+
+
+def validate_codex_result(task: dict[str, Any], codex_result: dict[str, Any]) -> list[str]:
+    return validate_result(
+        codex_result,
+        expected_task_id=task["task_id"],
+        strict=strict_result_schema(task),
+    )
 
 
 def final_check(product_path: Path, task_id: str) -> dict[str, Any]:
@@ -192,7 +241,7 @@ def final_check(product_path: Path, task_id: str) -> dict[str, Any]:
 
 def commit_push_product(product_path: Path, message: str) -> dict[str, Any]:
     status_before = run(["git", "status", "--short"], cwd=product_path)
-    run(["git", "add", "app/main.py", "app/__init__.py"], cwd=product_path)
+    run(["git", "add", "app/main.py", "app/__init__.py", "tests"], cwd=product_path)
     staged = run(["git", "diff", "--cached", "--quiet"], cwd=product_path)
     if staged.returncode == 0:
         commit_sha = run(["git", "rev-parse", "HEAD"], cwd=product_path).stdout.strip()
@@ -231,6 +280,8 @@ def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_re
         "checks": checks,
         "codex_result_path": run_state["codex_result_path"],
         "codex_log_path": run_state["codex_log_path"],
+        "strict_result_schema": strict_result_schema(task),
+        "task_objective": task.get("task_objective"),
     }
     write_json(RUN_DIR / f"{task_id}.json", evidence)
     write_json(RUN_DIR / f"{task_id}.supervised_result.json", evidence)
@@ -240,11 +291,12 @@ def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_re
         "product_commit_sha": product_result["commit_sha"],
         "product_remote_sha": product_result["remote_sha"],
         "oris_evidence_pending": False,
+        "strict_result_schema": strict_result_schema(task),
         "updated_at": now_iso(),
     }
     write_json(LOG_DIR / "latest_task_progress.json", latest)
     (LOG_DIR / "latest_task_progress.md").write_text(
-        f"# Latest Dev Employee Task Progress\n\nTask id: `{task_id}`\n\nStatus: completed\n\nProduct commit SHA: `{product_result['commit_sha']}`\n\nRemote verification: `{product_result['remote_sha']}`\n\nORIS evidence pending: `false`\n",
+        f"# Latest Dev Employee Task Progress\n\nTask id: `{task_id}`\n\nStatus: completed\n\nProduct commit SHA: `{product_result['commit_sha']}`\n\nRemote verification: `{product_result['remote_sha']}`\n\nStrict result schema: `{strict_result_schema(task)}`\n\nORIS evidence pending: `false`\n",
         encoding="utf-8",
     )
     files = [
@@ -304,6 +356,14 @@ def run_task(task_path: Path) -> int:
         if not result_path.is_file():
             return fail_task(task_path, task, "blocked_missing_codex_result")
         codex_result = read_json(result_path)
+        schema_errors = validate_codex_result(task, codex_result)
+        if schema_errors:
+            return fail_task(
+                task_path,
+                task,
+                "blocked_result_schema_invalid",
+                {"schema_errors": schema_errors, "codex_result": codex_result},
+            )
         if codex_result.get("status") != "local_checks_passed":
             return fail_task(task_path, task, "blocked_codex_result_not_passed", {"codex_result": codex_result})
         product_path = safe_path(codex_result["product_path"], [PROJECTS_DIR])
