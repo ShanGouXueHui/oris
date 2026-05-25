@@ -1,0 +1,118 @@
+{
+  "task_id": "autonomous-api-stats-skill-resolution-20260526",
+  "resolved_at": "2026-05-26T06:03:58+08:00",
+  "objective": "为 in-memory task-board API 增加 GET /stats 端点，返回 total_tasks 以及按 status 分组的计数；保持现有 API 兼容；补充必要 pytest。任务开始前必须解析所需 FastAPI、pytest、GitHub evidence 与 OpenClaw skills/capability policy；如需要外部 skills，只能 quarantine audit，不能安装执行。",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence",
+      "fastapi_pytest",
+      "safe_execution",
+      "skill_audit"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_task_status.py",
+      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py",
+      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+    ],
+    "downloaded_quarantine": [
+      "/home/admin/projects/oris/vendor/skill_candidates/awesome-openclaw-skills",
+      "/home/admin/projects/oris/vendor/skill_candidates/clawhub",
+      "/home/admin/projects/oris/vendor/skill_candidates/awesome-mcp-servers"
+    ],
+    "blocked": []
+  },
+  "capability_matches": [
+    {
+      "name": "github_evidence",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "github",
+        "evidence"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md"
+      ]
+    },
+    {
+      "name": "fastapi_pytest",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "fastapi",
+        "api",
+        "pytest"
+      ],
+      "owned_assets": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json"
+      ]
+    },
+    {
+      "name": "safe_execution",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "test"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py"
+      ]
+    },
+    {
+      "name": "skill_audit",
+      "decision": "use_existing_then_quarantine_if_needed",
+      "hit_keywords": [
+        "skill",
+        "skills",
+        "openclaw",
+        "quarantine",
+        "audit"
+      ],
+      "owned_assets": [
+        "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+      ]
+    }
+  ],
+  "quarantine_results": [
+    {
+      "name": "awesome-openclaw-skills",
+      "url": "https://github.com/VoltAgent/awesome-openclaw-skills.git",
+      "path": "/home/admin/projects/oris/vendor/skill_candidates/awesome-openclaw-skills",
+      "already_present": true,
+      "return_code": 0,
+      "commit_sha": "bf943408a62c7e16d477c95f40a17f8f4d21a72a",
+      "stderr": ""
+    },
+    {
+      "name": "clawhub",
+      "url": "https://github.com/openclaw/clawhub.git",
+      "path": "/home/admin/projects/oris/vendor/skill_candidates/clawhub",
+      "already_present": true,
+      "return_code": 0,
+      "commit_sha": "963b0a5719431a182bef07ed1cd4ff09cc6fc1c9",
+      "stderr": ""
+    },
+    {
+      "name": "awesome-mcp-servers",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers.git",
+      "path": "/home/admin/projects/oris/vendor/skill_candidates/awesome-mcp-servers",
+      "already_present": true,
+      "return_code": 0,
+      "commit_sha": "39b5e990fe94734de271a2b13ec1513811da9cdd",
+      "stderr": ""
+    }
+  ],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
