@@ -5,8 +5,12 @@ This bridge invokes Codex for local code/test work, then performs host-side
 post-processing: final checks, product commit/push, remote verification, and
 ORIS evidence commit/push.
 
-Important host-side rule: never rely on a bare `python` binary. Prefer the
-product repository virtualenv interpreter, then fall back to `python3`.
+Important host-side rules:
+- Never rely on a bare `python` binary. Prefer the product repository virtualenv
+  interpreter, then fall back to `python3`.
+- Never rely on hardcoded task IDs inside reusable prompts. The bridge injects
+  the claimed runtime task descriptor into the Codex prompt and treats that
+  runtime descriptor as the authoritative contract.
 """
 
 from __future__ import annotations
@@ -85,6 +89,50 @@ def claim_task(path: Path) -> Path | None:
     return claimed
 
 
+def build_runtime_prompt(task: dict[str, Any], base_prompt: str, result_path: Path) -> str:
+    task_id = task["task_id"]
+    product_path = task.get("expected_product_path") or task.get("product_path")
+    runtime_contract = {
+        "task_id": task_id,
+        "product_path": product_path,
+        "codex_result_path": str(result_path),
+        "status_required_on_success": "local_checks_passed",
+        "outer_bridge_owns": [
+            "host-side final checks",
+            "product git commit and push",
+            "product GitHub remote verification",
+            "ORIS evidence commit and push",
+        ],
+    }
+    return (
+        base_prompt
+        + "\n\n---\n\n"
+        + "# ORIS RUNTIME TASK DESCRIPTOR — AUTHORITATIVE\n\n"
+        + "The following runtime descriptor is injected by the host supervised bridge after claiming the queued task. "
+        + "It overrides any hardcoded task id or codex_result path that may appear in the reusable prompt above.\n\n"
+        + "You MUST write the structured result file exactly to `codex_result_path` below, using exactly this `task_id`. "
+        + "Do not write the result to any other task id.\n\n"
+        + "```json\n"
+        + json.dumps(runtime_contract, ensure_ascii=False, indent=2)
+        + "\n```\n\n"
+        + "Minimum required success result JSON:\n\n"
+        + "```json\n"
+        + json.dumps(
+            {
+                "task_id": task_id,
+                "status": "local_checks_passed",
+                "product_path": product_path,
+                "changed_files": [],
+                "check_logs": {},
+                "notes": "Local checks passed; outer supervised bridge must finish final verification.",
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n```\n"
+    )
+
+
 def build_codex_command(task: dict[str, Any], prompt_text: str) -> list[str]:
     codex_bin = safe_path(task.get("codex_bin") or str(DEFAULT_CODEX), [Path("/home/admin")])
     cmd = [
@@ -100,10 +148,11 @@ def build_codex_command(task: dict[str, Any], prompt_text: str) -> list[str]:
     return cmd
 
 
-def invoke_codex(task: dict[str, Any], log_path: Path) -> int:
+def invoke_codex(task: dict[str, Any], log_path: Path, result_path: Path) -> int:
     prompt_path = safe_path(task["prompt_path"], [ORIS_DIR, PROJECTS_DIR])
     workdir = safe_path(task.get("workdir", str(PROJECTS_DIR)), [PROJECTS_DIR])
-    prompt_text = prompt_path.read_text(encoding="utf-8")
+    base_prompt = prompt_path.read_text(encoding="utf-8")
+    prompt_text = build_runtime_prompt(task, base_prompt, result_path)
     cmd = build_codex_command(task, prompt_text)
     env = os.environ.copy()
     env.setdefault("PYTHONUNBUFFERED", "1")
@@ -113,6 +162,7 @@ def invoke_codex(task: dict[str, Any], log_path: Path) -> int:
         log.write(f"started_at={now_iso()}\n")
         log.write(f"workdir={workdir}\n")
         log.write(f"prompt_path={prompt_path}\n")
+        log.write(f"codex_result_path={result_path}\n")
         log.write("command=codex exec --skip-git-repo-check ...\n\n")
         log.flush()
         proc = subprocess.run(cmd, cwd=str(workdir), env=env, stdout=log, stderr=subprocess.STDOUT, text=True, check=False)
@@ -248,7 +298,7 @@ def run_task(task_path: Path) -> int:
     try:
         task.update({"status": "codex_running", "codex_log_path": str(codex_log), "codex_result_path": str(result_path), "started_at": now_iso()})
         write_json(RUN_DIR / f"{task_id}.json", task)
-        rc = invoke_codex(task, codex_log)
+        rc = invoke_codex(task, codex_log, result_path)
         if rc != 0:
             return fail_task(task_path, task, "codex_failed", {"return_code": rc})
         if not result_path.is_file():
