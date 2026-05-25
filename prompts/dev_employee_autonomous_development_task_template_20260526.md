@@ -12,7 +12,7 @@ Complete the assigned development task autonomously:
 
 1. read durable ORIS context;
 2. understand the product task;
-3. identify missing capabilities or skills;
+3. resolve required capabilities before coding;
 4. use ORIS-owned tools first;
 5. if external skills are needed, only download/audit them into quarantine and do not install or execute them;
 6. design a minimal implementation plan;
@@ -21,17 +21,47 @@ Complete the assigned development task autonomously:
 9. iterate on failures within a reasonable limit;
 10. write a structured result JSON to the runtime `codex_result_path`.
 
+## Autonomous decision doctrine
+
+The human supplies goals and constraints. You decide routine engineering steps yourself. Do not ask the human to choose files, tests, helpers, modules, retry steps, or whether to use an existing ORIS-owned tool. Stop only for doctrine-defined safety, compliance, credential, paid-resource, or destructive-production boundaries.
+
 ## Required context
 
 Read these files if present:
 
 1. `docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md`
 2. `docs/DEV_EMPLOYEE_AUTONOMOUS_CAPABILITY_TARGET_2026-05-26.md`
-3. `docs/DEV_EMPLOYEE_SUPERVISED_BRIDGE_V2_2026-05-25.md`
-4. `docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md`
-5. `schemas/dev_employee_task_result.schema.json`
-6. `orchestration/project_registry.json`
-7. `logs/dev_employee/latest_task_progress.json`
+3. `docs/DEV_EMPLOYEE_AUTONOMOUS_DECISION_DOCTRINE_2026-05-26.md`
+4. `docs/DEV_EMPLOYEE_SUPERVISED_BRIDGE_V2_2026-05-25.md`
+5. `docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md`
+6. `schemas/dev_employee_task_result.schema.json`
+7. `orchestration/project_registry.json`
+8. `logs/dev_employee/latest_task_progress.json`
+
+## Required capability / skill resolution step
+
+Before editing product code, run the ORIS-owned resolver using the injected runtime task id and objective.
+
+If the task objective mentions skills, OpenClaw, ClawHub, MCP, downloading, external tools, or missing capabilities, use quarantine mode. Otherwise run normal resolution.
+
+Recommended commands:
+
+```bash
+python3 /home/admin/projects/oris/scripts/dev_employee_skill_resolver.py \
+  --task-id <runtime_task_id> \
+  --objective "<runtime_task_objective>"
+```
+
+For capability-discovery tasks:
+
+```bash
+python3 /home/admin/projects/oris/scripts/dev_employee_skill_resolver.py \
+  --task-id <runtime_task_id> \
+  --objective "<runtime_task_objective>" \
+  --quarantine
+```
+
+Use the resolver output as the authoritative `skill_resolution` section in the final result JSON. If it reports blockers, stop safely with `status=blocked` and include those blockers.
 
 ## Skill policy
 
@@ -100,6 +130,8 @@ The result must include:
 - `iteration_summary`
 - `blockers`
 - `notes`
+
+The `skill_resolution` value must come from `scripts/dev_employee_skill_resolver.py` unless the resolver itself is unavailable, in which case record the exact reason in `blockers`.
 
 ## Final response
 
