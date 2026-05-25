@@ -1,0 +1,31 @@
+{
+  "task_id": "bridge-runtime-contract-smoke-20260526",
+  "status": "completed",
+  "updated_at": "2026-05-26T03:45:12+08:00",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_commit_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
+  "product_remote_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
+  "checks": {
+    "ok": true,
+    "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/bridge-runtime-contract-smoke-20260526_host_py_compile.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/bridge-runtime-contract-smoke-20260526_host_pytest.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/bridge-runtime-contract-smoke-20260526_host_pytest_werror.txt"
+      }
+    ]
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/bridge-runtime-contract-smoke-20260526.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/bridge-runtime-contract-smoke-20260526.codex.log"
+}
