@@ -91,6 +91,39 @@ def parse_json(text: str) -> Any:
         return {"raw": text}
 
 
+def annotate_local_descriptor(api_response: Any, objective: str, constraints: list[str], checks: list[str]) -> dict[str, Any]:
+    """Patch the freshly-created local queue descriptor with autonomy metadata.
+
+    The enqueue API intentionally stays generic. This helper immediately enriches
+    the local descriptor so the bridge can enforce strict autonomous result
+    schema before final host-side checks. If the bridge already claimed the file,
+    this function returns a warning instead of failing the enqueue request.
+    """
+    if not isinstance(api_response, dict):
+        return {"annotated": False, "reason": "response_not_object"}
+    response = api_response.get("response") if "response" in api_response else api_response
+    if not isinstance(response, dict):
+        return {"annotated": False, "reason": "missing_response_object"}
+    path_value = response.get("path")
+    if not path_value:
+        return {"annotated": False, "reason": "missing_descriptor_path"}
+    path = Path(str(path_value))
+    if not path.exists():
+        return {"annotated": False, "reason": "descriptor_already_claimed_or_missing", "path": str(path)}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data.update(
+        {
+            "strict_result_schema": True,
+            "autonomy_mode": "goal_driven",
+            "task_objective": objective,
+            "constraints": constraints,
+            "expected_checks": checks,
+        }
+    )
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return {"annotated": True, "path": str(path)}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Create and enqueue an autonomous ORIS Dev Employee task")
     parser.add_argument("--task-id", required=True)
@@ -121,9 +154,17 @@ def main() -> int:
         "strict_result_schema": True,
         "task_objective": args.objective,
         "constraints": args.constraint,
+        "expected_checks": args.check,
     }
     status, response_text = post_json(args.url, auth_value, payload)
-    output = {"http_status": status, "runtime_prompt_path": str(prompt_path), "response": parse_json(response_text)}
+    parsed_response = parse_json(response_text)
+    output = {
+        "http_status": status,
+        "runtime_prompt_path": str(prompt_path),
+        "response": parsed_response,
+    }
+    if 200 <= status < 300:
+        output["descriptor_annotation"] = annotate_local_descriptor(output, args.objective, args.constraint, args.check)
     print(json.dumps(output, ensure_ascii=False, indent=2))
     return 0 if 200 <= status < 300 else 1
 
