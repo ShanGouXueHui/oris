@@ -1,6 +1,6 @@
 # Latest Dev Employee Task Progress
 
-Task id: `bridge-runtime-contract-smoke-20260526`
+Task id: `bridge-client-smoke-20260526`
 
 Status: completed
 
