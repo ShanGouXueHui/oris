@@ -1,7 +1,8 @@
 {
-  "task_id": "formal-test-pydantic-cleanup-v2-20260525",
+  "task_id": "bridge-service-smoke-20260525",
   "status": "completed",
   "product_commit_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
-  "oris_evidence_pending": true,
-  "updated_at": "2026-05-25T06:02:33+08:00"
+  "product_remote_sha": "bf9853d2bdf80dad4278021e03f877932ee31d4a",
+  "oris_evidence_pending": false,
+  "updated_at": "2026-05-25T15:54:44+08:00"
 }
