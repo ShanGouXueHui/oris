@@ -4,6 +4,9 @@
 This bridge invokes Codex for local code/test work, then performs host-side
 post-processing: final checks, product commit/push, remote verification, and
 ORIS evidence commit/push.
+
+Important host-side rule: never rely on a bare `python` binary. Prefer the
+product repository virtualenv interpreter, then fall back to `python3`.
 """
 
 from __future__ import annotations
@@ -39,7 +42,10 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
 
 
 def run(cmd: list[str], cwd: Path, log_path: Path | None = None, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
-    proc = subprocess.run(cmd, cwd=str(cwd), text=True, capture_output=True, env=env, check=False)
+    try:
+        proc = subprocess.run(cmd, cwd=str(cwd), text=True, capture_output=True, env=env, check=False)
+    except FileNotFoundError as exc:
+        proc = subprocess.CompletedProcess(cmd, 127, "", f"FileNotFoundError: {exc}\n")
     if log_path is not None:
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_path.write_text(proc.stdout + proc.stderr, encoding="utf-8")
@@ -52,6 +58,13 @@ def safe_path(path_value: str, roots: list[Path]) -> Path:
     if not any(path == root or root in path.parents for root in resolved_roots):
         raise ValueError(f"path outside allowed roots: {path}")
     return path
+
+
+def select_python(product_path: Path) -> str:
+    venv_python = product_path / ".venv" / "bin" / "python"
+    if venv_python.exists():
+        return str(venv_python)
+    return "python3"
 
 
 def claim_task(path: Path) -> Path | None:
@@ -108,22 +121,23 @@ def invoke_codex(task: dict[str, Any], log_path: Path) -> int:
 
 
 def final_check(product_path: Path, task_id: str) -> dict[str, Any]:
+    python_bin = select_python(product_path)
     env = os.environ.copy()
     env["PYTHONPATH"] = str(product_path)
     py_compile_log = LOG_DIR / f"{task_id}_host_py_compile.txt"
     pytest_log = LOG_DIR / f"{task_id}_host_pytest.txt"
     pytest_werror_log = LOG_DIR / f"{task_id}_host_pytest_werror.txt"
     checks = [
-        (["python3", "-m", "py_compile", "app/main.py"], py_compile_log, os.environ.copy()),
-        (["python", "-m", "pytest", "-q"], pytest_log, env),
-        (["python", "-m", "pytest", "-q", "-W", "error::DeprecationWarning"], pytest_werror_log, env),
+        ([python_bin, "-m", "py_compile", "app/main.py"], py_compile_log, env),
+        ([python_bin, "-m", "pytest", "-q"], pytest_log, env),
+        ([python_bin, "-m", "pytest", "-q", "-W", "error::DeprecationWarning"], pytest_werror_log, env),
     ]
     results = []
     for cmd, log_path, check_env in checks:
         proc = run(cmd, cwd=product_path, log_path=log_path, env=check_env)
         results.append({"cmd": " ".join(cmd), "return_code": proc.returncode, "log": str(log_path)})
     ok = all(item["return_code"] == 0 for item in results)
-    return {"ok": ok, "results": results}
+    return {"ok": ok, "python_bin": python_bin, "results": results}
 
 
 def commit_push_product(product_path: Path, message: str) -> dict[str, Any]:
@@ -174,12 +188,13 @@ def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_re
         "task_id": task_id,
         "status": "completed",
         "product_commit_sha": product_result["commit_sha"],
-        "oris_evidence_pending": True,
+        "product_remote_sha": product_result["remote_sha"],
+        "oris_evidence_pending": False,
         "updated_at": now_iso(),
     }
     write_json(LOG_DIR / "latest_task_progress.json", latest)
     (LOG_DIR / "latest_task_progress.md").write_text(
-        f"# Latest Dev Employee Task Progress\n\nTask id: `{task_id}`\n\nStatus: completed\n\nProduct commit SHA: `{product_result['commit_sha']}`\n\nRemote verification: `{product_result['remote_sha']}`\n",
+        f"# Latest Dev Employee Task Progress\n\nTask id: `{task_id}`\n\nStatus: completed\n\nProduct commit SHA: `{product_result['commit_sha']}`\n\nRemote verification: `{product_result['remote_sha']}`\n\nORIS evidence pending: `false`\n",
         encoding="utf-8",
     )
     files = [
@@ -210,6 +225,17 @@ def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_re
     return {"ok": push.returncode == 0 and remote_sha == sha, "committed": committed, "commit_sha": sha, "remote_sha": remote_sha, "push_stdout": push.stdout, "push_stderr": push.stderr}
 
 
+def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[str, Any] | None = None) -> int:
+    task.update({"status": status, "finished_at": now_iso()})
+    if extra:
+        task.update(extra)
+    write_json(RUN_DIR / f"{task['task_id']}.json", task)
+    failed_path = task_path.with_suffix(".failed.json")
+    write_json(failed_path, task)
+    task_path.unlink(missing_ok=True)
+    return 1
+
+
 def run_task(task_path: Path) -> int:
     task = read_json(task_path)
     task_id = task["task_id"]
@@ -218,43 +244,36 @@ def run_task(task_path: Path) -> int:
     codex_log = LOG_DIR / f"{task_id}.codex.log"
     result_path = RUN_DIR / f"{task_id}.codex_result.json"
 
-    task.update({"status": "codex_running", "codex_log_path": str(codex_log), "codex_result_path": str(result_path), "started_at": now_iso()})
-    write_json(RUN_DIR / f"{task_id}.json", task)
-    rc = invoke_codex(task, codex_log)
-    if rc != 0:
-        task.update({"status": "codex_failed", "return_code": rc, "finished_at": now_iso()})
+    try:
+        task.update({"status": "codex_running", "codex_log_path": str(codex_log), "codex_result_path": str(result_path), "started_at": now_iso()})
         write_json(RUN_DIR / f"{task_id}.json", task)
-        task_path.with_suffix(".failed.json").write_text(json.dumps(task, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        rc = invoke_codex(task, codex_log)
+        if rc != 0:
+            return fail_task(task_path, task, "codex_failed", {"return_code": rc})
+        if not result_path.is_file():
+            return fail_task(task_path, task, "blocked_missing_codex_result")
+        codex_result = read_json(result_path)
+        if codex_result.get("status") != "local_checks_passed":
+            return fail_task(task_path, task, "blocked_codex_result_not_passed", {"codex_result": codex_result})
+        product_path = safe_path(codex_result["product_path"], [PROJECTS_DIR])
+        checks = final_check(product_path, task_id)
+        if not checks["ok"]:
+            return fail_task(task_path, task, "blocked_host_checks_failed", {"checks": checks})
+        product_result = commit_push_product(product_path, task.get("product_commit_message", f"refactor(api): complete supervised task {task_id}"))
+        if not product_result.get("ok"):
+            return fail_task(task_path, task, "blocked_product_push_failed", {"product_result": product_result})
+        run_state = {"product_path": str(product_path), "codex_result_path": str(result_path), "codex_log_path": str(codex_log)}
+        oris_result = commit_push_oris(task, run_state, product_result, checks)
+        if not oris_result.get("ok"):
+            return fail_task(task_path, task, "blocked_oris_push_failed", {"product_result": product_result, "oris_result": oris_result})
+        task.update({"status": "completed", "product_result": product_result, "oris_result": oris_result, "finished_at": now_iso()})
+        write_json(RUN_DIR / f"{task_id}.json", task)
+        done_path = task_path.with_suffix(".done.json")
+        write_json(done_path, task)
         task_path.unlink(missing_ok=True)
-        return rc
-    if not result_path.is_file():
-        task.update({"status": "blocked_missing_codex_result", "finished_at": now_iso()})
-        write_json(RUN_DIR / f"{task_id}.json", task)
-        return 3
-    codex_result = read_json(result_path)
-    if codex_result.get("status") != "local_checks_passed":
-        task.update({"status": "blocked_codex_result_not_passed", "codex_result": codex_result, "finished_at": now_iso()})
-        write_json(RUN_DIR / f"{task_id}.json", task)
-        return 4
-    product_path = safe_path(codex_result["product_path"], [PROJECTS_DIR])
-    checks = final_check(product_path, task_id)
-    if not checks["ok"]:
-        task.update({"status": "blocked_host_checks_failed", "checks": checks, "finished_at": now_iso()})
-        write_json(RUN_DIR / f"{task_id}.json", task)
-        return 5
-    product_result = commit_push_product(product_path, task.get("product_commit_message", f"refactor(api): complete supervised task {task_id}"))
-    if not product_result.get("ok"):
-        task.update({"status": "blocked_product_push_failed", "product_result": product_result, "finished_at": now_iso()})
-        write_json(RUN_DIR / f"{task_id}.json", task)
-        return 6
-    run_state = {"product_path": str(product_path), "codex_result_path": str(result_path), "codex_log_path": str(codex_log)}
-    oris_result = commit_push_oris(task, run_state, product_result, checks)
-    task.update({"status": "completed" if oris_result.get("ok") else "blocked_oris_push_failed", "product_result": product_result, "oris_result": oris_result, "finished_at": now_iso()})
-    write_json(RUN_DIR / f"{task_id}.json", task)
-    done_path = task_path.with_suffix(".done.json" if task["status"] == "completed" else ".failed.json")
-    write_json(done_path, task)
-    task_path.unlink(missing_ok=True)
-    return 0 if task["status"] == "completed" else 7
+        return 0
+    except Exception as exc:
+        return fail_task(task_path, task, "bridge_exception", {"last_error": repr(exc)})
 
 
 def run_once() -> int:
@@ -269,7 +288,7 @@ def run_once() -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run one ORIS supervised bridge v2 queued task")
+    parser = argparse.ArgumentParser(description="Run one ORIS supervised bridge queued task")
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--watch", action="store_true")
     parser.add_argument("--interval", type=int, default=10)
