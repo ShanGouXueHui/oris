@@ -12,7 +12,8 @@ Important host-side rules:
   the claimed runtime task descriptor into the Codex prompt and treats that
   runtime descriptor as the authoritative contract.
 - For autonomous tasks with strict_result_schema=true, validate the Codex result
-  contract before host-side checks, Git operations, or evidence completion.
+  contract and skill resolver evidence before host-side checks, Git operations,
+  or evidence completion.
 """
 
 from __future__ import annotations
@@ -33,6 +34,7 @@ PROJECTS_DIR = Path("/home/admin/projects")
 QUEUE_DIR = ORIS_DIR / "orchestration" / "dev_employee_queue"
 RUN_DIR = ORIS_DIR / "orchestration" / "task_runs"
 LOG_DIR = ORIS_DIR / "logs" / "dev_employee"
+SKILL_RESOLUTION_DIR = LOG_DIR / "skill_resolution"
 DEFAULT_CODEX = Path("/home/admin/.npm-global/bin/codex")
 
 
@@ -117,7 +119,7 @@ def minimum_result_payload(task: dict[str, Any], product_path: str | None, stric
         "task_id": task_id,
         "status": "local_checks_passed",
         "product_path": product_path,
-        "plan": ["Inspect durable context", "Design minimal change", "Implement", "Run checks", "Repair failures if any"],
+        "plan": ["Inspect durable context", "Resolve capabilities", "Design minimal change", "Implement", "Run checks", "Repair failures if any"],
         "design_summary": "Summarize the selected design and why it satisfies the objective.",
         "skill_resolution": {
             "needed": [],
@@ -145,6 +147,8 @@ def build_runtime_prompt(task: dict[str, Any], base_prompt: str, result_path: Pa
         "task_objective": task.get("task_objective"),
         "constraints": task.get("constraints", []),
         "expected_checks": task.get("expected_checks", []),
+        "skill_resolver_report_json": str(SKILL_RESOLUTION_DIR / f"{task_id}.json"),
+        "skill_resolver_report_markdown": str(SKILL_RESOLUTION_DIR / f"{task_id}.md"),
         "status_required_on_success": "local_checks_passed",
         "outer_bridge_owns": [
             "host-side final checks",
@@ -162,7 +166,8 @@ def build_runtime_prompt(task: dict[str, Any], base_prompt: str, result_path: Pa
         + "You MUST write the structured result file exactly to `codex_result_path` below, using exactly this `task_id`. "
         + "Do not write the result to any other task id.\n\n"
         + "If `strict_result_schema` is true, the result JSON must include the full autonomous evidence fields: "
-        + "plan, design_summary, skill_resolution, changed_files, check_logs, iteration_summary, blockers, and notes.\n\n"
+        + "plan, design_summary, skill_resolution, changed_files, check_logs, iteration_summary, blockers, and notes. "
+        + "You must also run the ORIS skill resolver first and copy its `skill_resolution` object exactly into the final result JSON.\n\n"
         + "```json\n"
         + json.dumps(runtime_contract, ensure_ascii=False, indent=2)
         + "\n```\n\n"
@@ -219,6 +224,31 @@ def validate_codex_result(task: dict[str, Any], codex_result: dict[str, Any]) ->
     )
 
 
+def validate_skill_resolution_evidence(task: dict[str, Any], codex_result: dict[str, Any]) -> list[str]:
+    if not strict_result_schema(task):
+        return []
+    task_id = task["task_id"]
+    report_path = SKILL_RESOLUTION_DIR / f"{task_id}.json"
+    errors: list[str] = []
+    if not report_path.is_file():
+        return [f"missing skill resolver report: {report_path}"]
+    try:
+        report = read_json(report_path)
+    except Exception as exc:
+        return [f"unable to read skill resolver report {report_path}: {exc!r}"]
+    report_resolution = report.get("skill_resolution")
+    result_resolution = codex_result.get("skill_resolution")
+    if not isinstance(report_resolution, dict):
+        errors.append("skill resolver report missing object field: skill_resolution")
+    if not isinstance(result_resolution, dict):
+        errors.append("codex result missing object field: skill_resolution")
+    if isinstance(report_resolution, dict) and isinstance(result_resolution, dict) and report_resolution != result_resolution:
+        errors.append("codex result skill_resolution does not match skill resolver report")
+    if report.get("task_id") != task_id:
+        errors.append(f"skill resolver report task_id mismatch: {report.get('task_id')!r}")
+    return errors
+
+
 def final_check(product_path: Path, task_id: str) -> dict[str, Any]:
     python_bin = select_python(product_path)
     env = os.environ.copy()
@@ -268,8 +298,28 @@ def commit_push_product(product_path: Path, message: str) -> dict[str, Any]:
     }
 
 
-def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_result: dict[str, Any], checks: dict[str, Any]) -> dict[str, Any]:
+def autonomous_summary(codex_result: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "plan": codex_result.get("plan"),
+        "design_summary": codex_result.get("design_summary"),
+        "skill_resolution": codex_result.get("skill_resolution"),
+        "changed_files": codex_result.get("changed_files"),
+        "iteration_summary": codex_result.get("iteration_summary"),
+        "blockers": codex_result.get("blockers"),
+        "notes": codex_result.get("notes"),
+    }
+
+
+def commit_push_oris(
+    task: dict[str, Any],
+    run_state: dict[str, Any],
+    product_result: dict[str, Any],
+    checks: dict[str, Any],
+    codex_result: dict[str, Any],
+) -> dict[str, Any]:
     task_id = task["task_id"]
+    skill_json_path = SKILL_RESOLUTION_DIR / f"{task_id}.json"
+    skill_md_path = SKILL_RESOLUTION_DIR / f"{task_id}.md"
     evidence = {
         "task_id": task_id,
         "status": "completed",
@@ -282,6 +332,9 @@ def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_re
         "codex_log_path": run_state["codex_log_path"],
         "strict_result_schema": strict_result_schema(task),
         "task_objective": task.get("task_objective"),
+        "skill_resolver_report_json": str(skill_json_path) if skill_json_path.exists() else None,
+        "skill_resolver_report_markdown": str(skill_md_path) if skill_md_path.exists() else None,
+        "autonomous_result": autonomous_summary(codex_result),
     }
     write_json(RUN_DIR / f"{task_id}.json", evidence)
     write_json(RUN_DIR / f"{task_id}.supervised_result.json", evidence)
@@ -305,6 +358,9 @@ def commit_push_oris(task: dict[str, Any], run_state: dict[str, Any], product_re
         "logs/dev_employee/latest_task_progress.json",
         "logs/dev_employee/latest_task_progress.md",
     ]
+    for path in [skill_json_path, skill_md_path]:
+        if path.exists():
+            files.append(str(path.relative_to(ORIS_DIR)))
     for result in checks["results"]:
         try:
             files.append(str(Path(result["log"]).relative_to(ORIS_DIR)))
@@ -364,6 +420,14 @@ def run_task(task_path: Path) -> int:
                 "blocked_result_schema_invalid",
                 {"schema_errors": schema_errors, "codex_result": codex_result},
             )
+        skill_errors = validate_skill_resolution_evidence(task, codex_result)
+        if skill_errors:
+            return fail_task(
+                task_path,
+                task,
+                "blocked_skill_resolution_invalid",
+                {"skill_resolution_errors": skill_errors, "codex_result": codex_result},
+            )
         if codex_result.get("status") != "local_checks_passed":
             return fail_task(task_path, task, "blocked_codex_result_not_passed", {"codex_result": codex_result})
         product_path = safe_path(codex_result["product_path"], [PROJECTS_DIR])
@@ -374,7 +438,7 @@ def run_task(task_path: Path) -> int:
         if not product_result.get("ok"):
             return fail_task(task_path, task, "blocked_product_push_failed", {"product_result": product_result})
         run_state = {"product_path": str(product_path), "codex_result_path": str(result_path), "codex_log_path": str(codex_log)}
-        oris_result = commit_push_oris(task, run_state, product_result, checks)
+        oris_result = commit_push_oris(task, run_state, product_result, checks, codex_result)
         if not oris_result.get("ok"):
             return fail_task(task_path, task, "blocked_oris_push_failed", {"product_result": product_result, "oris_result": oris_result})
         task.update({"status": "completed", "product_result": product_result, "oris_result": oris_result, "finished_at": now_iso()})
