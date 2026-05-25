@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ORIS Dev Employee Task Result",
+  "type": "object",
+  "required": [
+    "task_id",
+    "status",
+    "product_path",
+    "plan",
+    "skill_resolution",
+    "changed_files",
+    "check_logs",
+    "iteration_summary",
+    "notes"
+  ],
+  "properties": {
+    "task_id": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["local_checks_passed", "blocked", "local_checks_failed"]
+    },
+    "product_path": {"type": "string"},
+    "plan": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "design_summary": {"type": "string"},
+    "skill_resolution": {
+      "type": "object",
+      "required": ["needed", "used_existing", "downloaded_quarantine", "blocked"],
+      "properties": {
+        "needed": {"type": "array", "items": {"type": "string"}},
+        "used_existing": {"type": "array", "items": {"type": "string"}},
+        "downloaded_quarantine": {"type": "array", "items": {"type": "string"}},
+        "blocked": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "changed_files": {"type": "array", "items": {"type": "string"}},
+    "check_logs": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "iteration_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["attempt", "result"],
+        "properties": {
+          "attempt": {"type": "integer"},
+          "result": {"type": "string"},
+          "action": {"type": "string"}
+        }
+      }
+    },
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  }
+}
