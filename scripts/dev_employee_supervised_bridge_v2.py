@@ -518,7 +518,8 @@ def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[st
     task["failure_triage_result"] = triage_result
     if not triage_result.get("ok"):
         task["failure_triage_failed"] = True
-    write_json(RUN_DIR / f"{task['task_id']}.json", task)
+    # Do not rewrite orchestration/task_runs/<task_id>.json after failure evidence
+    # and triage commits; keep richer terminal runtime state only in the queue file.
     failed_path = task_path.with_suffix(".failed.json")
     write_json(failed_path, task)
     task_path.unlink(missing_ok=True)
@@ -573,7 +574,8 @@ def run_task(task_path: Path) -> int:
         if not oris_result.get("ok"):
             return fail_task(task_path, task, "blocked_oris_push_failed", {"product_result": product_result, "oris_result": oris_result})
         task.update({"status": "completed", "product_result": product_result, "oris_result": oris_result, "finished_at": now_iso()})
-        write_json(RUN_DIR / f"{task_id}.json", task)
+        # Do not rewrite orchestration/task_runs/<task_id>.json after ORIS evidence
+        # commit; keep richer terminal runtime state only in the queue file.
         done_path = task_path.with_suffix(".done.json")
         write_json(done_path, task)
         task_path.unlink(missing_ok=True)
