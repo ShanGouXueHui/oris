@@ -1,0 +1,42 @@
+{
+  "task_id": "failure-evidence-host-checks-failed-20260526-r1",
+  "triaged_at": "2026-05-27T03:38:24+08:00",
+  "source_evidence": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.failure_result.json",
+  "status": "blocked_host_checks_failed",
+  "strict_result_schema": true,
+  "classification": {
+    "category": "host_checks_failed",
+    "root_cause": "Host-side verification failed for 3 check(s).",
+    "routine_autonomous_repair_allowed": true,
+    "recommended_action": "Inspect host check logs; fix product implementation/tests or environment issue according to log evidence, then rerun with a new task id.",
+    "repair_scope": "product_or_test_environment",
+    "failed_checks": [
+      {
+        "cmd": "python3 -m py_compile app/main.py",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-host-checks-failed-20260526-r1_host_py_compile.txt"
+      },
+      {
+        "cmd": "python3 -m pytest -q",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-host-checks-failed-20260526-r1_host_pytest.txt"
+      },
+      {
+        "cmd": "python3 -m pytest -q -W error::DeprecationWarning",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-host-checks-failed-20260526-r1_host_pytest_werror.txt"
+      }
+    ]
+  },
+  "evidence_links": {
+    "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-host-checks-failed-20260526-r1.codex.log",
+    "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.codex_result.json",
+    "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/failure-evidence-host-checks-failed-20260526-r1.json",
+    "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/failure-evidence-host-checks-failed-20260526-r1.md"
+  },
+  "next_step_contract": {
+    "ask_human_for_routine_decision": false,
+    "rerun_requires_new_task_id": true,
+    "must_preserve_original_failure_evidence": true
+  }
+}
