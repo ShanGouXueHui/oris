@@ -1,11 +1,11 @@
 # Latest Dev Employee Task Progress
 
-Task id: `failure-evidence-bridge-exception-20260526-r2`
+Task id: `failure-evidence-skill-resolution-invalid-20260526-r1`
 
-Status: bridge_exception
+Status: blocked_skill_resolution_invalid
 
 Strict result schema: `True`
 
 ORIS evidence pending: `false`
 
-Next recommended action: Inspect failure details and available logs; apply the smallest safe platform or product fix, then rerun with a new task id.
+Next recommended action: Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id.

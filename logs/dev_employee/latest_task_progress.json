@@ -1,8 +1,8 @@
 {
-  "task_id": "failure-evidence-bridge-exception-20260526-r2",
-  "status": "bridge_exception",
+  "task_id": "failure-evidence-skill-resolution-invalid-20260526-r1",
+  "status": "blocked_skill_resolution_invalid",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T03:17:03+08:00",
-  "next_recommended_action": "Inspect failure details and available logs; apply the smallest safe platform or product fix, then rerun with a new task id."
+  "updated_at": "2026-05-27T03:25:49+08:00",
+  "next_recommended_action": "Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id."
 }

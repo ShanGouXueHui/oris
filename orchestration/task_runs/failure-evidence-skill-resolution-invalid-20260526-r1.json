@@ -1,0 +1,83 @@
+{
+  "task_id": "failure-evidence-skill-resolution-invalid-20260526-r1",
+  "status": "blocked_skill_resolution_invalid",
+  "updated_at": "2026-05-27T03:25:49+08:00",
+  "strict_result_schema": true,
+  "task_objective": "Controlled skill resolver mismatch failure evidence test. The pre-written resolver report and strict result intentionally disagree to verify blocked_skill_resolution_invalid evidence persistence.",
+  "failure_stage": "blocked_skill_resolution_invalid",
+  "failure_details": {
+    "skill_resolution_errors": [
+      "codex result skill_resolution does not match skill resolver report"
+    ],
+    "codex_result": {
+      "task_id": "failure-evidence-skill-resolution-invalid-20260526-r1",
+      "status": "local_checks_passed",
+      "product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "plan": [
+        "Pre-write resolver report",
+        "Pre-write strict result with intentional skill_resolution mismatch",
+        "Let bridge enforcement block the task"
+      ],
+      "design_summary": "Controlled negative-path test for bridge skill resolver enforcement; no product files are changed.",
+      "skill_resolution": {
+        "needed": [
+          "fastapi_pytest"
+        ],
+        "used_existing": [
+          "prompts/dev_employee_autonomous_development_task_template_20260526.md"
+        ],
+        "downloaded_quarantine": [],
+        "blocked": []
+      },
+      "changed_files": [],
+      "check_logs": {},
+      "iteration_summary": [
+        {
+          "attempt": 1,
+          "result": "pre-written mismatch result ready for bridge validation"
+        }
+      ],
+      "blockers": [],
+      "notes": "Expected outer bridge status: blocked_skill_resolution_invalid."
+    }
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-skill-resolution-invalid-20260526-r1.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-skill-resolution-invalid-20260526-r1.codex.log",
+  "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/failure-evidence-skill-resolution-invalid-20260526-r1.json",
+  "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/failure-evidence-skill-resolution-invalid-20260526-r1.md",
+  "next_recommended_action": "Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id.",
+  "codex_result": {
+    "task_id": "failure-evidence-skill-resolution-invalid-20260526-r1",
+    "status": "local_checks_passed",
+    "product_path": "/home/admin/projects/oris-final-acceptance-api",
+    "plan": [
+      "Pre-write resolver report",
+      "Pre-write strict result with intentional skill_resolution mismatch",
+      "Let bridge enforcement block the task"
+    ],
+    "design_summary": "Controlled negative-path test for bridge skill resolver enforcement; no product files are changed.",
+    "skill_resolution": {
+      "needed": [
+        "fastapi_pytest"
+      ],
+      "used_existing": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md"
+      ],
+      "downloaded_quarantine": [],
+      "blocked": []
+    },
+    "changed_files": [],
+    "check_logs": {},
+    "iteration_summary": [
+      {
+        "attempt": 1,
+        "result": "pre-written mismatch result ready for bridge validation"
+      }
+    ],
+    "blockers": [],
+    "notes": "Expected outer bridge status: blocked_skill_resolution_invalid."
+  },
+  "skill_resolution_errors": [
+    "codex result skill_resolution does not match skill resolver report"
+  ]
+}

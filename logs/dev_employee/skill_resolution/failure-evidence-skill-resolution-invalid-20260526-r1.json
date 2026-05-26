@@ -1,0 +1,22 @@
+{
+  "task_id": "failure-evidence-skill-resolution-invalid-20260526-r1",
+  "resolved_at": "2026-05-27T03:25:42+08:00",
+  "objective": "Controlled skill resolver mismatch failure evidence test. The pre-written resolver report and strict result intentionally disagree to verify blocked_skill_resolution_invalid evidence persistence.",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
