@@ -1,9 +1,8 @@
 {
-  "task_id": "autonomous-api-stats-skill-resolution-20260526",
-  "status": "completed",
-  "product_commit_sha": "7853ab0a27e1266789af7c97d900db171176d228",
-  "product_remote_sha": "7853ab0a27e1266789af7c97d900db171176d228",
+  "task_id": "failure-evidence-bridge-exception-20260526-r2",
+  "status": "bridge_exception",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T03:03:13+08:00"
+  "updated_at": "2026-05-27T03:17:03+08:00",
+  "next_recommended_action": "Inspect failure details and available logs; apply the smallest safe platform or product fix, then rerun with a new task id."
 }

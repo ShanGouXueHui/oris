@@ -1,0 +1,17 @@
+{
+  "task_id": "failure-evidence-bridge-exception-20260526-r2",
+  "status": "bridge_exception",
+  "updated_at": "2026-05-27T03:17:03+08:00",
+  "strict_result_schema": true,
+  "task_objective": "Controlled failure evidence test r2. This task intentionally uses a missing Codex binary to verify ORIS failure evidence persistence after bridge restart.",
+  "failure_stage": "bridge_exception",
+  "failure_details": {
+    "last_error": "FileNotFoundError(2, 'No such file or directory')"
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-bridge-exception-20260526-r2.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-bridge-exception-20260526-r2.codex.log",
+  "skill_resolver_report_json": null,
+  "skill_resolver_report_markdown": null,
+  "next_recommended_action": "Inspect failure details and available logs; apply the smallest safe platform or product fix, then rerun with a new task id.",
+  "last_error": "FileNotFoundError(2, 'No such file or directory')"
+}

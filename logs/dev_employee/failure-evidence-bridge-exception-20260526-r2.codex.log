@@ -1,0 +1,9 @@
+===== ORIS supervised bridge v2 Codex phase =====
+task_id=failure-evidence-bridge-exception-20260526-r2
+started_at=2026-05-27T03:17:03+08:00
+workdir=/home/admin/projects
+prompt_path=/home/admin/projects/oris/prompts/dev_employee_autonomous_development_task_template_20260526.md
+codex_result_path=/home/admin/projects/oris/orchestration/task_runs/failure-evidence-bridge-exception-20260526-r2.codex_result.json
+strict_result_schema=True
+command=codex exec --skip-git-repo-check ...
+
