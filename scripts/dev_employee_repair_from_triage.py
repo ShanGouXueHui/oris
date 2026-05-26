@@ -84,6 +84,42 @@ def infer_product_path(failure: dict[str, Any], override: str | None) -> str | N
     return None
 
 
+
+def repo_slug(product_repo: str) -> str:
+    return product_repo.rsplit("/", 1)[-1].strip()
+
+
+def target_mismatch_reason(product_path: str | None, product_repo: str) -> str | None:
+    if not product_path:
+        return "missing product_path"
+    slug = repo_slug(product_repo)
+    if not slug:
+        return "missing product_repo slug"
+    path_name = Path(product_path).expanduser().name
+    if path_name != slug:
+        return f"product_path basename {path_name!r} does not match product_repo slug {slug!r}"
+    return None
+
+
+def enforce_target_guard(product_path: str | None, product_repo: str, enqueue: bool, allow_mismatch: bool) -> dict[str, Any]:
+    reason = target_mismatch_reason(product_path, product_repo)
+    result = {
+        "product_path": product_path,
+        "product_repo": product_repo,
+        "mismatch_reason": reason,
+        "enqueue_allowed": True,
+        "guard_mode": "allow" if allow_mismatch else "strict",
+    }
+    if enqueue and reason and not allow_mismatch:
+        raise SystemExit(
+            "ERROR: refusing to enqueue repair task because product_path/product_repo mismatch: "
+            f"{reason}. Pass explicit --product-path/--product-repo for the intended target or "
+            "--allow-path-repo-mismatch for controlled fixture tests."
+        )
+    if reason and not allow_mismatch:
+        result["enqueue_allowed"] = False
+    return result
+
 def default_checks(product_path: str | None) -> list[str]:
     if not product_path:
         return []
@@ -206,6 +242,7 @@ def main() -> int:
     parser.add_argument("--new-task-id")
     parser.add_argument("--product-path")
     parser.add_argument("--product-repo", default="ShanGouXueHui/oris-final-acceptance-api")
+    parser.add_argument("--allow-path-repo-mismatch", action="store_true", help="allow enqueue when product_path basename does not match product_repo slug; intended only for controlled fixture tests")
     parser.add_argument("--enqueue", action="store_true")
     parser.add_argument("--commit-plan", action="store_true")
     args = parser.parse_args()
@@ -216,6 +253,7 @@ def main() -> int:
     new_task_id = args.new_task_id or f"repair-{args.failed_task_id}"
     product_path = infer_product_path(failure, args.product_path)
 
+    target_guard = enforce_target_guard(product_path, args.product_repo, args.enqueue, args.allow_path_repo_mismatch)
     contract = make_repair_contract(
         args.failed_task_id,
         new_task_id,
@@ -224,6 +262,7 @@ def main() -> int:
         product_path,
         args.product_repo,
     )
+    contract["target_guard"] = target_guard
     plan_path = REPAIR_PLAN_DIR / f"{new_task_id}.json"
     write_json(plan_path, contract)
 
