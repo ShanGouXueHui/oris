@@ -123,5 +123,11 @@
   "ok": true,
   "final_product_status": "",
   "final_oris_tracked_status": " M orchestration/task_runs/goal-api-info-endpoint-20260526-r1.json\n",
-  "finished_at": "2026-05-27T05:47:51+08:00"
+  "finished_at": "2026-05-27T05:47:51+08:00",
+  "report_commit": {
+    "ok": true,
+    "committed": true,
+    "commit_sha": "9dfd847c5b5ac774bb24311f441b9b712d8c78a8",
+    "remote_sha": "9dfd847c5b5ac774bb24311f441b9b712d8c78a8"
+  }
 }
