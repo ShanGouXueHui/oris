@@ -6,14 +6,18 @@ Required GitHub context, in order:
 
 1. `memory/dev_employee/CURRENT_STATE_2026-05-26.md`
 2. `memory/dev_employee/NEXT_CHAT_HANDOFF_2026-05-26.md`
-3. `docs/DEV_EMPLOYEE_AUTONOMOUS_DECISION_DOCTRINE_2026-05-26.md`
-4. `docs/DEV_EMPLOYEE_AUTONOMOUS_CAPABILITY_TARGET_2026-05-26.md`
-5. `docs/SKILL_RESOLVER_INTEGRATION_2026-05-26.md`
-6. `docs/SKILL_RESOLVER_ENFORCEMENT_TEST_PLAN_2026-05-26.md`
-7. `scripts/dev_employee_supervised_bridge_v2.py`
-8. `scripts/dev_employee_autonomous_enqueue.py`
-9. `scripts/dev_employee_skill_resolver.py`
-10. `orchestration/project_registry.json`
+3. `memory/dev_employee/current_task.json`
+4. `memory/dev_employee/current_task.md`
+5. `docs/DEV_EMPLOYEE_AUTONOMOUS_DECISION_DOCTRINE_2026-05-26.md`
+6. `docs/DEV_EMPLOYEE_AUTONOMOUS_CAPABILITY_TARGET_2026-05-26.md`
+7. `docs/SKILL_RESOLVER_INTEGRATION_2026-05-26.md`
+8. `docs/DEV_EMPLOYEE_FAILURE_EVIDENCE_PLAN_2026-05-26.md`
+9. `scripts/dev_employee_supervised_bridge_v2.py`
+10. `scripts/dev_employee_autonomous_enqueue.py`
+11. `scripts/dev_employee_skill_resolver.py`
+12. `scripts/dev_employee_failure_triage.py`
+13. `scripts/dev_employee_repair_from_triage.py`
+14. `orchestration/project_registry.json`
 
 ## Current objective
 
@@ -21,38 +25,76 @@ Continue toward the target:
 
 > ORIS acts as an autonomous AI development employee. Human provides goals and constraints; ORIS decides plan, capabilities, skills, implementation, tests, repair loops, and evidence. Routine engineering decisions should not require human prompts.
 
-## Immediate next task
+## Current validated architecture
 
-Run and verify the skill resolver enforcement test.
+```text
+human objective
+  -> scripts/dev_employee_autonomous_enqueue.py
+  -> generated runtime prompt under run/dev_employee_prompts/
+  -> local enqueue API
+  -> queue descriptor
+  -> supervised bridge
+  -> Codex CLI
+  -> runtime contract injection
+  -> skill resolver before coding
+  -> strict result schema validation
+  -> skill resolver evidence validation
+  -> host final checks
+  -> product commit/push/remote verification
+  -> ORIS success evidence commit
+```
+
+Failure chain now validated:
+
+```text
+failure occurs
+  -> bridge commits failure_result.json/logs/resolver evidence
+  -> bridge runs deterministic failure triage automatically
+  -> triage commits JSON/Markdown report
+  -> repair-from-triage can generate a repair plan
+  -> target guard prevents product_path/product_repo mismatch enqueue by default
+```
+
+## Most recent verified product capability
 
 Task id:
 
 `autonomous-api-stats-skill-resolution-20260526`
 
-Goal:
+Result:
 
-Add `GET /stats` to `oris-final-acceptance-api`, returning `total_tasks` and counts by status, with tests.
+- Status: `completed`
+- ORIS evidence commit: `6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad`
+- Product commit and remote SHA: `7853ab0a27e1266789af7c97d900db171176d228`
+- Product feature: `GET /stats` returns `total_tasks` and status-counts.
+- Host pytest: `16 passed in 0.30s`
+- Host pytest with `-W error::DeprecationWarning`: `16 passed in 0.30s`
+- Strict result schema: `true`
+- Skill resolver evidence committed and copied into `autonomous_result.skill_resolution`.
 
-Use the command in:
+## Verified failure/evidence/repair milestones
 
-`docs/SKILL_RESOLVER_ENFORCEMENT_TEST_PLAN_2026-05-26.md`
+- `404d44ecad8150709089263e2e6c763e02fc5e30`: controlled `bridge_exception` failure evidence committed.
+- `fe58abe15fb55158f8bb5a717411dcf9dd29a7ab`: controlled `blocked_skill_resolution_invalid` failure evidence committed.
+- `8c079bab5abfc5914a5dbd7f14142cbb13738211`: controlled `blocked_host_checks_failed` failure evidence committed.
+- `c0815b2`: manual failure triage report committed.
+- `f2ebb8d`: bridge patched to run failure triage automatically.
+- `671daad1a4a9a5968f67dab02f088be94105f56d`: end-to-end auto triage verified.
+- `88b336dccaff1ed698ed0b79b0cc7d448c40320b`: triage-driven repair helper added.
+- `9d1096a66ea86c96a79b900b56798708c39259bf`: repair plan generated from triage.
+- `af219e0`: repair target path/repo guard added.
+- `95e23b0`: guard validation passed; mismatch enqueue rejected and no queue task created.
 
-After execution, read evidence from GitHub, not pasted long logs.
+## Current immediate next task
 
-Expected success:
+The next useful task is a positive repair-enqueue verification for a real target pair, not a synthetic fixture:
 
-- ORIS evidence commit exists.
-- Product commit SHA equals product remote SHA.
-- pytest passes.
-- strict result schema is true.
-- ORIS evidence includes `skill_resolver_report_json` and `autonomous_result.skill_resolution`.
-- `logs/dev_employee/skill_resolution/autonomous-api-stats-skill-resolution-20260526.json` exists and is committed.
+1. Use a failure whose product target is actually `/home/admin/projects/oris-final-acceptance-api` and `ShanGouXueHui/oris-final-acceptance-api`, or pass those explicitly.
+2. Run `scripts/dev_employee_repair_from_triage.py` with a new task id and confirm `target_guard.enqueue_allowed=true`.
+3. Only then use `--enqueue` to submit a repair task.
+4. Verify that repair tasks preserve original evidence, use a new task id, run skill resolver, pass strict schema, and produce ORIS evidence.
 
-Expected failure if Codex skips resolver:
-
-- `blocked_skill_resolution_invalid`.
-
-If failure occurs, do not ask user what to do. Inspect GitHub evidence/log files, update prompt/bridge/resolver as needed, and rerun with a new task id.
+Do **not** use the synthetic fixture failure `failure-evidence-auto-triage-host-checks-20260526-r1` to enqueue a real product repair task unless intentionally running a controlled fixture test with `--allow-path-repo-mismatch`.
 
 ## Interaction rules
 
@@ -63,7 +105,7 @@ If failure occurs, do not ask user what to do. Inspect GitHub evidence/log files
 - If shell commands are needed for the user, keep them copy-paste ready and short.
 - Do not use `set -e` in Linux command blocks.
 - Only `main` is the long-lived branch.
-- Do not commit `.env`, credentials, private keys, `.venv`, caches, queue runtime JSON, or runtime noise.
+- Do not commit `.env`, credentials, private keys, `.venv`, caches, queue runtime JSON, browser profiles, or runtime noise.
 - Product code must not be written into `/home/admin/projects/oris`.
 
 ## Current services
@@ -82,29 +124,14 @@ systemctl --user status oris-dev-employee-enqueue.service --no-pager
 systemctl --user status oris-dev-employee-bridge.service --no-pager
 ```
 
-## Current validated architecture
-
-```text
-human objective
-  -> scripts/dev_employee_autonomous_enqueue.py
-  -> generated runtime prompt under run/dev_employee_prompts/
-  -> local enqueue API
-  -> queue descriptor
-  -> supervised bridge
-  -> Codex CLI
-  -> runtime contract injection
-  -> skill resolver before coding
-  -> strict result schema validation
-  -> skill resolver evidence validation
-  -> host final checks
-  -> product commit/push/remote verification
-  -> ORIS evidence commit
-```
-
 ## Important implementation notes
 
 - `dev_employee_autonomous_enqueue.py` annotates local queued descriptors with `strict_result_schema=true`, `autonomy_mode=goal_driven`, `task_objective`, `constraints`, and `expected_checks`.
 - `dev_employee_supervised_bridge_v2.py` validates result schema and skill resolver evidence before host checks.
+- `dev_employee_supervised_bridge_v2.py` now commits failure evidence and automatically runs `dev_employee_failure_triage.py --commit`.
+- `dev_employee_failure_triage.py` writes JSON/Markdown triage reports under `logs/dev_employee/failure_triage/`.
+- `dev_employee_repair_from_triage.py` writes repair plans under `logs/dev_employee/repair_plans/` and only enqueues when `--enqueue` is passed.
+- `dev_employee_repair_from_triage.py` blocks enqueue by default if `product_path` basename does not match `product_repo` slug.
 - `dev_employee_skill_resolver.py` prefers ORIS-owned capabilities and only quarantines allowlisted external intelligence repos when requested.
 - Third-party skills must not be installed or executed in runtime. Use quarantine/audit/internalization only.
 
@@ -117,4 +144,6 @@ Do not return to pseudo-exec behavior. Completion requires GitHub-verifiable evi
 - ORIS evidence SHA;
 - task run JSON;
 - check logs;
-- skill resolution report for strict autonomous tasks.
+- skill resolution report for strict autonomous tasks;
+- failure evidence and triage report for failed tasks;
+- repair plans must preserve original evidence references and enforce target guard before enqueue.
