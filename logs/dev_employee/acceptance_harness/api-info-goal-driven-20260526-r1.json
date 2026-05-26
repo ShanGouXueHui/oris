@@ -1,18 +1,127 @@
 {
-  "started_at": "2026-05-27T05:43:39+08:00",
+  "started_at": "2026-05-27T05:45:41+08:00",
   "scenario_path": "/home/admin/projects/oris/acceptance_scenarios/api_info_goal_driven.json",
   "scenario_id": "api-info-goal-driven-20260526-r1",
   "kind": "goal_driven",
   "validation_errors": [],
-  "dry_run": true,
-  "ok": true,
-  "product_path": "/home/admin/projects/oris-final-acceptance-api",
-  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
-  "finished_at": "2026-05-27T05:43:39+08:00",
-  "report_commit": {
+  "dry_run": false,
+  "product_head_before": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "enqueue_return_code": 0,
+  "wait_result": {
+    "completed": true,
+    "status": "completed",
+    "evidence": {
+      "task_id": "goal-api-info-endpoint-20260526-r1",
+      "status": "completed",
+      "created_at": "2026-05-27T05:45:46+08:00",
+      "created_by": "dev_employee_enqueue_server",
+      "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-api-info-endpoint-20260526-r1.md",
+      "workdir": "/home/admin/projects",
+      "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+      "sandbox": "workspace-write",
+      "extra_write_dirs": [
+        "/home/admin/projects/oris"
+      ],
+      "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "product_commit_message": "feat(api): add API info endpoint",
+      "notes": "The endpoint is intentionally small so acceptance focuses on the Dev Employee loop rather than feature complexity.",
+      "strict_result_schema": true,
+      "autonomy_mode": "goal_driven",
+      "task_objective": "Add a small GET /info endpoint to the FastAPI in-memory task-board API. The endpoint must return a stable JSON object with app_name, version, storage, and endpoints fields. Required response: app_name='ORIS Final Acceptance API', version='1.0.0', storage='in-memory', endpoints contains at least 'health', 'healthz', 'stats', and 'tasks'. Add pytest coverage and keep all existing tests passing.",
+      "constraints": [
+        "Do not ask the human for routine engineering decisions.",
+        "Use the existing FastAPI app in app/main.py.",
+        "Keep the implementation minimal and deterministic.",
+        "Do not add external dependencies.",
+        "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+        "Produce strict autonomous result schema and fresh skill resolver evidence."
+      ],
+      "expected_checks": [
+        "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+      ],
+      "claimed_at": "2026-05-27T05:45:53+08:00",
+      "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-api-info-endpoint-20260526-r1.codex.log",
+      "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/goal-api-info-endpoint-20260526-r1.codex_result.json",
+      "started_at": "2026-05-27T05:45:53+08:00",
+      "product_result": {
+        "ok": true,
+        "committed": true,
+        "commit_sha": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+        "remote_sha": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+        "status_before": " M app/main.py\n M tests/test_tasks_api.py\n",
+        "push_stdout": "",
+        "push_stderr": "To github.com:ShanGouXueHui/oris-final-acceptance-api.git\n   58fb03f..d2d577e  main -> main\n",
+        "remote_stdout": "d2d577e3476320f3a35d88c0870e31befd032ecc\trefs/heads/main\n",
+        "remote_stderr": ""
+      },
+      "oris_result": {
+        "ok": true,
+        "committed": true,
+        "commit_sha": "ad9463326dffc551fd4ecd720e060c9875a75402",
+        "remote_sha": "ad9463326dffc551fd4ecd720e060c9875a75402",
+        "push_stdout": "",
+        "push_stderr": "To github.com:ShanGouXueHui/oris.git\n   2fc606e..ad94633  main -> main\n",
+        "files": [
+          "orchestration/task_runs/goal-api-info-endpoint-20260526-r1.json",
+          "orchestration/task_runs/goal-api-info-endpoint-20260526-r1.supervised_result.json",
+          "logs/dev_employee/latest_task_progress.json",
+          "logs/dev_employee/latest_task_progress.md",
+          "logs/dev_employee/skill_resolution/goal-api-info-endpoint-20260526-r1.json",
+          "logs/dev_employee/skill_resolution/goal-api-info-endpoint-20260526-r1.md",
+          "logs/dev_employee/goal-api-info-endpoint-20260526-r1_host_py_compile.txt",
+          "logs/dev_employee/goal-api-info-endpoint-20260526-r1_host_pytest.txt",
+          "logs/dev_employee/goal-api-info-endpoint-20260526-r1_host_pytest_werror.txt"
+        ]
+      },
+      "finished_at": "2026-05-27T05:47:39+08:00"
+    },
+    "last_status_output": "{\n  \"http_status\": 404,\n  \"response\": {\n    \"error\": \"not_found\"\n  }\n}\n"
+  },
+  "product_head_after": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+  "product_remote_after": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+  "final_checks": {
     "ok": true,
-    "committed": true,
-    "commit_sha": "a4ced96c0b1eeed54012cc49538540457cebc6cd",
-    "remote_sha": "a4ced96c0b1eeed54012cc49538540457cebc6cd"
-  }
+    "results": [
+      {
+        "cmd": [
+          "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "-c",
+          "from fastapi.testclient import TestClient\nfrom app.main import app\nclient = TestClient(app)\nr = client.get('/info')\nassert r.status_code == 200, r.text\ndata = r.json()\nassert data['app_name'] == 'ORIS Final Acceptance API', data\nassert data['version'] == '1.0.0', data\nassert data['storage'] == 'in-memory', data\nassert set(['health', 'healthz', 'stats', 'tasks']).issubset(set(data['endpoints'])), data\n"
+        ],
+        "return_code": 0,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      {
+        "cmd": [
+          "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "return_code": 0,
+        "stdout_tail": "..................                                                       [100%]\n18 passed in 0.30s\n",
+        "stderr_tail": ""
+      },
+      {
+        "cmd": [
+          "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-W",
+          "error::DeprecationWarning"
+        ],
+        "return_code": 0,
+        "stdout_tail": "..................                                                       [100%]\n18 passed in 0.31s\n",
+        "stderr_tail": ""
+      }
+    ]
+  },
+  "ok": true,
+  "final_product_status": "",
+  "final_oris_tracked_status": " M orchestration/task_runs/goal-api-info-endpoint-20260526-r1.json\n",
+  "finished_at": "2026-05-27T05:47:51+08:00"
 }
