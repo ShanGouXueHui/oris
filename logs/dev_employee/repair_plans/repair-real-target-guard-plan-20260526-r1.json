@@ -1,0 +1,42 @@
+{
+  "failed_task_id": "failure-evidence-real-target-plan-only-20260526-r1",
+  "new_task_id": "repair-real-target-guard-plan-20260526-r1",
+  "created_at": "2026-05-27T04:39:55+08:00",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "commit_message": "fix(dev-employee): repair task failure-evidence-real-target-plan-only-20260526-r1",
+  "objective": "Repair failed ORIS Dev Employee task `failure-evidence-real-target-plan-only-20260526-r1` using committed GitHub evidence and triage.\n\nFailure category: host_checks_failed.\nRepair scope: product_or_test_environment.\nRoot cause summary: Synthetic positive target-guard validation failure; no real product failure is asserted..\nRecommended action: Generate a repair plan and verify target guard only. Do not enqueue in this validation..\n\nRequired behavior:\n1. Read the original failure evidence JSON and triage JSON from ORIS repository.\n2. Inspect referenced logs and resolver reports before changing code.\n3. Preserve the original failure evidence; do not overwrite or delete it.\n4. Decide the minimal safe repair autonomously.\n5. Run the required checks and self-repair routine failures.\n6. Produce strict autonomous result schema with fresh skill resolver evidence.",
+  "constraints": [
+    "Original failed task id: failure-evidence-real-target-plan-only-20260526-r1.",
+    "Original failure evidence: orchestration/task_runs/failure-evidence-real-target-plan-only-20260526-r1.failure_result.json.",
+    "Failure triage report: logs/dev_employee/failure_triage/failure-evidence-real-target-plan-only-20260526-r1.json.",
+    "Do not ask the human for routine engineering decisions.",
+    "Do not overwrite or delete original failure evidence or triage reports.",
+    "Use a new task id for the repair attempt.",
+    "Respect ORIS repository/product repository separation.",
+    "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+    "Expected product path: /home/admin/projects/oris-final-acceptance-api.",
+    "Repair scope from triage: product_or_test_environment."
+  ],
+  "checks": [
+    "python3 -m py_compile app/main.py",
+    "PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+    "PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+  ],
+  "triage_category": "host_checks_failed",
+  "repair_scope": "product_or_test_environment",
+  "source_evidence": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-real-target-plan-only-20260526-r1.codex.log",
+  "routine_autonomous_repair_allowed": true,
+  "next_step_contract": {
+    "ask_human_for_routine_decision": false,
+    "rerun_requires_new_task_id": true,
+    "must_preserve_original_failure_evidence": true
+  },
+  "target_guard": {
+    "product_path": "/home/admin/projects/oris-final-acceptance-api",
+    "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "mismatch_reason": null,
+    "enqueue_allowed": true,
+    "guard_mode": "strict"
+  }
+}
