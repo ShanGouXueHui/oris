@@ -5,7 +5,7 @@
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "positive_repair_enqueue_verification_pending",
+  "current_step": "repair_execution_hardening_and_normal_goal_validation_pending",
   "completed_steps": [
     "final_acceptance_api_created_and_verified",
     "loopback_enqueue_api_verified",
@@ -33,13 +33,17 @@
     "triage_driven_repair_plan_helper_added",
     "repair_plan_generated_from_triage",
     "repair_target_path_repo_guard_added",
-    "repair_target_guard_validation_passed"
+    "repair_target_guard_validation_passed",
+    "real_target_repair_plan_guard_positive_path_verified",
+    "real_target_repair_enqueue_positive_path_verified",
+    "real_product_repair_e2e_precheck_relaxed",
+    "real_product_repair_execution_e2e_verified"
   ],
   "failed_steps": [],
-  "next_action": "Verify positive repair enqueue behavior with a real product target pair. Use a failure whose product_path is /home/admin/projects/oris-final-acceptance-api and product_repo is ShanGouXueHui/oris-final-acceptance-api, or pass both explicitly. Confirm target_guard.enqueue_allowed=true before using --enqueue. Do not enqueue synthetic fixture failures into the real product repo.",
+  "next_action": "Harden/generalize the verified real product repair execution loop. Promote the one-off healthz E2E runner into a reusable acceptance harness, add post-run local tracked clean-state reporting, then validate one additional routine product feature through the normal goal-driven enqueue path rather than a synthetic failure seed.",
   "last_error": null,
-  "last_known_product_commit_sha": "7853ab0a27e1266789af7c97d900db171176d228",
-  "last_known_oris_evidence_sha": "6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad",
+  "last_known_product_commit_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "last_known_oris_evidence_sha": "5b6710bd1390e0b96c8a2dc64be24bb5f748d86f",
   "latest_platform_commits": {
     "stats_endpoint_skill_resolver_enforcement": "6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad",
     "failure_evidence_plan": "f0e6f17688fb57db110307e434d82006bb6eb10f",
@@ -53,9 +57,14 @@
     "repair_from_triage_helper": "88b336dccaff1ed698ed0b79b0cc7d448c40320b",
     "repair_plan_from_triage": "9d1096a66ea86c96a79b900b56798708c39259bf",
     "repair_target_guard": "af219e0",
-    "repair_target_guard_validation": "95e23b0"
+    "repair_target_guard_validation": "95e23b0",
+    "real_target_repair_plan_guard": "a77d534",
+    "real_target_repair_enqueue": "8d7be20",
+    "real_product_repair_e2e_precheck": "963f16d",
+    "real_product_repair_oris_evidence": "5b6710bd1390e0b96c8a2dc64be24bb5f748d86f",
+    "real_product_repair_e2e_report": "f8f98f8"
   },
-  "test_result": "Latest verified product task: autonomous-api-stats-skill-resolution-20260526 completed with 16 passed and strict skill resolver evidence. Latest platform validation: repair target guard report ok=true; mismatch enqueue rejected and no queue task created.",
+  "test_result": "Latest verified real repair task: repair-real-product-healthz-20260526-r1 completed. Product commit and remote SHA 58fb03fe2020f6d044e837a4626ff050fe90d2d9. ORIS evidence 5b6710bd1390e0b96c8a2dc64be24bb5f748d86f. Final checks: targeted healthz 1 passed, full pytest 17 passed, Werror pytest 17 passed. E2E report f8f98f8 has ok=true.",
   "blocked_reason": null,
   "updated_at": "2026-05-26"
 }
