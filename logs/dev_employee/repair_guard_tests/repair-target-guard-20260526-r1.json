@@ -1,0 +1,30 @@
+{
+  "validated_at": "2026-05-27T04:13:31+08:00",
+  "failed_task_id": "failure-evidence-auto-triage-host-checks-20260526-r1",
+  "plan_task_id": "guard-validate-plan-mismatch-20260526-r1",
+  "enqueue_task_id": "guard-validate-enqueue-rejected-20260526-r1",
+  "plan_generation": {
+    "return_code": 0,
+    "plan_path": "/home/admin/projects/oris/logs/dev_employee/repair_plans/guard-validate-plan-mismatch-20260526-r1.json",
+    "target_guard": {
+      "product_path": "/home/admin/projects/oris-host-check-failure-fixture",
+      "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "mismatch_reason": "product_path basename 'oris-host-check-failure-fixture' does not match product_repo slug 'oris-final-acceptance-api'",
+      "enqueue_allowed": false,
+      "guard_mode": "strict"
+    }
+  },
+  "enqueue_attempt": {
+    "return_code": 1,
+    "stdout_tail": "",
+    "stderr_tail": "ERROR: refusing to enqueue repair task because product_path/product_repo mismatch: product_path basename 'oris-host-check-failure-fixture' does not match product_repo slug 'oris-final-acceptance-api'. Pass explicit --product-path/--product-repo for the intended target or --allow-path-repo-mismatch for controlled fixture tests.\n",
+    "created_queue_files": []
+  },
+  "expected": {
+    "plan_return_code": 0,
+    "target_guard_enqueue_allowed": false,
+    "enqueue_return_code_nonzero": true,
+    "created_queue_files": []
+  },
+  "ok": true
+}
