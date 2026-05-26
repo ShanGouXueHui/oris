@@ -1,9 +1,121 @@
 {
-  "started_at": "2026-05-27T04:53:12+08:00",
+  "started_at": "2026-05-27T05:01:23+08:00",
   "failed_task_id": "failure-evidence-real-product-healthz-20260526-r1",
   "repair_task_id": "repair-real-product-healthz-20260526-r1",
   "product_path": "/home/admin/projects/oris-final-acceptance-api",
   "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
-  "finished_at": "2026-05-27T04:53:17+08:00",
-  "final_product_status": ""
+  "product_head_before": "7853ab0a27e1266789af7c97d900db171176d228",
+  "initial_failure_return_code": 1,
+  "initial_failure_log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-real-product-healthz-20260526-r1_host_pytest.txt",
+  "failure_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-real-product-healthz-20260526-r1.failure_result.json",
+  "triage_path": "/home/admin/projects/oris/logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json",
+  "enqueue_return_code": 0,
+  "enqueue_stdout_tail": "-product-healthz-20260526-r1.failure_result.json.\",\n      \"Failure triage report: logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json.\",\n      \"Do not ask the human for routine engineering decisions.\",\n      \"Do not overwrite or delete original failure evidence or triage reports.\",\n      \"Use a new task id for the repair attempt.\",\n      \"Respect ORIS repository/product repository separation.\",\n      \"Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.\",\n      \"Expected product path: /home/admin/projects/oris-final-acceptance-api.\",\n      \"Repair scope from triage: product_or_test_environment.\"\n    ],\n    \"checks\": [\n      \"python3 -m py_compile app/main.py\",\n      \"PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q\",\n      \"PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning\"\n    ],\n    \"triage_category\": \"host_checks_failed\",\n    \"repair_scope\": \"product_or_test_environment\",\n    \"source_evidence\": \"/home/admin/projects/oris/logs/dev_employee/failure-evidence-real-product-healthz-20260526-r1.codex.log\",\n    \"routine_autonomous_repair_allowed\": true,\n    \"next_step_contract\": {\n      \"ask_human_for_routine_decision\": false,\n      \"rerun_requires_new_task_id\": true,\n      \"must_preserve_original_failure_evidence\": true\n    },\n    \"target_guard\": {\n      \"product_path\": \"/home/admin/projects/oris-final-acceptance-api\",\n      \"product_repo\": \"ShanGouXueHui/oris-final-acceptance-api\",\n      \"mismatch_reason\": null,\n      \"enqueue_allowed\": true,\n      \"guard_mode\": \"strict\"\n    }\n  },\n  \"commit\": {\n    \"ok\": true,\n    \"committed\": true,\n    \"commit_sha\": \"b9ac2db10d2d1d67b8125caf006f51de542644a3\",\n    \"remote_sha\": \"b9ac2db10d2d1d67b8125caf006f51de542644a3\"\n  },\n  \"enqueue_return_code\": 0\n}\n",
+  "enqueue_stderr_tail": "",
+  "wait_result": {
+    "completed": true,
+    "status": "completed",
+    "evidence": {
+      "task_id": "repair-real-product-healthz-20260526-r1",
+      "status": "completed",
+      "created_at": "2026-05-27T05:01:34+08:00",
+      "created_by": "dev_employee_enqueue_server",
+      "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/repair-real-product-healthz-20260526-r1.md",
+      "workdir": "/home/admin/projects",
+      "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+      "sandbox": "workspace-write",
+      "extra_write_dirs": [
+        "/home/admin/projects/oris"
+      ],
+      "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "product_commit_message": "fix(dev-employee): repair task failure-evidence-real-product-healthz-20260526-r1",
+      "notes": "Repair task generated from triage of failure-evidence-real-product-healthz-20260526-r1",
+      "strict_result_schema": true,
+      "autonomy_mode": "goal_driven",
+      "task_objective": "Repair failed ORIS Dev Employee task `failure-evidence-real-product-healthz-20260526-r1` using committed GitHub evidence and triage.\n\nFailure category: host_checks_failed.\nRepair scope: product_or_test_environment.\nRoot cause summary: The real product has a new controlled failing test requiring GET /healthz to return {'status': 'ok'}..\nRecommended action: Add a minimal FastAPI GET /healthz endpoint returning {'status': 'ok'}, run full host checks, and commit the product changes..\n\nRequired behavior:\n1. Read the original failure evidence JSON and triage JSON from ORIS repository.\n2. Inspect referenced logs and resolver reports before changing code.\n3. Preserve the original failure evidence; do not overwrite or delete it.\n4. Decide the minimal safe repair autonomously.\n5. Run the required checks and self-repair routine failures.\n6. Produce strict autonomous result schema with fresh skill resolver evidence.",
+      "constraints": [
+        "Original failed task id: failure-evidence-real-product-healthz-20260526-r1.",
+        "Original failure evidence: orchestration/task_runs/failure-evidence-real-product-healthz-20260526-r1.failure_result.json.",
+        "Failure triage report: logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json.",
+        "Do not ask the human for routine engineering decisions.",
+        "Do not overwrite or delete original failure evidence or triage reports.",
+        "Use a new task id for the repair attempt.",
+        "Respect ORIS repository/product repository separation.",
+        "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+        "Expected product path: /home/admin/projects/oris-final-acceptance-api.",
+        "Repair scope from triage: product_or_test_environment."
+      ],
+      "expected_checks": [
+        "python3 -m py_compile app/main.py",
+        "PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+      ],
+      "claimed_at": "2026-05-27T05:01:44+08:00",
+      "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/repair-real-product-healthz-20260526-r1.codex.log",
+      "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/repair-real-product-healthz-20260526-r1.codex_result.json",
+      "started_at": "2026-05-27T05:01:44+08:00",
+      "product_result": {
+        "ok": true,
+        "committed": true,
+        "commit_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+        "remote_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+        "status_before": " M app/main.py\n?? tests/test_healthz_repair.py\n",
+        "push_stdout": "",
+        "push_stderr": "To github.com:ShanGouXueHui/oris-final-acceptance-api.git\n   7853ab0..58fb03f  main -> main\n",
+        "remote_stdout": "58fb03fe2020f6d044e837a4626ff050fe90d2d9\trefs/heads/main\n",
+        "remote_stderr": ""
+      },
+      "oris_result": {
+        "ok": true,
+        "committed": true,
+        "commit_sha": "5b6710bd1390e0b96c8a2dc64be24bb5f748d86f",
+        "remote_sha": "5b6710bd1390e0b96c8a2dc64be24bb5f748d86f",
+        "push_stdout": "",
+        "push_stderr": "To github.com:ShanGouXueHui/oris.git\n   b9ac2db..5b6710b  main -> main\n",
+        "files": [
+          "orchestration/task_runs/repair-real-product-healthz-20260526-r1.json",
+          "orchestration/task_runs/repair-real-product-healthz-20260526-r1.supervised_result.json",
+          "logs/dev_employee/latest_task_progress.json",
+          "logs/dev_employee/latest_task_progress.md",
+          "logs/dev_employee/skill_resolution/repair-real-product-healthz-20260526-r1.json",
+          "logs/dev_employee/skill_resolution/repair-real-product-healthz-20260526-r1.md",
+          "logs/dev_employee/repair-real-product-healthz-20260526-r1_host_py_compile.txt",
+          "logs/dev_employee/repair-real-product-healthz-20260526-r1_host_pytest.txt",
+          "logs/dev_employee/repair-real-product-healthz-20260526-r1_host_pytest_werror.txt"
+        ]
+      },
+      "finished_at": "2026-05-27T05:04:01+08:00"
+    },
+    "last_status_output": "{\n  \"http_status\": 404,\n  \"response\": {\n    \"error\": \"not_found\"\n  }\n}\n"
+  },
+  "product_head_after": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "product_remote_after": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "final_checks": {
+    "ok": true,
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q tests/test_healthz_repair.py",
+        "return_code": 0,
+        "stdout_tail": ".                                                                        [100%]\n1 passed in 0.25s\n",
+        "stderr_tail": ""
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 0,
+        "stdout_tail": ".................                                                        [100%]\n17 passed in 0.30s\n",
+        "stderr_tail": ""
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+        "return_code": 0,
+        "stdout_tail": ".................                                                        [100%]\n17 passed in 0.31s\n",
+        "stderr_tail": ""
+      }
+    ]
+  },
+  "ok": true,
+  "finished_at": "2026-05-27T05:04:10+08:00",
+  "final_product_status": "",
+  "final_oris_tracked_status": " M orchestration/task_runs/repair-real-product-healthz-20260526-r1.json\n"
 }
