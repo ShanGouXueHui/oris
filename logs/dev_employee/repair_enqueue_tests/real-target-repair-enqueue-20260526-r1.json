@@ -1,0 +1,71 @@
+{
+  "validated_at": "2026-05-27T04:46:13+08:00",
+  "failed_task_id": "failure-evidence-real-target-enqueue-only-20260526-r1",
+  "repair_task_id": "repair-real-target-enqueue-only-20260526-r1",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "ok": true,
+  "bridge_was_active": true,
+  "failure_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-real-target-enqueue-only-20260526-r1.failure_result.json",
+  "triage_path": "/home/admin/projects/oris/logs/dev_employee/failure_triage/failure-evidence-real-target-enqueue-only-20260526-r1.json",
+  "plan_path": "/home/admin/projects/oris/logs/dev_employee/repair_plans/repair-real-target-enqueue-only-20260526-r1.json",
+  "enqueue_return_code": 0,
+  "enqueue_stdout_tail": "eue-only-20260526-r1.failure_result.json.\",\n      \"Failure triage report: logs/dev_employee/failure_triage/failure-evidence-real-target-enqueue-only-20260526-r1.json.\",\n      \"Do not ask the human for routine engineering decisions.\",\n      \"Do not overwrite or delete original failure evidence or triage reports.\",\n      \"Use a new task id for the repair attempt.\",\n      \"Respect ORIS repository/product repository separation.\",\n      \"Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.\",\n      \"Expected product path: /home/admin/projects/oris-final-acceptance-api.\",\n      \"Repair scope from triage: product_or_test_environment.\"\n    ],\n    \"checks\": [\n      \"python3 -m py_compile app/main.py\",\n      \"PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q\",\n      \"PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning\"\n    ],\n    \"triage_category\": \"host_checks_failed\",\n    \"repair_scope\": \"product_or_test_environment\",\n    \"source_evidence\": \"/home/admin/projects/oris/logs/dev_employee/failure-evidence-real-target-enqueue-only-20260526-r1.codex.log\",\n    \"routine_autonomous_repair_allowed\": true,\n    \"next_step_contract\": {\n      \"ask_human_for_routine_decision\": false,\n      \"rerun_requires_new_task_id\": true,\n      \"must_preserve_original_failure_evidence\": true\n    },\n    \"target_guard\": {\n      \"product_path\": \"/home/admin/projects/oris-final-acceptance-api\",\n      \"product_repo\": \"ShanGouXueHui/oris-final-acceptance-api\",\n      \"mismatch_reason\": null,\n      \"enqueue_allowed\": true,\n      \"guard_mode\": \"strict\"\n    }\n  },\n  \"commit\": {\n    \"ok\": true,\n    \"committed\": true,\n    \"commit_sha\": \"ae720f9f373b18a0ccae0e9cbee04e3ebf35e75b\",\n    \"remote_sha\": \"ae720f9f373b18a0ccae0e9cbee04e3ebf35e75b\"\n  },\n  \"enqueue_return_code\": 0\n}\n",
+  "enqueue_stderr_tail": "",
+  "target_guard": {
+    "product_path": "/home/admin/projects/oris-final-acceptance-api",
+    "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "mismatch_reason": null,
+    "enqueue_allowed": true,
+    "guard_mode": "strict"
+  },
+  "queued_descriptor_snapshot": {
+    "task_id": "repair-real-target-enqueue-only-20260526-r1",
+    "status": "queued",
+    "created_at": "2026-05-27T04:46:23+08:00",
+    "created_by": "dev_employee_enqueue_server",
+    "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/repair-real-target-enqueue-only-20260526-r1.md",
+    "workdir": "/home/admin/projects",
+    "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+    "sandbox": "workspace-write",
+    "extra_write_dirs": [
+      "/home/admin/projects/oris"
+    ],
+    "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+    "product_commit_message": "fix(dev-employee): repair task failure-evidence-real-target-enqueue-only-20260526-r1",
+    "notes": "Repair task generated from triage of failure-evidence-real-target-enqueue-only-20260526-r1",
+    "strict_result_schema": true,
+    "autonomy_mode": "goal_driven",
+    "task_objective": "Repair failed ORIS Dev Employee task `failure-evidence-real-target-enqueue-only-20260526-r1` using committed GitHub evidence and triage.\n\nFailure category: host_checks_failed.\nRepair scope: product_or_test_environment.\nRoot cause summary: Synthetic positive repair-enqueue validation failure; no real product failure is asserted..\nRecommended action: Validate enqueue descriptor creation only while bridge is stopped..\n\nRequired behavior:\n1. Read the original failure evidence JSON and triage JSON from ORIS repository.\n2. Inspect referenced logs and resolver reports before changing code.\n3. Preserve the original failure evidence; do not overwrite or delete it.\n4. Decide the minimal safe repair autonomously.\n5. Run the required checks and self-repair routine failures.\n6. Produce strict autonomous result schema with fresh skill resolver evidence.",
+    "constraints": [
+      "Original failed task id: failure-evidence-real-target-enqueue-only-20260526-r1.",
+      "Original failure evidence: orchestration/task_runs/failure-evidence-real-target-enqueue-only-20260526-r1.failure_result.json.",
+      "Failure triage report: logs/dev_employee/failure_triage/failure-evidence-real-target-enqueue-only-20260526-r1.json.",
+      "Do not ask the human for routine engineering decisions.",
+      "Do not overwrite or delete original failure evidence or triage reports.",
+      "Use a new task id for the repair attempt.",
+      "Respect ORIS repository/product repository separation.",
+      "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+      "Expected product path: /home/admin/projects/oris-final-acceptance-api.",
+      "Repair scope from triage: product_or_test_environment."
+    ],
+    "expected_checks": [
+      "python3 -m py_compile app/main.py",
+      "PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+      "PYTHONPATH=/home/admin/projects/oris-final-acceptance-api /home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+    ]
+  },
+  "removed_queue_files": [
+    "/home/admin/projects/oris/orchestration/dev_employee_queue/repair-real-target-enqueue-only-20260526-r1.queued.json"
+  ],
+  "product_status_before": "",
+  "product_status_after": "",
+  "expected": {
+    "enqueue_return_code": 0,
+    "target_guard_enqueue_allowed": true,
+    "queued_descriptor_created": true,
+    "queue_descriptor_removed_before_bridge_restart": true,
+    "product_status_unchanged": true
+  }
+}

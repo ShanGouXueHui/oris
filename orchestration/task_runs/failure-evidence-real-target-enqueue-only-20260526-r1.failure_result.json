@@ -1,0 +1,23 @@
+{
+  "task_id": "failure-evidence-real-target-enqueue-only-20260526-r1",
+  "status": "blocked_host_checks_failed",
+  "updated_at": "2026-05-27T04:46:17+08:00",
+  "strict_result_schema": true,
+  "task_objective": "Synthetic real-target repair enqueue validation. Do not let bridge process this task.",
+  "failure_stage": "blocked_host_checks_failed",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-real-target-enqueue-only-20260526-r1.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-real-target-enqueue-only-20260526-r1.codex.log",
+  "next_recommended_action": "Validate repair enqueue descriptor creation only; do not modify product code.",
+  "checks": {
+    "ok": false,
+    "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-real-target-enqueue-only-20260526-r1_host_pytest.txt"
+      }
+    ]
+  }
+}
