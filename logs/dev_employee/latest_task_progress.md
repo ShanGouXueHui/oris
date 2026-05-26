@@ -1,11 +1,11 @@
 # Latest Dev Employee Task Progress
 
-Task id: `failure-evidence-skill-resolution-invalid-20260526-r1`
+Task id: `failure-evidence-host-checks-failed-20260526-r1`
 
-Status: blocked_skill_resolution_invalid
+Status: blocked_host_checks_failed
 
 Strict result schema: `True`
 
 ORIS evidence pending: `false`
 
-Next recommended action: Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id.
+Next recommended action: Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id.

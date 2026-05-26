@@ -1,0 +1,24 @@
+{
+  "task_id": "failure-evidence-host-checks-failed-20260526-r1",
+  "resolved_at": "2026-05-27T03:32:35+08:00",
+  "objective": "Controlled host checks failure evidence test. The pre-written strict result and resolver report match, but host py_compile/pytest must fail against a temporary product fixture to verify blocked_host_checks_failed evidence.",
+  "skill_resolution": {
+    "needed": [
+      "fastapi_pytest",
+      "github_evidence"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "schemas/dev_employee_task_result.schema.json"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}

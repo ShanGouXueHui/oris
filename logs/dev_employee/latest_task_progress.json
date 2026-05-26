@@ -1,8 +1,8 @@
 {
-  "task_id": "failure-evidence-skill-resolution-invalid-20260526-r1",
-  "status": "blocked_skill_resolution_invalid",
+  "task_id": "failure-evidence-host-checks-failed-20260526-r1",
+  "status": "blocked_host_checks_failed",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T03:25:49+08:00",
-  "next_recommended_action": "Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id."
+  "updated_at": "2026-05-27T03:32:42+08:00",
+  "next_recommended_action": "Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id."
 }

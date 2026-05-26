@@ -1,0 +1,4 @@
+  File "app/main.py", line 1
+    def intentionally_broken(:
+                             ^
+SyntaxError: invalid syntax

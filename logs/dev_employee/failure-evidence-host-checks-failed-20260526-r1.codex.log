@@ -1,0 +1,13 @@
+===== ORIS supervised bridge v2 Codex phase =====
+task_id=failure-evidence-host-checks-failed-20260526-r1
+started_at=2026-05-27T03:32:42+08:00
+workdir=/home/admin/projects
+prompt_path=/home/admin/projects/oris/run/dev_employee_prompts/failure-evidence-host-checks-failed-20260526-r1.md
+codex_result_path=/home/admin/projects/oris/orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.codex_result.json
+strict_result_schema=True
+command=codex exec --skip-git-repo-check ...
+
+FAKE_CODEX_SUCCESS controlled host-check failure test
+
+finished_at=2026-05-27T03:32:42+08:00
+return_code=0
