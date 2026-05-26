@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-05-27T05:36:20+08:00",
+  "scenario_path": "/home/admin/projects/oris/acceptance_scenarios/healthz_repair_seed.json",
+  "scenario_id": "healthz-repair-seed-20260526-r1",
+  "kind": "repair_seed",
+  "validation_errors": [],
+  "dry_run": true,
+  "ok": true,
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "finished_at": "2026-05-27T05:36:20+08:00"
+}
