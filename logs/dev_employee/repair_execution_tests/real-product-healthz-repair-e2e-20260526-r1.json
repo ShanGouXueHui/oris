@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-05-27T04:53:12+08:00",
+  "failed_task_id": "failure-evidence-real-product-healthz-20260526-r1",
+  "repair_task_id": "repair-real-product-healthz-20260526-r1",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "finished_at": "2026-05-27T04:53:17+08:00",
+  "final_product_status": ""
+}
