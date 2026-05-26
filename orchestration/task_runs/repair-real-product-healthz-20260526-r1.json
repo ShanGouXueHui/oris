@@ -1,0 +1,81 @@
+{
+  "task_id": "repair-real-product-healthz-20260526-r1",
+  "status": "completed",
+  "updated_at": "2026-05-27T05:03:56+08:00",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_commit_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "product_remote_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "checks": {
+    "ok": true,
+    "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/repair-real-product-healthz-20260526-r1_host_py_compile.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/repair-real-product-healthz-20260526-r1_host_pytest.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/repair-real-product-healthz-20260526-r1_host_pytest_werror.txt"
+      }
+    ]
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/repair-real-product-healthz-20260526-r1.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/repair-real-product-healthz-20260526-r1.codex.log",
+  "strict_result_schema": true,
+  "task_objective": "Repair failed ORIS Dev Employee task `failure-evidence-real-product-healthz-20260526-r1` using committed GitHub evidence and triage.\n\nFailure category: host_checks_failed.\nRepair scope: product_or_test_environment.\nRoot cause summary: The real product has a new controlled failing test requiring GET /healthz to return {'status': 'ok'}..\nRecommended action: Add a minimal FastAPI GET /healthz endpoint returning {'status': 'ok'}, run full host checks, and commit the product changes..\n\nRequired behavior:\n1. Read the original failure evidence JSON and triage JSON from ORIS repository.\n2. Inspect referenced logs and resolver reports before changing code.\n3. Preserve the original failure evidence; do not overwrite or delete it.\n4. Decide the minimal safe repair autonomously.\n5. Run the required checks and self-repair routine failures.\n6. Produce strict autonomous result schema with fresh skill resolver evidence.",
+  "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/repair-real-product-healthz-20260526-r1.json",
+  "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/repair-real-product-healthz-20260526-r1.md",
+  "autonomous_result": {
+    "plan": [
+      "Inspect durable context",
+      "Read original failure evidence and triage",
+      "Inspect referenced logs and resolver reports",
+      "Resolve capabilities",
+      "Design minimal change",
+      "Implement",
+      "Run checks",
+      "Repair failures if any"
+    ],
+    "design_summary": "Added a minimal FastAPI GET /healthz endpoint returning {'status': 'ok'} alongside the existing /health endpoint. This directly satisfies the controlled failing test while preserving existing API behavior.",
+    "skill_resolution": {
+      "needed": [
+        "github_evidence",
+        "fastapi_pytest",
+        "safe_execution",
+        "skill_audit"
+      ],
+      "used_existing": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json",
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py",
+        "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+      ],
+      "downloaded_quarantine": [],
+      "blocked": []
+    },
+    "changed_files": [
+      "app/main.py"
+    ],
+    "iteration_summary": [
+      {
+        "attempt": 1,
+        "result": "local checks passed",
+        "action": "Added GET /healthz endpoint and ran py_compile, pytest, and pytest with DeprecationWarning as error."
+      }
+    ],
+    "blockers": [],
+    "notes": "Original failure evidence and triage were preserved. Referenced original Codex log and Codex result paths were inspected but absent. Local checks passed; outer supervised bridge must finish final verification, product commit/push, and ORIS evidence commit."
+  }
+}

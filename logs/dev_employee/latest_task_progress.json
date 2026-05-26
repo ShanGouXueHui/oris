@@ -1,8 +1,9 @@
 {
-  "task_id": "failure-evidence-auto-triage-host-checks-20260526-r1",
-  "status": "blocked_host_checks_failed",
+  "task_id": "repair-real-product-healthz-20260526-r1",
+  "status": "completed",
+  "product_commit_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "product_remote_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T03:51:26+08:00",
-  "next_recommended_action": "Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id."
+  "updated_at": "2026-05-27T05:03:56+08:00"
 }
