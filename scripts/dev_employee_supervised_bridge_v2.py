@@ -16,6 +16,8 @@ Important host-side rules:
   or evidence completion.
 - Failure paths must also persist GitHub-verifiable ORIS evidence whenever
   committing/pushing the ORIS repository is still possible.
+- Failure paths should also run deterministic failure triage so the next repair
+  loop can proceed without asking the human for routine engineering decisions.
 """
 
 from __future__ import annotations
@@ -489,6 +491,21 @@ def commit_push_oris_failure(task: dict[str, Any], status: str, extra: dict[str,
     return commit_files(files, f"docs(dev-employee): record failed supervised task {task_id}")
 
 
+def run_failure_triage(task_id: str) -> dict[str, Any]:
+    script = ORIS_DIR / "scripts" / "dev_employee_failure_triage.py"
+    log_path = LOG_DIR / f"{task_id}_failure_triage.txt"
+    if not script.exists():
+        return {"ok": False, "stage": "triage_script_missing", "script": str(script)}
+    proc = run(["python3", str(script), "--task-id", task_id, "--commit"], cwd=ORIS_DIR, log_path=log_path)
+    return {
+        "ok": proc.returncode == 0,
+        "return_code": proc.returncode,
+        "log": str(log_path),
+        "stdout_tail": proc.stdout[-2000:],
+        "stderr_tail": proc.stderr[-2000:],
+    }
+
+
 def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[str, Any] | None = None) -> int:
     task.update({"status": status, "finished_at": now_iso()})
     if extra:
@@ -497,6 +514,10 @@ def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[st
     task["failure_evidence_result"] = evidence_result
     if not evidence_result.get("ok"):
         task["oris_evidence_push_failed"] = True
+    triage_result = run_failure_triage(task["task_id"])
+    task["failure_triage_result"] = triage_result
+    if not triage_result.get("ok"):
+        task["failure_triage_failed"] = True
     write_json(RUN_DIR / f"{task['task_id']}.json", task)
     failed_path = task_path.with_suffix(".failed.json")
     write_json(failed_path, task)
