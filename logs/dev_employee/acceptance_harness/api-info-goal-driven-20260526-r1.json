@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-05-27T05:43:39+08:00",
+  "scenario_path": "/home/admin/projects/oris/acceptance_scenarios/api_info_goal_driven.json",
+  "scenario_id": "api-info-goal-driven-20260526-r1",
+  "kind": "goal_driven",
+  "validation_errors": [],
+  "dry_run": true,
+  "ok": true,
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "finished_at": "2026-05-27T05:43:39+08:00"
+}
