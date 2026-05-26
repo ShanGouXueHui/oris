@@ -14,6 +14,8 @@ Important host-side rules:
 - For autonomous tasks with strict_result_schema=true, validate the Codex result
   contract and skill resolver evidence before host-side checks, Git operations,
   or evidence completion.
+- Failure paths must also persist GitHub-verifiable ORIS evidence whenever
+  committing/pushing the ORIS repository is still possible.
 """
 
 from __future__ import annotations
@@ -310,6 +312,61 @@ def autonomous_summary(codex_result: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def existing_relative(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    try:
+        return str(path.relative_to(ORIS_DIR))
+    except ValueError:
+        return None
+
+
+def add_existing(files: list[str], path: Path) -> None:
+    rel = existing_relative(path)
+    if rel and rel not in files:
+        files.append(rel)
+
+
+def collect_task_log_files(task_id: str) -> list[str]:
+    files: list[str] = []
+    if LOG_DIR.exists():
+        for path in sorted(LOG_DIR.glob(f"{task_id}*")):
+            if path.is_file():
+                add_existing(files, path)
+    return files
+
+
+def commit_files(files: list[str], message: str) -> dict[str, Any]:
+    unique_files = list(dict.fromkeys(files))
+    if not unique_files:
+        return {"ok": False, "stage": "git_add", "error": "no files to commit"}
+    add = run(["git", "add", *unique_files], cwd=ORIS_DIR)
+    if add.returncode != 0:
+        return {"ok": False, "stage": "git_add", "stdout": add.stdout, "stderr": add.stderr, "files": unique_files}
+    staged = run(["git", "diff", "--cached", "--quiet"], cwd=ORIS_DIR)
+    if staged.returncode == 0:
+        sha = run(["git", "rev-parse", "HEAD"], cwd=ORIS_DIR).stdout.strip()
+        committed = False
+    else:
+        commit = run(["git", "commit", "-m", message], cwd=ORIS_DIR)
+        if commit.returncode != 0:
+            return {"ok": False, "stage": "oris_commit", "stdout": commit.stdout, "stderr": commit.stderr, "files": unique_files}
+        sha = run(["git", "rev-parse", "HEAD"], cwd=ORIS_DIR).stdout.strip()
+        committed = True
+    push = run(["git", "push", "origin", "main"], cwd=ORIS_DIR)
+    remote = run(["git", "ls-remote", "origin", "refs/heads/main"], cwd=ORIS_DIR)
+    remote_sha = remote.stdout.split()[0] if remote.returncode == 0 and remote.stdout.split() else None
+    return {
+        "ok": push.returncode == 0 and remote_sha == sha,
+        "committed": committed,
+        "commit_sha": sha,
+        "remote_sha": remote_sha,
+        "push_stdout": push.stdout,
+        "push_stderr": push.stderr,
+        "files": unique_files,
+    }
+
+
 def commit_push_oris(
     task: dict[str, Any],
     run_state: dict[str, Any],
@@ -359,34 +416,87 @@ def commit_push_oris(
         "logs/dev_employee/latest_task_progress.md",
     ]
     for path in [skill_json_path, skill_md_path]:
-        if path.exists():
-            files.append(str(path.relative_to(ORIS_DIR)))
+        add_existing(files, path)
     for result in checks["results"]:
-        try:
-            files.append(str(Path(result["log"]).relative_to(ORIS_DIR)))
-        except ValueError:
-            pass
-    run(["git", "add", *files], cwd=ORIS_DIR)
-    staged = run(["git", "diff", "--cached", "--quiet"], cwd=ORIS_DIR)
-    if staged.returncode == 0:
-        sha = run(["git", "rev-parse", "HEAD"], cwd=ORIS_DIR).stdout.strip()
-        committed = False
-    else:
-        commit = run(["git", "commit", "-m", f"docs(dev-employee): complete supervised task {task_id}"], cwd=ORIS_DIR)
-        if commit.returncode != 0:
-            return {"ok": False, "stage": "oris_commit", "stdout": commit.stdout, "stderr": commit.stderr}
-        sha = run(["git", "rev-parse", "HEAD"], cwd=ORIS_DIR).stdout.strip()
-        committed = True
-    push = run(["git", "push", "origin", "main"], cwd=ORIS_DIR)
-    remote = run(["git", "ls-remote", "origin", "refs/heads/main"], cwd=ORIS_DIR)
-    remote_sha = remote.stdout.split()[0] if remote.returncode == 0 and remote.stdout.split() else None
-    return {"ok": push.returncode == 0 and remote_sha == sha, "committed": committed, "commit_sha": sha, "remote_sha": remote_sha, "push_stdout": push.stdout, "push_stderr": push.stderr}
+        add_existing(files, Path(result["log"]))
+    return commit_files(files, f"docs(dev-employee): complete supervised task {task_id}")
+
+
+def next_recommended_action(status: str) -> str:
+    if status in {"blocked_result_schema_invalid", "blocked_skill_resolution_invalid"}:
+        return "Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id."
+    if status == "blocked_host_checks_failed":
+        return "Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id."
+    if status == "codex_failed":
+        return "Inspect Codex log and runtime descriptor; repair prompt/tooling or resource issue, then rerun with a new task id."
+    if status in {"blocked_product_push_failed", "blocked_oris_push_failed"}:
+        return "Inspect Git push evidence and repository state; resolve Git synchronization or permissions issue, then rerun or resume safely."
+    return "Inspect failure details and available logs; apply the smallest safe platform or product fix, then rerun with a new task id."
+
+
+def commit_push_oris_failure(task: dict[str, Any], status: str, extra: dict[str, Any] | None = None) -> dict[str, Any]:
+    task_id = task["task_id"]
+    skill_json_path = SKILL_RESOLUTION_DIR / f"{task_id}.json"
+    skill_md_path = SKILL_RESOLUTION_DIR / f"{task_id}.md"
+    evidence = {
+        "task_id": task_id,
+        "status": status,
+        "updated_at": now_iso(),
+        "strict_result_schema": strict_result_schema(task),
+        "task_objective": task.get("task_objective"),
+        "failure_stage": status,
+        "failure_details": extra or {},
+        "codex_result_path": task.get("codex_result_path"),
+        "codex_log_path": task.get("codex_log_path"),
+        "skill_resolver_report_json": str(skill_json_path) if skill_json_path.exists() else None,
+        "skill_resolver_report_markdown": str(skill_md_path) if skill_md_path.exists() else None,
+        "next_recommended_action": next_recommended_action(status),
+    }
+    if extra:
+        for optional_key in ["checks", "product_result", "oris_result", "codex_result", "schema_errors", "skill_resolution_errors", "return_code", "last_error"]:
+            if optional_key in extra:
+                evidence[optional_key] = extra[optional_key]
+    write_json(RUN_DIR / f"{task_id}.json", evidence)
+    write_json(RUN_DIR / f"{task_id}.failure_result.json", evidence)
+    latest = {
+        "task_id": task_id,
+        "status": status,
+        "oris_evidence_pending": False,
+        "strict_result_schema": strict_result_schema(task),
+        "updated_at": now_iso(),
+        "next_recommended_action": evidence["next_recommended_action"],
+    }
+    write_json(LOG_DIR / "latest_task_progress.json", latest)
+    (LOG_DIR / "latest_task_progress.md").write_text(
+        f"# Latest Dev Employee Task Progress\n\nTask id: `{task_id}`\n\nStatus: {status}\n\nStrict result schema: `{strict_result_schema(task)}`\n\nORIS evidence pending: `false`\n\nNext recommended action: {evidence['next_recommended_action']}\n",
+        encoding="utf-8",
+    )
+    files = [
+        f"orchestration/task_runs/{task_id}.json",
+        f"orchestration/task_runs/{task_id}.failure_result.json",
+        "logs/dev_employee/latest_task_progress.json",
+        "logs/dev_employee/latest_task_progress.md",
+    ]
+    for path in [skill_json_path, skill_md_path]:
+        add_existing(files, path)
+    for rel in collect_task_log_files(task_id):
+        if rel not in files:
+            files.append(rel)
+    if extra and isinstance(extra.get("checks"), dict):
+        for result in extra["checks"].get("results", []):
+            if isinstance(result, dict) and result.get("log"):
+                add_existing(files, Path(result["log"]))
+    return commit_files(files, f"docs(dev-employee): record failed supervised task {task_id}")
 
 
 def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[str, Any] | None = None) -> int:
     task.update({"status": status, "finished_at": now_iso()})
     if extra:
         task.update(extra)
+    evidence_result = commit_push_oris_failure(task, status, extra)
+    task["failure_evidence_result"] = evidence_result
+    if not evidence_result.get("ok"):
+        task["oris_evidence_push_failed"] = True
     write_json(RUN_DIR / f"{task['task_id']}.json", task)
     failed_path = task_path.with_suffix(".failed.json")
     write_json(failed_path, task)
