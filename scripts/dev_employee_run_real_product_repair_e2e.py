@@ -67,15 +67,22 @@ def git_status(path: Path) -> str:
     return run(["git", "status", "--short"], cwd=path).stdout
 
 
+def git_tracked_status(path: Path) -> str:
+    return run(["git", "status", "--short", "--untracked-files=no"], cwd=path).stdout
+
+
 def service_active(service: str) -> bool:
     return run(["systemctl", "--user", "is-active", service]).stdout.strip() == "active"
 
 
 def require_clean_trees() -> None:
-    oris_status = git_status(ORIS_DIR)
+    # ORIS can legitimately contain old untracked runtime logs/evidence on host.
+    # Require no tracked/staged ORIS modifications, but do not block on untracked
+    # runtime noise.
+    oris_tracked_status = git_tracked_status(ORIS_DIR)
     product_status = git_status(PRODUCT_DIR)
-    if oris_status:
-        raise SystemExit(f"ERROR: ORIS working tree is not clean before E2E:\n{oris_status}")
+    if oris_tracked_status:
+        raise SystemExit(f"ERROR: ORIS tracked working tree is not clean before E2E:\n{oris_tracked_status}")
     if product_status:
         raise SystemExit(f"ERROR: product working tree is not clean before E2E:\n{product_status}")
 
@@ -288,10 +295,17 @@ def main() -> int:
             report["final_checks"] = final_product_checks()
             success = product_head_after == product_remote and report["final_checks"].get("ok") is True
         report["ok"] = success
+    except BaseException as exc:
+        report["ok"] = False
+        report["error_type"] = type(exc).__name__
+        report["error"] = str(exc)
+        raise
     finally:
         restore_product_if_needed(success)
+        report.setdefault("ok", success)
         report["finished_at"] = now_iso()
         report["final_product_status"] = git_status(PRODUCT_DIR)
+        report["final_oris_tracked_status"] = git_tracked_status(ORIS_DIR)
         commit_report(report)
         run(["git", "log", "-1", "--oneline"], cwd=ORIS_DIR)
         print(json.dumps({"ok": report.get("ok"), "repair_task_id": REPAIR_TASK_ID}, ensure_ascii=False, indent=2))
