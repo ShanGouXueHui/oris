@@ -1,6 +1,6 @@
 {
   "task_id": "autonomous-api-stats-skill-resolution-20260526",
-  "resolved_at": "2026-05-26T06:03:58+08:00",
+  "resolved_at": "2026-05-27T03:02:01+08:00",
   "objective": "为 in-memory task-board API 增加 GET /stats 端点，返回 total_tasks 以及按 status 分组的计数；保持现有 API 兼容；补充必要 pytest。任务开始前必须解析所需 FastAPI、pytest、GitHub evidence 与 OpenClaw skills/capability policy；如需要外部 skills，只能 quarantine audit，不能安装执行。",
   "skill_resolution": {
     "needed": [
