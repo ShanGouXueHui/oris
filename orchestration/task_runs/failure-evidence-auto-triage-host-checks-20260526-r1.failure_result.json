@@ -1,0 +1,57 @@
+{
+  "task_id": "failure-evidence-auto-triage-host-checks-20260526-r1",
+  "status": "blocked_host_checks_failed",
+  "updated_at": "2026-05-27T03:51:26+08:00",
+  "strict_result_schema": true,
+  "task_objective": "Controlled host checks failure evidence test. The pre-written strict result and resolver report match, but host py_compile/pytest must fail against a temporary product fixture to verify blocked_host_checks_failed evidence.",
+  "failure_stage": "blocked_host_checks_failed",
+  "failure_details": {
+    "checks": {
+      "ok": false,
+      "python_bin": "python3",
+      "results": [
+        {
+          "cmd": "python3 -m py_compile app/main.py",
+          "return_code": 1,
+          "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_host_py_compile.txt"
+        },
+        {
+          "cmd": "python3 -m pytest -q",
+          "return_code": 1,
+          "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_host_pytest.txt"
+        },
+        {
+          "cmd": "python3 -m pytest -q -W error::DeprecationWarning",
+          "return_code": 1,
+          "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_host_pytest_werror.txt"
+        }
+      ]
+    }
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-auto-triage-host-checks-20260526-r1.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1.codex.log",
+  "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/failure-evidence-auto-triage-host-checks-20260526-r1.json",
+  "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/failure-evidence-auto-triage-host-checks-20260526-r1.md",
+  "next_recommended_action": "Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id.",
+  "checks": {
+    "ok": false,
+    "python_bin": "python3",
+    "results": [
+      {
+        "cmd": "python3 -m py_compile app/main.py",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_host_py_compile.txt"
+      },
+      {
+        "cmd": "python3 -m pytest -q",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_host_pytest.txt"
+      },
+      {
+        "cmd": "python3 -m pytest -q -W error::DeprecationWarning",
+        "return_code": 1,
+        "log": "/home/admin/projects/oris/logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_host_pytest_werror.txt"
+      }
+    ]
+  }
+}

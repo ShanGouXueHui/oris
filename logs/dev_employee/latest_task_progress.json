@@ -1,8 +1,8 @@
 {
-  "task_id": "failure-evidence-host-checks-failed-20260526-r1",
+  "task_id": "failure-evidence-auto-triage-host-checks-20260526-r1",
   "status": "blocked_host_checks_failed",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T03:32:42+08:00",
+  "updated_at": "2026-05-27T03:51:26+08:00",
   "next_recommended_action": "Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id."
 }
