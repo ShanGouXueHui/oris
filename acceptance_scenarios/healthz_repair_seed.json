@@ -1,0 +1,80 @@
+{
+  "scenario_id": "healthz-repair-seed-20260526-r1",
+  "kind": "repair_seed",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "failed_task_id": "failure-evidence-harness-healthz-20260526-r1",
+  "repair_task_id": "repair-harness-healthz-20260526-r1",
+  "commit_message": "fix(dev-employee): repair harness healthz scenario",
+  "repair_objective": "Implement GET /healthz returning {\"status\": \"ok\"} and keep all existing tests passing.",
+  "root_cause": "Controlled acceptance scenario creates a failing /healthz test so the repair path can verify endpoint implementation.",
+  "repair_scope": "product_or_test_environment",
+  "seed_files": [
+    {
+      "path": "tests/test_healthz_repair.py",
+      "content": "from fastapi.testclient import TestClient\n\nfrom app.main import app\n\n\nclient = TestClient(app)\n\n\ndef test_healthz_endpoint_returns_ok():\n    response = client.get('/healthz')\n    assert response.status_code == 200\n    assert response.json() == {'status': 'ok'}\n"
+    }
+  ],
+  "initial_check": [
+    "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_healthz_repair.py"
+  ],
+  "expected_checks": [
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_healthz_repair.py"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-W",
+      "error::DeprecationWarning"
+    ]
+  ],
+  "final_checks": [
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_healthz_repair.py"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-W",
+      "error::DeprecationWarning"
+    ]
+  ],
+  "require_initial_failure": true,
+  "constraints": [
+    "Do not ask the human for routine engineering decisions.",
+    "Preserve original failure evidence and use a new repair task id.",
+    "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON."
+  ],
+  "notes": [
+    "This scenario is intended for repair_seed validation only. It will no longer fail once /healthz already exists on product main."
+  ]
+}
