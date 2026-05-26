@@ -17,7 +17,8 @@ Required GitHub context, in order:
 11. `scripts/dev_employee_skill_resolver.py`
 12. `scripts/dev_employee_failure_triage.py`
 13. `scripts/dev_employee_repair_from_triage.py`
-14. `orchestration/project_registry.json`
+14. `scripts/dev_employee_run_real_product_repair_e2e.py`
+15. `orchestration/project_registry.json`
 
 ## Current objective
 
@@ -44,26 +45,41 @@ human objective
   -> ORIS success evidence commit
 ```
 
-Failure chain now validated:
+Failure/repair chain now validated:
 
 ```text
 failure occurs
   -> bridge commits failure_result.json/logs/resolver evidence
   -> bridge runs deterministic failure triage automatically
   -> triage commits JSON/Markdown report
-  -> repair-from-triage can generate a repair plan
-  -> target guard prevents product_path/product_repo mismatch enqueue by default
+  -> repair-from-triage generates a guarded repair plan
+  -> target guard validates product_path/product_repo
+  -> repair task is enqueued through loopback API
+  -> bridge/Codex repairs real product code
+  -> host checks pass
+  -> product commit/push and ORIS evidence commit complete
 ```
 
 ## Most recent verified product capability
 
 Task id:
 
-`autonomous-api-stats-skill-resolution-20260526`
+`repair-real-product-healthz-20260526-r1`
 
 Result:
 
 - Status: `completed`
+- ORIS evidence commit: `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`
+- Product commit and remote SHA: `58fb03fe2020f6d044e837a4626ff050fe90d2d9`
+- Product feature: `GET /healthz` returns `{"status": "ok"}`.
+- Targeted test: `1 passed in 0.25s`
+- Full pytest: `17 passed in 0.30s`
+- Full pytest with `-W error::DeprecationWarning`: `17 passed in 0.31s`
+- E2E report commit: `f8f98f8`, with `ok=true`.
+
+Earlier product milestone:
+
+- `autonomous-api-stats-skill-resolution-20260526`
 - ORIS evidence commit: `6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad`
 - Product commit and remote SHA: `7853ab0a27e1266789af7c97d900db171176d228`
 - Product feature: `GET /stats` returns `total_tasks` and status-counts.
@@ -84,17 +100,18 @@ Result:
 - `9d1096a66ea86c96a79b900b56798708c39259bf`: repair plan generated from triage.
 - `af219e0`: repair target path/repo guard added.
 - `95e23b0`: guard validation passed; mismatch enqueue rejected and no queue task created.
+- `a77d534`: real target repair plan guard positive path verified.
+- `8d7be20`: real target repair enqueue positive path verified while preventing bridge/Codex from consuming synthetic task.
+- `963f16d`: real product repair E2E precheck relaxed to ignore old untracked ORIS runtime noise while keeping product precheck strict.
+- `f8f98f8`: real product repair execution E2E validated with `ok=true`.
 
 ## Current immediate next task
 
-The next useful task is a positive repair-enqueue verification for a real target pair, not a synthetic fixture:
+The core autonomous repair loop is proven on the real product repository. The next useful task is hardening/generalization:
 
-1. Use a failure whose product target is actually `/home/admin/projects/oris-final-acceptance-api` and `ShanGouXueHui/oris-final-acceptance-api`, or pass those explicitly.
-2. Run `scripts/dev_employee_repair_from_triage.py` with a new task id and confirm `target_guard.enqueue_allowed=true`.
-3. Only then use `--enqueue` to submit a repair task.
-4. Verify that repair tasks preserve original evidence, use a new task id, run skill resolver, pass strict schema, and produce ORIS evidence.
-
-Do **not** use the synthetic fixture failure `failure-evidence-auto-triage-host-checks-20260526-r1` to enqueue a real product repair task unless intentionally running a controlled fixture test with `--allow-path-repo-mismatch`.
+1. Promote `scripts/dev_employee_run_real_product_repair_e2e.py` from a one-off healthz validation into a reusable acceptance harness.
+2. Add a small post-run sanity helper that records local tracked clean state after report commit/reset so future reports do not confuse transient report-file modifications with product failure.
+3. Validate one additional routine feature/repair task using the normal goal-driven enqueue path, not a synthetic failure seed, to confirm the system behaves as an AI development employee under ordinary product goals.
 
 ## Interaction rules
 
@@ -128,7 +145,7 @@ systemctl --user status oris-dev-employee-bridge.service --no-pager
 
 - `dev_employee_autonomous_enqueue.py` annotates local queued descriptors with `strict_result_schema=true`, `autonomy_mode=goal_driven`, `task_objective`, `constraints`, and `expected_checks`.
 - `dev_employee_supervised_bridge_v2.py` validates result schema and skill resolver evidence before host checks.
-- `dev_employee_supervised_bridge_v2.py` now commits failure evidence and automatically runs `dev_employee_failure_triage.py --commit`.
+- `dev_employee_supervised_bridge_v2.py` commits failure evidence and automatically runs `dev_employee_failure_triage.py --commit`.
 - `dev_employee_failure_triage.py` writes JSON/Markdown triage reports under `logs/dev_employee/failure_triage/`.
 - `dev_employee_repair_from_triage.py` writes repair plans under `logs/dev_employee/repair_plans/` and only enqueues when `--enqueue` is passed.
 - `dev_employee_repair_from_triage.py` blocks enqueue by default if `product_path` basename does not match `product_repo` slug.
@@ -146,4 +163,5 @@ Do not return to pseudo-exec behavior. Completion requires GitHub-verifiable evi
 - check logs;
 - skill resolution report for strict autonomous tasks;
 - failure evidence and triage report for failed tasks;
-- repair plans must preserve original evidence references and enforce target guard before enqueue.
+- repair plans must preserve original evidence references and enforce target guard before enqueue;
+- repair execution must prove product remote SHA and ORIS evidence commit.
