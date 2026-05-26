@@ -8,5 +8,11 @@
   "ok": true,
   "product_path": "/home/admin/projects/oris-final-acceptance-api",
   "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
-  "finished_at": "2026-05-27T05:36:20+08:00"
+  "finished_at": "2026-05-27T05:36:20+08:00",
+  "report_commit": {
+    "ok": true,
+    "committed": true,
+    "commit_sha": "c7e60f4f78406343aa1582cc1db94de822af84c5",
+    "remote_sha": "c7e60f4f78406343aa1582cc1db94de822af84c5"
+  }
 }
