@@ -1,6 +1,6 @@
 # Failure Triage — failure-evidence-host-checks-failed-20260526-r1
 
-Triaged at: `2026-05-27T03:38:24+08:00`
+Triaged at: `2026-05-27T03:40:57+08:00`
 Status: `blocked_host_checks_failed`
 Category: `host_checks_failed`
 Repair scope: `product_or_test_environment`

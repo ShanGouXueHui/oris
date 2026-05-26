@@ -1,6 +1,6 @@
 {
   "task_id": "failure-evidence-host-checks-failed-20260526-r1",
-  "triaged_at": "2026-05-27T03:38:24+08:00",
+  "triaged_at": "2026-05-27T03:40:57+08:00",
   "source_evidence": "/home/admin/projects/oris/orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.failure_result.json",
   "status": "blocked_host_checks_failed",
   "strict_result_schema": true,
