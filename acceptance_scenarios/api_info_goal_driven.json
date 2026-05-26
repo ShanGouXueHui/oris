@@ -1,0 +1,58 @@
+{
+  "scenario_id": "api-info-goal-driven-20260526-r1",
+  "kind": "goal_driven",
+  "task_id": "goal-api-info-endpoint-20260526-r1",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "commit_message": "feat(api): add API info endpoint",
+  "objective": "Add a small GET /info endpoint to the FastAPI in-memory task-board API. The endpoint must return a stable JSON object with app_name, version, storage, and endpoints fields. Required response: app_name='ORIS Final Acceptance API', version='1.0.0', storage='in-memory', endpoints contains at least 'health', 'healthz', 'stats', and 'tasks'. Add pytest coverage and keep all existing tests passing.",
+  "constraints": [
+    "Do not ask the human for routine engineering decisions.",
+    "Use the existing FastAPI app in app/main.py.",
+    "Keep the implementation minimal and deterministic.",
+    "Do not add external dependencies.",
+    "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+    "Produce strict autonomous result schema and fresh skill resolver evidence."
+  ],
+  "expected_checks": [
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-W",
+      "error::DeprecationWarning"
+    ]
+  ],
+  "final_checks": [
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-c",
+      "from fastapi.testclient import TestClient\nfrom app.main import app\nclient = TestClient(app)\nr = client.get('/info')\nassert r.status_code == 200, r.text\ndata = r.json()\nassert data['app_name'] == 'ORIS Final Acceptance API', data\nassert data['version'] == '1.0.0', data\nassert data['storage'] == 'in-memory', data\nassert set(['health', 'healthz', 'stats', 'tasks']).issubset(set(data['endpoints'])), data\n"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-W",
+      "error::DeprecationWarning"
+    ]
+  ],
+  "notes": [
+    "This scenario validates the reusable acceptance harness in normal goal-driven mode, not synthetic repair_seed mode.",
+    "The endpoint is intentionally small so acceptance focuses on the Dev Employee loop rather than feature complexity."
+  ]
+}
