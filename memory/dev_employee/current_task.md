@@ -14,7 +14,7 @@ Target local path: `/home/admin/projects/oris`
 
 Build ORIS into an autonomous AI development employee.
 
-Human gives goals and constraints. ORIS should autonomously decide design, capabilities, skills, implementation, tests, ordinary repair loops, failure diagnosis, repair planning, and GitHub evidence. Human should not decide routine engineering steps.
+Human gives goals and constraints. ORIS should autonomously decide design, capabilities, skills, implementation, tests, ordinary repair loops, failure diagnosis, repair planning, repair execution, and GitHub evidence. Human should not decide routine engineering steps.
 
 ## Verified milestones
 
@@ -40,6 +40,10 @@ Human gives goals and constraints. ORIS should autonomously decide design, capab
 - Repair plan generated from failure triage.
 - Repair target path/repo mismatch guard added.
 - Repair target guard validation passed: mismatch enqueue rejected and no queue task created.
+- Real target repair plan guard positive path verified.
+- Real target repair enqueue positive path verified.
+- Real product repair E2E precheck relaxed to allow old untracked ORIS runtime noise while keeping product precheck strict.
+- Real product repair execution E2E verified: ORIS repaired the real product by adding `GET /healthz` and committed product + ORIS evidence.
 
 ## Last verified product state
 
@@ -47,14 +51,15 @@ Product repository: `ShanGouXueHui/oris-final-acceptance-api`
 
 Product local path: `/home/admin/projects/oris-final-acceptance-api`
 
-Last verified product commit SHA: `7853ab0a27e1266789af7c97d900db171176d228`
+Last verified product commit SHA: `58fb03fe2020f6d044e837a4626ff050fe90d2d9`
 
-Last verified ORIS evidence SHA for product task: `6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad`
+Last verified ORIS evidence SHA for real repair task: `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`
 
 Latest verified product checks:
 
-- `16 passed in 0.30s`
-- `16 passed in 0.30s` with `-W error::DeprecationWarning`
+- targeted `/healthz` test: `1 passed in 0.25s`
+- full pytest: `17 passed in 0.30s`
+- full pytest with `-W error::DeprecationWarning`: `17 passed in 0.31s`
 
 ## Current platform evidence state
 
@@ -72,19 +77,21 @@ Key recent platform commits:
 - `9d1096a66ea86c96a79b900b56798708c39259bf`: repair plan generated from triage.
 - `af219e0`: repair target guard added.
 - `95e23b0`: repair target guard validation passed.
+- `a77d534`: real target repair plan guard positive path verified.
+- `8d7be20`: real target repair enqueue positive path verified.
+- `963f16d`: real product repair E2E precheck relaxed.
+- `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`: real product repair ORIS evidence committed.
+- `f8f98f8`: real product repair execution E2E report committed with `ok=true`.
 
 ## Next action
 
-Verify positive repair enqueue behavior with a real product target pair.
+Harden/generalize the verified repair execution loop.
 
 Requirements:
 
-1. Use a failure whose product target is actually `/home/admin/projects/oris-final-acceptance-api` and `ShanGouXueHui/oris-final-acceptance-api`, or pass both explicitly.
-2. Run `scripts/dev_employee_repair_from_triage.py` and confirm generated `target_guard.enqueue_allowed=true`.
-3. Only then use `--enqueue` to submit a repair task.
-4. Verify the repair task uses a new task id, preserves original failure evidence, runs skill resolver, passes strict schema, and commits GitHub evidence.
-
-Do not enqueue synthetic fixture failures into the real product repo unless explicitly running a controlled fixture test with `--allow-path-repo-mismatch`.
+1. Promote `scripts/dev_employee_run_real_product_repair_e2e.py` from one-off healthz validation into a reusable acceptance harness.
+2. Add post-run local tracked clean-state reporting after report commit/reset so future reports do not confuse transient report-file modifications with product failure.
+3. Validate one additional routine product feature or repair task using the normal goal-driven enqueue path, not a synthetic failure seed.
 
 ## Operating rule
 
