@@ -1,9 +1,9 @@
 {
-  "task_id": "repair-real-product-healthz-20260526-r1",
+  "task_id": "goal-api-info-endpoint-20260526-r1",
   "status": "completed",
-  "product_commit_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
-  "product_remote_sha": "58fb03fe2020f6d044e837a4626ff050fe90d2d9",
+  "product_commit_sha": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+  "product_remote_sha": "d2d577e3476320f3a35d88c0870e31befd032ecc",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T05:03:56+08:00"
+  "updated_at": "2026-05-27T05:47:33+08:00"
 }
