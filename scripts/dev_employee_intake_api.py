@@ -28,6 +28,8 @@ from typing import Any
 from urllib.parse import unquote, urlparse
 
 ORIS_DIR = Path("/home/admin/projects/oris")
+ORIS_REPO = "ShanGouXueHui/oris"
+DEFAULT_BRANCH = "main"
 REGISTRY = ORIS_DIR / "orchestration" / "project_registry.json"
 CATALOG_DIR = ORIS_DIR / "orchestration" / "dev_employee_intake_catalog"
 RUN_DIR = ORIS_DIR / "orchestration" / "task_runs"
@@ -131,7 +133,7 @@ def resolve_project(project_key: str) -> dict[str, Any]:
         "type": project.get("type"),
         "product_path": str(local_path),
         "product_repo": github_full_name(project),
-        "default_branch": project.get("default_branch") or "main",
+        "default_branch": project.get("default_branch") or DEFAULT_BRANCH,
         "allowed_scope": project.get("allowed_scope", []),
         "forbidden_scope": project.get("forbidden_scope", []),
     }
@@ -289,6 +291,49 @@ def create_goal(payload: dict[str, Any]) -> dict[str, Any]:
     return catalog
 
 
+def repo_relative(path: Path) -> str | None:
+    try:
+        return path.resolve().relative_to(ORIS_DIR.resolve()).as_posix()
+    except ValueError:
+        return None
+
+
+def evidence_file(label: str, path: Path) -> dict[str, Any]:
+    rel = repo_relative(path)
+    return {
+        "label": label,
+        "exists": path.exists(),
+        "local_path": str(path),
+        "repo": ORIS_REPO if rel else None,
+        "branch": DEFAULT_BRANCH if rel else None,
+        "repo_path": rel,
+    }
+
+
+def evidence_summary(task_id: str, primary_run: dict[str, Any] | None) -> dict[str, Any]:
+    files = [
+        evidence_file("task_run_json", RUN_DIR / f"{task_id}.json"),
+        evidence_file("codex_result_json", RUN_DIR / f"{task_id}.codex_result.json"),
+        evidence_file("skill_resolution_json", LOG_DIR / "skill_resolution" / f"{task_id}.json"),
+        evidence_file("skill_resolution_markdown", LOG_DIR / "skill_resolution" / f"{task_id}.md"),
+        evidence_file("codex_log", LOG_DIR / f"{task_id}.codex.log"),
+        evidence_file("host_py_compile_log", LOG_DIR / f"{task_id}_host_py_compile.txt"),
+        evidence_file("host_pytest_log", LOG_DIR / f"{task_id}_host_pytest.txt"),
+        evidence_file("host_pytest_werror_log", LOG_DIR / f"{task_id}_host_pytest_werror.txt"),
+    ]
+    completed = primary_run or {}
+    return {
+        "repo": ORIS_REPO,
+        "branch": DEFAULT_BRANCH,
+        "files": [item for item in files if item["exists"]],
+        "product_commit_sha": completed.get("product_commit_sha"),
+        "product_remote_sha": completed.get("product_remote_sha"),
+        "oris_evidence_sha": completed.get("oris_evidence_sha"),
+        "strict_result_schema": completed.get("strict_result_schema"),
+        "skill_resolver_report_json": completed.get("skill_resolver_report_json"),
+    }
+
+
 def task_status(task_id: str) -> dict[str, Any]:
     if not TASK_ID_RE.match(task_id):
         raise ValueError("invalid task_id")
@@ -302,8 +347,11 @@ def task_status(task_id: str) -> dict[str, Any]:
     runs = []
     for path in sorted(RUN_DIR.glob(f"{task_id}*.json")) if RUN_DIR.exists() else []:
         runs.append({"path": str(path), "data": read_json(path)})
+    primary_run = read_json(RUN_DIR / f"{task_id}.json") if (RUN_DIR / f"{task_id}.json").exists() else None
     status = "unknown"
-    if runs:
+    if primary_run:
+        status = str(primary_run.get("status") or status)
+    elif runs:
         status = str((runs[0].get("data") or {}).get("status") or status)
     elif queue:
         status = str((queue[0].get("data") or {}).get("status") or queue[0].get("suffix") or status)
@@ -319,7 +367,16 @@ def task_status(task_id: str) -> dict[str, Any]:
         "skill_resolution_json": str(LOG_DIR / "skill_resolution" / f"{task_id}.json") if (LOG_DIR / "skill_resolution" / f"{task_id}.json").exists() else None,
         "codex_log": str(LOG_DIR / f"{task_id}.codex.log") if (LOG_DIR / f"{task_id}.codex.log").exists() else None,
     }
-    return {"task_id": task_id, "status": status, "catalog": catalog, "queue": queue, "runs": runs, "latest_task_progress": latest, "evidence": evidence}
+    return {
+        "task_id": task_id,
+        "status": status,
+        "catalog": catalog,
+        "queue": queue,
+        "runs": runs,
+        "latest_task_progress": latest,
+        "evidence": evidence,
+        "github_evidence": evidence_summary(task_id, primary_run),
+    }
 
 
 def list_goals() -> dict[str, Any]:
