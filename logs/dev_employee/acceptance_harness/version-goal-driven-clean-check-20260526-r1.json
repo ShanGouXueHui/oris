@@ -124,5 +124,11 @@
   "ok": true,
   "final_product_status": "",
   "final_oris_tracked_status": " M orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.json\n",
-  "finished_at": "2026-05-29T03:50:20+08:00"
+  "finished_at": "2026-05-29T03:50:20+08:00",
+  "report_commit": {
+    "ok": true,
+    "committed": true,
+    "commit_sha": "d5beb709fee01b089f52d50bb80809eef295d085",
+    "remote_sha": "d5beb709fee01b089f52d50bb80809eef295d085"
+  }
 }
