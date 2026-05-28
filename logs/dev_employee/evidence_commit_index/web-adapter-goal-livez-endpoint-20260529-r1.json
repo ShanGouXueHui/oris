@@ -1,0 +1,20 @@
+{
+  "task_id": "web-adapter-goal-livez-endpoint-20260529-r1",
+  "status": "completed",
+  "indexed_at": "2026-05-29T05:13:05+08:00",
+  "oris_evidence_commit_sha": "9f50e41e30cffe419b515ae9613998a7cf33b4d0",
+  "oris_evidence_remote_sha": "9f50e41e30cffe419b515ae9613998a7cf33b4d0",
+  "oris_evidence_files": [
+    "orchestration/task_runs/web-adapter-goal-livez-endpoint-20260529-r1.json",
+    "orchestration/task_runs/web-adapter-goal-livez-endpoint-20260529-r1.supervised_result.json",
+    "logs/dev_employee/latest_task_progress.json",
+    "logs/dev_employee/latest_task_progress.md",
+    "logs/dev_employee/skill_resolution/web-adapter-goal-livez-endpoint-20260529-r1.json",
+    "logs/dev_employee/skill_resolution/web-adapter-goal-livez-endpoint-20260529-r1.md",
+    "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_host_py_compile.txt",
+    "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_host_pytest.txt",
+    "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_host_pytest_werror.txt"
+  ],
+  "product_commit_sha": "f241f1626edec2f97e906680831ada29482b00ef",
+  "product_remote_sha": "f241f1626edec2f97e906680831ada29482b00ef"
+}
