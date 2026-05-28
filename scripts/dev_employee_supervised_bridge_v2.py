@@ -39,6 +39,7 @@ QUEUE_DIR = ORIS_DIR / "orchestration" / "dev_employee_queue"
 RUN_DIR = ORIS_DIR / "orchestration" / "task_runs"
 LOG_DIR = ORIS_DIR / "logs" / "dev_employee"
 SKILL_RESOLUTION_DIR = LOG_DIR / "skill_resolution"
+EVIDENCE_COMMIT_INDEX_DIR = LOG_DIR / "evidence_commit_index"
 DEFAULT_CODEX = Path("/home/admin/.npm-global/bin/codex")
 
 
@@ -424,6 +425,32 @@ def commit_push_oris(
     return commit_files(files, f"docs(dev-employee): complete supervised task {task_id}")
 
 
+def record_evidence_commit_index(
+    task_id: str,
+    status: str,
+    evidence_result: dict[str, Any],
+    product_result: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if not evidence_result.get("commit_sha"):
+        return {"ok": False, "stage": "missing_evidence_commit_sha", "evidence_result": evidence_result}
+    index = {
+        "task_id": task_id,
+        "status": status,
+        "indexed_at": now_iso(),
+        "oris_evidence_commit_sha": evidence_result.get("commit_sha"),
+        "oris_evidence_remote_sha": evidence_result.get("remote_sha"),
+        "oris_evidence_files": evidence_result.get("files", []),
+        "product_commit_sha": product_result.get("commit_sha") if product_result else None,
+        "product_remote_sha": product_result.get("remote_sha") if product_result else None,
+    }
+    index_path = EVIDENCE_COMMIT_INDEX_DIR / f"{task_id}.json"
+    write_json(index_path, index)
+    return commit_files(
+        [f"logs/dev_employee/evidence_commit_index/{task_id}.json"],
+        f"docs(dev-employee): index evidence commit {task_id}",
+    )
+
+
 def next_recommended_action(status: str) -> str:
     if status in {"blocked_result_schema_invalid", "blocked_skill_resolution_invalid"}:
         return "Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id."
@@ -512,6 +539,8 @@ def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[st
         task.update(extra)
     evidence_result = commit_push_oris_failure(task, status, extra)
     task["failure_evidence_result"] = evidence_result
+    evidence_index_result = record_evidence_commit_index(task["task_id"], status, evidence_result)
+    task["failure_evidence_index_result"] = evidence_index_result
     if not evidence_result.get("ok"):
         task["oris_evidence_push_failed"] = True
     triage_result = run_failure_triage(task["task_id"])
@@ -573,7 +602,8 @@ def run_task(task_path: Path) -> int:
         oris_result = commit_push_oris(task, run_state, product_result, checks, codex_result)
         if not oris_result.get("ok"):
             return fail_task(task_path, task, "blocked_oris_push_failed", {"product_result": product_result, "oris_result": oris_result})
-        task.update({"status": "completed", "product_result": product_result, "oris_result": oris_result, "finished_at": now_iso()})
+        evidence_index_result = record_evidence_commit_index(task_id, "completed", oris_result, product_result)
+        task.update({"status": "completed", "product_result": product_result, "oris_result": oris_result, "oris_evidence_index_result": evidence_index_result, "finished_at": now_iso()})
         # Do not rewrite orchestration/task_runs/<task_id>.json after ORIS evidence
         # commit; keep richer terminal runtime state only in the queue file.
         done_path = task_path.with_suffix(".done.json")

@@ -1,0 +1,13 @@
+{
+  "task_id": "web-adapter-goal-ping-endpoint-20260529-r1",
+  "status": "completed",
+  "indexed_at": "2026-05-29T05:04:38+08:00",
+  "oris_evidence_commit_sha": "73eca59f169c202b7b21be546b3510c9c6cfb5b0",
+  "oris_evidence_remote_sha": "73eca59f169c202b7b21be546b3510c9c6cfb5b0",
+  "oris_evidence_files": [
+    "orchestration/task_runs/web-adapter-goal-ping-endpoint-20260529-r1.json"
+  ],
+  "product_commit_sha": "1ce234cf4e6b3179d4b3eebdb85a69263745582b",
+  "product_remote_sha": "1ce234cf4e6b3179d4b3eebdb85a69263745582b",
+  "backfilled": true
+}

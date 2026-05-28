@@ -35,6 +35,7 @@ CATALOG_DIR = ORIS_DIR / "orchestration" / "dev_employee_intake_catalog"
 RUN_DIR = ORIS_DIR / "orchestration" / "task_runs"
 QUEUE_DIR = ORIS_DIR / "orchestration" / "dev_employee_queue"
 LOG_DIR = ORIS_DIR / "logs" / "dev_employee"
+EVIDENCE_COMMIT_INDEX_DIR = LOG_DIR / "evidence_commit_index"
 BASE_TEMPLATE = ORIS_DIR / "prompts" / "dev_employee_autonomous_development_task_template_20260526.md"
 RUNTIME_PROMPT_DIR = ORIS_DIR / "run" / "dev_employee_prompts"
 DEFAULT_ENV_FILE = Path.home() / ".config" / "oris" / "dev_employee_enqueue.env"
@@ -311,6 +312,8 @@ def evidence_file(label: str, path: Path) -> dict[str, Any]:
 
 
 def evidence_summary(task_id: str, primary_run: dict[str, Any] | None) -> dict[str, Any]:
+    index_path = EVIDENCE_COMMIT_INDEX_DIR / f"{task_id}.json"
+    evidence_index = read_json(index_path) if index_path.exists() else {}
     files = [
         evidence_file("task_run_json", RUN_DIR / f"{task_id}.json"),
         evidence_file("codex_result_json", RUN_DIR / f"{task_id}.codex_result.json"),
@@ -320,6 +323,7 @@ def evidence_summary(task_id: str, primary_run: dict[str, Any] | None) -> dict[s
         evidence_file("host_py_compile_log", LOG_DIR / f"{task_id}_host_py_compile.txt"),
         evidence_file("host_pytest_log", LOG_DIR / f"{task_id}_host_pytest.txt"),
         evidence_file("host_pytest_werror_log", LOG_DIR / f"{task_id}_host_pytest_werror.txt"),
+        evidence_file("evidence_commit_index", EVIDENCE_COMMIT_INDEX_DIR / f"{task_id}.json"),
     ]
     completed = primary_run or {}
     return {
@@ -329,6 +333,9 @@ def evidence_summary(task_id: str, primary_run: dict[str, Any] | None) -> dict[s
         "product_commit_sha": completed.get("product_commit_sha"),
         "product_remote_sha": completed.get("product_remote_sha"),
         "oris_evidence_sha": completed.get("oris_evidence_sha"),
+        "oris_evidence_commit_sha": evidence_index.get("oris_evidence_commit_sha"),
+        "oris_evidence_remote_sha": evidence_index.get("oris_evidence_remote_sha"),
+        "evidence_index_commit_sha": evidence_index.get("evidence_index_commit_sha"),
         "strict_result_schema": completed.get("strict_result_schema"),
         "skill_resolver_report_json": completed.get("skill_resolver_report_json"),
     }
