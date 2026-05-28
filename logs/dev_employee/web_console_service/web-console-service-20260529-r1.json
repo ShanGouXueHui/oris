@@ -1,0 +1,24 @@
+{
+  "validated_at": "2026-05-29T05:35:00+08:00",
+  "service_name": "oris-dev-employee-web-console.service",
+  "installed": true,
+  "active": true,
+  "health": {
+    "status": "ok",
+    "service": "dev_employee_web_console"
+  },
+  "projects_contains_final_acceptance": true,
+  "known_task_id": "web-adapter-goal-livez-endpoint-20260529-r1",
+  "known_task_status": "completed",
+  "product_commit_sha": "f241f1626edec2f97e906680831ada29482b00ef",
+  "product_remote_sha": "f241f1626edec2f97e906680831ada29482b00ef",
+  "oris_evidence_commit_sha": "9f50e41e30cffe419b515ae9613998a7cf33b4d0",
+  "evidence_commit_index_repo_path": "logs/dev_employee/evidence_commit_index/web-adapter-goal-livez-endpoint-20260529-r1.json",
+  "ok": true,
+  "source": "user-provided curl output after installing Web console systemd user service",
+  "notes": [
+    "Web console health endpoint returned ok.",
+    "Web console projects endpoint returned registered project keys including oris-final-acceptance-api.",
+    "Web console status proxy returned completed livez task with product SHA, remote SHA, ORIS evidence commit SHA, and evidence_commit_index label."
+  ]
+}
