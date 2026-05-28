@@ -1,18 +1,128 @@
 {
-  "started_at": "2026-05-29T03:46:27+08:00",
+  "started_at": "2026-05-29T03:48:10+08:00",
   "scenario_path": "/home/admin/projects/oris/acceptance_scenarios/version_goal_driven_clean_check.json",
   "scenario_id": "version-goal-driven-clean-check-20260526-r1",
   "kind": "goal_driven",
   "validation_errors": [],
-  "dry_run": true,
-  "ok": true,
-  "product_path": "/home/admin/projects/oris-final-acceptance-api",
-  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
-  "finished_at": "2026-05-29T03:46:27+08:00",
-  "report_commit": {
+  "dry_run": false,
+  "product_head_before": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+  "enqueue_return_code": 0,
+  "wait_result": {
+    "completed": true,
+    "status": "completed",
+    "evidence": {
+      "task_id": "goal-version-endpoint-clean-check-20260526-r1",
+      "status": "completed",
+      "created_at": "2026-05-29T03:48:16+08:00",
+      "created_by": "dev_employee_enqueue_server",
+      "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-version-endpoint-clean-check-20260526-r1.md",
+      "workdir": "/home/admin/projects",
+      "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+      "sandbox": "workspace-write",
+      "extra_write_dirs": [
+        "/home/admin/projects/oris"
+      ],
+      "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "product_commit_message": "feat(api): add version endpoint",
+      "notes": "Harness report final_oris_tracked_status should be empty before the report commit step.",
+      "strict_result_schema": true,
+      "autonomy_mode": "goal_driven",
+      "task_objective": "Add a small GET /version endpoint to the FastAPI in-memory task-board API. The endpoint must return exactly {\"version\": \"1.0.0\"}. Add pytest coverage and keep all existing tests passing. This scenario also validates that ORIS bridge does not leave tracked task-run evidence dirty after committing ORIS evidence.",
+      "constraints": [
+        "Do not ask the human for routine engineering decisions.",
+        "Use the existing FastAPI app in app/main.py.",
+        "Keep the implementation minimal and deterministic.",
+        "Do not add external dependencies.",
+        "Do not change existing /info response semantics except if needed to keep consistency.",
+        "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+        "Produce strict autonomous result schema and fresh skill resolver evidence."
+      ],
+      "expected_checks": [
+        "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+      ],
+      "claimed_at": "2026-05-29T03:48:16+08:00",
+      "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1.codex.log",
+      "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.codex_result.json",
+      "started_at": "2026-05-29T03:48:16+08:00",
+      "product_result": {
+        "ok": true,
+        "committed": true,
+        "commit_sha": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
+        "remote_sha": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
+        "status_before": " M app/main.py\n M tests/test_tasks_api.py\n",
+        "push_stdout": "",
+        "push_stderr": "To github.com:ShanGouXueHui/oris-final-acceptance-api.git\n   d2d577e..044ac0f  main -> main\n",
+        "remote_stdout": "044ac0f1dd6f13766338f17e31e067bed2a9b372\trefs/heads/main\n",
+        "remote_stderr": ""
+      },
+      "oris_result": {
+        "ok": true,
+        "committed": true,
+        "commit_sha": "adf8ea0102a26831848b11aa7208135a2d84caea",
+        "remote_sha": "adf8ea0102a26831848b11aa7208135a2d84caea",
+        "push_stdout": "",
+        "push_stderr": "To github.com:ShanGouXueHui/oris.git\n   6734464..adf8ea0  main -> main\n",
+        "files": [
+          "orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.json",
+          "orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.supervised_result.json",
+          "logs/dev_employee/latest_task_progress.json",
+          "logs/dev_employee/latest_task_progress.md",
+          "logs/dev_employee/skill_resolution/goal-version-endpoint-clean-check-20260526-r1.json",
+          "logs/dev_employee/skill_resolution/goal-version-endpoint-clean-check-20260526-r1.md",
+          "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_host_py_compile.txt",
+          "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_host_pytest.txt",
+          "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_host_pytest_werror.txt"
+        ]
+      },
+      "finished_at": "2026-05-29T03:50:13+08:00"
+    },
+    "last_status_output": "{\n  \"http_status\": 404,\n  \"response\": {\n    \"error\": \"not_found\"\n  }\n}\n"
+  },
+  "product_head_after": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
+  "product_remote_after": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
+  "final_checks": {
     "ok": true,
-    "committed": true,
-    "commit_sha": "57f933d6b2dc762f342a46095b005c151df3758a",
-    "remote_sha": "57f933d6b2dc762f342a46095b005c151df3758a"
-  }
+    "results": [
+      {
+        "cmd": [
+          "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "-c",
+          "from fastapi.testclient import TestClient\nfrom app.main import app\nclient = TestClient(app)\nr = client.get('/version')\nassert r.status_code == 200, r.text\nassert r.json() == {'version': '1.0.0'}, r.json()\n"
+        ],
+        "return_code": 0,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      {
+        "cmd": [
+          "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "return_code": 0,
+        "stdout_tail": "...................                                                      [100%]\n19 passed in 0.31s\n",
+        "stderr_tail": ""
+      },
+      {
+        "cmd": [
+          "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "-m",
+          "pytest",
+          "-q",
+          "-W",
+          "error::DeprecationWarning"
+        ],
+        "return_code": 0,
+        "stdout_tail": "...................                                                      [100%]\n19 passed in 0.30s\n",
+        "stderr_tail": ""
+      }
+    ]
+  },
+  "ok": true,
+  "final_product_status": "",
+  "final_oris_tracked_status": " M orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.json\n",
+  "finished_at": "2026-05-29T03:50:20+08:00"
 }
