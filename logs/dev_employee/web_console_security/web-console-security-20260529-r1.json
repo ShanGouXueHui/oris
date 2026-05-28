@@ -1,0 +1,22 @@
+{
+  "validated_at": "2026-05-29T06:05:29+08:00",
+  "task_id": "web-adapter-goal-livez-endpoint-20260529-r1",
+  "ok": true,
+  "health_code": 200,
+  "health_service": "dev_employee_web_console",
+  "no_token_projects_code": 401,
+  "no_token_projects_error": "unauthorized",
+  "projects_code": 200,
+  "projects": [
+    "oris-final-acceptance-api"
+  ],
+  "status_code": 200,
+  "task_status": "completed",
+  "product_commit_sha": "f241f1626edec2f97e906680831ada29482b00ef",
+  "oris_evidence_commit_sha": "9f50e41e30cffe419b515ae9613998a7cf33b4d0",
+  "post_code": 403,
+  "post_error": "submit_disabled",
+  "task_check_code": 200,
+  "task_check_status": "unknown",
+  "final_oris_tracked_status": ""
+}
