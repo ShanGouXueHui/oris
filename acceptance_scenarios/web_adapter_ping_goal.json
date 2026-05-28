@@ -1,0 +1,22 @@
+{
+  "project_key": "oris-final-acceptance-api",
+  "task_id": "web-adapter-goal-ping-endpoint-20260529-r1",
+  "objective": "Add a small GET /ping endpoint to the FastAPI in-memory task-board API. The endpoint must return exactly {\"pong\": true}. Add pytest coverage and keep all existing tests passing. This task must be submitted through the Web/OpenClaw intake adapter path.",
+  "constraints": [
+    "Do not ask the human for routine engineering decisions.",
+    "Use the existing FastAPI app in app/main.py.",
+    "Keep the implementation minimal and deterministic.",
+    "Do not add external dependencies.",
+    "Do not change existing endpoint semantics.",
+    "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+    "Produce strict autonomous result schema and fresh skill resolver evidence."
+  ],
+  "expected_checks": [
+    "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+    "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+  ],
+  "commit_message": "feat(api): add ping endpoint",
+  "notes": [
+    "Submitted through Web/OpenClaw adapter real-goal validation."
+  ]
+}
