@@ -1,9 +1,9 @@
 {
-  "task_id": "web-adapter-goal-ping-endpoint-20260529-r1",
+  "task_id": "web-adapter-goal-livez-endpoint-20260529-r1",
   "status": "completed",
-  "product_commit_sha": "1ce234cf4e6b3179d4b3eebdb85a69263745582b",
-  "product_remote_sha": "1ce234cf4e6b3179d4b3eebdb85a69263745582b",
+  "product_commit_sha": "f241f1626edec2f97e906680831ada29482b00ef",
+  "product_remote_sha": "f241f1626edec2f97e906680831ada29482b00ef",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-29T04:45:53+08:00"
+  "updated_at": "2026-05-29T05:12:59+08:00"
 }
