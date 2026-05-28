@@ -1,0 +1,59 @@
+{
+  "scenario_id": "version-goal-driven-clean-check-20260526-r1",
+  "kind": "goal_driven",
+  "task_id": "goal-version-endpoint-clean-check-20260526-r1",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "commit_message": "feat(api): add version endpoint",
+  "objective": "Add a small GET /version endpoint to the FastAPI in-memory task-board API. The endpoint must return exactly {\"version\": \"1.0.0\"}. Add pytest coverage and keep all existing tests passing. This scenario also validates that ORIS bridge does not leave tracked task-run evidence dirty after committing ORIS evidence.",
+  "constraints": [
+    "Do not ask the human for routine engineering decisions.",
+    "Use the existing FastAPI app in app/main.py.",
+    "Keep the implementation minimal and deterministic.",
+    "Do not add external dependencies.",
+    "Do not change existing /info response semantics except if needed to keep consistency.",
+    "Do not commit .env, credentials, private keys, .venv, caches, browser profiles, or runtime queue JSON.",
+    "Produce strict autonomous result schema and fresh skill resolver evidence."
+  ],
+  "expected_checks": [
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-W",
+      "error::DeprecationWarning"
+    ]
+  ],
+  "final_checks": [
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-c",
+      "from fastapi.testclient import TestClient\nfrom app.main import app\nclient = TestClient(app)\nr = client.get('/version')\nassert r.status_code == 200, r.text\nassert r.json() == {'version': '1.0.0'}, r.json()\n"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-W",
+      "error::DeprecationWarning"
+    ]
+  ],
+  "notes": [
+    "This scenario validates normal goal-driven development after the bridge post-commit clean fix.",
+    "Harness report final_oris_tracked_status should be empty before the report commit step."
+  ]
+}
