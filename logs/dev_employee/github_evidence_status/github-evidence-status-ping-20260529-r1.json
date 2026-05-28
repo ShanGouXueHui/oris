@@ -1,0 +1,24 @@
+{
+  "validated_at": "2026-05-29T04:56:11+08:00",
+  "task_id": "web-adapter-goal-ping-endpoint-20260529-r1",
+  "ok": true,
+  "status_code": 200,
+  "task_status": "completed",
+  "github_evidence_repo": "ShanGouXueHui/oris",
+  "github_evidence_branch": "main",
+  "product_commit_sha": "1ce234cf4e6b3179d4b3eebdb85a69263745582b",
+  "product_remote_sha": "1ce234cf4e6b3179d4b3eebdb85a69263745582b",
+  "oris_evidence_sha": null,
+  "strict_result_schema": true,
+  "evidence_labels": [
+    "codex_log",
+    "codex_result_json",
+    "host_py_compile_log",
+    "host_pytest_log",
+    "host_pytest_werror_log",
+    "skill_resolution_json",
+    "skill_resolution_markdown",
+    "task_run_json"
+  ],
+  "evidence_file_count": 8
+}
