@@ -17,20 +17,20 @@ Required GitHub context, in order:
 11. `scripts/dev_employee_skill_resolver.py`
 12. `scripts/dev_employee_failure_triage.py`
 13. `scripts/dev_employee_repair_from_triage.py`
-14. `scripts/dev_employee_run_real_product_repair_e2e.py`
+14. `scripts/dev_employee_acceptance_harness.py`
 15. `orchestration/project_registry.json`
 
 ## Current objective
 
 Continue toward the target:
 
-> ORIS acts as an autonomous AI development employee. Human provides goals and constraints; ORIS decides plan, capabilities, skills, implementation, tests, repair loops, and evidence. Routine engineering decisions should not require human prompts.
+> ORIS acts as an autonomous AI development employee. Human provides goals and constraints; ORIS decides plan, capabilities, skills, implementation, tests, repair loops, acceptance checks, and evidence. Routine engineering decisions should not require human prompts.
 
 ## Current validated architecture
 
 ```text
 human objective
-  -> scripts/dev_employee_autonomous_enqueue.py
+  -> scripts/dev_employee_autonomous_enqueue.py or acceptance harness
   -> generated runtime prompt under run/dev_employee_prompts/
   -> local enqueue API
   -> queue descriptor
@@ -43,9 +43,11 @@ human objective
   -> host final checks
   -> product commit/push/remote verification
   -> ORIS success evidence commit
+  -> optional scenario acceptance report commit
+  -> ORIS tracked working tree remains clean after bridge commit
 ```
 
-Failure/repair chain now validated:
+Failure/repair chain validated:
 
 ```text
 failure occurs
@@ -64,29 +66,40 @@ failure occurs
 
 Task id:
 
-`repair-real-product-healthz-20260526-r1`
+`goal-readyz-endpoint-clean-check-20260529-r1`
 
 Result:
 
 - Status: `completed`
-- ORIS evidence commit: `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`
-- Product commit and remote SHA: `58fb03fe2020f6d044e837a4626ff050fe90d2d9`
-- Product feature: `GET /healthz` returns `{"status": "ok"}`.
-- Targeted test: `1 passed in 0.25s`
-- Full pytest: `17 passed in 0.30s`
-- Full pytest with `-W error::DeprecationWarning`: `17 passed in 0.31s`
-- E2E report commit: `f8f98f8`, with `ok=true`.
+- Product commit and remote SHA: `714dc53b239ad9ab2d7f408cef40b5c594e47181`
+- Product feature: `GET /readyz` returns `{"ready": true}`.
+- Full pytest: `20 passed in 0.30s`
+- Full pytest with `-W error::DeprecationWarning`: `20 passed in 0.31s`
+- Acceptance harness report: `logs/dev_employee/acceptance_harness/readyz-goal-driven-clean-check-20260529-r1.json`
+- Harness report commit: `bf85937b75c809a090752fce6c6cabde9f0bccb5`
+- `final_oris_tracked_status`: empty string, proving bridge post-commit clean behavior after restart.
 
-Earlier product milestone:
+Earlier product milestones:
 
+- `goal-api-info-endpoint-20260526-r1`
+  - Product commit: `d2d577e3476320f3a35d88c0870e31befd032ecc`
+  - ORIS evidence: `ad9463326dffc551fd4ecd720e060c9875a75402`
+  - Acceptance report: `9dfd847c5b5ac774bb24311f441b9b712d8c78a8`
+  - Feature: `GET /info`.
+- `goal-version-endpoint-clean-check-20260526-r1`
+  - Product commit: `044ac0f1dd6f13766338f17e31e067bed2a9b372`
+  - ORIS evidence: `adf8ea0102a26831848b11aa7208135a2d84caea`
+  - Acceptance report: `d5beb709fee01b089f52d50bb80809eef295d085`
+  - Feature: `GET /version`.
+  - Note: this run occurred before bridge service restart and still observed dirty tracked task-run evidence.
+- `repair-real-product-healthz-20260526-r1`
+  - ORIS evidence commit: `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`
+  - Product commit and remote SHA: `58fb03fe2020f6d044e837a4626ff050fe90d2d9`
+  - Product feature: `GET /healthz`.
 - `autonomous-api-stats-skill-resolution-20260526`
-- ORIS evidence commit: `6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad`
-- Product commit and remote SHA: `7853ab0a27e1266789af7c97d900db171176d228`
-- Product feature: `GET /stats` returns `total_tasks` and status-counts.
-- Host pytest: `16 passed in 0.30s`
-- Host pytest with `-W error::DeprecationWarning`: `16 passed in 0.30s`
-- Strict result schema: `true`
-- Skill resolver evidence committed and copied into `autonomous_result.skill_resolution`.
+  - ORIS evidence commit: `6a6d19e33b71da50fce06a1f5d4c382b12a7d7ad`
+  - Product commit and remote SHA: `7853ab0a27e1266789af7c97d900db171176d228`
+  - Product feature: `GET /stats`.
 
 ## Verified failure/evidence/repair milestones
 
@@ -103,15 +116,34 @@ Earlier product milestone:
 - `a77d534`: real target repair plan guard positive path verified.
 - `8d7be20`: real target repair enqueue positive path verified while preventing bridge/Codex from consuming synthetic task.
 - `963f16d`: real product repair E2E precheck relaxed to ignore old untracked ORIS runtime noise while keeping product precheck strict.
-- `f8f98f8`: real product repair execution E2E validated with `ok=true`.
+- `930cc89`: bridge fixed to avoid rewriting committed task-run evidence JSON after ORIS evidence commit.
+- `bf85937`: readyz acceptance report proves clean ORIS tracked state after bridge restart.
+
+## Acceptance harness state
+
+Reusable harness:
+
+- `scripts/dev_employee_acceptance_harness.py`
+
+Scenario directory:
+
+- `acceptance_scenarios/`
+
+Verified scenarios:
+
+- `healthz-repair-seed-20260526-r1`: dry-run repair_seed schema validation.
+- `api-info-goal-driven-20260526-r1`: normal goal-driven full run, `ok=true`.
+- `version-goal-driven-clean-check-20260526-r1`: normal goal-driven full run, `ok=true`, but before bridge restart.
+- `readyz-goal-driven-clean-check-20260529-r1`: normal goal-driven full run, `ok=true`, clean ORIS tracked state.
 
 ## Current immediate next task
 
-The core autonomous repair loop is proven on the real product repository. The next useful task is hardening/generalization:
+The core loop is proven across repair execution, normal goal-driven development, scenario-driven acceptance, and clean post-commit working-tree behavior. The next useful task is productizing the AI development employee interface:
 
-1. Promote `scripts/dev_employee_run_real_product_repair_e2e.py` from a one-off healthz validation into a reusable acceptance harness.
-2. Add a small post-run sanity helper that records local tracked clean state after report commit/reset so future reports do not confuse transient report-file modifications with product failure.
-3. Validate one additional routine feature/repair task using the normal goal-driven enqueue path, not a synthetic failure seed, to confirm the system behaves as an AI development employee under ordinary product goals.
+1. Add a thin OpenClaw/Web-to-Dev-Employee intake contract around the goal-driven enqueue path.
+2. Define a small persistent task catalog/status API for non-shell users to submit goals and inspect GitHub evidence.
+3. Keep GitHub as source of truth for evidence; avoid asking humans to paste logs.
+4. Keep acceptance harness as regression suite for new platform changes.
 
 ## Interaction rules
 
@@ -130,7 +162,7 @@ The core autonomous repair loop is proven on the real product repository. The ne
 On host:
 
 - `oris-dev-employee-enqueue.service` should be active.
-- `oris-dev-employee-bridge.service` should be active.
+- `oris-dev-employee-bridge.service` should be active and should already be restarted after `930cc89`.
 - Enqueue API: `127.0.0.1:18891`.
 - Token local file: `~/.config/oris/dev_employee_enqueue.env`.
 
@@ -146,6 +178,7 @@ systemctl --user status oris-dev-employee-bridge.service --no-pager
 - `dev_employee_autonomous_enqueue.py` annotates local queued descriptors with `strict_result_schema=true`, `autonomy_mode=goal_driven`, `task_objective`, `constraints`, and `expected_checks`.
 - `dev_employee_supervised_bridge_v2.py` validates result schema and skill resolver evidence before host checks.
 - `dev_employee_supervised_bridge_v2.py` commits failure evidence and automatically runs `dev_employee_failure_triage.py --commit`.
+- Since `930cc89`, `dev_employee_supervised_bridge_v2.py` does not rewrite committed task-run evidence JSON after ORIS evidence commit.
 - `dev_employee_failure_triage.py` writes JSON/Markdown triage reports under `logs/dev_employee/failure_triage/`.
 - `dev_employee_repair_from_triage.py` writes repair plans under `logs/dev_employee/repair_plans/` and only enqueues when `--enqueue` is passed.
 - `dev_employee_repair_from_triage.py` blocks enqueue by default if `product_path` basename does not match `product_repo` slug.
@@ -164,4 +197,5 @@ Do not return to pseudo-exec behavior. Completion requires GitHub-verifiable evi
 - skill resolution report for strict autonomous tasks;
 - failure evidence and triage report for failed tasks;
 - repair plans must preserve original evidence references and enforce target guard before enqueue;
-- repair execution must prove product remote SHA and ORIS evidence commit.
+- repair execution must prove product remote SHA and ORIS evidence commit;
+- acceptance harness reports must record final product status and ORIS tracked status.
