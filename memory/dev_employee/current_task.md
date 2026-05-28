@@ -14,7 +14,7 @@ Target local path: `/home/admin/projects/oris`
 
 Build ORIS into an autonomous AI development employee.
 
-Human gives goals and constraints. ORIS should autonomously decide design, capabilities, skills, implementation, tests, ordinary repair loops, failure diagnosis, repair planning, repair execution, and GitHub evidence. Human should not decide routine engineering steps.
+Human gives goals and constraints. ORIS should autonomously decide design, capabilities, skills, implementation, tests, ordinary repair loops, failure diagnosis, repair planning, repair execution, acceptance validation, and GitHub evidence. Human should not decide routine engineering steps.
 
 ## Verified milestones
 
@@ -44,6 +44,11 @@ Human gives goals and constraints. ORIS should autonomously decide design, capab
 - Real target repair enqueue positive path verified.
 - Real product repair E2E precheck relaxed to allow old untracked ORIS runtime noise while keeping product precheck strict.
 - Real product repair execution E2E verified: ORIS repaired the real product by adding `GET /healthz` and committed product + ORIS evidence.
+- Reusable acceptance harness added at `scripts/dev_employee_acceptance_harness.py`.
+- `api_info` normal goal-driven acceptance verified.
+- `version` normal goal-driven acceptance verified.
+- Bridge post-commit clean fix added at `930cc89`.
+- `readyz` normal goal-driven clean-state acceptance verified: final ORIS tracked status remained clean.
 
 ## Last verified product state
 
@@ -51,47 +56,48 @@ Product repository: `ShanGouXueHui/oris-final-acceptance-api`
 
 Product local path: `/home/admin/projects/oris-final-acceptance-api`
 
-Last verified product commit SHA: `58fb03fe2020f6d044e837a4626ff050fe90d2d9`
+Last verified product commit SHA: `714dc53b239ad9ab2d7f408cef40b5c594e47181`
 
-Last verified ORIS evidence SHA for real repair task: `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`
+Latest verified product capability: `GET /readyz -> {"ready": true}`
 
-Latest verified product checks:
+Latest verified checks:
 
-- targeted `/healthz` test: `1 passed in 0.25s`
-- full pytest: `17 passed in 0.30s`
-- full pytest with `-W error::DeprecationWarning`: `17 passed in 0.31s`
+- targeted `/readyz` check: passed
+- full pytest: `20 passed in 0.30s`
+- full pytest with `-W error::DeprecationWarning`: `20 passed in 0.31s`
+
+Latest verified acceptance report:
+
+- `logs/dev_employee/acceptance_harness/readyz-goal-driven-clean-check-20260529-r1.json`
+- report commit: `bf85937b75c809a090752fce6c6cabde9f0bccb5`
+- `final_product_status`: empty
+- `final_oris_tracked_status`: empty
 
 ## Current platform evidence state
 
 Key recent platform commits:
 
-- `f0e6f17688fb57db110307e434d82006bb6eb10f`: failure evidence persistence plan.
-- `ab779dbd865231a6067e19f019033e3e2da8dce6`: bridge failure evidence persistence implementation.
-- `404d44ecad8150709089263e2e6c763e02fc5e30`: `bridge_exception` failure evidence verified.
-- `fe58abe15fb55158f8bb5a717411dcf9dd29a7ab`: `blocked_skill_resolution_invalid` failure evidence verified.
-- `8c079bab5abfc5914a5dbd7f14142cbb13738211`: `blocked_host_checks_failed` failure evidence verified.
-- `98a8eaab3a66a50fabf4f14dd13733823d3456d0`: failure triage helper added.
-- `f2ebb8d`: bridge auto failure triage integration.
-- `671daad1a4a9a5968f67dab02f088be94105f56d`: auto triage end-to-end verified.
-- `88b336dccaff1ed698ed0b79b0cc7d448c40320b`: repair-from-triage helper added.
-- `9d1096a66ea86c96a79b900b56798708c39259bf`: repair plan generated from triage.
-- `af219e0`: repair target guard added.
-- `95e23b0`: repair target guard validation passed.
-- `a77d534`: real target repair plan guard positive path verified.
-- `8d7be20`: real target repair enqueue positive path verified.
-- `963f16d`: real product repair E2E precheck relaxed.
 - `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`: real product repair ORIS evidence committed.
 - `f8f98f8`: real product repair execution E2E report committed with `ok=true`.
+- `cdadb9a`: reusable acceptance harness added.
+- `b5af5aa`: healthz repair-seed scenario added.
+- `a5a70c3`: API info goal-driven scenario added.
+- `9dfd847c5b5ac774bb24311f441b9b712d8c78a8`: API info goal-driven acceptance report committed with `ok=true`.
+- `d5beb709fee01b089f52d50bb80809eef295d085`: version goal-driven acceptance report committed with `ok=true`; it still observed dirty tracked task-run evidence because bridge process was not restarted yet.
+- `930cc89`: bridge fixed to avoid rewriting committed task-run evidence JSON after ORIS evidence commit.
+- `1359c7a02489a2422e864ccdc1cdb848ee758994`: readyz clean-state scenario added.
+- `bf85937b75c809a090752fce6c6cabde9f0bccb5`: readyz acceptance report committed with `ok=true` and clean ORIS tracked state.
 
 ## Next action
 
-Harden/generalize the verified repair execution loop.
+Productize the AI development employee intake and status interface.
 
 Requirements:
 
-1. Promote `scripts/dev_employee_run_real_product_repair_e2e.py` from one-off healthz validation into a reusable acceptance harness.
-2. Add post-run local tracked clean-state reporting after report commit/reset so future reports do not confuse transient report-file modifications with product failure.
-3. Validate one additional routine product feature or repair task using the normal goal-driven enqueue path, not a synthetic failure seed.
+1. Add a thin OpenClaw/Web-to-Dev-Employee intake contract around the goal-driven enqueue path.
+2. Define a small persistent task catalog/status API for non-shell users to submit goals and inspect GitHub evidence.
+3. Keep GitHub as the source of truth for evidence; do not ask humans to paste logs.
+4. Keep the acceptance harness as the regression suite for platform changes.
 
 ## Operating rule
 
