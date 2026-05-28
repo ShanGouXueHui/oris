@@ -7,6 +7,7 @@ service. It does not expose the console publicly.
 
 from __future__ import annotations
 
+import secrets
 import subprocess
 from pathlib import Path
 
@@ -27,6 +28,8 @@ EnvironmentFile={ENV_FILE}
 Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_HOST=127.0.0.1
 Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PORT=18893
 Environment=ORIS_DEV_EMPLOYEE_INTAKE_URL=http://127.0.0.1:18892
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=0
 ExecStart=/usr/bin/python3 {ORIS_DIR}/scripts/dev_employee_web_console.py
 Restart=always
 RestartSec=5
@@ -36,6 +39,16 @@ PrivateTmp=true
 [Install]
 WantedBy=default.target
 """
+
+
+def ensure_env_key(key: str) -> None:
+    ENV_FILE.parent.mkdir(parents=True, exist_ok=True)
+    existing = ENV_FILE.read_text(encoding="utf-8").splitlines() if ENV_FILE.exists() else []
+    if any(line.strip().startswith(f"{key}=") for line in existing):
+        return
+    with ENV_FILE.open("a", encoding="utf-8") as fh:
+        fh.write(f"{key}={secrets.token_urlsafe(32)}\n")
+    ENV_FILE.chmod(0o600)
 
 
 def run(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -55,6 +68,7 @@ def main() -> int:
         raise SystemExit(f"ERROR: missing {script}")
     if not ENV_FILE.exists():
         raise SystemExit(f"ERROR: missing local env file {ENV_FILE}; install intake service first")
+    ensure_env_key("ORIS_DEV_EMPLOYEE_WEB_CONSOLE_TOKEN")
     SYSTEMD_USER_DIR.mkdir(parents=True, exist_ok=True)
     SERVICE_PATH.write_text(SERVICE_CONTENT, encoding="utf-8")
     run(["python3", "-m", "py_compile", "scripts/dev_employee_web_console.py"])

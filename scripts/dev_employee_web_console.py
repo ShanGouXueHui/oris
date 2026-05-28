@@ -24,6 +24,8 @@ DEFAULT_PORT = 18893
 DEFAULT_INTAKE_URL = "http://127.0.0.1:18892"
 DEFAULT_ENV_FILE = Path.home() / ".config" / "oris" / "dev_employee_enqueue.env"
 INTAKE_TOKEN_KEY = "ORIS_DEV_EMPLOYEE_INTAKE_TOKEN"
+CONSOLE_TOKEN_KEY = "ORIS_DEV_EMPLOYEE_WEB_CONSOLE_TOKEN"
+CONSOLE_AUTH_HEADER = "X-ORIS-Console-Token"
 AUTH_HEADER = "X-ORIS-Token"
 
 
@@ -52,6 +54,36 @@ def intake_token() -> str:
     if not token:
         raise RuntimeError(f"{INTAKE_TOKEN_KEY} missing from environment or local config")
     return token
+
+
+def console_token() -> str:
+    token = os.environ.get(CONSOLE_TOKEN_KEY) or load_env(DEFAULT_ENV_FILE).get(CONSOLE_TOKEN_KEY)
+    if not token:
+        raise RuntimeError(f"{CONSOLE_TOKEN_KEY} missing from environment or local config")
+    return token
+
+
+def console_auth_ok(handler: BaseHTTPRequestHandler) -> bool:
+    return (handler.headers.get(CONSOLE_AUTH_HEADER) or "") == console_token()
+
+
+def allowed_projects() -> set[str]:
+    raw = os.environ.get("ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST", "oris-final-acceptance-api")
+    return {item.strip() for item in raw.split(",") if item.strip()}
+
+
+def submit_enabled() -> bool:
+    return os.environ.get("ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED", "0").lower() in {"1", "true", "yes", "on"}
+
+
+def filter_projects(body: Any) -> Any:
+    if not isinstance(body, dict):
+        return body
+    projects = body.get("projects")
+    if not isinstance(projects, list):
+        return body
+    allow = allowed_projects()
+    return {**body, "projects": [item for item in projects if item in allow]}
 
 
 def json_response(handler: BaseHTTPRequestHandler, status: int, payload: Any) -> None:
@@ -125,6 +157,9 @@ def page() -> str:
     <section>
       <h2>Submit goal</h2>
       <div class="muted">Human supplies goal and constraints; ORIS decides routine engineering steps.</div>
+      <label>Console API token</label>
+      <input id="console_token" type="password" placeholder="paste local console token" />
+      <div class="muted">Stored only in this browser localStorage. Do not expose publicly without reverse-proxy auth.</div>
       <label>Project</label>
       <select id="project_key"></select>
       <label>Task ID optional</label>
@@ -160,13 +195,19 @@ Do not add external dependencies unless necessary.</textarea>
   </main>
 <script>
 const splitLines = (value) => value.split('\n').map(x => x.trim()).filter(Boolean);
+function consoleToken() { return document.getElementById('console_token').value.trim(); }
+function rememberToken() { localStorage.setItem('oris_console_token', consoleToken()); }
 async function api(path, options={}) {
-  const resp = await fetch(path, options);
+  const headers = Object.assign({}, options.headers || {});
+  const token = consoleToken();
+  if (token) headers['X-ORIS-Console-Token'] = token;
+  const resp = await fetch(path, Object.assign({}, options, {headers}));
   const data = await resp.json();
   if (!resp.ok) throw new Error(JSON.stringify(data, null, 2));
   return data;
 }
 async function loadProjects() {
+  rememberToken();
   const data = await api('/api/projects');
   const select = document.getElementById('project_key');
   select.innerHTML = '';
@@ -175,6 +216,7 @@ async function loadProjects() {
   }
 }
 async function submitGoal() {
+  rememberToken();
   const payload = {
     project_key: document.getElementById('project_key').value,
     objective: document.getElementById('objective').value.trim(),
@@ -203,10 +245,12 @@ function renderSummary(data) {
 async function loadStatus() {
   const taskId = document.getElementById('lookup_task_id').value.trim();
   if (!taskId) return;
+  rememberToken();
   const data = await api('/api/goals/' + encodeURIComponent(taskId));
   renderSummary(data);
   document.getElementById('status_result').textContent = JSON.stringify(data, null, 2);
 }
+document.getElementById('console_token').value = localStorage.getItem('oris_console_token') || '';
 loadProjects().catch(e => { document.getElementById('submit_result').textContent = String(e); });
 </script>
 </body>
@@ -226,12 +270,18 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/health":
             return json_response(self, 200, {"status": "ok", "service": "dev_employee_web_console"})
         if path == "/api/projects":
+            if not console_auth_ok(self):
+                return json_response(self, 401, {"error": "unauthorized"})
             status, body = intake_request("GET", "/projects")
-            return json_response(self, status, body)
+            return json_response(self, status, filter_projects(body))
         if path == "/api/goals":
+            if not console_auth_ok(self):
+                return json_response(self, 401, {"error": "unauthorized"})
             status, body = intake_request("GET", "/goals")
             return json_response(self, status, body)
         if path.startswith("/api/goals/"):
+            if not console_auth_ok(self):
+                return json_response(self, 401, {"error": "unauthorized"})
             task_id = unquote(path.removeprefix("/api/goals/"))
             status, body = intake_request("GET", f"/goals/{task_id}")
             return json_response(self, status, body)
@@ -242,10 +292,17 @@ class Handler(BaseHTTPRequestHandler):
         if path != "/api/goals":
             return json_response(self, 404, {"error": "not_found"})
         try:
+            if not console_auth_ok(self):
+                return json_response(self, 401, {"error": "unauthorized"})
+            if not submit_enabled():
+                return json_response(self, 403, {"error": "submit_disabled"})
             length = int(self.headers.get("Content-Length") or "0")
             if length <= 0 or length > 80_000:
                 return json_response(self, 400, {"error": "invalid_body_length"})
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            project_key = str(payload.get("project_key") or "")
+            if project_key not in allowed_projects():
+                return json_response(self, 403, {"error": "project_not_allowed", "project_key": project_key})
             status, body = intake_request("POST", "/goals", body=payload, auth=True)
             return json_response(self, status, body)
         except Exception as exc:
