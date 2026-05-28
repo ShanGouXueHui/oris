@@ -1,0 +1,215 @@
+{
+  "task_id": "intake-smoke-noexec-20260529-r1",
+  "started_at": "2026-05-29T04:25:13+08:00",
+  "ok": true,
+  "health_status": 200,
+  "health": {
+    "status": "ok",
+    "service": "dev_employee_intake_api"
+  },
+  "projects_status": 200,
+  "projects_contains_final_acceptance": true,
+  "post_status": 201,
+  "post_body": {
+    "task_id": "intake-smoke-noexec-20260529-r1",
+    "project_key": "oris-final-acceptance-api",
+    "project": {
+      "project_key": "oris-final-acceptance-api",
+      "name": "ORIS Final Acceptance API",
+      "type": "test_project",
+      "product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "default_branch": "main",
+      "allowed_scope": [
+        "README.md",
+        "AGENTS.md",
+        "docs/",
+        "app/",
+        "tests/",
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "private_keys",
+        "production_credentials"
+      ]
+    },
+    "objective": "Smoke-test the ORIS Dev Employee intake API only. Do not execute product changes. This task is intentionally removed before the bridge is restarted.",
+    "constraints": [
+      "This is an intake API smoke test only.",
+      "Do not ask the human for routine engineering decisions."
+    ],
+    "expected_checks": [
+      "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q"
+    ],
+    "commit_message": "test(dev-employee): intake api smoke",
+    "notes": [
+      "This queued descriptor will be deleted before bridge restart."
+    ],
+    "status": "queued",
+    "created_at": "2026-05-29T04:25:20+08:00",
+    "runtime_prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/intake-smoke-noexec-20260529-r1.md",
+    "enqueue_http_status": 201,
+    "enqueue_response": {
+      "queued": true,
+      "task_id": "intake-smoke-noexec-20260529-r1",
+      "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/intake-smoke-noexec-20260529-r1.queued.json",
+      "descriptor": {
+        "task_id": "intake-smoke-noexec-20260529-r1",
+        "status": "queued",
+        "created_at": "2026-05-29T04:25:20+08:00",
+        "created_by": "dev_employee_enqueue_server",
+        "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/intake-smoke-noexec-20260529-r1.md",
+        "workdir": "/home/admin/projects",
+        "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+        "sandbox": "workspace-write",
+        "extra_write_dirs": [
+          "/home/admin/projects/oris"
+        ],
+        "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+        "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "product_commit_message": "test(dev-employee): intake api smoke",
+        "notes": "This queued descriptor will be deleted before bridge restart."
+      }
+    },
+    "descriptor_annotation": {
+      "annotated": true,
+      "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/intake-smoke-noexec-20260529-r1.queued.json"
+    }
+  },
+  "task_status_status": 200,
+  "task_status_body": {
+    "task_id": "intake-smoke-noexec-20260529-r1",
+    "status": "queued",
+    "catalog": {
+      "task_id": "intake-smoke-noexec-20260529-r1",
+      "project_key": "oris-final-acceptance-api",
+      "project": {
+        "project_key": "oris-final-acceptance-api",
+        "name": "ORIS Final Acceptance API",
+        "type": "test_project",
+        "product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+        "default_branch": "main",
+        "allowed_scope": [
+          "README.md",
+          "AGENTS.md",
+          "docs/",
+          "app/",
+          "tests/",
+          "requirements.txt",
+          ".gitignore"
+        ],
+        "forbidden_scope": [
+          ".env",
+          "secrets",
+          "private_keys",
+          "production_credentials"
+        ]
+      },
+      "objective": "Smoke-test the ORIS Dev Employee intake API only. Do not execute product changes. This task is intentionally removed before the bridge is restarted.",
+      "constraints": [
+        "This is an intake API smoke test only.",
+        "Do not ask the human for routine engineering decisions."
+      ],
+      "expected_checks": [
+        "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q"
+      ],
+      "commit_message": "test(dev-employee): intake api smoke",
+      "notes": [
+        "This queued descriptor will be deleted before bridge restart."
+      ],
+      "status": "queued",
+      "created_at": "2026-05-29T04:25:20+08:00",
+      "runtime_prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/intake-smoke-noexec-20260529-r1.md",
+      "enqueue_http_status": 201,
+      "enqueue_response": {
+        "queued": true,
+        "task_id": "intake-smoke-noexec-20260529-r1",
+        "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/intake-smoke-noexec-20260529-r1.queued.json",
+        "descriptor": {
+          "task_id": "intake-smoke-noexec-20260529-r1",
+          "status": "queued",
+          "created_at": "2026-05-29T04:25:20+08:00",
+          "created_by": "dev_employee_enqueue_server",
+          "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/intake-smoke-noexec-20260529-r1.md",
+          "workdir": "/home/admin/projects",
+          "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+          "sandbox": "workspace-write",
+          "extra_write_dirs": [
+            "/home/admin/projects/oris"
+          ],
+          "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+          "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+          "product_commit_message": "test(dev-employee): intake api smoke",
+          "notes": "This queued descriptor will be deleted before bridge restart."
+        }
+      },
+      "descriptor_annotation": {
+        "annotated": true,
+        "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/intake-smoke-noexec-20260529-r1.queued.json"
+      }
+    },
+    "queue": [
+      {
+        "suffix": "queued",
+        "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/intake-smoke-noexec-20260529-r1.queued.json",
+        "data": {
+          "task_id": "intake-smoke-noexec-20260529-r1",
+          "status": "queued",
+          "created_at": "2026-05-29T04:25:20+08:00",
+          "created_by": "dev_employee_enqueue_server",
+          "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/intake-smoke-noexec-20260529-r1.md",
+          "workdir": "/home/admin/projects",
+          "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+          "sandbox": "workspace-write",
+          "extra_write_dirs": [
+            "/home/admin/projects/oris"
+          ],
+          "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+          "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+          "product_commit_message": "test(dev-employee): intake api smoke",
+          "notes": "This queued descriptor will be deleted before bridge restart.",
+          "strict_result_schema": true,
+          "autonomy_mode": "goal_driven",
+          "task_objective": "Smoke-test the ORIS Dev Employee intake API only. Do not execute product changes. This task is intentionally removed before the bridge is restarted.",
+          "constraints": [
+            "This is an intake API smoke test only.",
+            "Do not ask the human for routine engineering decisions."
+          ],
+          "expected_checks": [
+            "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q"
+          ]
+        }
+      }
+    ],
+    "runs": [],
+    "latest_task_progress": {
+      "task_id": "goal-readyz-endpoint-clean-check-20260529-r1",
+      "status": "completed",
+      "product_commit_sha": "714dc53b239ad9ab2d7f408cef40b5c594e47181",
+      "product_remote_sha": "714dc53b239ad9ab2d7f408cef40b5c594e47181",
+      "oris_evidence_pending": false,
+      "strict_result_schema": true,
+      "updated_at": "2026-05-29T03:58:52+08:00"
+    },
+    "evidence": {
+      "task_run_json": null,
+      "codex_result_json": null,
+      "skill_resolution_json": null,
+      "codex_log": null
+    }
+  },
+  "removed_smoke_files": [
+    "/home/admin/projects/oris/orchestration/dev_employee_queue/intake-smoke-noexec-20260529-r1.queued.json",
+    "/home/admin/projects/oris/orchestration/dev_employee_intake_catalog/intake-smoke-noexec-20260529-r1.json",
+    "/home/admin/projects/oris/run/dev_employee_prompts/intake-smoke-noexec-20260529-r1.md"
+  ],
+  "bridge_was_active": true,
+  "log_path": "/home/admin/projects/oris/logs/dev_employee/intake_api_smoke_intake-smoke-noexec-20260529-r1.log",
+  "bridge_active_after": true,
+  "finished_at": "2026-05-29T04:25:23+08:00",
+  "final_oris_tracked_status": ""
+}
