@@ -133,5 +133,11 @@
   "ok": true,
   "final_product_status": "",
   "final_oris_tracked_status": "",
-  "finished_at": "2026-05-29T03:58:58+08:00"
+  "finished_at": "2026-05-29T03:58:58+08:00",
+  "report_commit": {
+    "ok": true,
+    "committed": true,
+    "commit_sha": "bf85937b75c809a090752fce6c6cabde9f0bccb5",
+    "remote_sha": "bf85937b75c809a090752fce6c6cabde9f0bccb5"
+  }
 }
