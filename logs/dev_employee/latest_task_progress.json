@@ -1,9 +1,9 @@
 {
-  "task_id": "goal-version-endpoint-clean-check-20260526-r1",
+  "task_id": "goal-readyz-endpoint-clean-check-20260529-r1",
   "status": "completed",
-  "product_commit_sha": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
-  "product_remote_sha": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
+  "product_commit_sha": "714dc53b239ad9ab2d7f408cef40b5c594e47181",
+  "product_remote_sha": "714dc53b239ad9ab2d7f408cef40b5c594e47181",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-29T03:50:08+08:00"
+  "updated_at": "2026-05-29T03:58:52+08:00"
 }
