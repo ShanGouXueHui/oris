@@ -1,9 +1,9 @@
 {
-  "task_id": "goal-api-info-endpoint-20260526-r1",
+  "task_id": "goal-version-endpoint-clean-check-20260526-r1",
   "status": "completed",
-  "product_commit_sha": "d2d577e3476320f3a35d88c0870e31befd032ecc",
-  "product_remote_sha": "d2d577e3476320f3a35d88c0870e31befd032ecc",
+  "product_commit_sha": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
+  "product_remote_sha": "044ac0f1dd6f13766338f17e31e067bed2a9b372",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-27T05:47:33+08:00"
+  "updated_at": "2026-05-29T03:50:08+08:00"
 }
