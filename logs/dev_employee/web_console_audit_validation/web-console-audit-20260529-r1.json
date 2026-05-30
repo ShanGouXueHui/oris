@@ -1,0 +1,27 @@
+{
+  "validated_at": "2026-05-31T01:20:35+08:00",
+  "ok": true,
+  "post_code": 403,
+  "post_error": "submit_disabled",
+  "audit_event_found": true,
+  "audit_event_result": "rejected",
+  "audit_event_reason": "submit_disabled",
+  "audit_event_action": "submit_goal",
+  "audit_event_path": "/api/goals",
+  "audit_event_method": "POST",
+  "audit_event_has_ts": true,
+  "audit_event_keys": [
+    "action",
+    "method",
+    "path",
+    "reason",
+    "remote_addr",
+    "result",
+    "ts"
+  ],
+  "forbidden_terms_found": [],
+  "audit_files_count": 1,
+  "audit_events_before": 0,
+  "audit_events_after": 1,
+  "final_oris_tracked_status": ""
+}
