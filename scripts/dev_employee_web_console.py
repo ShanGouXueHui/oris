@@ -14,6 +14,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -22,11 +23,39 @@ from urllib.parse import unquote, urlparse
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 18893
 DEFAULT_INTAKE_URL = "http://127.0.0.1:18892"
+ORIS_DIR = Path("/home/admin/projects/oris")
+WEB_CONSOLE_AUDIT_DIR = ORIS_DIR / "logs" / "dev_employee" / "web_console_audit"
 DEFAULT_ENV_FILE = Path.home() / ".config" / "oris" / "dev_employee_enqueue.env"
 INTAKE_TOKEN_KEY = "ORIS_DEV_EMPLOYEE_INTAKE_TOKEN"
 CONSOLE_TOKEN_KEY = "ORIS_DEV_EMPLOYEE_WEB_CONSOLE_TOKEN"
 CONSOLE_AUTH_HEADER = "X-ORIS-Console-Token"
 AUTH_HEADER = "X-ORIS-Token"
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def audit_path() -> Path:
+    stamp = datetime.now(timezone.utc).astimezone().strftime("%Y%m%d")
+    return WEB_CONSOLE_AUDIT_DIR / f"web_console_audit_{stamp}.jsonl"
+
+
+def write_audit_event(handler: BaseHTTPRequestHandler, event: dict[str, Any]) -> None:
+    safe = {
+        "ts": now_iso(),
+        "remote_addr": handler.client_address[0] if handler.client_address else None,
+        "method": handler.command,
+        "path": handler.path,
+        **event,
+    }
+    # Never persist token/header values.
+    for forbidden in ["token", "headers", "authorization", "x_oris_console_token", "x-oris-console-token"]:
+        safe.pop(forbidden, None)
+    path = audit_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(safe, ensure_ascii=False, sort_keys=True) + "\n")
 
 
 def load_env(path: Path) -> dict[str, str]:
@@ -291,21 +320,42 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path != "/api/goals":
             return json_response(self, 404, {"error": "not_found"})
+        event_base = {"action": "submit_goal"}
         try:
             if not console_auth_ok(self):
+                write_audit_event(self, {**event_base, "result": "rejected", "reason": "unauthorized"})
                 return json_response(self, 401, {"error": "unauthorized"})
             if not submit_enabled():
+                write_audit_event(self, {**event_base, "result": "rejected", "reason": "submit_disabled"})
                 return json_response(self, 403, {"error": "submit_disabled"})
             length = int(self.headers.get("Content-Length") or "0")
             if length <= 0 or length > 80_000:
+                write_audit_event(self, {**event_base, "result": "rejected", "reason": "invalid_body_length", "body_length": length})
                 return json_response(self, 400, {"error": "invalid_body_length"})
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
             project_key = str(payload.get("project_key") or "")
+            task_id = str(payload.get("task_id") or "")
+            objective = str(payload.get("objective") or "")
             if project_key not in allowed_projects():
+                write_audit_event(self, {**event_base, "result": "rejected", "reason": "project_not_allowed", "project_key": project_key, "task_id": task_id})
                 return json_response(self, 403, {"error": "project_not_allowed", "project_key": project_key})
             status, body = intake_request("POST", "/goals", body=payload, auth=True)
+            write_audit_event(
+                self,
+                {
+                    **event_base,
+                    "result": "submitted" if 200 <= status < 300 else "upstream_error",
+                    "upstream_status": status,
+                    "project_key": project_key,
+                    "task_id": task_id or (body.get("task_id") if isinstance(body, dict) else None),
+                    "objective_length": len(objective),
+                    "constraints_count": len(payload.get("constraints") or []),
+                    "expected_checks_count": len(payload.get("expected_checks") or []),
+                },
+            )
             return json_response(self, status, body)
         except Exception as exc:
+            write_audit_event(self, {**event_base, "result": "error", "reason": type(exc).__name__})
             return json_response(self, 400, {"error": type(exc).__name__, "message": str(exc)})
 
 

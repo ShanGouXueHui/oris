@@ -101,3 +101,29 @@ The UI should show at least:
 - Codex log.
 
 The source of truth remains GitHub evidence, not transient local output.
+
+## Submit audit logging
+
+The Web Console writes local JSONL audit records for every `POST /api/goals` attempt.
+
+Audit directory:
+
+```text
+logs/dev_employee/web_console_audit/
+```
+
+Audit events intentionally exclude token/header values. Events may include:
+
+- timestamp;
+- remote address;
+- action;
+- result;
+- rejection reason;
+- project key;
+- task id;
+- objective length;
+- constraints/check count;
+- upstream intake status.
+
+Submit remains disabled by default. Audit logging must be verified before enabling submit in any public or reverse-proxied environment.
+
