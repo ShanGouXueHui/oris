@@ -1,0 +1,21 @@
+{
+  "project_key": "oris-final-acceptance-api",
+  "task_id": "web-console-submit-consolez-20260531-r1",
+  "objective": "Add a small GET /consolez endpoint to the FastAPI in-memory task-board API. The endpoint must return exactly {\"console\": true}. Add pytest coverage and keep all existing tests passing.",
+  "constraints": [
+    "Do not ask the human for routine engineering decisions.",
+    "Use the existing FastAPI app in app/main.py.",
+    "Keep the implementation minimal and deterministic.",
+    "Do not add external dependencies.",
+    "Do not change existing endpoint semantics.",
+    "Produce strict autonomous result schema and fresh skill resolver evidence."
+  ],
+  "expected_checks": [
+    "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+    "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning"
+  ],
+  "commit_message": "feat(api): add console readiness endpoint",
+  "notes": [
+    "Submitted through controlled Web Console validation."
+  ]
+}
