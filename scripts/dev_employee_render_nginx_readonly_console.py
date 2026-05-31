@@ -21,16 +21,33 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
 
+def active_config_lines(rendered: str) -> str:
+    """Return config text with full-line comments removed.
+
+    The template intentionally documents that the intake service lives at
+    127.0.0.1:18892, but only active proxy directives should be checked for
+    accidental intake exposure.
+    """
+    lines: list[str] = []
+    for raw in rendered.splitlines():
+        stripped = raw.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        lines.append(raw)
+    return "\n".join(lines)
+
+
 def validate(rendered: str) -> dict[str, object]:
+    active = active_config_lines(rendered)
     checks = {
-        "no_intake_proxy": "127.0.0.1:18892" not in rendered,
-        "web_console_proxy_only": "127.0.0.1:18893" in rendered,
-        "blocks_post_goals": "location = /api/goals" in rendered and "limit_except GET" in rendered and "return 403" in rendered,
-        "has_basic_auth": "auth_basic" in rendered and "auth_basic_user_file" in rendered,
-        "has_https": "listen 443 ssl" in rendered,
-        "has_http_redirect": "listen 80" in rendered and "return 301 https://$host$request_uri" in rendered,
-        "has_body_limit": "client_max_body_size 64k" in rendered,
-        "has_rate_limit": "limit_req_zone" in rendered and "limit_req zone=oris_dev_employee_console_read" in rendered,
+        "no_intake_proxy": "proxy_pass http://127.0.0.1:18892" not in active,
+        "web_console_proxy_only": "proxy_pass http://127.0.0.1:18893" in active,
+        "blocks_post_goals": "location = /api/goals" in active and "limit_except GET" in active and "return 403" in active,
+        "has_basic_auth": "auth_basic" in active and "auth_basic_user_file" in active,
+        "has_https": "listen 443 ssl" in active,
+        "has_http_redirect": "listen 80" in active and "return 301 https://$host$request_uri" in active,
+        "has_body_limit": "client_max_body_size 64k" in active,
+        "has_rate_limit": "limit_req_zone" in active and "limit_req zone=oris_dev_employee_console_read" in active,
         "no_placeholders": "__" not in rendered,
     }
     return {"ok": all(checks.values()), "checks": checks}
