@@ -1,0 +1,59 @@
+===== timestamp =====
+2026-06-01T01:55:31+08:00
+
+===== git sync =====
+HEAD is now at 7de7077 ops(dev-employee): add local web submit e2e finisher
+7de70770b0ef7d2ee7260996600e5309d955a371
+
+===== safety: public route must remain read-only =====
+4:# - proxies only to the local Web Console service on 127.0.0.1:18893;
+5:# - never proxies directly to the intake service on 127.0.0.1:18892;
+23:    server_name control.orisfy.com;
+38:    auth_basic "ORIS Dev Employee Console";
+39:    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+42:        if ($request_method !~ ^(GET)$) { return 403; }
+44:        proxy_pass http://127.0.0.1:18893/api/goals;
+53:        if ($request_method !~ ^(GET)$) { return 403; }
+55:        proxy_pass http://127.0.0.1:18893;
+64:        if ($request_method !~ ^(GET)$) { return 403; }
+66:        proxy_pass http://127.0.0.1:18893/api/projects;
+75:        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+77:        proxy_pass http://127.0.0.1:18893;
+88:    server_name control.orisfy.com;
+
+===== local services before =====
+active
+active
+active
+
+===== web console service file before =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=0
+
+===== enable local-only web submit =====
+BACKUP=/home/admin/.config/systemd/user/oris-dev-employee-web-console.service.bak_20260601015534
+
+===== web console service file after =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=1
+
+===== local web console health =====
+HTTP/1.0 200 OK
+Server: oris-dev-employee-web-console/0.1 Python/3.10.12
+Date: Sun, 31 May 2026 17:55:36 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 61
+
+{
+  "status": "ok",
+  "service": "dev_employee_web_console"
+}
+===== local project allowlist through web console requires token; token not logged =====
+ENV_FILE_EXISTS=/home/admin/.config/oris/dev_employee_enqueue.env
+CONSOLE_TOKEN_PRESENT
+
+===== local services after =====
+active
+active
+active
+
