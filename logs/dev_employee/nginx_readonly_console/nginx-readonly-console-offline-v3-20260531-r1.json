@@ -1,0 +1,27 @@
+{
+  "validated_at": "2026-05-31T21:31:07+08:00",
+  "source": "user-provided output from scripts/dev_employee_validate_nginx_readonly_console_offline_v3.py",
+  "nginx_found": true,
+  "openssl_found": true,
+  "ok": true,
+  "openssl_return_code": 0,
+  "renderer_return_code": 0,
+  "nginx_test_return_code": 0,
+  "nginx_test_stderr_summary": "nginx syntax is ok and configuration test is successful; initial default error_log alert was non-fatal in offline user-mode test",
+  "offline_https_port": 57689,
+  "offline_http_port": 44139,
+  "checks": {
+    "rendered_exists": true,
+    "production_keeps_https_443": true,
+    "production_keeps_http_80": true,
+    "offline_uses_high_https_port": true,
+    "offline_uses_high_http_port": true,
+    "does_not_proxy_intake": true,
+    "proxies_web_console": true,
+    "post_goals_blocked": true,
+    "root_non_read_blocked": true,
+    "has_basic_auth": true,
+    "top_level_logs_are_temp": true
+  },
+  "policy_result": "Read-only Nginx reverse proxy template is syntactically valid under nginx -t after using unprivileged offline test ports. The production template keeps HTTPS 443 and HTTP 80, proxies only the Web Console on 127.0.0.1:18893, does not proxy intake 127.0.0.1:18892, blocks POST /api/goals, blocks non-read root methods, and requires Basic Auth. Public installation is still pending and must not enable submit by default."
+}
