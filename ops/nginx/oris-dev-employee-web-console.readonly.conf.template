@@ -1,0 +1,98 @@
+# ORIS Dev Employee Web Console reverse proxy template - read-only mode
+#
+# This template is intentionally conservative:
+# - proxies only to the local Web Console service on 127.0.0.1:18893;
+# - never proxies directly to the intake service on 127.0.0.1:18892;
+# - requires outer Basic Auth placeholder;
+# - blocks POST /api/goals at Nginx layer;
+# - keeps Web Console internal submit disabled by default;
+# - applies small body limits and request-rate limiting.
+#
+# Replace placeholders before installation:
+# - __SERVER_NAME__
+# - __ACCESS_LOG__
+# - __ERROR_LOG__
+# - __HTPASSWD_FILE__
+# - __TLS_CERT__
+# - __TLS_KEY__
+
+limit_req_zone $binary_remote_addr zone=oris_dev_employee_console_read:10m rate=30r/m;
+
+server {
+    listen 443 ssl http2;
+    server_name __SERVER_NAME__;
+
+    ssl_certificate __TLS_CERT__;
+    ssl_certificate_key __TLS_KEY__;
+
+    access_log __ACCESS_LOG__;
+    error_log __ERROR_LOG__ warn;
+
+    client_max_body_size 64k;
+
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
+
+    auth_basic "ORIS Dev Employee Console";
+    auth_basic_user_file __HTPASSWD_FILE__;
+
+    location = /api/goals {
+        limit_except GET {
+            return 403;
+        }
+        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
+        proxy_pass http://127.0.0.1:18893/api/goals;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location /api/goals/ {
+        limit_except GET {
+            return 403;
+        }
+        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
+        proxy_pass http://127.0.0.1:18893;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location = /api/projects {
+        limit_except GET {
+            return 403;
+        }
+        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
+        proxy_pass http://127.0.0.1:18893/api/projects;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location / {
+        limit_except GET HEAD {
+            return 403;
+        }
+        limit_req zone=oris_dev_employee_console_read burst=20 nodelay;
+        proxy_pass http://127.0.0.1:18893;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+}
+
+server {
+    listen 80;
+    server_name __SERVER_NAME__;
+    return 301 https://$host$request_uri;
+}
