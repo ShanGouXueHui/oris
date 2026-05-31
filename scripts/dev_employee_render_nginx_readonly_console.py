@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Render and statically validate ORIS Dev Employee read-only Nginx config.
+
+This script does not install or reload Nginx. It renders the template to a target
+path and verifies conservative safety invariants.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+ORIS_DIR = Path("/home/admin/projects/oris")
+TEMPLATE = ORIS_DIR / "ops" / "nginx" / "oris-dev-employee-web-console.readonly.conf.template"
+DEFAULT_OUTPUT = Path("/tmp/oris-dev-employee-web-console.readonly.conf")
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def validate(rendered: str) -> dict[str, object]:
+    checks = {
+        "no_intake_proxy": "127.0.0.1:18892" not in rendered,
+        "web_console_proxy_only": "127.0.0.1:18893" in rendered,
+        "blocks_post_goals": "location = /api/goals" in rendered and "limit_except GET" in rendered and "return 403" in rendered,
+        "has_basic_auth": "auth_basic" in rendered and "auth_basic_user_file" in rendered,
+        "has_https": "listen 443 ssl" in rendered,
+        "has_http_redirect": "listen 80" in rendered and "return 301 https://$host$request_uri" in rendered,
+        "has_body_limit": "client_max_body_size 64k" in rendered,
+        "has_rate_limit": "limit_req_zone" in rendered and "limit_req zone=oris_dev_employee_console_read" in rendered,
+        "no_placeholders": "__" not in rendered,
+    }
+    return {"ok": all(checks.values()), "checks": checks}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Render read-only ORIS Web Console Nginx config")
+    parser.add_argument("--server-name", required=True)
+    parser.add_argument("--htpasswd-file", default="/etc/nginx/oris-dev-employee.htpasswd")
+    parser.add_argument("--tls-cert", default="/etc/letsencrypt/live/example/fullchain.pem")
+    parser.add_argument("--tls-key", default="/etc/letsencrypt/live/example/privkey.pem")
+    parser.add_argument("--access-log", default="/var/log/nginx/oris-dev-employee-console.access.log")
+    parser.add_argument("--error-log", default="/var/log/nginx/oris-dev-employee-console.error.log")
+    parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
+    args = parser.parse_args()
+
+    template = TEMPLATE.read_text(encoding="utf-8")
+    rendered = (
+        template
+        .replace("__SERVER_NAME__", args.server_name)
+        .replace("__HTPASSWD_FILE__", args.htpasswd_file)
+        .replace("__TLS_CERT__", args.tls_cert)
+        .replace("__TLS_KEY__", args.tls_key)
+        .replace("__ACCESS_LOG__", args.access_log)
+        .replace("__ERROR_LOG__", args.error_log)
+    )
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(rendered, encoding="utf-8")
+    result = validate(rendered)
+    result.update({"rendered_at": now_iso(), "output": str(output), "server_name": args.server_name})
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0 if result["ok"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
