@@ -1,0 +1,81 @@
+{
+  "prepared_at": "2026-05-31T22:20:40+08:00",
+  "ok": true,
+  "server_name": "你的真实域名",
+  "candidate_path": "/tmp/oris-dev-employee-web-console.readonly.conf",
+  "renderer_result": {
+    "ok": true,
+    "checks": {
+      "no_intake_proxy": true,
+      "web_console_proxy_only": true,
+      "blocks_post_goals": true,
+      "blocks_non_read_root": true,
+      "has_basic_auth": true,
+      "has_https": true,
+      "has_http_redirect": true,
+      "has_body_limit": true,
+      "has_rate_limit": true,
+      "no_placeholders": true
+    },
+    "rendered_at": "2026-05-31T22:20:40+08:00",
+    "output": "/tmp/oris-dev-employee-web-console.readonly.conf",
+    "server_name": "你的真实域名"
+  },
+  "file_checks": {
+    "htpasswd": {
+      "path": "/etc/nginx/oris-dev-employee.htpasswd",
+      "exists": null,
+      "readable": false,
+      "permission_error": true,
+      "error": "[Errno 13] Permission denied: '/etc/nginx/oris-dev-employee.htpasswd'"
+    },
+    "tls_cert": {
+      "path": "/etc/letsencrypt/live/你的真实域名/fullchain.pem",
+      "exists": null,
+      "readable": false,
+      "permission_error": true,
+      "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/你的真实域名/fullchain.pem'"
+    },
+    "tls_key": {
+      "path": "/etc/letsencrypt/live/你的真实域名/privkey.pem",
+      "exists": null,
+      "readable": false,
+      "permission_error": true,
+      "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/你的真实域名/privkey.pem'"
+    }
+  },
+  "require_existing_files": false,
+  "required_files_ok": true,
+  "service_status": {
+    "web_console": "active",
+    "intake": "active",
+    "bridge": "active",
+    "submit_enabled": false,
+    "health_status": 200
+  },
+  "safety_checks": {
+    "candidate_exists": true,
+    "renderer_ok": true,
+    "web_console_health_ok": true,
+    "web_console_service_active": true,
+    "intake_service_active": true,
+    "bridge_service_active": true,
+    "submit_disabled": true,
+    "does_not_proxy_intake": true,
+    "proxies_web_console": true,
+    "blocks_post_goals": true,
+    "has_basic_auth": true,
+    "keeps_production_443_80": true
+  },
+  "install_command_preview": [
+    "sudo install -m 0644 /tmp/oris-dev-employee-web-console.readonly.conf /etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+    "sudo nginx -t",
+    "sudo systemctl reload nginx"
+  ],
+  "notes": [
+    "This script did not install or reload Nginx.",
+    "Permission-denied file checks are reported but do not fail preflight unless --require-existing-files is used.",
+    "Only install after reviewing the candidate config and confirming TLS/htpasswd paths.",
+    "Public write operations remain blocked at Nginx and Web Console layers."
+  ]
+}
