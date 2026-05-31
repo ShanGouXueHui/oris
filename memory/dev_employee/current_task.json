@@ -5,7 +5,7 @@
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "web_product_ui_and_access_policy_pending",
+  "current_step": "reverse_proxy_access_policy_pending",
   "completed_steps": [
     "final_acceptance_api_created_and_verified",
     "loopback_enqueue_api_verified",
@@ -53,13 +53,20 @@
     "github_evidence_status_added_and_verified",
     "oris_evidence_commit_index_added",
     "oris_evidence_commit_index_backfilled_for_ping",
-    "future_task_evidence_commit_index_verified_with_livez"
+    "future_task_evidence_commit_index_verified_with_livez",
+    "local_web_console_prototype_added",
+    "web_console_access_policy_documented",
+    "web_console_systemd_service_installed_and_verified",
+    "web_console_token_gate_and_project_allowlist_verified",
+    "web_console_submit_disabled_gate_verified",
+    "web_console_submit_audit_logging_verified",
+    "controlled_temporary_web_console_submit_verified_with_consolez"
   ],
   "failed_steps": [],
-  "next_action": "Build the Web/OpenClaw product UI and access policy on top of the verified local intake/status service. The backend chain is proven; next work should focus on a safe UI layer for submitting goals, listing tasks, and displaying GitHub evidence. Keep the intake service local-only unless an explicit reverse-proxy/auth policy is implemented.",
+  "next_action": "Design and validate reverse-proxy access policy for the Web Console without exposing the intake service directly. Keep submit disabled by default. Any public route must require HTTPS, outer authentication, console API token, project allowlist, audit logging, body limits, rate limits, and an emergency disable mechanism before enabling write operations.",
   "last_error": null,
-  "last_known_product_commit_sha": "f241f1626edec2f97e906680831ada29482b00ef",
-  "last_known_oris_evidence_sha": "9f50e41e30cffe419b515ae9613998a7cf33b4d0",
+  "last_known_product_commit_sha": "8aad2de69577fa1367db0ef8d010ed1a912679e0",
+  "last_known_oris_evidence_sha": "bfb8420",
   "latest_platform_commits": {
     "intake_status_api": "9239046a0e51b90bf928b807be43aca3bfd7de6b",
     "intake_status_api_docs": "41b10a3fb88d73a86a7b2ae23f2a173ef99b09f0",
@@ -75,9 +82,19 @@
     "github_evidence_status_validation": "b070adf21e019a11d0ba25aef6ec11d48c0020a9",
     "evidence_commit_index_patch": "f5eccda",
     "web_adapter_livez_goal_payload": "4189fa73bf466d937f36753423a7af856975381d",
-    "web_adapter_livez_oris_evidence_commit": "9f50e41e30cffe419b515ae9613998a7cf33b4d0"
+    "web_adapter_livez_oris_evidence_commit": "9f50e41e30cffe419b515ae9613998a7cf33b4d0",
+    "web_console_prototype": "308321c",
+    "web_console_access_policy": "4985472",
+    "web_console_systemd_installer": "dd54721",
+    "web_console_service_validation": "ff031c3",
+    "web_console_security_patch": "f41749a",
+    "web_console_security_validation": "4e61a94",
+    "web_console_audit_patch": "e5ce946",
+    "web_console_audit_validation": "057edf9",
+    "web_console_consolez_goal_payload": "a51fda4",
+    "web_console_consolez_diagnostic": "bfb8420"
   },
-  "test_result": "Latest verified platform state: Web/OpenClaw adapter submitted real product tasks through the local intake service and bridge. Ping task completed with product SHA 1ce234cf4e6b3179d4b3eebdb85a69263745582b and Web status GitHub evidence. Livez task completed after the evidence-index bridge patch, with product SHA f241f1626edec2f97e906680831ada29482b00ef and automatic ORIS evidence commit index SHA 9f50e41e30cffe419b515ae9613998a7cf33b4d0. Status API now returns Web-friendly evidence including product commit, product remote, ORIS evidence commit, and evidence files.",
+  "test_result": "Latest verified platform state: Web Console is a local-only systemd user service over the verified intake/status service. It requires a separate console API token, filters projects to the allowlist, keeps submit disabled by default, and writes sanitized audit JSONL for submit attempts without token/header persistence. A controlled temporary submit-enable flow was validated with task web-console-submit-consolez-20260531-r1: audit recorded submitted with upstream_status=201, intake completed with three runs, product commit and remote SHA both equal 8aad2de69577fa1367db0ef8d010ed1a912679e0, product contains GET /consolez returning {\"console\": true}, checks passed, Web Console submit was restored disabled, and ORIS/product working trees were clean.",
   "blocked_reason": null,
-  "updated_at": "2026-05-29"
+  "updated_at": "2026-05-31"
 }
