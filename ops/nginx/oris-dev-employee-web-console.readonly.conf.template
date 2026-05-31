@@ -39,9 +39,7 @@ server {
     auth_basic_user_file __HTPASSWD_FILE__;
 
     location = /api/goals {
-        limit_except GET {
-            return 403;
-        }
+        if ($request_method !~ ^(GET)$) { return 403; }
         limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
         proxy_pass http://127.0.0.1:18893/api/goals;
         proxy_http_version 1.1;
@@ -52,9 +50,7 @@ server {
     }
 
     location /api/goals/ {
-        limit_except GET {
-            return 403;
-        }
+        if ($request_method !~ ^(GET)$) { return 403; }
         limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
         proxy_pass http://127.0.0.1:18893;
         proxy_http_version 1.1;
@@ -65,9 +61,7 @@ server {
     }
 
     location = /api/projects {
-        limit_except GET {
-            return 403;
-        }
+        if ($request_method !~ ^(GET)$) { return 403; }
         limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
         proxy_pass http://127.0.0.1:18893/api/projects;
         proxy_http_version 1.1;
@@ -78,9 +72,7 @@ server {
     }
 
     location / {
-        limit_except GET HEAD {
-            return 403;
-        }
+        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
         limit_req zone=oris_dev_employee_console_read burst=20 nodelay;
         proxy_pass http://127.0.0.1:18893;
         proxy_http_version 1.1;
