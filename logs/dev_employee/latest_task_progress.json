@@ -1,9 +1,9 @@
 {
-  "task_id": "web-adapter-goal-livez-endpoint-20260529-r1",
+  "task_id": "web-console-submit-consolez-20260531-r1",
   "status": "completed",
-  "product_commit_sha": "f241f1626edec2f97e906680831ada29482b00ef",
-  "product_remote_sha": "f241f1626edec2f97e906680831ada29482b00ef",
+  "product_commit_sha": "8aad2de69577fa1367db0ef8d010ed1a912679e0",
+  "product_remote_sha": "8aad2de69577fa1367db0ef8d010ed1a912679e0",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-05-29T05:12:59+08:00"
+  "updated_at": "2026-05-31T20:13:07+08:00"
 }

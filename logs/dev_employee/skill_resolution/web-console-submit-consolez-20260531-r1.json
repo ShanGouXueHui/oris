@@ -1,0 +1,53 @@
+{
+  "task_id": "web-console-submit-consolez-20260531-r1",
+  "resolved_at": "2026-05-31T20:11:19+08:00",
+  "objective": "Add a small GET /consolez endpoint to the FastAPI in-memory task-board API. The endpoint must return exactly {\"console\": true}. Add pytest coverage and keep all existing tests passing.",
+  "skill_resolution": {
+    "needed": [
+      "fastapi_pytest",
+      "safe_execution"
+    ],
+    "used_existing": [
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [
+    {
+      "name": "fastapi_pytest",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "fastapi",
+        "api",
+        "endpoint",
+        "pytest",
+        "tests"
+      ],
+      "owned_assets": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json"
+      ]
+    },
+    {
+      "name": "safe_execution",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "test"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py"
+      ]
+    }
+  ],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
