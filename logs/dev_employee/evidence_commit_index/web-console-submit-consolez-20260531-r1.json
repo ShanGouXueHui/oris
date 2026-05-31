@@ -1,0 +1,20 @@
+{
+  "task_id": "web-console-submit-consolez-20260531-r1",
+  "status": "completed",
+  "indexed_at": "2026-05-31T20:13:13+08:00",
+  "oris_evidence_commit_sha": "f5614009b44cfc7f7935c23cb69155d42d1426c7",
+  "oris_evidence_remote_sha": "f5614009b44cfc7f7935c23cb69155d42d1426c7",
+  "oris_evidence_files": [
+    "orchestration/task_runs/web-console-submit-consolez-20260531-r1.json",
+    "orchestration/task_runs/web-console-submit-consolez-20260531-r1.supervised_result.json",
+    "logs/dev_employee/latest_task_progress.json",
+    "logs/dev_employee/latest_task_progress.md",
+    "logs/dev_employee/skill_resolution/web-console-submit-consolez-20260531-r1.json",
+    "logs/dev_employee/skill_resolution/web-console-submit-consolez-20260531-r1.md",
+    "logs/dev_employee/web-console-submit-consolez-20260531-r1_host_py_compile.txt",
+    "logs/dev_employee/web-console-submit-consolez-20260531-r1_host_pytest.txt",
+    "logs/dev_employee/web-console-submit-consolez-20260531-r1_host_pytest_werror.txt"
+  ],
+  "product_commit_sha": "8aad2de69577fa1367db0ef8d010ed1a912679e0",
+  "product_remote_sha": "8aad2de69577fa1367db0ef8d010ed1a912679e0"
+}
