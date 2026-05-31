@@ -1,0 +1,291 @@
+===== timestamp =====
+2026-06-01T01:08:59+08:00
+
+===== nginx duplicate server_name =====
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_195142:4:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_195142:11:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_195142:13:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_195142:14:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf:4:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf:12:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf:17:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf:18:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194940:4:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194940:11:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194940:13:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194940:14:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194657:4:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194657:11:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194657:13:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_194657:14:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_074123:7:    server_name control.orisfy.com;
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_074123:31:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem; # managed by Certbot
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_074123:32:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem; # managed by Certbot
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_074123:40:    if ($host = control.orisfy.com) {
+/etc/nginx/sites-available/control.orisfy.com.conf.bak_20260406_074123:47:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:4:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:12:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:17:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:18:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:12:# - control.orisfy.com
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:16:# - /etc/letsencrypt/live/control.orisfy.com/fullchain.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:17:# - /etc/letsencrypt/live/control.orisfy.com/privkey.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:23:    server_name control.orisfy.com;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:25:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:26:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:88:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:4:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:12:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:17:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:18:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:12:# - control.orisfy.com
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:16:# - /etc/letsencrypt/live/control.orisfy.com/fullchain.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:17:# - /etc/letsencrypt/live/control.orisfy.com/privkey.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:23:    server_name control.orisfy.com;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:25:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:26:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:88:    server_name control.orisfy.com;
+
+===== nginx readonly config =====
+# ORIS Dev Employee Web Console reverse proxy template - read-only mode
+#
+# This template is intentionally conservative:
+# - proxies only to the local Web Console service on 127.0.0.1:18893;
+# - never proxies directly to the intake service on 127.0.0.1:18892;
+# - requires outer Basic Auth placeholder;
+# - blocks POST /api/goals at Nginx layer;
+# - keeps Web Console internal submit disabled by default;
+# - applies small body limits and request-rate limiting.
+#
+# Replace placeholders before installation:
+# - control.orisfy.com
+# - /var/log/nginx/oris-dev-employee-console.access.log
+# - /var/log/nginx/oris-dev-employee-console.error.log
+# - /etc/nginx/oris-dev-employee.htpasswd
+# - /etc/letsencrypt/live/control.orisfy.com/fullchain.pem
+# - /etc/letsencrypt/live/control.orisfy.com/privkey.pem
+
+limit_req_zone $binary_remote_addr zone=oris_dev_employee_console_read:10m rate=30r/m;
+
+server {
+    listen 443 ssl http2;
+    server_name control.orisfy.com;
+
+    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+
+    access_log /var/log/nginx/oris-dev-employee-console.access.log;
+    error_log /var/log/nginx/oris-dev-employee-console.error.log warn;
+
+    client_max_body_size 64k;
+
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" always;
+
+    auth_basic "ORIS Dev Employee Console";
+    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+
+    location = /api/goals {
+        if ($request_method !~ ^(GET)$) { return 403; }
+        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
+        proxy_pass http://127.0.0.1:18893/api/goals;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location /api/goals/ {
+        if ($request_method !~ ^(GET)$) { return 403; }
+        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
+        proxy_pass http://127.0.0.1:18893;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location = /api/projects {
+        if ($request_method !~ ^(GET)$) { return 403; }
+        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;
+        proxy_pass http://127.0.0.1:18893/api/projects;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location / {
+        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+        limit_req zone=oris_dev_employee_console_read burst=20 nodelay;
+        proxy_pass http://127.0.0.1:18893;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+}
+
+server {
+    listen 80;
+    server_name control.orisfy.com;
+    return 301 https://$host$request_uri;
+}
+
+===== nginx error log tail =====
+
+===== web console local health =====
+HTTP/1.0 200 OK
+Server: oris-dev-employee-web-console/0.1 Python/3.10.12
+Date: Sun, 31 May 2026 17:08:59 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 61
+
+{
+  "status": "ok",
+  "service": "dev_employee_web_console"
+}
+===== web console local root =====
+HTTP/1.0 200 OK
+Server: oris-dev-employee-web-console/0.1 Python/3.10.12
+Date: Sun, 31 May 2026 17:08:59 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 6708
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ORIS Dev Employee Console</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f6f7f9; color: #111827; }
+    header { background: #111827; color: white; padding: 18px 24px; }
+    main { max-width: 1180px; margin: 24px auto; padding: 0 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    section { background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; box-shadow: 0 8px 24px rgba(15,23,42,.06); }
+    label { display: block; font-weight: 650; margin: 12px 0 6px; }
+    input, textarea, select { width: 100%; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px; font: inherit; }
+    textarea { min-height: 90px; }
+    button { margin-top: 12px; border: 0; border-radius: 10px; padding: 10px 14px; background: #2563eb; color: white; font-weight: 700; cursor: pointer; }
+    button.secondary { background: #374151; }
+    pre { background: #0b1020; color: #d1e7ff; padding: 14px; border-radius: 12px; overflow: auto; max-height: 520px; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pill { display:inline-block; padding: 4px 9px; border-radius:999px; background:#e0f2fe; color:#075985; font-size:12px; font-weight:700; }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ORIS Dev Employee Console</h1>
+    <div class="muted">Local-only prototype over the verified intake/status service. Do not expose publicly without auth/reverse-proxy policy.</div>
+  </header>
+  <main>
+    <section>
+      <h2>Submit goal</h2>
+      <div class="muted">Human supplies goal and constraints; ORIS decides routine engineering steps.</div>
+      <label>Console API token</label>
+      <input id="console_token" type="password" placeholder="paste local console token" />
+      <div class="muted">Stored only in this browser localStorage. Do not expose publicly without reverse-proxy auth.</div>
+      <label>Project</label>
+      <select id="project_key"></select>
+      <label>Task ID optional</label>
+      <input id="task_id" placeholder="leave blank for generated id" />
+      <label>Objective</label>
+      <textarea id="objective" placeholder="Add a concrete product feature with acceptance criteria."></textarea>
+      <label>Constraints one per line</label>
+      <textarea id="constraints">Do not ask the human for routine engineering decisions.
+Keep implementation minimal and deterministic.
+Do not add external dependencies unless necessary.</textarea>
+      <label>Expected checks one per line</label>
+      <textarea id="expected_checks"></textarea>
+      <label>Commit message optional</label>
+      <input id="commit_message" placeholder="feat(...): ..." />
+      <button onclick="submitGoal()">Submit goal</button>
+      <button class="secondary" onclick="loadProjects()">Reload projects</button>
+      <pre id="submit_result"></pre>
+    </section>
+    <section>
+      <h2>Status & evidence</h2>
+      <div class="row">
+        <div>
+          <label>Task ID</label>
+          <input id="lookup_task_id" placeholder="task id" />
+        </div>
+        <div style="align-self:end">
+          <button onclick="loadStatus()">Load status</button>
+        </div>
+      </div>
+      <div id="summary"></div>
+      <pre id="status_result"></pre>
+    </section>
+  </main>
+<script>
+const splitLines = (value) => value.split('
+').map(x => x.trim()).filter(Boolean);
+function consoleToken() { return document.getElementById('console_token').value.trim(); }
+function rememberToken() { localStorage.setItem('oris_console_token', consoleToken()); }
+async function api(path, options={}) {
+  const headers = Object.assign({}, options.headers || {});
+  const token = consoleToken();
+  if (token) headers['X-ORIS-Console-Token'] = token;
+  const resp = await fetch(path, Object.assign({}, options, {headers}));
+  const data = await resp.json();
+  if (!resp.ok) throw new Error(JSON.stringify(data, null, 2));
+  return data;
+}
+async function loadProjects() {
+  rememberToken();
+  const data = await api('/api/projects');
+  const select = document.getElementById('project_key');
+  select.innerHTML = '';
+  for (const key of data.projects || []) {
+    const opt = document.createElement('option'); opt.value = key; opt.textContent = key; select.appendChild(opt);
+  }
+}
+async function submitGoal() {
+  rememberToken();
+  const payload = {
+    project_key: document.getElementById('project_key').value,
+    objective: document.getElementById('objective').value.trim(),
+    constraints: splitLines(document.getElementById('constraints').value),
+    expected_checks: splitLines(document.getElementById('expected_checks').value),
+    notes: ['Submitted through ORIS local Web console prototype.']
+  };
+  const taskId = document.getElementById('task_id').value.trim();
+  const commitMessage = document.getElementById('commit_message').value.trim();
+  if (taskId) payload.task_id = taskId;
+  if (commitMessage) payload.commit_message = commitMessage;
+  const data = await api('/api/goals', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+  document.getElementById('submit_result').textContent = JSON.stringify(data, null, 2);
+  if (data.task_id) document.getElementById('lookup_task_id').value = data.task_id;
+}
+function renderSummary(data) {
+  const ev = data.github_evidence || {};
+  const files = (ev.files || []).map(f => `<li><code>${f.label}</code>: ${f.repo_path || f.local_path}</li>`).join('');
+  document.getElementById('summary').innerHTML = `
+    <p><span class="pill">${data.status || 'unknown'}</span></p>
+    <p><b>Product:</b> <code>${ev.product_commit_sha || ''}</code></p>
+    <p><b>Remote:</b> <code>${ev.product_remote_sha || ''}</code></p>
+    <p><b>ORIS evidence:</b> <code>${ev.oris_evidence_commit_sha || ''}</code></p>
+    <p><b>Evidence files</b></p><ul>${files}</ul>`;
+}
+async function loadStatus() {
+  const taskId = document.getElementById('lookup_task_id').value.trim();
+  if (!taskId) return;
+  rememberToken();
+  const data = await api('/api/goals/' + encodeURIComponent(taskId));
+  renderSummary(data);
+  document.getElementById('status_result').textContent = JSON.stringify(data, null, 2);
+}
+document.getElementById('console_token').value = localStorage.getItem('oris_console_token') || '';
+loadProjects().catch(e => { document.getElementById('submit_result').textContent = String(e); });
+</script>
+</body>
+</html>
