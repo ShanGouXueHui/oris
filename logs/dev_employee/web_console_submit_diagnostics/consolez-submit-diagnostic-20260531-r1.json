@@ -1,0 +1,32 @@
+{
+  "diagnosed_at": "2026-05-31T20:15:42+08:00",
+  "task_id": "web-console-submit-consolez-20260531-r1",
+  "intake_status_code": 200,
+  "intake_task_status": "completed",
+  "intake_has_catalog": true,
+  "intake_queue_count": 0,
+  "intake_runs_count": 3,
+  "service_submit_enabled": false,
+  "web_console_active": "active",
+  "bridge_active": "active",
+  "intake_active": "active",
+  "audit_total_events": 2,
+  "matching_audit_count": 1,
+  "matching_audit_summaries": [
+    {
+      "ts": "2026-05-31T20:10:37+08:00",
+      "action": "submit_goal",
+      "result": "submitted",
+      "reason": null,
+      "upstream_status": 201,
+      "project_key": "oris-final-acceptance-api",
+      "task_id": "web-console-submit-consolez-20260531-r1"
+    }
+  ],
+  "product_contains_consolez": true,
+  "product_head": "8aad2de69577fa1367db0ef8d010ed1a912679e0",
+  "product_remote_main": "8aad2de69577fa1367db0ef8d010ed1a912679e0",
+  "oris_tracked_status": "",
+  "product_status": "",
+  "likely_stage": "submitted_to_intake_or_later"
+}
