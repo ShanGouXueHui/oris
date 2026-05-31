@@ -1,0 +1,356 @@
+===== timestamp =====
+2026-05-31T23:59:19+08:00
+
+===== git sync =====
+HEAD is now at 642a8bc ops(dev-employee): add orisfy readonly console apply verifier
+642a8bc6f43a4b68160859cd82c16611cad953c6
+
+===== env =====
+{
+  "env_path": "/home/admin/projects/oris/.env",
+  "values": {
+    "ORIS_NGINX_READONLY_CONSOLE_SERVER_NAME": "control.orisfy.com",
+    "ORIS_NGINX_READONLY_CONSOLE_HTPASSWD_FILE": "/etc/nginx/oris-dev-employee.htpasswd",
+    "ORIS_NGINX_READONLY_CONSOLE_TLS_CERT": "/etc/letsencrypt/live/control.orisfy.com/fullchain.pem",
+    "ORIS_NGINX_READONLY_CONSOLE_TLS_KEY": "/etc/letsencrypt/live/control.orisfy.com/privkey.pem",
+    "ORIS_NGINX_READONLY_CONSOLE_CANDIDATE": "/tmp/oris-dev-employee-web-console.readonly.conf"
+  }
+}
+
+===== DNS =====
+control.orisfy.com:
+43.106.55.255
+server public ip:
+43.106.55.255
+
+===== required files via sudo =====
+HTPASSWD_OK
+CERT_OK
+KEY_OK
+
+===== dry-run =====
+{
+  "planned_at": "2026-05-31T23:59:22+08:00",
+  "apply": false,
+  "server_name": "control.orisfy.com",
+  "candidate": "/tmp/oris-dev-employee-web-console.readonly.conf",
+  "target": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+  "preflight_return_code": 0,
+  "preflight_result": {
+    "ok": true,
+    "report_path": "/home/admin/projects/oris/logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json",
+    "candidate_path": "/tmp/oris-dev-employee-web-console.readonly.conf",
+    "file_checks": {
+      "htpasswd": {
+        "path": "/etc/nginx/oris-dev-employee.htpasswd",
+        "exists": null,
+        "readable": false,
+        "permission_error": true,
+        "error": "[Errno 13] Permission denied: '/etc/nginx/oris-dev-employee.htpasswd'"
+      },
+      "tls_cert": {
+        "path": "/etc/letsencrypt/live/control.orisfy.com/fullchain.pem",
+        "exists": null,
+        "readable": false,
+        "permission_error": true,
+        "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/control.orisfy.com/fullchain.pem'"
+      },
+      "tls_key": {
+        "path": "/etc/letsencrypt/live/control.orisfy.com/privkey.pem",
+        "exists": null,
+        "readable": false,
+        "permission_error": true,
+        "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/control.orisfy.com/privkey.pem'"
+      }
+    },
+    "safety_checks": {
+      "candidate_exists": true,
+      "renderer_ok": true,
+      "web_console_health_ok": true,
+      "web_console_service_active": true,
+      "intake_service_active": true,
+      "bridge_service_active": true,
+      "submit_disabled": true,
+      "does_not_proxy_intake": true,
+      "proxies_web_console": true,
+      "blocks_post_goals": true,
+      "has_basic_auth": true,
+      "keeps_production_443_80": true
+    }
+  },
+  "commands": [
+    "sudo install -m 0644 /tmp/oris-dev-employee-web-console.readonly.conf /etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+    "sudo nginx -t",
+    "sudo systemctl reload nginx"
+  ],
+  "ok": true,
+  "mode": "dry_run",
+  "notes": [
+    "No files were installed.",
+    "Run again with --apply only after reviewing the candidate and confirming TLS/htpasswd paths.",
+    "Public write operations remain blocked."
+  ]
+}
+
+===== readiness =====
+{
+  "checked_at": "2026-05-31T23:59:22+08:00",
+  "ok": true,
+  "server_name": "control.orisfy.com",
+  "candidate": "/tmp/oris-dev-employee-web-console.readonly.conf",
+  "installer_return_code": 0,
+  "installer_result": {
+    "planned_at": "2026-05-31T23:59:22+08:00",
+    "apply": false,
+    "server_name": "control.orisfy.com",
+    "candidate": "/tmp/oris-dev-employee-web-console.readonly.conf",
+    "target": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+    "preflight_return_code": 0,
+    "preflight_result": {
+      "ok": true,
+      "report_path": "/home/admin/projects/oris/logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json",
+      "candidate_path": "/tmp/oris-dev-employee-web-console.readonly.conf",
+      "file_checks": {
+        "htpasswd": {
+          "path": "/etc/nginx/oris-dev-employee.htpasswd",
+          "exists": null,
+          "readable": false,
+          "permission_error": true,
+          "error": "[Errno 13] Permission denied: '/etc/nginx/oris-dev-employee.htpasswd'"
+        },
+        "tls_cert": {
+          "path": "/etc/letsencrypt/live/control.orisfy.com/fullchain.pem",
+          "exists": null,
+          "readable": false,
+          "permission_error": true,
+          "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/control.orisfy.com/fullchain.pem'"
+        },
+        "tls_key": {
+          "path": "/etc/letsencrypt/live/control.orisfy.com/privkey.pem",
+          "exists": null,
+          "readable": false,
+          "permission_error": true,
+          "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/control.orisfy.com/privkey.pem'"
+        }
+      },
+      "safety_checks": {
+        "candidate_exists": true,
+        "renderer_ok": true,
+        "web_console_health_ok": true,
+        "web_console_service_active": true,
+        "intake_service_active": true,
+        "bridge_service_active": true,
+        "submit_disabled": true,
+        "does_not_proxy_intake": true,
+        "proxies_web_console": true,
+        "blocks_post_goals": true,
+        "has_basic_auth": true,
+        "keeps_production_443_80": true
+      }
+    },
+    "commands": [
+      "sudo install -m 0644 /tmp/oris-dev-employee-web-console.readonly.conf /etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+      "sudo nginx -t",
+      "sudo systemctl reload nginx"
+    ],
+    "ok": true,
+    "mode": "dry_run",
+    "notes": [
+      "No files were installed.",
+      "Run again with --apply only after reviewing the candidate and confirming TLS/htpasswd paths.",
+      "Public write operations remain blocked."
+    ]
+  },
+  "sudo_file_checks": {
+    "htpasswd": {
+      "path": "/etc/nginx/oris-dev-employee.htpasswd",
+      "ok": true,
+      "return_code": 0,
+      "stderr": ""
+    },
+    "tls_cert": {
+      "path": "/etc/letsencrypt/live/control.orisfy.com/fullchain.pem",
+      "ok": true,
+      "return_code": 0,
+      "stderr": ""
+    },
+    "tls_key": {
+      "path": "/etc/letsencrypt/live/control.orisfy.com/privkey.pem",
+      "ok": true,
+      "return_code": 0,
+      "stderr": ""
+    }
+  },
+  "checks": {
+    "not_placeholder_domain": true,
+    "dry_run_ok": true,
+    "candidate_exists": true,
+    "sudo_files_exist": true,
+    "does_not_proxy_intake": true,
+    "proxies_web_console": true,
+    "blocks_post_goals": true,
+    "keeps_submit_readonly_layer": true,
+    "has_basic_auth": true
+  },
+  "next_command_if_ok": "python3 scripts/dev_employee_install_nginx_readonly_console.py --server-name control.orisfy.com --htpasswd-file /etc/nginx/oris-dev-employee.htpasswd --tls-cert /etc/letsencrypt/live/control.orisfy.com/fullchain.pem --tls-key /etc/letsencrypt/live/control.orisfy.com/privkey.pem --apply",
+  "notes": [
+    "This script did not install or reload Nginx.",
+    "Run --apply only if ok is true and the server_name is a real domain you intend to expose.",
+    "The installed route remains read-only; POST /api/goals stays blocked."
+  ]
+}
+
+===== apply =====
+{
+  "planned_at": "2026-05-31T23:59:22+08:00",
+  "apply": true,
+  "server_name": "control.orisfy.com",
+  "candidate": "/tmp/oris-dev-employee-web-console.readonly.conf",
+  "target": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+  "preflight_return_code": 0,
+  "preflight_result": {
+    "ok": true,
+    "report_path": "/home/admin/projects/oris/logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json",
+    "candidate_path": "/tmp/oris-dev-employee-web-console.readonly.conf",
+    "file_checks": {
+      "htpasswd": {
+        "path": "/etc/nginx/oris-dev-employee.htpasswd",
+        "exists": null,
+        "readable": false,
+        "permission_error": true,
+        "error": "[Errno 13] Permission denied: '/etc/nginx/oris-dev-employee.htpasswd'"
+      },
+      "tls_cert": {
+        "path": "/etc/letsencrypt/live/control.orisfy.com/fullchain.pem",
+        "exists": null,
+        "readable": false,
+        "permission_error": true,
+        "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/control.orisfy.com/fullchain.pem'"
+      },
+      "tls_key": {
+        "path": "/etc/letsencrypt/live/control.orisfy.com/privkey.pem",
+        "exists": null,
+        "readable": false,
+        "permission_error": true,
+        "error": "[Errno 13] Permission denied: '/etc/letsencrypt/live/control.orisfy.com/privkey.pem'"
+      }
+    },
+    "safety_checks": {
+      "candidate_exists": true,
+      "renderer_ok": true,
+      "web_console_health_ok": true,
+      "web_console_service_active": true,
+      "intake_service_active": true,
+      "bridge_service_active": true,
+      "submit_disabled": true,
+      "does_not_proxy_intake": true,
+      "proxies_web_console": true,
+      "blocks_post_goals": true,
+      "has_basic_auth": true,
+      "keeps_production_443_80": true
+    }
+  },
+  "commands": [
+    "sudo install -m 0644 /tmp/oris-dev-employee-web-console.readonly.conf /etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+    "sudo nginx -t",
+    "sudo systemctl reload nginx"
+  ],
+  "ok": true,
+  "sudo_file_checks": {
+    "htpasswd": {
+      "path": "/etc/nginx/oris-dev-employee.htpasswd",
+      "ok": true,
+      "return_code": 0,
+      "stderr": ""
+    },
+    "tls_cert": {
+      "path": "/etc/letsencrypt/live/control.orisfy.com/fullchain.pem",
+      "ok": true,
+      "return_code": 0,
+      "stderr": ""
+    },
+    "tls_key": {
+      "path": "/etc/letsencrypt/live/control.orisfy.com/privkey.pem",
+      "ok": true,
+      "return_code": 0,
+      "stderr": ""
+    }
+  },
+  "mode": "apply",
+  "results": [
+    {
+      "cmd": "sudo install -m 0644 /tmp/oris-dev-employee-web-console.readonly.conf /etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+      "return_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": "sudo nginx -t",
+      "return_code": 0,
+      "stdout": "",
+      "stderr": "nginx: [warn] conflicting server name \"control.orisfy.com\" on 0.0.0.0:443, ignored\nnginx: [warn] conflicting server name \"control.orisfy.com\" on 0.0.0.0:80, ignored\nnginx: the configuration file /etc/nginx/nginx.conf syntax is ok\nnginx: configuration file /etc/nginx/nginx.conf test is successful\n"
+    },
+    {
+      "cmd": "sudo systemctl reload nginx",
+      "return_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
+
+===== nginx status =====
+active
+
+===== config safety grep =====
+4:# - proxies only to the local Web Console service on 127.0.0.1:18893;
+5:# - never proxies directly to the intake service on 127.0.0.1:18892;
+38:    auth_basic "ORIS Dev Employee Console";
+39:    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+42:        if ($request_method !~ ^(GET)$) { return 403; }
+44:        proxy_pass http://127.0.0.1:18893/api/goals;
+53:        if ($request_method !~ ^(GET)$) { return 403; }
+55:        proxy_pass http://127.0.0.1:18893;
+64:        if ($request_method !~ ^(GET)$) { return 403; }
+66:        proxy_pass http://127.0.0.1:18893/api/projects;
+75:        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+77:        proxy_pass http://127.0.0.1:18893;
+
+===== local submit disabled =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=0
+
+===== public unauth health should be 401 =====
+401
+<html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== public auth health should be 200 =====
+500
+<html>
+<head><title>500 Internal Server Error</title></head>
+<body>
+<center><h1>500 Internal Server Error</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== public auth POST /api/goals should be 403 =====
+403
+<html>
+<head><title>403 Forbidden</title></head>
+<body>
+<center><h1>403 Forbidden</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== final local service checks =====
+active
+active
+active
+
