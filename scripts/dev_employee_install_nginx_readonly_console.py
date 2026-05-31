@@ -41,6 +41,16 @@ def load_json_from_stdout(stdout: str) -> dict[str, Any]:
         return {"ok": False, "raw": stdout}
 
 
+def is_placeholder_domain(server_name: str) -> bool:
+    lowered = server_name.strip().lower()
+    return lowered in {"example.com", "oris.example.com", "localhost"} or lowered.endswith(".example.com") or lowered.endswith(".invalid")
+
+
+def sudo_file_exists(path: str) -> dict[str, Any]:
+    proc = run(["sudo", "test", "-f", path])
+    return {"path": path, "ok": proc.returncode == 0, "return_code": proc.returncode, "stderr": proc.stderr[-500:]}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Install read-only ORIS Web Console Nginx config")
     parser.add_argument("--server-name", required=True)
@@ -99,8 +109,22 @@ def main() -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0
 
+    if is_placeholder_domain(args.server_name):
+        report["error"] = "refusing_placeholder_domain"
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 1
     if not shutil.which("sudo"):
         report["error"] = "sudo_not_found"
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 1
+    sudo_file_checks = {
+        "htpasswd": sudo_file_exists(args.htpasswd_file),
+        "tls_cert": sudo_file_exists(args.tls_cert),
+        "tls_key": sudo_file_exists(args.tls_key),
+    }
+    report["sudo_file_checks"] = sudo_file_checks
+    if not all(item.get("ok") for item in sudo_file_checks.values()):
+        report["error"] = "required_file_missing_or_unreadable_by_sudo"
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 1
     results: list[dict[str, Any]] = []
