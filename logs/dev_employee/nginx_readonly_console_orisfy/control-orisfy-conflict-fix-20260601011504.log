@@ -1,0 +1,104 @@
+===== timestamp =====
+2026-06-01T01:17:52+08:00
+
+===== git sync =====
+HEAD is now at bd83260 ops(dev-employee): add orisfy nginx conflict fixer
+bd83260182d454d9ca0b2acc6e37a23f04ac2701
+
+===== before duplicate server_name scan =====
+/etc/nginx/sites-enabled/control.orisfy.com.conf:4:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:12:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:17:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-enabled/control.orisfy.com.conf:18:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:12:# - control.orisfy.com
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:16:# - /etc/letsencrypt/live/control.orisfy.com/fullchain.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:17:# - /etc/letsencrypt/live/control.orisfy.com/privkey.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:23:    server_name control.orisfy.com;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:25:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:26:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:88:    server_name control.orisfy.com;
+
+===== local web console health before fix =====
+HTTP/1.0 200 OK
+Server: oris-dev-employee-web-console/0.1 Python/3.10.12
+Date: Sun, 31 May 2026 17:17:54 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 61
+
+{
+  "status": "ok",
+  "service": "dev_employee_web_console"
+}
+===== disable old sites-enabled entry if present =====
+DISABLED_OLD_SITES_ENABLED=/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754
+
+===== nginx syntax and reload =====
+active
+
+===== after duplicate server_name scan =====
+/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754:4:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754:12:    server_name control.orisfy.com;
+/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754:17:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754:18:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:12:# - control.orisfy.com
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:16:# - /etc/letsencrypt/live/control.orisfy.com/fullchain.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:17:# - /etc/letsencrypt/live/control.orisfy.com/privkey.pem
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:23:    server_name control.orisfy.com;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:25:    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:26:    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;
+/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf:88:    server_name control.orisfy.com;
+
+===== effective readonly config safety grep =====
+4:# - proxies only to the local Web Console service on 127.0.0.1:18893;
+5:# - never proxies directly to the intake service on 127.0.0.1:18892;
+23:    server_name control.orisfy.com;
+38:    auth_basic "ORIS Dev Employee Console";
+39:    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+42:        if ($request_method !~ ^(GET)$) { return 403; }
+44:        proxy_pass http://127.0.0.1:18893/api/goals;
+53:        if ($request_method !~ ^(GET)$) { return 403; }
+55:        proxy_pass http://127.0.0.1:18893;
+64:        if ($request_method !~ ^(GET)$) { return 403; }
+66:        proxy_pass http://127.0.0.1:18893/api/projects;
+75:        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+77:        proxy_pass http://127.0.0.1:18893;
+88:    server_name control.orisfy.com;
+
+===== public unauth health should be 401 =====
+401
+<html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== public auth health should be 200 =====
+500
+<html>
+<head><title>500 Internal Server Error</title></head>
+<body>
+<center><h1>500 Internal Server Error</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== public auth POST /api/goals should be 403 =====
+403
+<html>
+<head><title>403 Forbidden</title></head>
+<body>
+<center><h1>403 Forbidden</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== local submit disabled =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=0
+
+===== final local service checks =====
+active
+active
+active
+
