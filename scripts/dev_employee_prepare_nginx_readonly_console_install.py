@@ -38,6 +38,18 @@ def run(cmd: list[str], check: bool = False) -> subprocess.CompletedProcess[str]
     return proc
 
 
+def safe_path_check(raw_path: str) -> dict[str, Any]:
+    path = Path(raw_path)
+    try:
+        exists = path.exists()
+        readable = path.is_file() and path.open("rb").read(1) is not None if exists else False
+        return {"path": raw_path, "exists": exists, "readable": readable, "permission_error": False, "error": None}
+    except PermissionError as exc:
+        return {"path": raw_path, "exists": None, "readable": False, "permission_error": True, "error": str(exc)}
+    except OSError as exc:
+        return {"path": raw_path, "exists": None, "readable": False, "permission_error": False, "error": str(exc)}
+
+
 def get_json(url: str) -> tuple[int, Any]:
     try:
         with urllib.request.urlopen(url, timeout=10) as resp:
@@ -75,6 +87,10 @@ def write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def file_ok_for_required(check: dict[str, Any]) -> bool:
+    return check.get("exists") is True and check.get("permission_error") is False
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Prepare read-only Web Console Nginx install candidate")
     parser.add_argument("--server-name", required=True)
@@ -84,7 +100,7 @@ def main() -> int:
     parser.add_argument("--access-log", default="/var/log/nginx/oris-dev-employee-console.access.log")
     parser.add_argument("--error-log", default="/var/log/nginx/oris-dev-employee-console.error.log")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
-    parser.add_argument("--require-existing-files", action="store_true", help="Fail if htpasswd/cert/key do not exist yet")
+    parser.add_argument("--require-existing-files", action="store_true", help="Fail if htpasswd/cert/key do not exist or are not stat-able by the current user")
     args = parser.parse_args()
 
     output = Path(args.output)
@@ -112,9 +128,9 @@ def main() -> int:
     intake_active = run(["systemctl", "--user", "is-active", "oris-dev-employee-intake.service"]).stdout.strip()
     bridge_active = run(["systemctl", "--user", "is-active", "oris-dev-employee-bridge.service"]).stdout.strip()
     file_checks = {
-        "htpasswd_exists": Path(args.htpasswd_file).exists(),
-        "tls_cert_exists": Path(args.tls_cert).exists(),
-        "tls_key_exists": Path(args.tls_key).exists(),
+        "htpasswd": safe_path_check(args.htpasswd_file),
+        "tls_cert": safe_path_check(args.tls_cert),
+        "tls_key": safe_path_check(args.tls_key),
     }
     rendered_text = output.read_text(encoding="utf-8") if output.exists() else ""
     safety_checks = {
@@ -131,7 +147,7 @@ def main() -> int:
         "has_basic_auth": "auth_basic" in rendered_text and "auth_basic_user_file" in rendered_text,
         "keeps_production_443_80": "listen 443 ssl http2;" in rendered_text and "listen 80;" in rendered_text,
     }
-    required_files_ok = all(file_checks.values()) if args.require_existing_files else True
+    required_files_ok = all(file_ok_for_required(item) for item in file_checks.values()) if args.require_existing_files else True
     ok = all(safety_checks.values()) and required_files_ok
     report = {
         "prepared_at": now_iso(),
@@ -141,6 +157,7 @@ def main() -> int:
         "renderer_result": renderer_result,
         "file_checks": file_checks,
         "require_existing_files": args.require_existing_files,
+        "required_files_ok": required_files_ok,
         "service_status": {
             "web_console": service_active,
             "intake": intake_active,
@@ -156,6 +173,7 @@ def main() -> int:
         ],
         "notes": [
             "This script did not install or reload Nginx.",
+            "Permission-denied file checks are reported but do not fail preflight unless --require-existing-files is used.",
             "Only install after reviewing the candidate config and confirming TLS/htpasswd paths.",
             "Public write operations remain blocked at Nginx and Web Console layers."
         ],
