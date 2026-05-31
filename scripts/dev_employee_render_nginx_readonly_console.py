@@ -22,12 +22,7 @@ def now_iso() -> str:
 
 
 def active_config_lines(rendered: str) -> str:
-    """Return config text with full-line comments removed.
-
-    The template intentionally documents that the intake service lives at
-    127.0.0.1:18892, but only active proxy directives should be checked for
-    accidental intake exposure.
-    """
+    """Return config text with full-line comments removed."""
     lines: list[str] = []
     for raw in rendered.splitlines():
         stripped = raw.strip()
@@ -42,7 +37,8 @@ def validate(rendered: str) -> dict[str, object]:
     checks = {
         "no_intake_proxy": "proxy_pass http://127.0.0.1:18892" not in active,
         "web_console_proxy_only": "proxy_pass http://127.0.0.1:18893" in active,
-        "blocks_post_goals": "location = /api/goals" in active and "limit_except GET" in active and "return 403" in active,
+        "blocks_post_goals": "location = /api/goals" in active and "if ($request_method !~ ^(GET)$) { return 403; }" in active,
+        "blocks_non_read_root": "if ($request_method !~ ^(GET|HEAD)$) { return 403; }" in active,
         "has_basic_auth": "auth_basic" in active and "auth_basic_user_file" in active,
         "has_https": "listen 443 ssl" in active,
         "has_http_redirect": "listen 80" in active and "return 301 https://$host$request_uri" in active,
