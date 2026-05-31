@@ -56,7 +56,7 @@ def main() -> int:
         rendered = conf_dir / "oris-dev-employee-web-console.readonly.conf"
         render = run(["python3", str(RENDERER), "--server-name", "oris.local", "--htpasswd-file", str(htpasswd), "--tls-cert", str(cert), "--tls-key", str(key), "--access-log", str(logs_dir / "access.log"), "--error-log", str(logs_dir / "error.log"), "--output", str(rendered)])
         top_conf = conf_dir / "nginx.conf"
-        top_conf.write_text("pid " + str(logs_dir / "nginx.pid") + ";\ndaemon off;\nevents { worker_connections 64; }\nhttp {\n    include mime.types;\n    default_type application/octet-stream;\n    include " + str(rendered) + ";\n}\n", encoding="utf-8")
+        top_conf.write_text("pid " + str(logs_dir / "nginx.pid") + ";\nerror_log " + str(logs_dir / "nginx-error.log") + " warn;\ndaemon off;\nevents { worker_connections 64; }\nhttp {\n    access_log off;\n    include mime.types;\n    default_type application/octet-stream;\n    include " + str(rendered) + ";\n}\n", encoding="utf-8")
         test = run([nginx_bin, "-t", "-p", str(prefix), "-c", str(top_conf)])
         rendered_text = rendered.read_text(encoding="utf-8") if rendered.exists() else ""
         checks = {
@@ -66,6 +66,7 @@ def main() -> int:
             "post_goals_blocked": "location = /api/goals" in rendered_text and "if ($request_method !~ ^(GET)$) { return 403; }" in rendered_text,
             "root_non_read_blocked": "if ($request_method !~ ^(GET|HEAD)$) { return 403; }" in rendered_text,
             "has_basic_auth": "auth_basic" in rendered_text and "auth_basic_user_file" in rendered_text,
+            "top_level_logs_are_temp": str(logs_dir) in top_conf.read_text(encoding="utf-8"),
         }
         report.update({"openssl_return_code": openssl.returncode, "renderer_return_code": render.returncode, "nginx_test_return_code": test.returncode, "nginx_test_stdout": test.stdout[-2000:], "nginx_test_stderr": test.stderr[-2000:], "checks": checks})
     report["ok"] = report.get("openssl_return_code") == 0 and report.get("renderer_return_code") == 0 and report.get("nginx_test_return_code") == 0 and all((report.get("checks") or {}).values())
