@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import scripts.dev_employee_intake_api_v2 as intake
-from scripts.dev_employee_queue_kernel import QueueKernel, TaskConflict
+from scripts.dev_employee_queue_kernel import QueueKernel
 
 
 class IntakeApiV2Tests(unittest.TestCase):
@@ -90,7 +90,7 @@ class IntakeApiV2Tests(unittest.TestCase):
             first = intake.create_goal(self.base_payload())
             replay = intake.create_goal(self.base_payload())
             changed = {**self.base_payload(), "objective": "Add a different deterministic endpoint with exact response coverage."}
-            with self.assertRaises(TaskConflict):
+            with self.assertRaises(intake.IntakeConflict):
                 intake.create_goal(changed)
 
         self.assertEqual(first["status"], "queued")
