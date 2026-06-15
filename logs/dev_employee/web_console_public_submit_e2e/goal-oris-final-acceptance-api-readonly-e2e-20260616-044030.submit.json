@@ -1,0 +1,77 @@
+{
+  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "project_key": "oris-final-acceptance-api",
+  "project": {
+    "project_key": "oris-final-acceptance-api",
+    "name": "ORIS Final Acceptance API",
+    "type": "test_project",
+    "product_path": "/home/admin/projects/oris-final-acceptance-api",
+    "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "default_branch": "main",
+    "allowed_scope": [
+      "README.md",
+      "AGENTS.md",
+      "docs/",
+      "app/",
+      "tests/",
+      "requirements.txt",
+      ".gitignore"
+    ],
+    "forbidden_scope": [
+      ".env",
+      "secrets",
+      "private_keys",
+      "production_credentials"
+    ]
+  },
+  "objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the complete existing test suite, commit the product changes to main, push them to the configured GitHub remote, and emit strict structured evidence with product and remote commit SHAs.",
+  "constraints": [
+    "Modify only the standalone product repository; do not place product code in ORIS.",
+    "Preserve all existing task-board API behavior and public contracts.",
+    "Use existing FastAPI and pytest conventions.",
+    "Keep implementation minimal and deterministic.",
+    "Do not add external dependencies unless strictly necessary.",
+    "Do not ask the human to decide routine engineering details.",
+    "Commit and push only after all tests pass."
+  ],
+  "expected_checks": [
+    "python3 -m py_compile app/main.py",
+    "pytest -q",
+    "GET /readonly-e2e returns HTTP 200 and exactly {\"readonly_e2e\": true}",
+    "product commit SHA equals product remote main SHA"
+  ],
+  "commit_message": "feat(api): add readonly e2e endpoint",
+  "notes": [
+    "Submitted through ORIS public Web console after Codex authentication recovery."
+  ],
+  "status": "queued",
+  "created_at": "2026-06-16T04:40:47+08:00",
+  "runtime_prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+  "enqueue_http_status": 201,
+  "enqueue_response": {
+    "queued": true,
+    "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+    "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.queued.json",
+    "descriptor": {
+      "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+      "status": "queued",
+      "created_at": "2026-06-16T04:40:47+08:00",
+      "created_by": "dev_employee_enqueue_server",
+      "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+      "workdir": "/home/admin/projects",
+      "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+      "sandbox": "workspace-write",
+      "extra_write_dirs": [
+        "/home/admin/projects/oris"
+      ],
+      "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "product_commit_message": "feat(api): add readonly e2e endpoint",
+      "notes": "Submitted through ORIS public Web console after Codex authentication recovery."
+    }
+  },
+  "descriptor_annotation": {
+    "annotated": true,
+    "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.queued.json"
+  }
+}
