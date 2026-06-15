@@ -1,0 +1,1 @@
+{"status": "ok", "service": "dev_employee_web_console_v4", "default_experience": "conversation", "admin_route": "/admin", "openclaw_provider_configured": true, "openclaw_provider_type": "OpenClawInferCLIProvider", "openclaw_gateway_required": true}

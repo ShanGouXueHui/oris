@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "provider": "openclaw_infer_gateway",
+  "intent": "create_task",
+  "project_key": "oris-final-acceptance-api",
+  "objective_contains_healthz": true,
+  "assistant_message_present": true,
+  "constraint_count": 2,
+  "expected_check_count": 0,
+  "requires_confirmation": false,
+  "transport": "gateway",
+  "model_provider": "oris",
+  "model": "free-auto",
+  "capability": "model.run",
+  "openclaw_binary": "/home/admin/.npm-global/bin/openclaw",
+  "real_product_task_submitted": false,
+  "product_changed": false,
+  "secrets_logged": false
+}
