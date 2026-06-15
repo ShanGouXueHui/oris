@@ -240,6 +240,23 @@ def create_goal(payload: dict[str, Any]) -> dict[str, Any]:
 
 def task_status(task_id: str) -> dict[str, Any]:
     result = v1.task_status(task_id)
+    cancelled_path = DEFAULT_KERNEL.task_path(task_id, "cancelled")
+    if cancelled_path.exists():
+        cancelled_data = read_json(cancelled_path)
+        queue = result.get("queue") if isinstance(result.get("queue"), list) else []
+        if not any(item.get("suffix") == "cancelled" for item in queue if isinstance(item, dict)):
+            queue.append({"suffix": "cancelled", "path": str(cancelled_path), "data": cancelled_data})
+        state = classify_task_state(cancelled_data.get("status") or "cancelled", cancelled_data)
+        result.update(
+            {
+                "queue": queue,
+                "status": str(cancelled_data.get("status") or "cancelled"),
+                "canonical_status": state["canonical_status"],
+                "active": state["active"],
+                "terminal": state["terminal"],
+                "failure_code": state["failure_code"],
+            }
+        )
     lifecycle = DEFAULT_KERNEL.lifecycle_summary(task_id)
     result["lifecycle"] = lifecycle
     catalog = result.get("catalog") if isinstance(result.get("catalog"), dict) else {}
