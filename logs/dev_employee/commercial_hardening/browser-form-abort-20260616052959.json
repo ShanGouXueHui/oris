@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-06-16T05:30:05+08:00",
+  "result": "PASS",
+  "failure_code": "",
+  "cancelled_tasks": 1,
+  "bridge_restored": "YES",
+  "product_sha_unchanged": "PASS",
+  "product_worktree_clean": "PASS",
+  "services": {
+    "bridge": "active",
+    "intake": "active",
+    "web_console": "active"
+  },
+  "next_action": "BUILD_CONVERSATIONAL_OPENCLAW_WEB_EXPERIENCE"
+}
