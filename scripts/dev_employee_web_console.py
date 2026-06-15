@@ -154,7 +154,7 @@ def intake_request(method: str, path: str, body: dict[str, Any] | None = None, a
 
 
 def page() -> str:
-    return """<!doctype html>
+    return r"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />

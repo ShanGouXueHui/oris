@@ -1,0 +1,40 @@
+===== timestamp =====
+2026-06-16T03:08:34+08:00
+
+===== git sync =====
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+HEAD is now at eff6960 ops(dev-employee): add Web console JavaScript deploy verifier
+eff6960870c21adde8929acd98423b97e4c6dbfb
+
+===== fix Python-to-JavaScript escaping =====
+WEB_CONSOLE_HTML_RAW_STRING=true
+PATCH_RESULT=applied
+
+===== Python static check =====
+PY_COMPILE=pass
+
+===== render page and extract JavaScript =====
+RENDERED_HTML=true
+EXTRACTED_JS=true
+SPLITLINES_ESCAPED=true
+
+===== JavaScript syntax check =====
+JS_CHECK=pass
+
+===== restart Web Console =====
+WEB_STATUS=active
+
+===== verify rendered public UI markers =====
+38:      <div id="project_status" class="muted">Project list loads automatically after the token changes.</div>
+52:      <button class="secondary" onclick="loadProjects()">Reload projects</button>
+71:const splitLines = (value) => value.split('\n').map(x => x.trim()).filter(Boolean);
+
+===== authenticated project API =====
+PROJECT_API_HTTP=200
+PROJECT_FOUND=true
+
+===== persistent public submit policy =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=1
+
