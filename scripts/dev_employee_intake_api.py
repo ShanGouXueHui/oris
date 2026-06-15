@@ -349,9 +349,15 @@ def task_status(task_id: str) -> dict[str, Any]:
     catalog_path = CATALOG_DIR / f"{task_id}.json"
     catalog = read_json(catalog_path) if catalog_path.exists() else None
     queue = []
+    seen_queue_paths: set[Path] = set()
     for suffix in ["queued", "running", "done", "failed"]:
-        path = QUEUE_DIR / f"{task_id}.{suffix}.json"
-        if path.exists():
+        candidates = [QUEUE_DIR / f"{task_id}.{suffix}.json"]
+        candidates.extend(sorted(QUEUE_DIR.glob(f"{task_id}*.{suffix}.json")))
+        for path in candidates:
+            resolved = path.resolve()
+            if resolved in seen_queue_paths or not path.exists():
+                continue
+            seen_queue_paths.add(resolved)
             queue.append({"suffix": suffix, "path": str(path), "data": read_json(path)})
     runs = []
     for path in sorted(RUN_DIR.glob(f"{task_id}*.json")) if RUN_DIR.exists() else []:

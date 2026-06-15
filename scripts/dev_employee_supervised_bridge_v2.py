@@ -91,7 +91,7 @@ def claim_task(path: Path) -> Path | None:
         return None
     if task.get("status") != "queued":
         return None
-    claimed = path.with_suffix(".running.json")
+    claimed = QUEUE_DIR / f"{task['task_id']}.running.json"
     try:
         path.rename(claimed)
     except FileNotFoundError:
@@ -561,7 +561,7 @@ def fail_task(task_path: Path, task: dict[str, Any], status: str, extra: dict[st
         task["failure_triage_failed"] = True
     # Do not rewrite orchestration/task_runs/<task_id>.json after failure evidence
     # and triage commits; keep richer terminal runtime state only in the queue file.
-    failed_path = task_path.with_suffix(".failed.json")
+    failed_path = QUEUE_DIR / f"{task['task_id']}.failed.json"
     write_json(failed_path, task)
     task_path.unlink(missing_ok=True)
     print(f"TASK_FAILED {task['task_id']} {status}")
@@ -660,7 +660,7 @@ def run_task(task_path: Path) -> int:
         task.update({"status": "completed", "product_result": product_result, "oris_result": oris_result, "oris_evidence_index_result": evidence_index_result, "finished_at": now_iso()})
         # Do not rewrite orchestration/task_runs/<task_id>.json after ORIS evidence
         # commit; keep richer terminal runtime state only in the queue file.
-        done_path = task_path.with_suffix(".done.json")
+        done_path = QUEUE_DIR / f"{task_id}.done.json"
         write_json(done_path, task)
         task_path.unlink(missing_ok=True)
         print(f"TASK_COMPLETED {task_id} product={product_result['commit_sha']} oris={oris_result['commit_sha']}")
