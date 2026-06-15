@@ -1,121 +1,89 @@
 {
-  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
-  "status": "completed",
-  "task_type": "public_web_real_project_e2e",
-  "target_project": "oris-final-acceptance-api",
-  "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
-  "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "final_acceptance_complete",
-  "completed_steps": [
-    "public_https_basic_auth_verified",
-    "console_token_verified",
-    "project_allowlist_verified",
-    "public_goal_submit_http_201_verified",
-    "intake_queue_bridge_claim_verified",
-    "codex_auth_preflight_verified",
-    "admin_noninteractive_codex_exec_verified",
-    "systemd_bridge_codex_context_verified",
-    "canonical_terminal_states_verified",
-    "terminal_failure_polling_stop_verified",
-    "terminal_queue_path_canonicalization_applied",
-    "legacy_queue_path_discovery_supported",
-    "codex_real_product_change_completed",
-    "product_py_compile_passed",
-    "product_pytest_passed",
-    "readonly_e2e_exact_contract_passed",
-    "product_commit_and_remote_sha_verified",
-    "strict_result_schema_verified",
-    "host_pytest_evidence_verified",
-    "oris_evidence_commit_verified",
-    "oris_evidence_index_commit_verified",
-    "independent_final_verification_passed"
+  "task_id": "commercial-hardening-queue-lifecycle-20260616",
+  "status": "implementation_prepared",
+  "task_type": "platform_commercial_hardening",
+  "target_project": "oris",
+  "target_repo": "ShanGouXueHui/oris",
+  "target_path": "/home/admin/projects/oris",
+  "current_step": "deploy_and_verify_queue_lifecycle_hardening_server_side",
+  "objective": "Deploy transaction-safe filesystem queue ownership, canonical lifecycle transitions, leases and heartbeats, bounded execution timeout, cancellation with rollback, explicit retry lineage, concurrency slots, and safe stale-task expiry without submitting a real product task.",
+  "prepared_components": [
+    "scripts/dev_employee_queue_kernel.py",
+    "scripts/dev_employee_supervised_bridge_v3.py",
+    "scripts/dev_employee_intake_api_v2.py",
+    "scripts/dev_employee_web_console_v2.py",
+    "scripts/dev_employee_recover_stale_tasks.py",
+    "scripts/dev_employee_task_states.py",
+    "tests/test_dev_employee_queue_kernel.py",
+    "tests/test_dev_employee_intake_api_v2.py",
+    "tests/test_dev_employee_web_console_v2.py",
+    "tests/test_dev_employee_task_states.py",
+    "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
+    "scripts/dev_employee_deploy_queue_lifecycle_hardening_v2_20260616.sh"
   ],
-  "historical_failures": [
-    {
-      "step": "initial_codex_execute_real_product_goal",
-      "status": "codex_failed",
-      "failure_code": "codex_authentication",
-      "evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
-      "diagnostic_commit_sha": "6fbc0ba1636ca01865b9565e68fdf6689ed6cae5",
-      "resolved": true
-    },
-    {
-      "step": "platform_regression_test_runner",
-      "failure_code": "pytest_not_installed_in_system_python",
-      "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453",
-      "resolved": true
-    },
-    {
-      "step": "automatic_codex_device_login",
-      "failure_code": "codex_login_failed",
-      "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a",
-      "resolved": true
-    },
-    {
-      "step": "final_evidence_polling",
-      "failure_code": "legacy_multi_suffix_done_path_not_discovered",
-      "resolved": true
-    },
-    {
-      "step": "first_independent_finalizer",
-      "failure_code": "product_checks_executed_from_oris_cwd",
-      "resolved": true
-    }
+  "acceptance_gates": [
+    "no queued or running task exists before service switch",
+    "all Python files compile",
+    "all standard-library regression tests pass",
+    "Codex non-interactive preflight passes",
+    "bridge service uses supervised_bridge_v3",
+    "intake service uses intake_api_v2",
+    "Web Console service uses web_console_v2",
+    "all three services remain active",
+    "loopback health contracts pass",
+    "unauthenticated intake mutation returns HTTP 401",
+    "previous final-acceptance completed status and GitHub evidence remain readable",
+    "Web page contains Cancel and Retry controls",
+    "stale recovery produces no automatic requeue",
+    "bridge v3 acquires exactly one configured worker slot",
+    "no real product task is submitted during deployment acceptance"
   ],
-  "next_action": "Do not rerun the final acceptance project. Continue with generic commercial hardening: transactional queue semantics and lifecycle controls first, followed by RBAC/audit/security, monitoring/SLO/backup, and generic project onboarding.",
+  "next_action": "As Linux user admin on 43.106.55.255, fetch the GitHub-hosted deployment script and run it. Send only the final SUMMARY. Do not perform browser testing until server-side deployment returns PASS and NEXT_ACTION=REQUEST_BROWSER_LIFECYCLE_TEST.",
   "last_error": null,
   "blocked_reason": null,
-  "product_result": {
-    "requested_feature": "GET /readonly-e2e",
-    "required_exact_response": {
-      "readonly_e2e": true
-    },
-    "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
-    "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
-    "product_local_head": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
-    "product_remote_main": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
-    "sha_match": true,
-    "tracked_worktree_clean": true,
-    "py_compile": "pass",
-    "pytest": "pass",
-    "endpoint_contract": "pass"
-  },
-  "final_acceptance": {
+  "prerequisite_final_acceptance": {
+    "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
     "result": "pass",
-    "canonical_status": "completed",
-    "terminal": true,
-    "strict_result_schema": true,
-    "host_pytest_evidence": true,
+    "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
     "oris_evidence_commit_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
-    "oris_evidence_remote_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
     "oris_evidence_index_commit_sha": "4425edbe8e29912ff44d41da2a5e458bdac292d3",
-    "independent_verification_log_commit_sha": "f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e",
-    "completion_record": "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md"
+    "independent_verification_log_commit_sha": "f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e"
   },
-  "platform_state": {
+  "commercial_policy": {
+    "automatic_retry_after_worker_loss": false,
+    "lease_expiry_result": "terminal_failed",
+    "retry_requires_new_task_id": true,
+    "default_max_attempts": 3,
+    "default_max_concurrency": 1,
+    "default_lease_seconds": 60,
+    "default_heartbeat_seconds": 10,
+    "default_execution_timeout_seconds": 7200,
+    "cancel_after_commit_started": false,
+    "rollback_on_cancel_or_timeout_before_delivery": true
+  },
+  "browser_test": {
+    "required_after_server_side_pass": true,
+    "operator_will_login_from_web": true,
+    "performed": false,
+    "must_not_reuse_final_acceptance_task": true
+  },
+  "platform_state_before_deployment": {
     "public_entry": "https://control.orisfy.com",
-    "public_submit_mode": "persistent",
-    "project_allowlist": [
-      "oris-final-acceptance-api"
-    ],
-    "web_console_service": "active",
-    "intake_service": "active",
-    "bridge_service": "active",
-    "admin_codex_preflight": "pass",
-    "systemd_codex_preflight": "pass",
-    "bridge_auth_context": "pass",
+    "web_console_service": "active_v1",
+    "intake_service": "active_v1",
+    "bridge_service": "active_v2",
     "direct_public_intake_exposure": false,
-    "real_product_task_submitted_after_auth_repair": true,
-    "final_acceptance": "pass"
+    "real_product_task_submitted_for_this_hardening": false
   },
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md",
-    "memory/dev_employee/CURRENT_STATE_2026-06-16.md",
-    "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-16.md",
+    "memory/dev_employee/current_task.json",
+    "memory/dev_employee/current_task.md",
+    "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
     "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md",
     "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md",
     "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md"
   ],
-  "updated_at": "2026-06-16T05:00:00+08:00"
+  "updated_at": "2026-06-16"
 }
