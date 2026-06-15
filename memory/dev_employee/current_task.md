@@ -1,104 +1,85 @@
 # Current AI Dev Employee Task
 
-Status: in progress
+Status: blocked
 
-Task id: `oris-dev-employee-autonomous-loop-20260526`
+Task id: `goal-oris-final-acceptance-api-20260616-031022`
 
-Target project: `oris`
+Target project: `oris-final-acceptance-api`
 
-Target repository: `ShanGouXueHui/oris`
+Target repository: `ShanGouXueHui/oris-final-acceptance-api`
 
-Target local path: `/home/admin/projects/oris`
+Target local path: `/home/admin/projects/oris-final-acceptance-api`
 
 ## Current objective
 
-Build ORIS into an autonomous AI development employee.
+Complete the first real project task submitted through the persistent public Web Console and prove the full chain:
 
-Human gives goals and constraints. ORIS should autonomously decide design, capabilities, skills, implementation, tests, ordinary repair loops, failure diagnosis, repair planning, repair execution, acceptance validation, and GitHub evidence. Human should not decide routine engineering steps.
+`public Web UI → Web Console auth/allowlist → intake → queue → bridge → Codex → product tests → product commit/push → ORIS evidence`.
 
-## Verified milestones
+The requested product change is a minimal `GET /readonly-e2e` endpoint with pytest coverage.
 
-- Final acceptance product `oris-final-acceptance-api` created and verified.
-- Loopback enqueue API verified.
-- systemd supervised bridge verified.
-- Codex CLI real execution verified.
-- Runtime task contract injection verified.
-- Enqueue client verified.
-- Goal-driven autonomous `tags` feature completed.
-- Strict-schema autonomous `GET /tasks` filters feature completed.
-- Autonomous decision doctrine committed.
-- Skill resolver added.
-- Autonomous prompt now requires skill resolver.
-- Bridge enforces strict result schema.
-- Bridge enforces skill resolver evidence for strict tasks.
-- `GET /stats` endpoint completed with strict schema and skill resolver evidence.
-- Failure evidence persistence implemented and verified for `bridge_exception`, `blocked_skill_resolution_invalid`, and `blocked_host_checks_failed`.
-- Failure triage helper added and verified.
-- Bridge now automatically runs failure triage after failure evidence commit.
-- Auto triage end-to-end verified.
-- Triage-driven repair plan helper added.
-- Repair plan generated from failure triage.
-- Repair target path/repo mismatch guard added.
-- Repair target guard validation passed: mismatch enqueue rejected and no queue task created.
-- Real target repair plan guard positive path verified.
-- Real target repair enqueue positive path verified.
-- Real product repair E2E precheck relaxed to allow old untracked ORIS runtime noise while keeping product precheck strict.
-- Real product repair execution E2E verified: ORIS repaired the real product by adding `GET /healthz` and committed product + ORIS evidence.
-- Reusable acceptance harness added at `scripts/dev_employee_acceptance_harness.py`.
-- `api_info` normal goal-driven acceptance verified.
-- `version` normal goal-driven acceptance verified.
-- Bridge post-commit clean fix added at `930cc89`.
-- `readyz` normal goal-driven clean-state acceptance verified: final ORIS tracked status remained clean.
+## What succeeded
 
-## Last verified product state
+- `https://control.orisfy.com` is operational behind HTTPS and Basic Auth.
+- Persistent public submit is enabled for the exact `/api/goals` path.
+- Console Token authentication works.
+- Project allowlist returns `oris-final-acceptance-api`.
+- The project dropdown and reload behavior were fixed.
+- Rendered browser JavaScript now passes syntax validation.
+- The public task was accepted with HTTP 201.
+- The task was persisted, queued, and claimed by the bridge.
+- Failure evidence and automated triage were committed to GitHub.
+- Web Console, intake, and bridge services remain active.
 
-Product repository: `ShanGouXueHui/oris-final-acceptance-api`
+## Current failure
 
-Product local path: `/home/admin/projects/oris-final-acceptance-api`
+The Codex process started but failed before changing product code.
 
-Last verified product commit SHA: `714dc53b239ad9ab2d7f408cef40b5c594e47181`
+Failure classification:
 
-Latest verified product capability: `GET /readyz -> {"ready": true}`
+- runtime status: `codex_failed`
+- failure code: `codex_authentication`
+- return code: `1`
+- provider response: HTTP 401
 
-Latest verified checks:
+No product commit or remote product SHA was produced.
 
-- targeted `/readyz` check: passed
-- full pytest: `20 passed in 0.30s`
-- full pytest with `-W error::DeprecationWarning`: `20 passed in 0.31s`
+## Evidence
 
-Latest verified acceptance report:
+- ORIS failure evidence commit: `ea2089c5344c67e016601de8993ef365591daa06`
+- diagnostic commit: `6fbc0ba1636ca01865b9565e68fdf6689ed6cae5`
+- Codex log: `logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log`
+- diagnostic log: `logs/dev_employee/codex_failed_diagnostics/goal-oris-final-acceptance-api-20260616-031022-20260616031848.log`
 
-- `logs/dev_employee/acceptance_harness/readyz-goal-driven-clean-check-20260529-r1.json`
-- report commit: `bf85937b75c809a090752fce6c6cabde9f0bccb5`
-- `final_product_status`: empty
-- `final_oris_tracked_status`: empty
+## Immediate next action
 
-## Current platform evidence state
+1. Reauthenticate Codex CLI as Linux user `admin`.
+2. Verify a harmless non-interactive Codex execution.
+3. Verify the same authentication context is available to `oris-dev-employee-bridge.service`.
+4. Add a Codex authentication preflight before real execution.
+5. Classify auth failure as terminal and fail fast.
+6. Update polling/finisher logic so `codex_failed` and all other terminal failures stop immediately.
+7. Resubmit the same product objective with a new task id.
+8. Verify product commit, product remote SHA, tests, and ORIS evidence.
 
-Key recent platform commits:
+## Do not do yet
 
-- `5b6710bd1390e0b96c8a2dc64be24bb5f748d86f`: real product repair ORIS evidence committed.
-- `f8f98f8`: real product repair execution E2E report committed with `ok=true`.
-- `cdadb9a`: reusable acceptance harness added.
-- `b5af5aa`: healthz repair-seed scenario added.
-- `a5a70c3`: API info goal-driven scenario added.
-- `9dfd847c5b5ac774bb24311f441b9b712d8c78a8`: API info goal-driven acceptance report committed with `ok=true`.
-- `d5beb709fee01b089f52d50bb80809eef295d085`: version goal-driven acceptance report committed with `ok=true`; it still observed dirty tracked task-run evidence because bridge process was not restarted yet.
-- `930cc89`: bridge fixed to avoid rewriting committed task-run evidence JSON after ORIS evidence commit.
-- `1359c7a02489a2422e864ccdc1cdb848ee758994`: readyz clean-state scenario added.
-- `bf85937b75c809a090752fce6c6cabde9f0bccb5`: readyz acceptance report committed with `ok=true` and clean ORIS tracked state.
+- Do not submit another real project task before auth preflight passes.
+- Do not weaken Basic Auth, Console Token, or project allowlist.
+- Do not expose intake port 18892 publicly.
+- Do not place product code in the ORIS repository.
+- Do not paste tokens or authentication material into chat or GitHub.
 
-## Next action
+## Authoritative context
 
-Productize the AI development employee intake and status interface.
+Read:
 
-Requirements:
-
-1. Add a thin OpenClaw/Web-to-Dev-Employee intake contract around the goal-driven enqueue path.
-2. Define a small persistent task catalog/status API for non-shell users to submit goals and inspect GitHub evidence.
-3. Keep GitHub as the source of truth for evidence; do not ask humans to paste logs.
-4. Keep the acceptance harness as the regression suite for platform changes.
+1. `memory/dev_employee/CONTEXT_INDEX.md`
+2. `memory/dev_employee/CURRENT_STATE_2026-06-16.md`
+3. `docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md`
+4. `docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md`
+5. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
 
 ## Operating rule
 
-Do not ask the human for routine engineering decisions. Inspect GitHub evidence and decide the next smallest safe action. Stop only at explicit safety/compliance/secret/paid-resource/destructive boundaries.
+Do not ask the human for routine engineering decisions. Inspect GitHub evidence, choose the smallest safe action, implement it through GitHub-hosted scripts, and stop only at an explicit authentication, secret, safety, paid-resource, or destructive-production boundary.
