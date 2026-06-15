@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-06-16T05:37:35+08:00",
+  "result": "PASS",
+  "failure_code": "",
+  "binary_found": true,
+  "binary_path": "/home/admin/.npm-global/bin/openclaw",
+  "binary_version": "OpenClaw 2026.5.19 (a185ca2)",
+  "service_found": true,
+  "service_names": [
+    "openclaw-gateway.service",
+    "openclaw-node.service"
+  ],
+  "process_found": true,
+  "listener_found": true,
+  "listeners": [
+    "LISTEN 0      511        127.0.0.1:18791      0.0.0.0:*    users:((\"openclaw\",pid=68596,fd=27))",
+    "LISTEN 0      511        127.0.0.1:18789      0.0.0.0:*    users:((\"openclaw\",pid=68596,fd=25))",
+    "LISTEN 0      511            [::1]:18789         [::]:*    users:((\"openclaw\",pid=68596,fd=26))"
+  ],
+  "http_probes": [
+    "http://127.0.0.1:18789/health status=200",
+    "http://127.0.0.1:18789/api/health status=404",
+    "http://127.0.0.1:18789/v1/health status=200",
+    "http://127.0.0.1:18789/ status=200",
+    "http://127.0.0.1:18791/health status=401",
+    "http://127.0.0.1:18791/api/health status=401",
+    "http://127.0.0.1:18791/v1/health status=401",
+    "http://127.0.0.1:18791/ status=401"
+  ],
+  "endpoint_discovered": true,
+  "endpoint_candidate": "http://127.0.0.1:18789",
+  "config_key_scan": "PASS",
+  "real_product_task_submitted": false,
+  "services_changed": false,
+  "next_action": "MAP_OPENCLAW_PROVIDER_CONTRACT_AND_DEPLOY_CHAT_V3"
+}
