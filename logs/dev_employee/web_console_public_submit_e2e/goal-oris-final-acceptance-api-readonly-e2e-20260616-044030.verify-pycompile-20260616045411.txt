@@ -1,0 +1,6 @@
+return_code=0
+
+===== stdout =====
+
+===== stderr =====
+

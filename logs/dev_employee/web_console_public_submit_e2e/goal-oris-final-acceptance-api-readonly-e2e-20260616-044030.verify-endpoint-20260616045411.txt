@@ -1,0 +1,7 @@
+return_code=0
+
+===== stdout =====
+{"body": {"readonly_e2e": true}, "status_code": 200}
+
+===== stderr =====
+
