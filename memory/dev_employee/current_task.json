@@ -5,7 +5,7 @@
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "resume_platform_hardening_then_reauthenticate_codex",
+  "current_step": "complete_explicit_headless_codex_device_login",
   "completed_steps": [
     "final_acceptance_api_created_and_registered",
     "loopback_intake_status_api_verified",
@@ -21,12 +21,12 @@
     "executor_failure_persisted_and_diagnosed",
     "canonical_terminal_state_module_prepared",
     "sanitized_codex_auth_preflight_prepared",
-    "bridge_intake_finisher_hardening_migration_applied_locally",
-    "executor_auth_failure_regression_tests_prepared",
     "platform_test_runner_dependency_failure_diagnosed",
-    "stdlib_unittest_regression_suite_prepared",
+    "stdlib_unittest_regression_suite_verified",
     "canonical_preflight_failure_stage_preservation_fixed",
-    "isolated_resume_runbook_prepared"
+    "bridge_intake_finisher_hardening_committed_and_pushed",
+    "failed_login_attempt_evidence_committed",
+    "explicit_headless_device_login_runbook_prepared"
   ],
   "failed_steps": [
     {
@@ -41,26 +41,32 @@
       "failure_code": "pytest_not_installed_in_system_python",
       "return_code": 1,
       "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453"
+    },
+    {
+      "step": "automatic_codex_device_login",
+      "status": "failed",
+      "failure_code": "codex_login_failed",
+      "return_code": 1,
+      "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a"
     }
   ],
-  "next_action": "As Linux user admin on 43.106.55.255, pull main and run scripts/dev_employee_resume_codex_auth_hardening_20260616.sh. The resume script uses only Python standard-library unittest, commits only the three authoritative runtime files, performs Codex login when required, verifies admin and transient user-systemd auth contexts, and restarts the bridge only after both preflights pass.",
+  "next_action": "As Linux user admin on 43.106.55.255, first enable Device code login in ChatGPT Settings > Security, then pull main and run scripts/dev_employee_repair_codex_auth_and_harden_20260616.sh from an interactive SSH TTY. Complete the displayed device-code flow in a private browser. The script will then verify admin and transient user-systemd authentication contexts and restart the bridge only after both pass.",
   "last_error": {
-    "type": "platform_regression_tests_failed",
-    "root_cause": "The first runbook invoked /usr/bin/python3 -m pytest, but pytest is not installed in the system Python environment. This was a runbook dependency assumption, not a runtime code assertion failure.",
-    "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453"
+    "type": "codex_login_failed",
+    "root_cause": "The automatic codex login --device-auth process returned non-zero. Raw interactive login output was intentionally not persisted. The replacement runbook requires an explicit TTY and asks the operator to enable ChatGPT device-code login before starting the authentication flow.",
+    "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a"
   },
   "prepared_changes": {
-    "canonical_state_fix_commit": "d6aa5d765385b2be78e1348f6538f1d0ef6793bf",
-    "stdlib_task_state_tests_commit": "60ac6a4e742faa32fd6fded94089633065f7a306",
-    "stdlib_auth_preflight_tests_commit": "2ff327cee93ef92d629db383304d21040fed10e3",
-    "canonical_stage_test_commit": "6ebba7c504fddd59b4e37ece920a01ab996789ac",
-    "resume_runbook_initial_commit": "c68644b1f528a8973639b85146d29b5aaaab09f7",
-    "resume_runbook_hardening_commit": "1ee55e97a39a64ecec3142f9ee54a1978ecaff97"
+    "code_hardening_commit": "57cf6eccb1bbf7cc4e6ddd79eab94e7530d3fe5c",
+    "explicit_device_login_runbook_commit": "2684a27620719862bcac11252ed6fc89159867a7",
+    "repair_entrypoint_update_commit": "83b3e91bbafdc34e2db80932ecdac080da30da7b",
+    "resume_entrypoint_update_commit": "5d3b21079a04e2bddaee0c0ea3a69efa936f326f"
   },
   "latest_task_evidence": {
     "failure_evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
     "diagnostic_commit_sha": "6fbc0ba1636ca01865b9565e68fdf6689ed6cae5",
     "platform_runbook_failure_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453",
+    "login_failure_evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a",
     "codex_log": "logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log",
     "diagnostic_log": "logs/dev_employee/codex_failed_diagnostics/goal-oris-final-acceptance-api-20260616-031022-20260616031848.log"
   },
@@ -82,7 +88,7 @@
     "direct_public_intake_exposure": false,
     "real_product_task_submitted_after_failure": false
   },
-  "blocked_reason": "The platform test-runner dependency issue has been repaired in GitHub. One admin-side resume execution and interactive Codex login are still required. Bridge remains stopped so no queued task can execute before the hardened preflight is validated.",
+  "blocked_reason": "Platform hardening and tests are complete. A one-time interactive ChatGPT device-code authentication by the admin operator remains required. Bridge stays stopped until both non-interactive admin and transient user-systemd Codex preflights pass.",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-16.md",
