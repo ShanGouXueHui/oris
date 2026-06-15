@@ -1,86 +1,121 @@
 {
-  "task_id": "commercial-hardening-queue-lifecycle-20260616",
-  "status": "implementation_prepared",
-  "task_type": "platform_commercial_hardening",
+  "task_id": "commercial-conversational-openclaw-web-20260616",
+  "status": "implementation_prepared_provider_discovery_pending",
+  "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "deploy_and_verify_queue_lifecycle_hardening_server_side",
-  "objective": "Deploy transaction-safe filesystem queue ownership, canonical lifecycle transitions, leases and heartbeats, bounded execution timeout, cancellation with rollback, explicit retry lineage, concurrency slots, and safe stale-task expiry without submitting a real product task.",
+  "current_step": "discover_existing_openclaw_runtime_and_map_provider_contract",
+  "objective": "Replace the form-and-JSON default Web experience with a conversation-first OpenClaw interface while preserving the accepted ORIS intake, lifecycle, queue, bridge v3, Codex execution, evidence, and audit chain. Move the engineering console to /admin.",
+  "completed_prerequisites": [
+    "full_public_web_to_codex_product_delivery_acceptance_passed",
+    "transactional_queue_kernel_deployed",
+    "canonical_lifecycle_state_machine_deployed",
+    "lease_heartbeat_timeout_cancel_retry_and_concurrency_deployed",
+    "bridge_v3_active",
+    "intake_v2_active",
+    "web_console_v2_active",
+    "form_based_browser_test_safely_aborted",
+    "test_task_cancelled",
+    "bridge_restored",
+    "product_sha_unchanged",
+    "product_worktree_clean"
+  ],
   "prepared_components": [
-    "scripts/dev_employee_queue_kernel.py",
-    "scripts/dev_employee_supervised_bridge_v3.py",
-    "scripts/dev_employee_intake_api_v2.py",
-    "scripts/dev_employee_web_console_v2.py",
-    "scripts/dev_employee_recover_stale_tasks.py",
-    "scripts/dev_employee_task_states.py",
-    "tests/test_dev_employee_queue_kernel.py",
-    "tests/test_dev_employee_intake_api_v2.py",
-    "tests/test_dev_employee_web_console_v2.py",
-    "tests/test_dev_employee_task_states.py",
-    "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
-    "scripts/dev_employee_deploy_queue_lifecycle_hardening_v2_20260616.sh"
+    "docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md",
+    "scripts/dev_employee_chat_store.py",
+    "scripts/dev_employee_openclaw_provider.py",
+    "scripts/dev_employee_chat_orchestrator.py",
+    "scripts/dev_employee_web_console_v3.py",
+    "tests/test_dev_employee_chat_store.py",
+    "tests/test_dev_employee_openclaw_provider.py",
+    "tests/test_dev_employee_chat_orchestrator.py",
+    "tests/test_dev_employee_web_console_v3.py",
+    "scripts/dev_employee_discover_openclaw_runtime_20260616.sh"
   ],
-  "acceptance_gates": [
-    "no queued or running task exists before service switch",
-    "all Python files compile",
-    "all standard-library regression tests pass",
-    "Codex non-interactive preflight passes",
-    "bridge service uses supervised_bridge_v3",
-    "intake service uses intake_api_v2",
-    "Web Console service uses web_console_v2",
-    "all three services remain active",
-    "loopback health contracts pass",
-    "unauthenticated intake mutation returns HTTP 401",
-    "previous final-acceptance completed status and GitHub evidence remain readable",
-    "Web page contains Cancel and Retry controls",
-    "stale recovery produces no automatic requeue",
-    "bridge v3 acquires exactly one configured worker slot",
-    "no real product task is submitted during deployment acceptance"
-  ],
-  "next_action": "As Linux user admin on 43.106.55.255, fetch the GitHub-hosted deployment script and run it. Send only the final SUMMARY. Do not perform browser testing until server-side deployment returns PASS and NEXT_ACTION=REQUEST_BROWSER_LIFECYCLE_TEST.",
-  "last_error": null,
-  "blocked_reason": null,
-  "prerequisite_final_acceptance": {
-    "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
-    "result": "pass",
-    "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
-    "oris_evidence_commit_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
-    "oris_evidence_index_commit_sha": "4425edbe8e29912ff44d41da2a5e458bdac292d3",
-    "independent_verification_log_commit_sha": "f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e"
+  "product_decision": {
+    "default_public_route": "/",
+    "default_experience": "conversation_first",
+    "admin_console_route": "/admin",
+    "normal_user_enters_console_token": false,
+    "normal_user_enters_task_id": false,
+    "normal_user_enters_expected_checks": false,
+    "normal_user_enters_commit_message": false,
+    "raw_json_visible_by_default": false,
+    "technical_evidence_collapsed": true,
+    "conversation_chain": "human -> OpenClaw provider -> ORIS control plane -> Codex executor -> evidence/result conversation"
   },
-  "commercial_policy": {
-    "automatic_retry_after_worker_loss": false,
-    "lease_expiry_result": "terminal_failed",
-    "retry_requires_new_task_id": true,
-    "default_max_attempts": 3,
-    "default_max_concurrency": 1,
-    "default_lease_seconds": 60,
-    "default_heartbeat_seconds": 10,
-    "default_execution_timeout_seconds": 7200,
-    "cancel_after_commit_started": false,
-    "rollback_on_cancel_or_timeout_before_delivery": true
+  "architecture_boundaries": {
+    "openclaw_layer": [
+      "conversation_session_state",
+      "intent_extraction",
+      "project_identification",
+      "risk_confirmation",
+      "plain_language_responses",
+      "task_progress_narration"
+    ],
+    "oris_control_plane": [
+      "structured_task_creation",
+      "idempotency",
+      "lifecycle",
+      "queue_and_lease",
+      "cancel_and_retry",
+      "policy",
+      "evidence_and_audit"
+    ],
+    "codex_executor": [
+      "implementation",
+      "tests_and_repairs",
+      "structured_result",
+      "controlled_commit_and_push"
+    ]
+  },
+  "provider_policy": {
+    "preferred_provider": "existing_openclaw_runtime",
+    "provider_contract": "structured_http_adapter",
+    "hardcode_provider_endpoint": false,
+    "fallback_allowed": true,
+    "fallback_scope": [
+      "status",
+      "cancel",
+      "retry",
+      "help",
+      "single_allowed_project_goal_translation"
+    ],
+    "provider_must_be_verified_before_openclaw_brand_acceptance": true,
+    "secret_values_must_not_enter_logs_or_github": true
+  },
+  "next_action": "Run the sanitized OpenClaw runtime discovery as Linux user admin on 43.106.55.255. It must not modify services or submit tasks. Send only the final SUMMARY. Use the committed discovery evidence to map the real provider contract before deploying Web Console v3.",
+  "last_error": null,
+  "blocked_reason": "existing OpenClaw binary/service/listener/provider contract is not represented in the ORIS repository and must be discovered from the server without exposing secrets",
+  "latest_evidence": {
+    "queue_lifecycle_server_acceptance_log_commit": "7540e90f54c0b397477c014305e6101d9513a647",
+    "form_browser_abort_log_commit": "9def6001a6488296b9ec79a08aa74a9741d24888",
+    "final_acceptance_task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+    "final_acceptance_product_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33"
   },
   "browser_test": {
-    "required_after_server_side_pass": true,
     "operator_will_login_from_web": true,
-    "performed": false,
-    "must_not_reuse_final_acceptance_task": true
+    "next_browser_test_must_be_conversational": true,
+    "form_console_must_not_be_used_as_product_acceptance": true,
+    "performed": false
   },
-  "platform_state_before_deployment": {
+  "platform_state": {
     "public_entry": "https://control.orisfy.com",
-    "web_console_service": "active_v1",
-    "intake_service": "active_v1",
-    "bridge_service": "active_v2",
+    "web_console_service": "active_v2",
+    "intake_service": "active_v2",
+    "bridge_service": "active_v3",
     "direct_public_intake_exposure": false,
-    "real_product_task_submitted_for_this_hardening": false
+    "active_product_task": false,
+    "real_product_change_during_form_test": false
   },
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
-    "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
+    "docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md",
     "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
+    "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md",
     "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md",
     "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md",
     "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md"
