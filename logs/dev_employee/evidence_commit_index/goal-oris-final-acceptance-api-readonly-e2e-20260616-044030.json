@@ -1,0 +1,20 @@
+{
+  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "status": "completed",
+  "indexed_at": "2026-06-16T04:43:10+08:00",
+  "oris_evidence_commit_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+  "oris_evidence_remote_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+  "oris_evidence_files": [
+    "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+    "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.supervised_result.json",
+    "logs/dev_employee/latest_task_progress.json",
+    "logs/dev_employee/latest_task_progress.md",
+    "logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+    "logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+    "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_py_compile.txt",
+    "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest.txt",
+    "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest_werror.txt"
+  ],
+  "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+  "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33"
+}
