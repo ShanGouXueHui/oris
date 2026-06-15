@@ -1,8 +1,9 @@
 {
-  "task_id": "goal-oris-final-acceptance-api-20260616-031022",
-  "status": "codex_failed",
+  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "status": "completed",
+  "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+  "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-06-16T03:10:45+08:00",
-  "next_recommended_action": "Inspect Codex log and runtime descriptor; repair prompt/tooling or resource issue, then rerun with a new task id."
+  "updated_at": "2026-06-16T04:43:05+08:00"
 }

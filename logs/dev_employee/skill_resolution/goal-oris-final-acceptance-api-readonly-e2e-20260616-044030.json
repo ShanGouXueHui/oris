@@ -1,0 +1,74 @@
+{
+  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "resolved_at": "2026-06-16T04:41:13+08:00",
+  "objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the complete existing test suite, commit the product changes to main, push them to the configured GitHub remote, and emit strict structured evidence with product and remote commit SHAs.",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence",
+      "fastapi_pytest",
+      "safe_execution"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_task_status.py",
+      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [
+    {
+      "name": "github_evidence",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "github",
+        "commit",
+        "push",
+        "remote",
+        "evidence",
+        "sha"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md"
+      ]
+    },
+    {
+      "name": "fastapi_pytest",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "fastapi",
+        "api",
+        "endpoint",
+        "pytest"
+      ],
+      "owned_assets": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json"
+      ]
+    },
+    {
+      "name": "safe_execution",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "test",
+        "run"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py"
+      ]
+    }
+  ],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
