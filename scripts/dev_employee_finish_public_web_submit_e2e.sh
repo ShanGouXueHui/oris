@@ -9,7 +9,10 @@ LOG_FILE="$LOG_DIR/finish-public-web-submit-$(date +%Y%m%d%H%M%S).log"
 STATUS_FILE="/tmp/oris-public-web-e2e-status-$$.json"
 mkdir -p "$LOG_DIR"
 
-read -p "Task ID submitted from public Web UI: " TASK_ID
+TASK_ID="${1:-}"
+if [ -z "$TASK_ID" ]; then
+  read -p "Task ID submitted from public Web UI: " TASK_ID
+fi
 if [ -z "$TASK_ID" ]; then
   echo "TASK_ID_REQUIRED"
   exit 1
@@ -25,6 +28,9 @@ if [ -z "$TOKEN" ]; then
 fi
 
 FINAL_STATUS="unknown"
+CANONICAL_STATUS="unknown"
+TERMINAL="false"
+FAILURE_CODE=""
 PRODUCT_COMMIT=""
 PRODUCT_REMOTE=""
 ORIS_EVIDENCE=""
@@ -52,8 +58,39 @@ except Exception:
     print('unknown')
 PY
 )"
-    echo "POLL=$i HTTP=$HTTP_CODE STATUS=$FINAL_STATUS"
-    if [ "$FINAL_STATUS" = "completed" ] || [ "$FINAL_STATUS" = "failed" ] || [ "$FINAL_STATUS" = "error" ]; then
+    CANONICAL_STATUS="$(python3 - "$STATUS_FILE" <<'PY'
+import json, sys
+try:
+    data = json.load(open(sys.argv[1], encoding='utf-8'))
+    print(data.get('canonical_status') or data.get('status') or 'unknown')
+except Exception:
+    print('unknown')
+PY
+)"
+    TERMINAL="$(python3 - "$STATUS_FILE" <<'PY'
+import json, sys
+try:
+    data = json.load(open(sys.argv[1], encoding='utf-8'))
+    print('true' if data.get('terminal') is True else 'false')
+except Exception:
+    print('false')
+PY
+)"
+    FAILURE_CODE="$(python3 - "$STATUS_FILE" <<'PY'
+import json, sys
+try:
+    data = json.load(open(sys.argv[1], encoding='utf-8'))
+    print(data.get('failure_code') or '')
+except Exception:
+    print('')
+PY
+)"
+    if [ "$TERMINAL" != "true" ]; then
+      TERMINAL="$(python3 scripts/dev_employee_task_states.py "$FINAL_STATUS" --field terminal 2>/dev/null || echo false)"
+      CANONICAL_STATUS="$(python3 scripts/dev_employee_task_states.py "$FINAL_STATUS" --field canonical_status 2>/dev/null || echo "$FINAL_STATUS")"
+    fi
+    echo "POLL=$i HTTP=$HTTP_CODE STATUS=$FINAL_STATUS CANONICAL=$CANONICAL_STATUS TERMINAL=$TERMINAL"
+    if [ "$TERMINAL" = "true" ]; then
       break
     fi
     sleep 10
@@ -128,9 +165,19 @@ rm -f "$STATUS_FILE"
 
 echo
 echo "===== SUMMARY ====="
-echo "RESULT=$([ "$FINAL_STATUS" = "completed" ] && echo PASS || echo REVIEW)"
+if [ "$CANONICAL_STATUS" = "completed" ]; then
+  SUMMARY_RESULT="PASS"
+elif [ "$TERMINAL" = "true" ]; then
+  SUMMARY_RESULT="FAILED"
+else
+  SUMMARY_RESULT="REVIEW"
+fi
+echo "RESULT=$SUMMARY_RESULT"
 echo "TASK_ID=$TASK_ID"
 echo "FINAL_STATUS=$FINAL_STATUS"
+echo "CANONICAL_STATUS=$CANONICAL_STATUS"
+echo "TERMINAL=$TERMINAL"
+echo "FAILURE_CODE=$FAILURE_CODE"
 echo "PRODUCT_COMMIT_SHA=$PRODUCT_COMMIT"
 echo "PRODUCT_REMOTE_SHA=$PRODUCT_REMOTE"
 echo "ORIS_EVIDENCE_COMMIT_SHA=$ORIS_EVIDENCE"

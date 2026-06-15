@@ -27,6 +27,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
+from dev_employee_task_states import classify as classify_task_state
+
 ORIS_DIR = Path("/home/admin/projects/oris")
 ORIS_REPO = "ShanGouXueHui/oris"
 DEFAULT_BRANCH = "main"
@@ -364,6 +366,7 @@ def task_status(task_id: str) -> dict[str, Any]:
         status = str((queue[0].get("data") or {}).get("status") or queue[0].get("suffix") or status)
     elif catalog:
         status = str(catalog.get("status") or status)
+    state = classify_task_state(status, primary_run or {})
     latest = None
     latest_path = LOG_DIR / "latest_task_progress.json"
     if latest_path.exists():
@@ -377,6 +380,9 @@ def task_status(task_id: str) -> dict[str, Any]:
     return {
         "task_id": task_id,
         "status": status,
+        "canonical_status": state["canonical_status"],
+        "terminal": state["terminal"],
+        "failure_code": state["failure_code"],
         "catalog": catalog,
         "queue": queue,
         "runs": runs,
@@ -391,7 +397,18 @@ def list_goals() -> dict[str, Any]:
     items = []
     for path in sorted(CATALOG_DIR.glob("*.json")):
         data = read_json(path)
-        items.append({"task_id": data.get("task_id"), "project_key": data.get("project_key"), "status": data.get("status"), "created_at": data.get("created_at"), "path": str(path)})
+        task_id = str(data.get("task_id") or "")
+        current = task_status(task_id) if task_id else {}
+        items.append({
+            "task_id": task_id or None,
+            "project_key": data.get("project_key"),
+            "status": current.get("status") or data.get("status"),
+            "canonical_status": current.get("canonical_status"),
+            "terminal": current.get("terminal"),
+            "failure_code": current.get("failure_code"),
+            "created_at": data.get("created_at"),
+            "path": str(path),
+        })
     return {"catalog_dir": str(CATALOG_DIR), "items": items}
 
 

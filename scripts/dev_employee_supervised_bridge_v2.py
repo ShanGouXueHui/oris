@@ -31,7 +31,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from dev_employee_codex_auth_preflight import classify_codex_failure, run_codex_auth_preflight
 from dev_employee_result_validator import validate_result
+from dev_employee_task_states import classify as classify_task_state
 
 ORIS_DIR = Path("/home/admin/projects/oris")
 PROJECTS_DIR = Path("/home/admin/projects")
@@ -451,14 +453,16 @@ def record_evidence_commit_index(
     )
 
 
-def next_recommended_action(status: str) -> str:
+def next_recommended_action(status: str, failure_code: str | None = None) -> str:
+    if failure_code == "codex_authentication":
+        return "Reauthenticate Codex as Linux user admin, verify non-interactive and bridge-context preflight, then rerun with a new task id."
     if status in {"blocked_result_schema_invalid", "blocked_skill_resolution_invalid"}:
         return "Inspect GitHub failure evidence and Codex log; update autonomous prompt, resolver, or bridge enforcement, then rerun with a new task id."
-    if status == "blocked_host_checks_failed":
+    if status in {"blocked_host_checks_failed", "local_checks_failed"}:
         return "Inspect host check logs from GitHub evidence; fix product implementation or tests, then rerun with a new task id."
-    if status == "codex_failed":
-        return "Inspect Codex log and runtime descriptor; repair prompt/tooling or resource issue, then rerun with a new task id."
-    if status in {"blocked_product_push_failed", "blocked_oris_push_failed"}:
+    if status in {"codex_failed", "failed", "preflight_failed"}:
+        return "Inspect executor preflight and Codex logs; repair authentication, tooling, or resource issue, then rerun with a new task id."
+    if status in {"blocked_product_push_failed", "blocked_oris_push_failed", "remote_verification_failed"}:
         return "Inspect Git push evidence and repository state; resolve Git synchronization or permissions issue, then rerun or resume safely."
     return "Inspect failure details and available logs; apply the smallest safe platform or product fix, then rerun with a new task id."
 
@@ -467,9 +471,14 @@ def commit_push_oris_failure(task: dict[str, Any], status: str, extra: dict[str,
     task_id = task["task_id"]
     skill_json_path = SKILL_RESOLUTION_DIR / f"{task_id}.json"
     skill_md_path = SKILL_RESOLUTION_DIR / f"{task_id}.md"
+    state = classify_task_state(status, extra or {})
+    failure_code = state.get("failure_code")
     evidence = {
         "task_id": task_id,
         "status": status,
+        "canonical_status": state["canonical_status"],
+        "terminal": state["terminal"],
+        "failure_code": failure_code,
         "updated_at": now_iso(),
         "strict_result_schema": strict_result_schema(task),
         "task_objective": task.get("task_objective"),
@@ -479,10 +488,10 @@ def commit_push_oris_failure(task: dict[str, Any], status: str, extra: dict[str,
         "codex_log_path": task.get("codex_log_path"),
         "skill_resolver_report_json": str(skill_json_path) if skill_json_path.exists() else None,
         "skill_resolver_report_markdown": str(skill_md_path) if skill_md_path.exists() else None,
-        "next_recommended_action": next_recommended_action(status),
+        "next_recommended_action": next_recommended_action(status, failure_code),
     }
     if extra:
-        for optional_key in ["checks", "product_result", "oris_result", "codex_result", "schema_errors", "skill_resolution_errors", "return_code", "last_error"]:
+        for optional_key in ["checks", "product_result", "oris_result", "codex_result", "schema_errors", "skill_resolution_errors", "return_code", "last_error", "failure_code", "legacy_status", "executor_preflight", "codex_auth_preflight_log_path"]:
             if optional_key in extra:
                 evidence[optional_key] = extra[optional_key]
     write_json(RUN_DIR / f"{task_id}.json", evidence)
@@ -490,6 +499,9 @@ def commit_push_oris_failure(task: dict[str, Any], status: str, extra: dict[str,
     latest = {
         "task_id": task_id,
         "status": status,
+        "canonical_status": state["canonical_status"],
+        "terminal": state["terminal"],
+        "failure_code": failure_code,
         "oris_evidence_pending": False,
         "strict_result_schema": strict_result_schema(task),
         "updated_at": now_iso(),
@@ -565,11 +577,53 @@ def run_task(task_path: Path) -> int:
     result_path = RUN_DIR / f"{task_id}.codex_result.json"
 
     try:
-        task.update({"status": "codex_running", "codex_log_path": str(codex_log), "codex_result_path": str(result_path), "started_at": now_iso()})
+        codex_bin = safe_path(task.get("codex_bin") or str(DEFAULT_CODEX), [Path("/home/admin")])
+        workdir = safe_path(task.get("workdir", str(PROJECTS_DIR)), [PROJECTS_DIR])
+        preflight_log = LOG_DIR / f"{task_id}.codex_auth_preflight.json"
+        task.update({
+            "status": "preflight",
+            "codex_log_path": str(codex_log),
+            "codex_result_path": str(result_path),
+            "codex_auth_preflight_log_path": str(preflight_log),
+            "started_at": now_iso(),
+        })
+        write_json(RUN_DIR / f"{task_id}.json", task)
+        executor_preflight = run_codex_auth_preflight(
+            codex_bin,
+            workdir,
+            log_path=preflight_log,
+        )
+        if not executor_preflight.get("ok"):
+            return fail_task(
+                task_path,
+                task,
+                "preflight_failed",
+                {
+                    "failure_code": executor_preflight.get("failure_code") or "codex_preflight_failed",
+                    "executor_preflight": executor_preflight,
+                    "codex_auth_preflight_log_path": str(preflight_log),
+                },
+            )
+        task["status"] = "codex_running"
+        task["executor_preflight"] = {
+            key: executor_preflight.get(key)
+            for key in ["ok", "status", "executor_path", "executor_version", "linux_user", "uid", "home", "workdir"]
+        }
         write_json(RUN_DIR / f"{task_id}.json", task)
         rc = invoke_codex(task, codex_log, result_path)
         if rc != 0:
-            return fail_task(task_path, task, "codex_failed", {"return_code": rc})
+            codex_output = codex_log.read_text(encoding="utf-8", errors="replace") if codex_log.exists() else ""
+            failure_code = classify_codex_failure(codex_output, rc)
+            return fail_task(
+                task_path,
+                task,
+                "failed",
+                {
+                    "return_code": rc,
+                    "failure_code": failure_code,
+                    "legacy_status": "codex_failed",
+                },
+            )
         if not result_path.is_file():
             return fail_task(task_path, task, "blocked_missing_codex_result")
         codex_result = read_json(result_path)
