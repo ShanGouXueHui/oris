@@ -1,84 +1,96 @@
 {
-  "task_id": "goal-oris-final-acceptance-api-20260616-031022",
-  "status": "ready_for_rerun",
+  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "status": "completed",
   "task_type": "public_web_real_project_e2e",
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "submit_new_public_readonly_e2e_task_and_verify_final_acceptance",
+  "current_step": "final_acceptance_complete",
   "completed_steps": [
-    "final_acceptance_api_created_and_registered",
-    "loopback_intake_status_api_verified",
-    "supervised_bridge_verified",
-    "failure_evidence_and_triage_verified",
-    "github_evidence_commit_index_verified",
-    "public_domain_and_https_verified",
-    "persistent_public_web_submit_enabled",
-    "console_token_and_project_allowlist_verified",
-    "web_console_project_dropdown_fixed",
-    "web_console_javascript_verified",
-    "public_real_task_accepted_queued_and_claimed",
-    "executor_failure_persisted_and_diagnosed",
-    "canonical_terminal_state_module_prepared",
-    "sanitized_codex_auth_preflight_prepared",
-    "stdlib_unittest_regression_suite_verified",
-    "canonical_preflight_failure_stage_preservation_fixed",
-    "bridge_intake_finisher_hardening_committed_and_pushed",
-    "explicit_headless_device_login_completed",
+    "public_https_basic_auth_verified",
+    "console_token_verified",
+    "project_allowlist_verified",
+    "public_goal_submit_http_201_verified",
+    "intake_queue_bridge_claim_verified",
+    "codex_auth_preflight_verified",
     "admin_noninteractive_codex_exec_verified",
     "systemd_bridge_codex_context_verified",
-    "bridge_restarted_active",
-    "public_readonly_e2e_final_runner_prepared",
-    "evidence_index_done_record_handling_prepared"
+    "canonical_terminal_states_verified",
+    "terminal_failure_polling_stop_verified",
+    "terminal_queue_path_canonicalization_applied",
+    "legacy_queue_path_discovery_supported",
+    "codex_real_product_change_completed",
+    "product_py_compile_passed",
+    "product_pytest_passed",
+    "readonly_e2e_exact_contract_passed",
+    "product_commit_and_remote_sha_verified",
+    "strict_result_schema_verified",
+    "host_pytest_evidence_verified",
+    "oris_evidence_commit_verified",
+    "oris_evidence_index_commit_verified",
+    "independent_final_verification_passed"
   ],
-  "failed_steps": [
+  "historical_failures": [
     {
-      "step": "codex_execute_real_product_goal",
+      "step": "initial_codex_execute_real_product_goal",
       "status": "codex_failed",
       "failure_code": "codex_authentication",
-      "return_code": 1,
-      "evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06"
+      "evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
+      "diagnostic_commit_sha": "6fbc0ba1636ca01865b9565e68fdf6689ed6cae5",
+      "resolved": true
     },
     {
       "step": "platform_regression_test_runner",
-      "status": "failed",
       "failure_code": "pytest_not_installed_in_system_python",
-      "return_code": 1,
-      "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453"
+      "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453",
+      "resolved": true
     },
     {
       "step": "automatic_codex_device_login",
-      "status": "failed",
       "failure_code": "codex_login_failed",
-      "return_code": 1,
-      "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a"
+      "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a",
+      "resolved": true
+    },
+    {
+      "step": "final_evidence_polling",
+      "failure_code": "legacy_multi_suffix_done_path_not_discovered",
+      "resolved": true
+    },
+    {
+      "step": "first_independent_finalizer",
+      "failure_code": "product_checks_executed_from_oris_cwd",
+      "resolved": true
     }
   ],
-  "next_action": "As Linux user admin on 43.106.55.255, pull main and run scripts/dev_employee_run_public_readonly_e2e_20260616.sh from an interactive SSH TTY. Enter the existing public Basic Auth username and password when prompted. The runner will generate a new Task ID, submit through https://control.orisfy.com, wait for terminal completed plus evidence-index done state, rerun product py_compile/pytest and exact endpoint checks, verify product and ORIS SHAs, and commit sanitized logs.",
+  "next_action": "Do not rerun the final acceptance project. Continue with generic commercial hardening: transactional queue semantics and lifecycle controls first, followed by RBAC/audit/security, monitoring/SLO/backup, and generic project onboarding.",
   "last_error": null,
-  "prepared_changes": {
-    "code_hardening_commit": "57cf6eccb1bbf7cc4e6ddd79eab94e7530d3fe5c",
-    "codex_auth_success_evidence_commit": "6397fa315d4172a92fbdcdc6d95e429f2dec2b53",
-    "final_public_e2e_runner_commit": "0884b6c41e8e26294fe3c43fe98233a123f10e79",
-    "done_evidence_patcher_commit": "04c90cb082b13a2ceaf2f4a6133172ee12f4b186",
-    "one_command_entrypoint_commit": "15f9f65f8131146460b0d9c030cfe19a2fb47bf1",
-    "superseded_runner_removal_commit": "091a95411dcf960b459f43bce9adaca1d07af271"
-  },
-  "latest_task_evidence": {
-    "failure_evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
-    "diagnostic_commit_sha": "6fbc0ba1636ca01865b9565e68fdf6689ed6cae5",
-    "platform_runbook_failure_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453",
-    "login_failure_evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a",
-    "codex_auth_success_evidence_commit_sha": "6397fa315d4172a92fbdcdc6d95e429f2dec2b53"
-  },
+  "blocked_reason": null,
   "product_result": {
-    "product_commit_sha": null,
-    "product_remote_sha": null,
-    "product_changed": false,
     "requested_feature": "GET /readonly-e2e",
     "required_exact_response": {
       "readonly_e2e": true
-    }
+    },
+    "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "product_local_head": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "product_remote_main": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "sha_match": true,
+    "tracked_worktree_clean": true,
+    "py_compile": "pass",
+    "pytest": "pass",
+    "endpoint_contract": "pass"
+  },
+  "final_acceptance": {
+    "result": "pass",
+    "canonical_status": "completed",
+    "terminal": true,
+    "strict_result_schema": true,
+    "host_pytest_evidence": true,
+    "oris_evidence_commit_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+    "oris_evidence_remote_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+    "oris_evidence_index_commit_sha": "4425edbe8e29912ff44d41da2a5e458bdac292d3",
+    "independent_verification_log_commit_sha": "f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e",
+    "completion_record": "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md"
   },
   "platform_state": {
     "public_entry": "https://control.orisfy.com",
@@ -93,16 +105,17 @@
     "systemd_codex_preflight": "pass",
     "bridge_auth_context": "pass",
     "direct_public_intake_exposure": false,
-    "real_product_task_submitted_after_auth_repair": false
+    "real_product_task_submitted_after_auth_repair": true,
+    "final_acceptance": "pass"
   },
-  "blocked_reason": null,
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
+    "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-16.md",
     "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-16.md",
     "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md",
     "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md",
     "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md"
   ],
-  "updated_at": "2026-06-16"
+  "updated_at": "2026-06-16T05:00:00+08:00"
 }
