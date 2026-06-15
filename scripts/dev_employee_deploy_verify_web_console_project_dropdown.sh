@@ -85,7 +85,8 @@ PY
   grep 'ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED\|ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST' "$HOME/.config/systemd/user/oris-dev-employee-web-console.service" || true
   sudo grep -n 'location = /api/goals\|request_method\|127.0.0.1:18892\|127.0.0.1:18893\|auth_basic' /etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf || true
   echo
-} | tee "$LOG_FILE"
+} > >(tee "$LOG_FILE") 2>&1
+wait
 
 rm -f "$API_RESULT"
 
