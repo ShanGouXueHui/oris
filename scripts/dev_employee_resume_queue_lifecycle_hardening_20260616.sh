@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 ORIS="/home/admin/projects/oris"
-BASE="$ORIS/scripts/dev_employee_deploy_queue_lifecycle_hardening_v2_20260616.sh"
 TMP="/tmp/oris-deploy-queue-lifecycle-resume-$$.sh"
 
 failure_summary() {
@@ -33,20 +32,10 @@ if [ "$?" -ne 0 ]; then
   exit 1
 fi
 
-git rebase origin/main >/tmp/oris-queue-lifecycle-resume-rebase.log 2>&1
-if [ "$?" -ne 0 ]; then
-  failure_summary "oris_rebase_failed" "INSPECT_ORIS_REBASE"
-  exit 1
-fi
-
-if [ ! -f "$BASE" ]; then
-  failure_summary "deployment_script_missing" "RESTORE_DEPLOYMENT_SCRIPT"
-  exit 1
-fi
-
-cp "$BASE" "$TMP"
-if [ "$?" -ne 0 ]; then
-  failure_summary "deployment_script_copy_failed" "INSPECT_TMP_DIRECTORY"
+git show origin/main:scripts/dev_employee_deploy_queue_lifecycle_hardening_v2_20260616.sh > "$TMP"
+if [ "$?" -ne 0 ] || [ ! -s "$TMP" ]; then
+  rm -f "$TMP"
+  failure_summary "deployment_script_materialize_failed" "RESTORE_DEPLOYMENT_SCRIPT"
   exit 1
 fi
 
