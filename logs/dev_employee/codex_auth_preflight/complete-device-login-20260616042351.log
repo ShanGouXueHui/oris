@@ -1,0 +1,53 @@
+===== timestamp =====
+2026-06-16T04:23:51+08:00
+
+===== execution identity =====
+linux_user=admin
+uid=1000
+home=/home/admin
+
+===== code state =====
+head=e490a0fae839474e3fa1c7c628d6c481d8fc2dde
+hardening_commit=57cf6eccb1bbf7cc4e6ddd79eab94e7530d3fe5c
+bridge_stopped=true
+codex-cli 0.133.0
+device_auth_login=PASS
+{
+  "checked_at": "2026-06-16T04:25:33+08:00",
+  "ok": true,
+  "status": "ready",
+  "failure_code": null,
+  "executor_path": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+  "executor_version": "codex-cli 0.133.0",
+  "linux_user": "admin",
+  "uid": 1000,
+  "home": "/home/admin",
+  "workdir": "/home/admin/projects",
+  "return_code": 0,
+  "marker_observed": true,
+  "output_tail": "ORIS_CODEX_AUTH_OK\nOpenAI Codex v0.133.0\n--------\nworkdir: /home/admin/projects\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: none\nreasoning summaries: none\nsession id: 019eccf6-022c-70c3-bcd9-abd8b8f9a235\n--------\nuser\nRespond with exactly ORIS_CODEX_AUTH_OK. Do not inspect files, do not modify files, and do not run shell commands.\ncodex\nORIS_CODEX_AUTH_OK\ntokens used\n7,131\n"
+}
+Running as unit: oris-codex-auth-preflight-20260616042351.service
+{
+  "checked_at": "2026-06-16T04:25:37+08:00",
+  "ok": true,
+  "status": "ready",
+  "failure_code": null,
+  "executor_path": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+  "executor_version": "codex-cli 0.133.0",
+  "linux_user": "admin",
+  "uid": 1000,
+  "home": "/home/admin",
+  "workdir": "/home/admin/projects",
+  "return_code": 0,
+  "marker_observed": true,
+  "output_tail": "ORIS_CODEX_AUTH_OK\nOpenAI Codex v0.133.0\n--------\nworkdir: /home/admin/projects\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: none\nreasoning summaries: none\nsession id: 019eccf6-0f91-71e1-93dd-71b9b096700a\n--------\nuser\nRespond with exactly ORIS_CODEX_AUTH_OK. Do not inspect files, do not modify files, and do not run shell commands.\ncodex\nORIS_CODEX_AUTH_OK\ntokens used\n2,523\n"
+}
+Finished with result: success
+Main processes terminated with: code=exited/status=0
+Service runtime: 4.850s
+CPU time consumed: 1.651s
+admin_preflight=PASS
+systemd_preflight=PASS
+bridge_auth_context=PASS
+real_product_task_submitted=NO
