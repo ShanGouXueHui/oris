@@ -1,0 +1,16 @@
+{
+  "task_id": "goal-oris-final-acceptance-api-20260616-031022",
+  "status": "codex_failed",
+  "indexed_at": "2026-06-16T03:10:51+08:00",
+  "oris_evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
+  "oris_evidence_remote_sha": "ea2089c5344c67e016601de8993ef365591daa06",
+  "oris_evidence_files": [
+    "orchestration/task_runs/goal-oris-final-acceptance-api-20260616-031022.json",
+    "orchestration/task_runs/goal-oris-final-acceptance-api-20260616-031022.failure_result.json",
+    "logs/dev_employee/latest_task_progress.json",
+    "logs/dev_employee/latest_task_progress.md",
+    "logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log"
+  ],
+  "product_commit_sha": null,
+  "product_remote_sha": null
+}
