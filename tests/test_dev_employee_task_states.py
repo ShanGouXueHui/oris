@@ -25,9 +25,15 @@ class TaskStateTests(unittest.TestCase):
             with self.subTest(status=status):
                 self.assertFalse(is_terminal_status(status))
 
-    def test_completed_and_preflight_failed_are_terminal(self) -> None:
+    def test_canonical_failure_stages_remain_distinct_and_terminal(self) -> None:
+        for status in ["preflight_failed", "local_checks_failed", "remote_verification_failed"]:
+            with self.subTest(status=status):
+                self.assertEqual(canonical_status(status), status)
+                self.assertTrue(is_terminal_status(status))
+
+    def test_completed_is_terminal(self) -> None:
+        self.assertEqual(canonical_status("completed"), "completed")
         self.assertTrue(is_terminal_status("completed"))
-        self.assertTrue(is_terminal_status("preflight_failed"))
 
 
 if __name__ == "__main__":
