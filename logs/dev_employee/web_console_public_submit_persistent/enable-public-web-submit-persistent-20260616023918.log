@@ -1,0 +1,86 @@
+===== timestamp =====
+2026-06-16T02:39:18+08:00
+
+===== git sync =====
+HEAD is now at 08670e4 ops(dev-employee): add persistent public web submit enabler
+08670e48b71739b2e7ac3496ad36faed311e860b
+
+===== explicit policy =====
+PUBLIC_WEB_SUBMIT_MODE=persistent
+PUBLIC_ENTRY=https://control.orisfy.com
+REQUIRED_OUTER_AUTH=BasicAuth
+REQUIRED_INNER_AUTH=X-ORIS-Console-Token
+PROJECT_ALLOWLIST=oris-final-acceptance-api
+INTAKE_DIRECT_PUBLIC_EXPOSURE=forbidden
+PUBLIC_POST_ALLOWED_PATH=/api/goals only
+
+===== current nginx config before =====
+5:# - never proxies directly to the intake service on 127.0.0.1:18892;
+38:    auth_basic "ORIS Dev Employee Console";
+39:    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+41:    location = /api/goals {
+42:        if ($request_method !~ ^(GET)$) { return 403; }
+44:        proxy_pass http://127.0.0.1:18893/api/goals;
+53:        if ($request_method !~ ^(GET)$) { return 403; }
+55:        proxy_pass http://127.0.0.1:18893;
+64:        if ($request_method !~ ^(GET)$) { return 403; }
+66:        proxy_pass http://127.0.0.1:18893/api/projects;
+75:        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+77:        proxy_pass http://127.0.0.1:18893;
+
+===== current service before =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=1
+
+===== enable persistent public submit safely =====
+NGINX_BACKUP=/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf.bak_persistent_public_submit_20260616023921
+SERVICE_BACKUP=/home/admin/.config/systemd/user/oris-dev-employee-web-console.service.bak_persistent_public_submit_20260616023921
+
+===== nginx config after =====
+5:# - never proxies directly to the intake service on 127.0.0.1:18892;
+38:    auth_basic "ORIS Dev Employee Console";
+39:    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+41:    location = /api/goals {
+42:        if ($request_method !~ ^(GET|POST)$) { return 403; }
+44:        proxy_pass http://127.0.0.1:18893/api/goals;
+53:        if ($request_method !~ ^(GET)$) { return 403; }
+55:        proxy_pass http://127.0.0.1:18893;
+64:        if ($request_method !~ ^(GET)$) { return 403; }
+66:        proxy_pass http://127.0.0.1:18893/api/projects;
+75:        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+77:        proxy_pass http://127.0.0.1:18893;
+
+===== service after =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=1
+
+===== token presence only; token not logged =====
+CONSOLE_TOKEN_PRESENT
+INTAKE_TOKEN_PRESENT
+
+===== public route checks without secrets =====
+unauth health should be 401
+401
+<html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+unauth POST /api/goals should be 401 from Basic Auth, not reach app
+401
+<html>
+<head><title>401 Authorization Required</title></head>
+<body>
+<center><h1>401 Authorization Required</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+
+===== final local services =====
+active
+active
+active
+
