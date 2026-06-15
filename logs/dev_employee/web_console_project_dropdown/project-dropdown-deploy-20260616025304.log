@@ -1,0 +1,62 @@
+===== timestamp =====
+2026-06-16T02:53:04+08:00
+
+===== git sync =====
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+HEAD is now at ff9d35b fix(dev-employee): preserve project dropdown summary state
+ff9d35b6b0416042819d07f964efb80b8f5b6bac
+
+===== apply project dropdown patch =====
+PATCHED_WEB_CONSOLE_PROJECT_DROPDOWN=true
+PATCH_RESULT=applied
+
+===== static checks =====
+194:      <div id="project_status" class="muted">Project list loads automatically after the token changes.</div>
+281:    setProjectPlaceholder('Unable to load projects');
+343:tokenInput.addEventListener('change', loadProjects);
+344:tokenInput.addEventListener('blur', () => { if (consoleToken()) loadProjects(); });
+
+===== restart web console =====
+active
+
+===== local health =====
+HTTP/1.0 200 OK
+Server: oris-dev-employee-web-console/0.1 Python/3.10.12
+Date: Mon, 15 Jun 2026 18:53:08 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 61
+
+{
+  "status": "ok",
+  "service": "dev_employee_web_console"
+}
+===== authenticated local project API =====
+API_HTTP=200
+{
+    "projects": [
+        "oris-final-acceptance-api"
+    ]
+}
+PROJECT_FOUND=true
+
+===== rendered UI markers =====
+UI_MARKER_FOUND=true
+
+===== persistent public submit policy remains enabled =====
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_PROJECT_ALLOWLIST=oris-final-acceptance-api
+Environment=ORIS_DEV_EMPLOYEE_WEB_CONSOLE_SUBMIT_ENABLED=1
+4:# - proxies only to the local Web Console service on 127.0.0.1:18893;
+5:# - never proxies directly to the intake service on 127.0.0.1:18892;
+38:    auth_basic "ORIS Dev Employee Console";
+39:    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;
+41:    location = /api/goals {
+42:        if ($request_method !~ ^(GET|POST)$) { return 403; }
+44:        proxy_pass http://127.0.0.1:18893/api/goals;
+53:        if ($request_method !~ ^(GET)$) { return 403; }
+55:        proxy_pass http://127.0.0.1:18893;
+64:        if ($request_method !~ ^(GET)$) { return 403; }
+66:        proxy_pass http://127.0.0.1:18893/api/projects;
+75:        if ($request_method !~ ^(GET|HEAD)$) { return 403; }
+77:        proxy_pass http://127.0.0.1:18893;
+
