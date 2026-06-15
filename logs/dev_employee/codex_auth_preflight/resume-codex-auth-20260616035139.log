@@ -1,0 +1,165 @@
+===== timestamp =====
+2026-06-16T03:51:39+08:00
+
+===== execution identity =====
+linux_user=admin
+uid=1000
+home=/home/admin
+
+===== starting git state =====
+97e0c7496187885fc9438bca9909b3a9efe9140a
+ M scripts/dev_employee_diagnose_codex_failed_task.sh
+ M scripts/dev_employee_finish_public_web_submit_e2e.sh
+ M scripts/dev_employee_intake_api.py
+ M scripts/dev_employee_supervised_bridge_v2.py
+?? logs/dev_employee/autonomous-api-list-filters-20260526.codex.log
+?? logs/dev_employee/autonomous-api-list-filters-20260526_py_compile.txt
+?? logs/dev_employee/autonomous-api-list-filters-20260526_pytest.txt
+?? logs/dev_employee/autonomous-api-list-filters-20260526_pytest_werror.txt
+?? logs/dev_employee/autonomous-api-stats-skill-resolution-20260526.codex.log
+?? logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_py_compile.txt
+?? logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest.txt
+?? logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest_werror.txt
+?? logs/dev_employee/autonomous-api-tags-20260526.codex.log
+?? logs/dev_employee/autonomous-api-tags-20260526_py_compile.txt
+?? logs/dev_employee/autonomous-api-tags-20260526_pytest.txt
+?? logs/dev_employee/bridge-client-smoke-20260526.codex.log
+?? logs/dev_employee/bridge-runtime-contract-smoke-20260526.codex.log
+?? logs/dev_employee/bridge-service-smoke-20260525.codex.log
+?? logs/dev_employee/bridge-service-smoke-http-20260525.codex.log
+?? logs/dev_employee/bridge_service_smoke_http_py_compile_20260525.txt
+?? logs/dev_employee/bridge_service_smoke_http_pytest_20260525.txt
+?? logs/dev_employee/bridge_service_smoke_http_pytest_werror_20260525.txt
+?? logs/dev_employee/bridge_service_smoke_py_compile_20260525.txt
+?? logs/dev_employee/bridge_service_smoke_pytest_20260525.txt
+?? logs/dev_employee/bridge_service_smoke_pytest_werror_20260525.txt
+?? logs/dev_employee/codex_auth_preflight/resume-codex-auth-20260616035139.log
+?? logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_failure_triage.txt
+?? logs/dev_employee/failure-evidence-bridge-exception-20260526.codex.log
+?? logs/dev_employee/failure-evidence-real-product-healthz-20260526-r1_host_pytest.txt
+?? logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json
+?? logs/dev_employee/final_acceptance_codex_run_20260524.log
+?? logs/dev_employee/final_acceptance_refresh_evidence_20260525.log
+?? logs/dev_employee/final_acceptance_refresh_evidence_v2_20260525.log
+?? logs/dev_employee/formal-test-pydantic-cleanup-20260524.codex.log
+?? logs/dev_employee/formal-test-pydantic-cleanup-20260524.log
+?? logs/dev_employee/formal-test-pydantic-cleanup-v2-20260525.codex.log
+?? logs/dev_employee/formal_test_pydantic_git_20260524.txt
+?? logs/dev_employee/formal_test_pydantic_py_compile_20260524.txt
+?? logs/dev_employee/formal_test_pydantic_pytest_20260524.txt
+?? logs/dev_employee/formal_test_pydantic_pytest_werror_20260524.txt
+?? logs/dev_employee/formal_test_pydantic_v2_py_compile_20260525.txt
+?? logs/dev_employee/formal_test_pydantic_v2_pytest_20260525.txt
+?? logs/dev_employee/formal_test_pydantic_v2_pytest_werror_20260525.txt
+?? logs/dev_employee/goal-api-info-endpoint-20260526-r1.codex.log
+?? logs/dev_employee/goal-api-info-endpoint-20260526-r1_py_compile.txt
+?? logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest.txt
+?? logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest_werror.txt
+?? logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022_failure_triage.txt
+?? logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1.codex.log
+?? logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_py_compile.txt
+?? logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest.txt
+?? logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest_werror.txt
+?? logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1.codex.log
+?? logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_py_compile.txt
+?? logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest.txt
+?? logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest_werror.txt
+?? logs/dev_employee/install_dev_employee_bridge_service.log
+?? logs/dev_employee/install_dev_employee_enqueue_service.log
+?? logs/dev_employee/intake_api_post_smoke_intake-smoke-noexec-20260529042041.log
+?? logs/dev_employee/intake_api_smoke_20260529_041653.log
+?? logs/dev_employee/intake_api_smoke_intake-smoke-noexec-20260529-r1.log
+?? logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json
+?? logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-oris-com.json
+?? logs/dev_employee/repair-real-product-healthz-20260526-r1.codex.log
+?? logs/dev_employee/repair-real-product-healthz-20260526-r1_py_compile.txt
+?? logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest.txt
+?? logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest_werror.txt
+?? logs/dev_employee/repair_plans/guard-validate-plan-mismatch-20260526-r1.json
+?? logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.json
+?? logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.md
+?? logs/dev_employee/stale_task_recovery_latest.json
+?? logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1.codex.log
+?? logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_py_compile.txt
+?? logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest.txt
+?? logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest_werror.txt
+?? logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1.codex.log
+?? logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_py_compile.txt
+?? logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest.txt
+?? logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest_werror.txt
+?? logs/dev_employee/web-console-submit-consolez-20260531-r1.codex.log
+?? logs/dev_employee/web-console-submit-consolez-20260531-r1_py_compile.txt
+?? logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest.txt
+?? logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest_werror.txt
+?? logs/dev_employee/web_console_audit/
+?? logs/dev_employee/web_console_public_submit_e2e/
+?? orchestration/dev_employee_intake_catalog/
+?? orchestration/task_runs/autonomous-api-list-filters-20260526.codex_result.json
+?? orchestration/task_runs/autonomous-api-stats-skill-resolution-20260526.codex_result.json
+?? orchestration/task_runs/autonomous-api-tags-20260526.codex_result.json
+?? orchestration/task_runs/bridge-client-smoke-20260526.codex_result.json
+?? orchestration/task_runs/bridge-runtime-contract-smoke-20260526.codex_result.json
+?? orchestration/task_runs/bridge-service-smoke-20260525.codex_result.json
+?? orchestration/task_runs/bridge-service-smoke-http-20260525.codex_result.json
+?? orchestration/task_runs/failure-evidence-auto-triage-host-checks-20260526-r1.codex_result.json
+?? orchestration/task_runs/failure-evidence-bridge-exception-20260526.json
+?? orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.codex_result.json
+?? orchestration/task_runs/failure-evidence-real-product-healthz-20260526-r1.failure_result.json
+?? orchestration/task_runs/failure-evidence-skill-resolution-invalid-20260526-r1.codex_result.json
+?? orchestration/task_runs/formal-test-pydantic-cleanup-20260524.json
+?? orchestration/task_runs/formal-test-pydantic-cleanup-v2-20260525.codex_result.json
+?? orchestration/task_runs/goal-api-info-endpoint-20260526-r1.codex_result.json
+?? orchestration/task_runs/goal-readyz-endpoint-clean-check-20260529-r1.codex_result.json
+?? orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.codex_result.json
+?? orchestration/task_runs/repair-real-product-healthz-20260526-r1.codex_result.json
+?? orchestration/task_runs/web-adapter-goal-livez-endpoint-20260529-r1.codex_result.json
+?? orchestration/task_runs/web-adapter-goal-ping-endpoint-20260529-r1.codex_result.json
+?? orchestration/task_runs/web-console-submit-consolez-20260531-r1.codex_result.json
+?? vendor/
+bridge_stopped=true
+BRIDGE_PATCHED=already
+INTAKE_PATCHED=already
+FINISHER_PATCHED=already
+test_active_states_are_not_terminal (__main__.TaskStateTests) ... ok
+test_blocked_family_is_terminal (__main__.TaskStateTests) ... ok
+test_canonical_failure_stages_remain_distinct_and_terminal (__main__.TaskStateTests) ... ok
+test_completed_is_terminal (__main__.TaskStateTests) ... ok
+test_legacy_codex_failed_is_terminal_failed (__main__.TaskStateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK
+test_generic_nonzero_is_preflight_failure (__main__.CodexAuthPreflightTests) ... ok
+test_preflight_accepts_fake_executor_success_marker (__main__.CodexAuthPreflightTests) ... ok
+test_preflight_classifies_fake_executor_auth_failure (__main__.CodexAuthPreflightTests) ... ok
+test_refresh_token_reused_is_authentication_failure (__main__.CodexAuthPreflightTests) ... ok
+test_sanitize_text_redacts_bearer_and_json_tokens (__main__.CodexAuthPreflightTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.010s
+
+OK
+[main 57cf6ec] fix(dev-employee): gate Codex auth and terminate failed tasks
+ 3 files changed, 132 insertions(+), 14 deletions(-)
+To github.com:ShanGouXueHui/oris.git
+   97e0c74..57cf6ec  main -> main
+codex-cli 0.133.0
+{
+  "checked_at": "2026-06-16T03:51:45+08:00",
+  "ok": false,
+  "status": "preflight_failed",
+  "failure_code": "codex_authentication",
+  "executor_path": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+  "executor_version": "codex-cli 0.133.0",
+  "linux_user": "admin",
+  "uid": 1000,
+  "home": "/home/admin",
+  "workdir": "/home/admin/projects",
+  "return_code": 1,
+  "marker_observed": false,
+  "output_tail": "be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.091887Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.204742Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.254702Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.306849Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.778529Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: HTTP error: 401 Unauthorized, url: wss://chatgpt.com/backend-api/codex/responses\n2026-06-15T19:51:57.880235Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.929004Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:57.978589Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:58.347221Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: HTTP error: 401 Unauthorized, url: wss://chatgpt.com/backend-api/codex/responses\n2026-06-15T19:51:58.407193Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:58.559177Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:58.608350Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:58.663183Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:59.043931Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: HTTP error: 401 Unauthorized, url: wss://chatgpt.com/backend-api/codex/responses\n2026-06-15T19:51:59.146451Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:59.195782Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:59.244996Z ERROR codex_login::auth::manager: Failed to refresh token: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n2026-06-15T19:51:59.627769Z ERROR codex_api::endpoint::responses_websocket: failed to connect to websocket: HTTP error: 401 Unauthorized, url: wss://chatgpt.com/backend-api/codex/responses\nERROR: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\nERROR: Your access token could not be refreshed because your refresh token was already used. Please log out and sign in again.\n"
+}
+RESULT=FAILED
+FAILURE_CODE=codex_login_failed
+NEXT_ACTION=COMPLETE_CODEX_LOGIN_AND_RERUN_RESUME_SCRIPT
