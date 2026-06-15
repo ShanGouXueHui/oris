@@ -5,7 +5,7 @@
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "run_admin_codex_reauthentication_and_hardening_script",
+  "current_step": "resume_platform_hardening_then_reauthenticate_codex",
   "completed_steps": [
     "final_acceptance_api_created_and_registered",
     "loopback_intake_status_api_verified",
@@ -21,9 +21,12 @@
     "executor_failure_persisted_and_diagnosed",
     "canonical_terminal_state_module_prepared",
     "sanitized_codex_auth_preflight_prepared",
-    "bridge_intake_finisher_hardening_migration_prepared",
-    "interactive_reauthentication_and_bridge_context_runbook_prepared",
-    "executor_auth_failure_regression_tests_prepared"
+    "bridge_intake_finisher_hardening_migration_applied_locally",
+    "executor_auth_failure_regression_tests_prepared",
+    "platform_test_runner_dependency_failure_diagnosed",
+    "stdlib_unittest_regression_suite_prepared",
+    "canonical_preflight_failure_stage_preservation_fixed",
+    "isolated_resume_runbook_prepared"
   ],
   "failed_steps": [
     {
@@ -31,26 +34,33 @@
       "status": "codex_failed",
       "failure_code": "codex_authentication",
       "return_code": 1
+    },
+    {
+      "step": "platform_regression_test_runner",
+      "status": "failed",
+      "failure_code": "pytest_not_installed_in_system_python",
+      "return_code": 1,
+      "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453"
     }
   ],
-  "next_action": "As Linux user admin on 43.106.55.255, pull main and run scripts/dev_employee_repair_codex_auth_and_harden_20260616.sh. Complete the interactive Codex login when prompted. Do not submit a new real product task until the script reports PASS for both admin and systemd bridge-context preflights.",
+  "next_action": "As Linux user admin on 43.106.55.255, pull main and run scripts/dev_employee_resume_codex_auth_hardening_20260616.sh. The resume script uses only Python standard-library unittest, commits only the three authoritative runtime files, performs Codex login when required, verifies admin and transient user-systemd auth contexts, and restarts the bridge only after both preflights pass.",
   "last_error": {
-    "type": "codex_authentication",
-    "http_status": 401,
-    "provider_error_code": "refresh_token_reused"
+    "type": "platform_regression_tests_failed",
+    "root_cause": "The first runbook invoked /usr/bin/python3 -m pytest, but pytest is not installed in the system Python environment. This was a runbook dependency assumption, not a runtime code assertion failure.",
+    "evidence_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453"
   },
   "prepared_changes": {
-    "task_state_module_commit": "b6a7d5420e07ac460a7abc2122917584855ca43c",
-    "codex_auth_preflight_commit": "ad07c687e16896f9fadab5b4eac8b05152f987f2",
-    "task_state_tests_commit": "30cc67a2ab2d648b94c449fd999a8c168ac97817",
-    "auth_preflight_tests_initial_commit": "f42a29d1506f63813b256cacc9a822ba4f38cea2",
-    "hardening_migration_commit": "0c3c3e69d04e76a0e27e34504035726a9621327c",
-    "reauth_runbook_commit": "4ffe9bc79b06018bca878e8cdc70e3e7397967f9",
-    "auth_failure_simulation_test_commit": "ccddc66d6a818ad64f89f9cadda09d70ad750c8b"
+    "canonical_state_fix_commit": "d6aa5d765385b2be78e1348f6538f1d0ef6793bf",
+    "stdlib_task_state_tests_commit": "60ac6a4e742faa32fd6fded94089633065f7a306",
+    "stdlib_auth_preflight_tests_commit": "2ff327cee93ef92d629db383304d21040fed10e3",
+    "canonical_stage_test_commit": "6ebba7c504fddd59b4e37ece920a01ab996789ac",
+    "resume_runbook_initial_commit": "c68644b1f528a8973639b85146d29b5aaaab09f7",
+    "resume_runbook_hardening_commit": "1ee55e97a39a64ecec3142f9ee54a1978ecaff97"
   },
   "latest_task_evidence": {
     "failure_evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
     "diagnostic_commit_sha": "6fbc0ba1636ca01865b9565e68fdf6689ed6cae5",
+    "platform_runbook_failure_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453",
     "codex_log": "logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log",
     "diagnostic_log": "logs/dev_employee/codex_failed_diagnostics/goal-oris-final-acceptance-api-20260616-031022-20260616031848.log"
   },
@@ -68,10 +78,11 @@
     ],
     "web_console_service": "active",
     "intake_service": "active",
-    "bridge_service": "active_before_repair_run",
-    "direct_public_intake_exposure": false
+    "bridge_service": "inactive_safe_stop",
+    "direct_public_intake_exposure": false,
+    "real_product_task_submitted_after_failure": false
   },
-  "blocked_reason": "Codex login repair requires one interactive admin action. The GitHub-hosted runbook will stop the bridge, apply and test generic auth/terminal-state hardening, perform the login without logging credentials, verify non-interactive execution under admin and a transient user-systemd context, and restart the bridge only after both pass.",
+  "blocked_reason": "The platform test-runner dependency issue has been repaired in GitHub. One admin-side resume execution and interactive Codex login are still required. Bridge remains stopped so no queued task can execute before the hardened preflight is validated.",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-16.md",
