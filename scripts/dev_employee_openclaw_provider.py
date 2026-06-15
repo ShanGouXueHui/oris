@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """OpenClaw provider boundary for conversational ORIS task orchestration.
 
-The Web layer depends on this structured interface rather than a specific model
-or OpenClaw deployment. A configured HTTP provider is preferred. A deterministic
-fallback remains available for safe status/cancel/retry commands and for direct
-single-project engineering goals when the provider is unavailable.
+The normal provider uses the installed first-party OpenClaw CLI:
+
+    openclaw infer model run --gateway --prompt ... --json
+
+This is a raw model inference path through the running Gateway. It does not load
+agent tools, MCP servers, product workspaces, or the Codex executor. The provider
+only converts conversation into a validated structured intent. Explicit control
+commands remain deterministic and the ORIS intake/control plane remains the sole
+owner of task creation, cancellation, retry, and execution.
 """
 
 from __future__ import annotations
@@ -12,11 +17,12 @@ from __future__ import annotations
 import json
 import os
 import re
-import urllib.error
-import urllib.request
+import subprocess
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
+
+ALLOWED_INTENTS = {"create_task", "status", "cancel", "retry", "clarify", "help", "chat"}
 
 
 @dataclass
@@ -45,19 +51,194 @@ class ProviderContractError(RuntimeError):
     pass
 
 
-class OpenClawHTTPProvider:
-    def __init__(self, endpoint: str, token_file: Path | None = None, timeout: int = 45) -> None:
-        self.endpoint = endpoint.rstrip("/")
-        self.token_file = token_file
-        self.timeout = timeout
+def compact_project_context(projects: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    return {
+        key: {
+            "name": value.get("name"),
+            "type": value.get("type"),
+            "notes": value.get("notes"),
+            "allowed_scope": value.get("allowed_scope", []),
+            "forbidden_scope": value.get("forbidden_scope", []),
+        }
+        for key, value in projects.items()
+    }
 
-    def token(self) -> str:
-        if self.token_file is None:
-            return ""
+
+def compact_recent_messages(session: dict[str, Any], limit: int = 10) -> list[dict[str, str]]:
+    result: list[dict[str, str]] = []
+    for item in (session.get("messages") or [])[-limit:]:
+        if not isinstance(item, dict):
+            continue
+        role = str(item.get("role") or "")
+        content = str(item.get("content") or "").strip()
+        if role in {"user", "assistant"} and content:
+            result.append({"role": role, "content": content[:4000]})
+    return result
+
+
+def safe_current_task(current_task: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(current_task, dict):
+        return None
+    return {
+        "task_id": current_task.get("task_id"),
+        "status": current_task.get("status"),
+        "canonical_status": current_task.get("canonical_status"),
+        "terminal": current_task.get("terminal"),
+        "failure_code": current_task.get("failure_code"),
+    }
+
+
+def build_router_prompt(
+    *,
+    session: dict[str, Any],
+    user_message: str,
+    projects: dict[str, dict[str, Any]],
+    current_task: dict[str, Any] | None,
+) -> str:
+    context = {
+        "locale": session.get("locale") or "zh-CN",
+        "selected_project": session.get("selected_project"),
+        "current_task_id": session.get("current_task_id"),
+        "recent_messages": compact_recent_messages(session),
+        "user_message": user_message,
+        "available_projects": compact_project_context(projects),
+        "current_task": safe_current_task(current_task),
+    }
+    schema = {
+        "intent": "create_task|status|cancel|retry|clarify|help|chat",
+        "assistant_message": "concise plain-language response in the user's language",
+        "project_key": "one exact available project key or null",
+        "objective": "specific engineering objective or null",
+        "constraints": ["derived non-secret engineering constraints"],
+        "expected_checks": ["relevant check commands only when confidently known"],
+        "commit_message": "optional concise commit message or null",
+        "requires_confirmation": False,
+        "confirmation_reason": "production_change|destructive_change|secret_operation|billing_operation|null",
+    }
+    return (
+        "You are the intent-routing layer for ORIS, an AI development employee.\n"
+        "Your only job is to convert the supplied conversation context into one structured response.\n"
+        "Do not execute tools, do not edit files, do not run commands, and do not invent project keys.\n"
+        "Routine implementation decisions should not be delegated back to the user.\n"
+        "Ask a clarification only when the target project or engineering outcome is genuinely ambiguous.\n"
+        "Set requires_confirmation=true for production changes, destructive/irreversible operations, secret handling, billing, or purchases.\n"
+        "For create_task, preserve the user's real objective and select exactly one available project.\n"
+        "Return exactly one JSON object, with no markdown fence and no text before or after it.\n"
+        f"Required schema example: {json.dumps(schema, ensure_ascii=False, separators=(',', ':'))}\n"
+        f"Conversation context: {json.dumps(context, ensure_ascii=False, separators=(',', ':'))}"
+    )
+
+
+def iter_strings(value: Any) -> Iterable[str]:
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        preferred = ["text", "content", "output", "response", "completion", "message"]
+        seen: set[str] = set()
+        for key in preferred:
+            if key in value:
+                seen.add(key)
+                yield from iter_strings(value[key])
+        for key, child in value.items():
+            if key not in seen:
+                yield from iter_strings(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from iter_strings(child)
+
+
+def parse_json_object_text(text: str) -> dict[str, Any] | None:
+    candidate = text.strip()
+    if candidate.startswith("```"):
+        candidate = re.sub(r"^```(?:json)?\s*", "", candidate, flags=re.IGNORECASE)
+        candidate = re.sub(r"\s*```$", "", candidate)
+    attempts = [candidate]
+    first = candidate.find("{")
+    last = candidate.rfind("}")
+    if first >= 0 and last > first:
+        attempts.append(candidate[first : last + 1])
+    for item in attempts:
         try:
-            return self.token_file.read_text(encoding="utf-8").strip()
-        except FileNotFoundError:
-            return ""
+            parsed = json.loads(item)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict) and "intent" in parsed:
+            return parsed
+    return None
+
+
+def extract_router_result(envelope: dict[str, Any]) -> dict[str, Any]:
+    direct = envelope.get("result")
+    if isinstance(direct, dict) and "intent" in direct:
+        return direct
+    for text in iter_strings(envelope):
+        parsed = parse_json_object_text(text)
+        if parsed is not None:
+            return parsed
+    raise ProviderContractError("OpenClaw output did not contain the structured intent object")
+
+
+def validate_provider_result(data: dict[str, Any], projects: dict[str, dict[str, Any]]) -> ProviderResult:
+    intent = str(data.get("intent") or "").strip()
+    if intent not in ALLOWED_INTENTS:
+        raise ProviderContractError(f"unsupported OpenClaw intent: {intent}")
+    assistant_message = str(data.get("assistant_message") or "").strip()
+    if not assistant_message:
+        raise ProviderContractError("OpenClaw response missing assistant_message")
+    project_key = str(data.get("project_key") or "").strip() or None
+    if project_key and project_key not in projects:
+        raise ProviderContractError(f"OpenClaw selected unsupported project: {project_key}")
+    objective = str(data.get("objective") or "").strip() or None
+    if intent == "create_task" and (not project_key or not objective):
+        raise ProviderContractError("create_task requires project_key and objective")
+    constraints = [str(item).strip() for item in data.get("constraints") or [] if str(item).strip()]
+    checks = [str(item).strip() for item in data.get("expected_checks") or [] if str(item).strip()]
+    return ProviderResult(
+        intent=intent,
+        assistant_message=assistant_message,
+        project_key=project_key,
+        objective=objective,
+        constraints=constraints[:30],
+        expected_checks=checks[:30],
+        commit_message=str(data.get("commit_message") or "").strip() or None,
+        requires_confirmation=bool(data.get("requires_confirmation")),
+        confirmation_reason=str(data.get("confirmation_reason") or "").strip() or None,
+        provider="openclaw_infer_gateway",
+    )
+
+
+class OpenClawInferCLIProvider:
+    def __init__(
+        self,
+        binary: Path,
+        *,
+        timeout: int = 90,
+        model: str | None = None,
+        thinking: str = "low",
+        require_gateway: bool = True,
+    ) -> None:
+        self.binary = Path(binary)
+        self.timeout = timeout
+        self.model = model
+        self.thinking = thinking
+        self.require_gateway = require_gateway
+
+    def command(self, prompt: str) -> list[str]:
+        command = [
+            str(self.binary),
+            "infer",
+            "model",
+            "run",
+            "--gateway",
+            "--prompt",
+            prompt,
+            "--thinking",
+            self.thinking,
+            "--json",
+        ]
+        if self.model:
+            command.extend(["--model", self.model])
+        return command
 
     def analyze(
         self,
@@ -67,87 +248,48 @@ class OpenClawHTTPProvider:
         projects: dict[str, dict[str, Any]],
         current_task: dict[str, Any] | None,
     ) -> ProviderResult:
-        payload = {
-            "contract_version": 1,
-            "session": {
-                "session_id": session.get("session_id"),
-                "locale": session.get("locale"),
-                "selected_project": session.get("selected_project"),
-                "current_task_id": session.get("current_task_id"),
-                "recent_messages": (session.get("messages") or [])[-12:],
-            },
-            "user_message": user_message,
-            "projects": {
-                key: {
-                    "name": value.get("name"),
-                    "type": value.get("type"),
-                    "notes": value.get("notes"),
-                    "allowed_scope": value.get("allowed_scope", []),
-                    "forbidden_scope": value.get("forbidden_scope", []),
-                }
-                for key, value in projects.items()
-            },
-            "current_task": current_task,
-            "response_schema": {
-                "intent": "create_task|status|cancel|retry|clarify|help|chat",
-                "assistant_message": "plain-language response",
-                "project_key": "optional project key",
-                "objective": "optional structured engineering objective",
-                "constraints": ["optional constraints"],
-                "expected_checks": ["optional checks"],
-                "commit_message": "optional commit message",
-                "requires_confirmation": False,
-                "confirmation_reason": "optional",
-            },
-        }
-        headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        token = self.token()
-        if token:
-            headers["Authorization"] = f"Bearer {token}"
-        request = urllib.request.Request(
-            self.endpoint,
-            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-            headers=headers,
-            method="POST",
+        if not self.binary.is_file() or not os.access(self.binary, os.X_OK):
+            raise ProviderUnavailable("OpenClaw binary is unavailable")
+        prompt = build_router_prompt(
+            session=session,
+            user_message=user_message,
+            projects=projects,
+            current_task=current_task,
         )
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                raw = response.read().decode("utf-8")
-                if response.status < 200 or response.status >= 300:
-                    raise ProviderUnavailable(f"OpenClaw provider returned HTTP {response.status}")
-        except (urllib.error.URLError, TimeoutError) as exc:
-            raise ProviderUnavailable(f"OpenClaw provider unavailable: {type(exc).__name__}") from exc
+            completed = subprocess.run(
+                self.command(prompt),
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=self.timeout,
+                env=os.environ.copy(),
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise ProviderUnavailable("OpenClaw inference timed out") from exc
+        if completed.returncode != 0:
+            raise ProviderUnavailable(f"OpenClaw inference exited with code {completed.returncode}")
         try:
-            data = json.loads(raw)
+            envelope = json.loads(completed.stdout)
         except json.JSONDecodeError as exc:
-            raise ProviderContractError("OpenClaw provider returned invalid JSON") from exc
-        if not isinstance(data, dict):
-            raise ProviderContractError("OpenClaw provider response must be an object")
-        intent = str(data.get("intent") or "").strip()
-        assistant_message = str(data.get("assistant_message") or "").strip()
-        if intent not in {"create_task", "status", "cancel", "retry", "clarify", "help", "chat"}:
-            raise ProviderContractError(f"unsupported OpenClaw intent: {intent}")
-        if not assistant_message:
-            raise ProviderContractError("OpenClaw response missing assistant_message")
-        project_key = str(data.get("project_key") or "").strip() or None
-        if project_key and project_key not in projects:
-            raise ProviderContractError(f"OpenClaw selected unsupported project: {project_key}")
-        return ProviderResult(
-            intent=intent,
-            assistant_message=assistant_message,
-            project_key=project_key,
-            objective=str(data.get("objective") or "").strip() or None,
-            constraints=[str(item).strip() for item in data.get("constraints") or [] if str(item).strip()],
-            expected_checks=[str(item).strip() for item in data.get("expected_checks") or [] if str(item).strip()],
-            commit_message=str(data.get("commit_message") or "").strip() or None,
-            requires_confirmation=bool(data.get("requires_confirmation")),
-            confirmation_reason=str(data.get("confirmation_reason") or "").strip() or None,
-            provider="openclaw_http",
-            raw_metadata={
-                "endpoint_configured": True,
-                "contract_version": data.get("contract_version", 1),
-            },
-        )
+            raise ProviderContractError("OpenClaw CLI returned invalid JSON envelope") from exc
+        if not isinstance(envelope, dict):
+            raise ProviderContractError("OpenClaw CLI envelope must be an object")
+        if envelope.get("ok") is False:
+            raise ProviderUnavailable("OpenClaw inference envelope reported failure")
+        transport = str(envelope.get("transport") or (envelope.get("meta") or {}).get("transport") or "").strip()
+        if self.require_gateway and transport and transport != "gateway":
+            raise ProviderUnavailable(f"OpenClaw transport is not gateway: {transport}")
+        data = extract_router_result(envelope)
+        result = validate_provider_result(data, projects)
+        result.raw_metadata = {
+            "transport": transport or "gateway_requested",
+            "provider": envelope.get("provider"),
+            "model": envelope.get("model"),
+            "capability": envelope.get("capability"),
+            "openclaw_binary": str(self.binary),
+        }
+        return result
 
 
 class DeterministicFallbackProvider:
@@ -229,10 +371,7 @@ class DeterministicFallbackProvider:
         project_key = self.infer_project(text, projects, session.get("selected_project"))
         if not project_key:
             choices = "、".join(f"{key}（{value.get('name', key)}）" for key, value in projects.items())
-            return ProviderResult(
-                intent="clarify",
-                assistant_message=f"请告诉我要操作哪个项目。当前可用项目：{choices}",
-            )
+            return ProviderResult(intent="clarify", assistant_message=f"请告诉我要操作哪个项目。当前可用项目：{choices}")
         risk = self.is_risky(text)
         if risk:
             return ProviderResult(
@@ -263,14 +402,48 @@ class DeterministicFallbackProvider:
         )
 
 
-def configured_provider() -> OpenClawHTTPProvider | None:
-    endpoint = os.environ.get("ORIS_OPENCLAW_CHAT_URL", "").strip()
-    if not endpoint:
+def explicit_control_intent(text: str) -> bool:
+    lowered = text.lower()
+    provider = DeterministicFallbackProvider()
+    groups = [provider.STATUS_WORDS, provider.CANCEL_WORDS, provider.RETRY_WORDS, provider.HELP_WORDS]
+    return any(word in lowered for group in groups for word in group)
+
+
+def configured_provider() -> OpenClawInferCLIProvider | None:
+    binary_value = os.environ.get("ORIS_OPENCLAW_BIN", "/home/admin/.npm-global/bin/openclaw").strip()
+    binary = Path(binary_value).expanduser()
+    if not binary.is_file() or not os.access(binary, os.X_OK):
         return None
-    token_file_value = os.environ.get("ORIS_OPENCLAW_TOKEN_FILE", "").strip()
-    token_file = Path(token_file_value).expanduser() if token_file_value else None
-    timeout = max(5, min(120, int(os.environ.get("ORIS_OPENCLAW_TIMEOUT_SECONDS", "45"))))
-    return OpenClawHTTPProvider(endpoint, token_file=token_file, timeout=timeout)
+    timeout = max(10, min(180, int(os.environ.get("ORIS_OPENCLAW_TIMEOUT_SECONDS", "90"))))
+    model = os.environ.get("ORIS_OPENCLAW_MODEL", "").strip() or None
+    thinking = os.environ.get("ORIS_OPENCLAW_THINKING", "low").strip() or "low"
+    require_gateway = os.environ.get("ORIS_OPENCLAW_REQUIRE_GATEWAY", "1").strip().lower() not in {"0", "false", "no"}
+    return OpenClawInferCLIProvider(
+        binary,
+        timeout=timeout,
+        model=model,
+        thinking=thinking,
+        require_gateway=require_gateway,
+    )
+
+
+def merge_mandatory_policy(result: ProviderResult, user_message: str, projects: dict[str, dict[str, Any]]) -> ProviderResult:
+    fallback = DeterministicFallbackProvider()
+    risk = fallback.is_risky(user_message)
+    if risk:
+        result.requires_confirmation = True
+        result.confirmation_reason = risk
+        if result.intent == "create_task":
+            result.intent = "clarify"
+        result.assistant_message = "这个请求涉及生产、敏感信息、付费或不可逆操作，需要你明确确认操作范围后才能继续。"
+    if result.intent == "create_task" and result.project_key in projects:
+        mandatory = fallback.default_constraints(projects[result.project_key])
+        merged: list[str] = []
+        for item in [*mandatory, *result.constraints]:
+            if item and item not in merged:
+                merged.append(item)
+        result.constraints = merged[:30]
+    return result
 
 
 def analyze_message(
@@ -280,28 +453,38 @@ def analyze_message(
     projects: dict[str, dict[str, Any]],
     current_task: dict[str, Any] | None,
 ) -> ProviderResult:
+    fallback = DeterministicFallbackProvider()
+    if explicit_control_intent(user_message):
+        return fallback.analyze(
+            session=session,
+            user_message=user_message,
+            projects=projects,
+            current_task=current_task,
+        )
+
     provider = configured_provider()
     if provider is not None:
         try:
-            return provider.analyze(
+            result = provider.analyze(
                 session=session,
                 user_message=user_message,
                 projects=projects,
                 current_task=current_task,
             )
+            return merge_mandatory_policy(result, user_message, projects)
         except (ProviderUnavailable, ProviderContractError) as exc:
-            fallback = DeterministicFallbackProvider().analyze(
+            result = fallback.analyze(
                 session=session,
                 user_message=user_message,
                 projects=projects,
                 current_task=current_task,
             )
-            fallback.raw_metadata = {
+            result.raw_metadata = {
                 "openclaw_fallback": True,
                 "fallback_reason": type(exc).__name__,
             }
-            return fallback
-    return DeterministicFallbackProvider().analyze(
+            return result
+    return fallback.analyze(
         session=session,
         user_message=user_message,
         projects=projects,
