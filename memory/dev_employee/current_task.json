@@ -1,12 +1,12 @@
 {
-  "task_id": "commercial-conversational-openclaw-web-20260616",
-  "status": "implementation_prepared_provider_discovery_pending",
+  "task_id": "commercial-conversational-agent-harness-web-20260616",
+  "status": "implementation_prepared_deployment_pending",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "discover_existing_openclaw_runtime_and_map_provider_contract",
-  "objective": "Replace the form-and-JSON default Web experience with a conversation-first OpenClaw interface while preserving the accepted ORIS intake, lifecycle, queue, bridge v3, Codex execution, evidence, and audit chain. Move the engineering console to /admin.",
+  "current_step": "deploy_conversation_first_web_v5_with_provider_neutral_agent_harness",
+  "objective": "Deploy a conversation-first Web experience through a provider-neutral Agent Harness. Keep the existing OpenClaw runtime as the preferred intent/model provider, preserve ORIS as the authoritative task control plane, preserve Codex as the code executor, and keep the engineering form console under /admin.",
   "completed_prerequisites": [
     "full_public_web_to_codex_product_delivery_acceptance_passed",
     "transactional_queue_kernel_deployed",
@@ -14,24 +14,32 @@
     "lease_heartbeat_timeout_cancel_retry_and_concurrency_deployed",
     "bridge_v3_active",
     "intake_v2_active",
-    "web_console_v2_active",
     "form_based_browser_test_safely_aborted",
     "test_task_cancelled",
     "bridge_restored",
     "product_sha_unchanged",
-    "product_worktree_clean"
+    "product_worktree_clean",
+    "existing_openclaw_runtime_discovered_without_install_or_upgrade",
+    "openclaw_gateway_active_on_loopback",
+    "real_openclaw_infer_gateway_contract_probe_passed",
+    "conversation_page_contract_passed",
+    "previous_deployment_rolled_back_only_because_admin_label_check_was_case_sensitive"
   ],
   "prepared_components": [
     "docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md",
     "scripts/dev_employee_chat_store.py",
     "scripts/dev_employee_openclaw_provider.py",
+    "scripts/dev_employee_agent_harness.py",
     "scripts/dev_employee_chat_orchestrator.py",
     "scripts/dev_employee_web_console_v3.py",
+    "scripts/dev_employee_web_console_v5.py",
+    "scripts/dev_employee_probe_openclaw_provider.py",
     "tests/test_dev_employee_chat_store.py",
     "tests/test_dev_employee_openclaw_provider.py",
+    "tests/test_dev_employee_agent_harness.py",
     "tests/test_dev_employee_chat_orchestrator.py",
     "tests/test_dev_employee_web_console_v3.py",
-    "scripts/dev_employee_discover_openclaw_runtime_20260616.sh"
+    "scripts/dev_employee_resume_conversational_harness_web_20260616.sh"
   ],
   "product_decision": {
     "default_public_route": "/",
@@ -43,16 +51,22 @@
     "normal_user_enters_commit_message": false,
     "raw_json_visible_by_default": false,
     "technical_evidence_collapsed": true,
-    "conversation_chain": "human -> OpenClaw provider -> ORIS control plane -> Codex executor -> evidence/result conversation"
+    "conversation_chain": "human -> Agent Harness -> provider adapter -> ORIS control plane -> Codex executor -> evidence/result conversation"
   },
   "architecture_boundaries": {
-    "openclaw_layer": [
-      "conversation_session_state",
-      "intent_extraction",
+    "agent_harness": [
+      "deterministic_control_intents",
+      "provider_selection_and_fallback",
+      "context_and_structured_contract",
+      "project_allowlist_validation",
+      "mandatory_risk_policy",
+      "sanitized_trace_and_evaluation_metadata"
+    ],
+    "openclaw_provider": [
+      "model_backed_intent_extraction",
       "project_identification",
-      "risk_confirmation",
-      "plain_language_responses",
-      "task_progress_narration"
+      "plain_language_response_draft",
+      "structured_goal_derivation"
     ],
     "oris_control_plane": [
       "structured_task_creation",
@@ -60,7 +74,7 @@
       "lifecycle",
       "queue_and_lease",
       "cancel_and_retry",
-      "policy",
+      "policy_authority",
       "evidence_and_audit"
     ],
     "codex_executor": [
@@ -72,25 +86,36 @@
   },
   "provider_policy": {
     "preferred_provider": "existing_openclaw_runtime",
-    "provider_contract": "structured_http_adapter",
-    "hardcode_provider_endpoint": false,
+    "provider_contract": "openclaw_infer_model_run_gateway_json",
+    "openclaw_reinstalled": false,
+    "openclaw_upgraded": false,
+    "provider_is_replaceable": true,
+    "harness_provider_mode": "openclaw",
     "fallback_allowed": true,
-    "fallback_scope": [
+    "deterministic_control_scope": [
       "status",
       "cancel",
       "retry",
-      "help",
+      "help"
+    ],
+    "fallback_scope": [
       "single_allowed_project_goal_translation"
     ],
-    "provider_must_be_verified_before_openclaw_brand_acceptance": true,
     "secret_values_must_not_enter_logs_or_github": true
   },
-  "next_action": "Run the sanitized OpenClaw runtime discovery as Linux user admin on 43.106.55.255. It must not modify services or submit tasks. Send only the final SUMMARY. Use the committed discovery evidence to map the real provider contract before deploying Web Console v3.",
-  "last_error": null,
-  "blocked_reason": "existing OpenClaw binary/service/listener/provider contract is not represented in the ORIS repository and must be discovered from the server without exposing secrets",
+  "harness_product_interpretation": {
+    "implemented_now": "generic_agent_harness",
+    "harness_io": "not_installed_and_not_used_as_an_openclaw_replacement",
+    "future_harness_io_role": "optional_ci_cd_gitops_testing_security_or_release_provider_after_code_delivery"
+  },
+  "next_action": "Run scripts/dev_employee_resume_conversational_harness_web_20260616.sh as Linux user admin on 43.106.55.255. Send only the final SUMMARY. The script must test Agent Harness, run a real OpenClaw Gateway intent probe without creating a task, deploy Web Console v5, verify / and /admin, confirm harness traces, and prove the product repository is unchanged.",
+  "last_error": "admin_console_contract_missing",
+  "blocked_reason": null,
   "latest_evidence": {
     "queue_lifecycle_server_acceptance_log_commit": "7540e90f54c0b397477c014305e6101d9513a647",
     "form_browser_abort_log_commit": "9def6001a6488296b9ec79a08aa74a9741d24888",
+    "openclaw_runtime_discovery_log_commit": "7e110e8c9ee24c37d53295e5faf59028e34aaa4f",
+    "conversational_web_failed_deployment_log_commit": "46b799ab99bd084b69412ee60125e905cee4f826",
     "final_acceptance_task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
     "final_acceptance_product_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33"
   },
@@ -102,12 +127,12 @@
   },
   "platform_state": {
     "public_entry": "https://control.orisfy.com",
-    "web_console_service": "active_v2",
+    "web_console_service": "active_after_rollback_to_previous_runtime",
     "intake_service": "active_v2",
     "bridge_service": "active_v3",
-    "direct_public_intake_exposure": false,
+    "openclaw_gateway_service": "active_existing_installation",
     "active_product_task": false,
-    "real_product_change_during_form_test": false
+    "real_product_change_during_conversational_deployment": false
   },
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
