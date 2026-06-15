@@ -1,3 +1,4 @@
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,6 +10,8 @@ from scripts.dev_employee_chat_store import ChatSessionStore
 
 class ChatOrchestratorTests(unittest.TestCase):
     def setUp(self) -> None:
+        self.env_patch = patch.dict(os.environ, {"ORIS_OPENCLAW_BIN": "/nonexistent/openclaw"})
+        self.env_patch.start()
         self.tmp = tempfile.TemporaryDirectory()
         root = Path(self.tmp.name)
         self.store = ChatSessionStore(root / "sessions", root / "locks")
@@ -28,6 +31,7 @@ class ChatOrchestratorTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.tmp.cleanup()
+        self.env_patch.stop()
 
     def test_natural_language_goal_creates_task_and_card(self) -> None:
         session = self.store.create()
