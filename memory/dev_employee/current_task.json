@@ -1,11 +1,11 @@
 {
   "task_id": "goal-oris-final-acceptance-api-20260616-031022",
-  "status": "blocked",
+  "status": "ready_for_rerun",
   "task_type": "public_web_real_project_e2e",
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "complete_explicit_headless_codex_device_login",
+  "current_step": "submit_new_public_readonly_e2e_task_and_verify_final_acceptance",
   "completed_steps": [
     "final_acceptance_api_created_and_registered",
     "loopback_intake_status_api_verified",
@@ -21,19 +21,23 @@
     "executor_failure_persisted_and_diagnosed",
     "canonical_terminal_state_module_prepared",
     "sanitized_codex_auth_preflight_prepared",
-    "platform_test_runner_dependency_failure_diagnosed",
     "stdlib_unittest_regression_suite_verified",
     "canonical_preflight_failure_stage_preservation_fixed",
     "bridge_intake_finisher_hardening_committed_and_pushed",
-    "failed_login_attempt_evidence_committed",
-    "explicit_headless_device_login_runbook_prepared"
+    "explicit_headless_device_login_completed",
+    "admin_noninteractive_codex_exec_verified",
+    "systemd_bridge_codex_context_verified",
+    "bridge_restarted_active",
+    "public_readonly_e2e_final_runner_prepared",
+    "evidence_index_done_record_handling_prepared"
   ],
   "failed_steps": [
     {
       "step": "codex_execute_real_product_goal",
       "status": "codex_failed",
       "failure_code": "codex_authentication",
-      "return_code": 1
+      "return_code": 1,
+      "evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06"
     },
     {
       "step": "platform_regression_test_runner",
@@ -50,31 +54,31 @@
       "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a"
     }
   ],
-  "next_action": "As Linux user admin on 43.106.55.255, first enable Device code login in ChatGPT Settings > Security, then pull main and run scripts/dev_employee_repair_codex_auth_and_harden_20260616.sh from an interactive SSH TTY. Complete the displayed device-code flow in a private browser. The script will then verify admin and transient user-systemd authentication contexts and restart the bridge only after both pass.",
-  "last_error": {
-    "type": "codex_login_failed",
-    "root_cause": "The automatic codex login --device-auth process returned non-zero. Raw interactive login output was intentionally not persisted. The replacement runbook requires an explicit TTY and asks the operator to enable ChatGPT device-code login before starting the authentication flow.",
-    "evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a"
-  },
+  "next_action": "As Linux user admin on 43.106.55.255, pull main and run scripts/dev_employee_run_public_readonly_e2e_20260616.sh from an interactive SSH TTY. Enter the existing public Basic Auth username and password when prompted. The runner will generate a new Task ID, submit through https://control.orisfy.com, wait for terminal completed plus evidence-index done state, rerun product py_compile/pytest and exact endpoint checks, verify product and ORIS SHAs, and commit sanitized logs.",
+  "last_error": null,
   "prepared_changes": {
     "code_hardening_commit": "57cf6eccb1bbf7cc4e6ddd79eab94e7530d3fe5c",
-    "explicit_device_login_runbook_commit": "2684a27620719862bcac11252ed6fc89159867a7",
-    "repair_entrypoint_update_commit": "83b3e91bbafdc34e2db80932ecdac080da30da7b",
-    "resume_entrypoint_update_commit": "5d3b21079a04e2bddaee0c0ea3a69efa936f326f"
+    "codex_auth_success_evidence_commit": "6397fa315d4172a92fbdcdc6d95e429f2dec2b53",
+    "final_public_e2e_runner_commit": "0884b6c41e8e26294fe3c43fe98233a123f10e79",
+    "done_evidence_patcher_commit": "04c90cb082b13a2ceaf2f4a6133172ee12f4b186",
+    "one_command_entrypoint_commit": "15f9f65f8131146460b0d9c030cfe19a2fb47bf1",
+    "superseded_runner_removal_commit": "091a95411dcf960b459f43bce9adaca1d07af271"
   },
   "latest_task_evidence": {
     "failure_evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
     "diagnostic_commit_sha": "6fbc0ba1636ca01865b9565e68fdf6689ed6cae5",
     "platform_runbook_failure_commit_sha": "d6ab181b745d1dbe9ded9f9789920c935781c453",
     "login_failure_evidence_commit_sha": "743b55c1a0cf018d8f6a2d300686db09642b992a",
-    "codex_log": "logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log",
-    "diagnostic_log": "logs/dev_employee/codex_failed_diagnostics/goal-oris-final-acceptance-api-20260616-031022-20260616031848.log"
+    "codex_auth_success_evidence_commit_sha": "6397fa315d4172a92fbdcdc6d95e429f2dec2b53"
   },
   "product_result": {
     "product_commit_sha": null,
     "product_remote_sha": null,
     "product_changed": false,
-    "requested_feature": "GET /readonly-e2e"
+    "requested_feature": "GET /readonly-e2e",
+    "required_exact_response": {
+      "readonly_e2e": true
+    }
   },
   "platform_state": {
     "public_entry": "https://control.orisfy.com",
@@ -84,11 +88,14 @@
     ],
     "web_console_service": "active",
     "intake_service": "active",
-    "bridge_service": "inactive_safe_stop",
+    "bridge_service": "active",
+    "admin_codex_preflight": "pass",
+    "systemd_codex_preflight": "pass",
+    "bridge_auth_context": "pass",
     "direct_public_intake_exposure": false,
-    "real_product_task_submitted_after_failure": false
+    "real_product_task_submitted_after_auth_repair": false
   },
-  "blocked_reason": "Platform hardening and tests are complete. A one-time interactive ChatGPT device-code authentication by the admin operator remains required. Bridge stays stopped until both non-interactive admin and transient user-systemd Codex preflights pass.",
+  "blocked_reason": null,
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-16.md",
