@@ -1,104 +1,139 @@
 #!/usr/bin/env python3
-"""Recover stale ORIS Dev Employee queue tasks.
+"""Recover stale ORIS Dev Employee queue descriptors safely.
 
-Moves old `*.running.json` task descriptors back to `*.queued.json` or to
-`*.failed.json` depending on age and whether a matching task run has completed.
-This script does not execute Codex or mutate product repos.
+Commercial rule: a stale running task is never automatically executed again.
+If durable task-run evidence is already terminal, the queue descriptor is
+reconciled to that terminal state. Otherwise, an expired lease becomes a
+terminal ``failed`` task with failure code ``lease_expired``. A retry must be an
+explicit new task id through the intake control plane.
+
+This script does not execute Codex or mutate product repositories.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-from datetime import datetime, timedelta, timezone
+import os
 from pathlib import Path
 from typing import Any
 
+from dev_employee_queue_kernel import DEFAULT_KERNEL, atomic_write_json, now_iso, read_json
+from dev_employee_task_states import canonical_status, is_terminal_status
+
 ORIS_DIR = Path("/home/admin/projects/oris")
-QUEUE_DIR = ORIS_DIR / "orchestration" / "dev_employee_queue"
-RUN_DIR = ORIS_DIR / "orchestration" / "task_runs"
-LOG_DIR = ORIS_DIR / "logs" / "dev_employee"
+QUEUE_DIR = ORIS_DIR / "orchestration/dev_employee_queue"
+RUN_DIR = ORIS_DIR / "orchestration/task_runs"
+LOG_DIR = ORIS_DIR / "logs/dev_employee"
 
 
-def now() -> datetime:
-    return datetime.now(timezone.utc).astimezone()
-
-
-def parse_dt(value: str | None) -> datetime | None:
-    if not value:
-        return None
-    try:
-        return datetime.fromisoformat(value)
-    except ValueError:
-        return None
-
-
-def read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def write_json(path: Path, data: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def recover(max_age_minutes: int, fail_completed_running: bool) -> dict[str, Any]:
-    QUEUE_DIR.mkdir(parents=True, exist_ok=True)
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
-    cutoff = now() - timedelta(minutes=max_age_minutes)
-    summary: dict[str, Any] = {
-        "checked_at": now().isoformat(timespec="seconds"),
-        "max_age_minutes": max_age_minutes,
-        "recovered": [],
-        "failed": [],
-        "skipped": [],
-    }
-
+def reconcile_terminal_run_descriptors() -> dict[str, Any]:
+    summary: dict[str, Any] = {"reconciled": [], "skipped": []}
     for path in sorted(QUEUE_DIR.glob("*.running.json")):
         try:
             task = read_json(path)
         except Exception as exc:
-            summary["skipped"].append({"path": str(path), "reason": f"invalid_json:{exc!r}"})
+            summary["skipped"].append({"path": str(path), "reason": f"invalid_queue_json:{type(exc).__name__}"})
             continue
-        task_id = task.get("task_id") or path.name.replace(".running.json", "")
-        claimed_at = parse_dt(task.get("claimed_at") or task.get("started_at"))
+        task_id = str(task.get("task_id") or path.name.removesuffix(".running.json"))
         run_path = RUN_DIR / f"{task_id}.json"
-        run_status = None
-        if run_path.exists():
-            try:
-                run_status = read_json(run_path).get("status")
-            except Exception:
-                run_status = None
-        if run_status == "completed" and fail_completed_running:
-            task["status"] = "failed_stale_descriptor_after_completed_run"
-            task["recovered_at"] = now().isoformat(timespec="seconds")
-            target = path.with_suffix(".failed.json")
-            write_json(target, task)
-            path.unlink(missing_ok=True)
-            summary["failed"].append({"task_id": task_id, "from": str(path), "to": str(target), "reason": "run_already_completed"})
+        if not run_path.exists():
             continue
-        if claimed_at is None or claimed_at > cutoff:
-            summary["skipped"].append({"task_id": task_id, "path": str(path), "reason": "not_stale_or_missing_time"})
+        try:
+            run_state = read_json(run_path)
+        except Exception as exc:
+            summary["skipped"].append({"task_id": task_id, "reason": f"invalid_run_json:{type(exc).__name__}"})
             continue
-        task["status"] = "queued"
-        task["requeued_at"] = now().isoformat(timespec="seconds")
-        task["requeue_reason"] = "stale_running_task_recovered"
-        target = path.with_name(path.name.replace(".running.json", ".queued.json"))
-        write_json(target, task)
-        path.unlink(missing_ok=True)
-        summary["recovered"].append({"task_id": task_id, "from": str(path), "to": str(target)})
+        raw_status = str(run_state.get("status") or "unknown")
+        canonical = canonical_status(raw_status)
+        if not is_terminal_status(canonical):
+            continue
 
+        if canonical == "completed":
+            suffix = "done"
+            task.update(
+                {
+                    "status": "completed",
+                    "canonical_status": "completed",
+                    "terminal": True,
+                    "reconciled_at": now_iso(),
+                    "reconcile_reason": "terminal_task_run_already_completed",
+                    "product_commit_sha": run_state.get("product_commit_sha"),
+                    "product_remote_sha": run_state.get("product_remote_sha"),
+                }
+            )
+        elif canonical == "cancelled":
+            suffix = "cancelled"
+            task.update(
+                {
+                    "status": "cancelled",
+                    "canonical_status": "cancelled",
+                    "terminal": True,
+                    "reconciled_at": now_iso(),
+                    "reconcile_reason": "terminal_task_run_cancelled",
+                }
+            )
+        else:
+            suffix = "failed"
+            task.update(
+                {
+                    "status": canonical if canonical in {"preflight_failed", "local_checks_failed", "remote_verification_failed", "blocked", "failed", "error"} else "failed",
+                    "canonical_status": canonical,
+                    "terminal": True,
+                    "failure_code": run_state.get("failure_code") or raw_status,
+                    "reconciled_at": now_iso(),
+                    "reconcile_reason": "terminal_task_run_already_failed",
+                }
+            )
+
+        target = DEFAULT_KERNEL.task_path(task_id, suffix)
+        if target.exists():
+            summary["skipped"].append({"task_id": task_id, "reason": "terminal_queue_target_exists", "target": str(target)})
+            continue
+        atomic_write_json(path, task)
+        os.replace(path, target)
+        try:
+            DEFAULT_KERNEL.release_claim(task_id, str(task.get("lease_token") or ""), terminal_status=canonical)
+        except Exception:
+            DEFAULT_KERNEL.lock_path(task_id).unlink(missing_ok=True)
+            DEFAULT_KERNEL.control_path(task_id, "cancel").unlink(missing_ok=True)
+        DEFAULT_KERNEL.append_event(
+            task_id,
+            "terminal_descriptor_reconciled",
+            status=canonical,
+            actor="stale-recovery",
+            details={"run_path": str(run_path), "target": str(target), "raw_status": raw_status},
+        )
+        summary["reconciled"].append({"task_id": task_id, "from": str(path), "to": str(target), "status": canonical})
     return summary
 
 
+def recover(max_age_minutes: int) -> dict[str, Any]:
+    QUEUE_DIR.mkdir(parents=True, exist_ok=True)
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    reconciliation = reconcile_terminal_run_descriptors()
+    expiry = DEFAULT_KERNEL.expire_stale(fallback_max_age_minutes=max_age_minutes)
+    return {
+        "checked_at": now_iso(),
+        "policy": "terminal_reconcile_else_fail_lease_expired_no_automatic_requeue",
+        "max_age_minutes": max_age_minutes,
+        "reconciliation": reconciliation,
+        "lease_expiry": expiry,
+    }
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Recover stale ORIS Dev Employee running queue tasks")
-    parser.add_argument("--max-age-minutes", type=int, default=30)
-    parser.add_argument("--fail-completed-running", action="store_true")
+    parser = argparse.ArgumentParser(description="Safely reconcile or expire stale ORIS Dev Employee tasks")
+    parser.add_argument("--max-age-minutes", type=int, default=120)
+    parser.add_argument(
+        "--fail-completed-running",
+        action="store_true",
+        help="Deprecated compatibility flag; completed task-run evidence is always reconciled to done.",
+    )
     args = parser.parse_args()
-    summary = recover(args.max_age_minutes, args.fail_completed_running)
+    summary = recover(max(1, args.max_age_minutes))
     out = LOG_DIR / "stale_task_recovery_latest.json"
-    write_json(out, summary)
+    atomic_write_json(out, summary)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0
 
