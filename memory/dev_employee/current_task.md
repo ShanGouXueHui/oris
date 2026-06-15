@@ -1,8 +1,8 @@
 # Current AI Dev Employee Task
 
-Status: blocked
+Status: completed
 
-Task id: `goal-oris-final-acceptance-api-20260616-031022`
+Task id: `goal-oris-final-acceptance-api-readonly-e2e-20260616-044030`
 
 Target project: `oris-final-acceptance-api`
 
@@ -10,76 +10,73 @@ Target repository: `ShanGouXueHui/oris-final-acceptance-api`
 
 Target local path: `/home/admin/projects/oris-final-acceptance-api`
 
-## Current objective
+## Final objective
 
-Complete the first real project task submitted through the persistent public Web Console and prove the full chain:
+Prove the complete commercial execution chain:
 
-`public Web UI → Web Console auth/allowlist → intake → queue → bridge → Codex → product tests → product commit/push → ORIS evidence`.
+`public Web → HTTPS Basic Auth → Console Token → project allowlist → intake → queue → bridge → Codex → product checks → product commit/push → ORIS evidence/index → independent verification`.
 
-The requested product change is a minimal `GET /readonly-e2e` endpoint with pytest coverage.
+Requested product change: minimal `GET /readonly-e2e` endpoint with pytest coverage and exact JSON response `{"readonly_e2e": true}`.
 
-## What succeeded
+## Final result
 
-- `https://control.orisfy.com` is operational behind HTTPS and Basic Auth.
-- Persistent public submit is enabled for the exact `/api/goals` path.
-- Console Token authentication works.
-- Project allowlist returns `oris-final-acceptance-api`.
-- The project dropdown and reload behavior were fixed.
-- Rendered browser JavaScript now passes syntax validation.
-- The public task was accepted with HTTP 201.
-- The task was persisted, queued, and claimed by the bridge.
-- Failure evidence and automated triage were committed to GitHub.
-- Web Console, intake, and bridge services remain active.
+The task completed successfully.
 
-## Current failure
+- canonical status: `completed`
+- terminal: `true`
+- product py_compile: `PASS`
+- product pytest: `PASS`
+- endpoint exact contract: `PASS`
+- host pytest evidence: `PASS`
+- strict result schema: `PASS`
+- product worktree clean: `YES`
+- all product SHAs match: `YES`
+- ORIS evidence on remote main: `YES`
+- ORIS evidence index on remote main: `YES`
 
-The Codex process started but failed before changing product code.
+## Product evidence
 
-Failure classification:
+- product commit SHA: `3207f20a2afdf109beac9a4a95523e7792e0ae33`
+- product remote SHA: `3207f20a2afdf109beac9a4a95523e7792e0ae33`
+- product local HEAD: `3207f20a2afdf109beac9a4a95523e7792e0ae33`
+- product remote main: `3207f20a2afdf109beac9a4a95523e7792e0ae33`
 
-- runtime status: `codex_failed`
-- failure code: `codex_authentication`
-- return code: `1`
-- provider response: HTTP 401
+## ORIS evidence
 
-No product commit or remote product SHA was produced.
+- ORIS evidence commit: `188a17eeba4acb43f5b922560ad98c3d8d28c587`
+- ORIS evidence remote SHA: `188a17eeba4acb43f5b922560ad98c3d8d28c587`
+- evidence index commit: `4425edbe8e29912ff44d41da2a5e458bdac292d3`
+- independent verification log commit: `f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e`
+- completion record: `memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md`
 
-## Evidence
+## Platform state
 
-- ORIS failure evidence commit: `ea2089c5344c67e016601de8993ef365591daa06`
-- diagnostic commit: `6fbc0ba1636ca01865b9565e68fdf6689ed6cae5`
-- Codex log: `logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log`
-- diagnostic log: `logs/dev_employee/codex_failed_diagnostics/goal-oris-final-acceptance-api-20260616-031022-20260616031848.log`
+- public entry: `https://control.orisfy.com`
+- Web Console: `active`
+- intake: `active`
+- bridge: `active`
+- admin Codex preflight: `PASS`
+- user-systemd/bridge Codex context: `PASS`
+- direct public exposure of intake port 18892: `false`
 
-## Immediate next action
+## Defects repaired during acceptance
 
-1. Reauthenticate Codex CLI as Linux user `admin`.
-2. Verify a harmless non-interactive Codex execution.
-3. Verify the same authentication context is available to `oris-dev-employee-bridge.service`.
-4. Add a Codex authentication preflight before real execution.
-5. Classify auth failure as terminal and fail fast.
-6. Update polling/finisher logic so `codex_failed` and all other terminal failures stop immediately.
-7. Resubmit the same product objective with a new task id.
-8. Verify product commit, product remote SHA, tests, and ORIS evidence.
+- Codex authentication preflight and sanitized failure classification;
+- canonical terminal-state handling and fail-fast polling;
+- standard-library platform regression tests;
+- headless device-code authentication verification;
+- canonical queue terminal filenames plus legacy compatibility;
+- independent product verification in the standalone product working directory.
 
-## Do not do yet
+## Next action
 
-- Do not submit another real project task before auth preflight passes.
-- Do not weaken Basic Auth, Console Token, or project allowlist.
-- Do not expose intake port 18892 publicly.
-- Do not place product code in the ORIS repository.
-- Do not paste tokens or authentication material into chat or GitHub.
+Do not rerun the final acceptance task. Continue with generic commercial hardening in this order:
 
-## Authoritative context
-
-Read:
-
-1. `memory/dev_employee/CONTEXT_INDEX.md`
-2. `memory/dev_employee/CURRENT_STATE_2026-06-16.md`
-3. `docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md`
-4. `docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md`
-5. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
+1. transactional queue semantics, leases, timeout, cancellation, explicit retry, concurrency and idempotency;
+2. project/tenant RBAC, audit retention, secret rotation, rate limiting and policy enforcement;
+3. monitoring, alerting, SLOs, capacity controls, backup/restore and upgrade/rollback;
+4. generic project onboarding and commercial packaging without acceptance-project special cases.
 
 ## Operating rule
 
-Do not ask the human for routine engineering decisions. Inspect GitHub evidence, choose the smallest safe action, implement it through GitHub-hosted scripts, and stop only at an explicit authentication, secret, safety, paid-resource, or destructive-production boundary.
+Do not ask the human for routine engineering decisions. Use the smallest safe generic implementation, preserve product/ORIS repository separation, and require real tests, local/remote SHAs and GitHub evidence for completion.
