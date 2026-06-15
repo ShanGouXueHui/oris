@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-06-16T05:24:26+08:00",
+  "result": "PASS",
+  "failure_code": "",
+  "task_id": "browser-lifecycle-cancel-20260616-052414",
+  "expected_retry_task_id": "browser-lifecycle-cancel-20260616-052414-r1",
+  "patch_result": "PASS",
+  "test_result": "PASS",
+  "active_queue_gate": "PASS",
+  "product_baseline": "PASS",
+  "bridge_paused": "YES",
+  "services": {
+    "bridge": "inactive",
+    "intake": "active",
+    "web_console": "active"
+  },
+  "real_product_task_submitted": false,
+  "codex_execution_expected": false,
+  "next_action": "LOGIN_WEB_AND_RUN_LIFECYCLE_TEST"
+}
