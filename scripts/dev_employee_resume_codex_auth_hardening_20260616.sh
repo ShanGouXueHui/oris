@@ -56,14 +56,15 @@ PY
 
 commit_logs() {
   cd "$ORIS_DIR" || return 1
-  git add "$RUN_LOG" 2>/dev/null || true
-  [ -f "$ADMIN_LOG" ] && git add "$ADMIN_LOG" 2>/dev/null || true
-  [ -f "$SYSTEMD_LOG" ] && git add "$SYSTEMD_LOG" 2>/dev/null || true
-  if git diff --cached --quiet; then
+  local log_files=("$RUN_LOG")
+  [ -f "$ADMIN_LOG" ] && log_files+=("$ADMIN_LOG")
+  [ -f "$SYSTEMD_LOG" ] && log_files+=("$SYSTEMD_LOG")
+  git add -- "${log_files[@]}" 2>/dev/null || true
+  if git diff --cached --quiet -- "${log_files[@]}"; then
     LOG_COMMIT="NO_LOG_CHANGES"
     return 0
   fi
-  git commit -m "test(dev-employee): record resumed Codex auth preflight $STAMP" > "$TMP_OUTPUT" 2>&1
+  git commit --only -m "test(dev-employee): record resumed Codex auth preflight $STAMP" -- "${log_files[@]}" > "$TMP_OUTPUT" 2>&1
   if [ "$?" -ne 0 ]; then
     LOG_COMMIT="LOG_COMMIT_FAILED"
     return 1
@@ -176,7 +177,10 @@ if [ "$STATE_TEST_RC" -ne 0 ] || [ "$AUTH_TEST_RC" -ne 0 ]; then
   fail_and_finish "FIX_PLATFORM_REGRESSION_TESTS"
 fi
 
-git diff --check >> "$RUN_LOG" 2>&1
+git diff --check -- \
+  scripts/dev_employee_supervised_bridge_v2.py \
+  scripts/dev_employee_intake_api.py \
+  scripts/dev_employee_finish_public_web_submit_e2e.sh >> "$RUN_LOG" 2>&1
 if [ "$?" -ne 0 ]; then
   FAILURE_CODE="git_diff_check_failed"
   fail_and_finish "FIX_PLATFORM_DIFF"
@@ -184,7 +188,7 @@ fi
 TEST_RESULT="PASS"
 
 # Stage only the authoritative runtime changes. Existing unrelated dirty files stay untouched.
-git add \
+git add -- \
   scripts/dev_employee_supervised_bridge_v2.py \
   scripts/dev_employee_intake_api.py \
   scripts/dev_employee_finish_public_web_submit_e2e.sh >> "$RUN_LOG" 2>&1
@@ -193,11 +197,17 @@ if [ "$?" -ne 0 ]; then
   fail_and_finish "INSPECT_GIT_STATE"
 fi
 
-if git diff --cached --quiet; then
+if git diff --cached --quiet -- \
+  scripts/dev_employee_supervised_bridge_v2.py \
+  scripts/dev_employee_intake_api.py \
+  scripts/dev_employee_finish_public_web_submit_e2e.sh; then
   HARDENING_COMMIT="$(git rev-parse HEAD 2>/dev/null || true)"
   log_line "hardening_commit_created=false"
 else
-  git commit -m "fix(dev-employee): gate Codex auth and terminate failed tasks" >> "$RUN_LOG" 2>&1
+  git commit --only -m "fix(dev-employee): gate Codex auth and terminate failed tasks" -- \
+    scripts/dev_employee_supervised_bridge_v2.py \
+    scripts/dev_employee_intake_api.py \
+    scripts/dev_employee_finish_public_web_submit_e2e.sh >> "$RUN_LOG" 2>&1
   if [ "$?" -ne 0 ]; then
     FAILURE_CODE="hardening_commit_failed"
     fail_and_finish "INSPECT_GIT_COMMIT_LOG"
