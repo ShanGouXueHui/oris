@@ -1,0 +1,530 @@
+{
+  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "status": "completed",
+  "canonical_status": "completed",
+  "terminal": true,
+  "failure_code": null,
+  "catalog": {
+    "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+    "project_key": "oris-final-acceptance-api",
+    "project": {
+      "project_key": "oris-final-acceptance-api",
+      "name": "ORIS Final Acceptance API",
+      "type": "test_project",
+      "product_path": "/home/admin/projects/oris-final-acceptance-api",
+      "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+      "default_branch": "main",
+      "allowed_scope": [
+        "README.md",
+        "AGENTS.md",
+        "docs/",
+        "app/",
+        "tests/",
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "private_keys",
+        "production_credentials"
+      ]
+    },
+    "objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the complete existing test suite, commit the product changes to main, push them to the configured GitHub remote, and emit strict structured evidence with product and remote commit SHAs.",
+    "constraints": [
+      "Modify only the standalone product repository; do not place product code in ORIS.",
+      "Preserve all existing task-board API behavior and public contracts.",
+      "Use existing FastAPI and pytest conventions.",
+      "Keep implementation minimal and deterministic.",
+      "Do not add external dependencies unless strictly necessary.",
+      "Do not ask the human to decide routine engineering details.",
+      "Commit and push only after all tests pass."
+    ],
+    "expected_checks": [
+      "python3 -m py_compile app/main.py",
+      "pytest -q",
+      "GET /readonly-e2e returns HTTP 200 and exactly {\"readonly_e2e\": true}",
+      "product commit SHA equals product remote main SHA"
+    ],
+    "commit_message": "feat(api): add readonly e2e endpoint",
+    "notes": [
+      "Submitted through ORIS public Web console after Codex authentication recovery."
+    ],
+    "status": "queued",
+    "created_at": "2026-06-16T04:40:47+08:00",
+    "runtime_prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+    "enqueue_http_status": 201,
+    "enqueue_response": {
+      "queued": true,
+      "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+      "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.queued.json",
+      "descriptor": {
+        "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+        "status": "queued",
+        "created_at": "2026-06-16T04:40:47+08:00",
+        "created_by": "dev_employee_enqueue_server",
+        "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+        "workdir": "/home/admin/projects",
+        "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+        "sandbox": "workspace-write",
+        "extra_write_dirs": [
+          "/home/admin/projects/oris"
+        ],
+        "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+        "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "product_commit_message": "feat(api): add readonly e2e endpoint",
+        "notes": "Submitted through ORIS public Web console after Codex authentication recovery."
+      }
+    },
+    "descriptor_annotation": {
+      "annotated": true,
+      "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.queued.json"
+    }
+  },
+  "queue": [
+    {
+      "suffix": "done",
+      "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.done.json",
+      "data": {
+        "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+        "status": "completed",
+        "created_at": "2026-06-16T04:40:47+08:00",
+        "created_by": "dev_employee_enqueue_server",
+        "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+        "workdir": "/home/admin/projects",
+        "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+        "sandbox": "workspace-write",
+        "extra_write_dirs": [
+          "/home/admin/projects/oris"
+        ],
+        "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+        "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "product_commit_message": "feat(api): add readonly e2e endpoint",
+        "notes": "Submitted through ORIS public Web console after Codex authentication recovery.",
+        "strict_result_schema": true,
+        "autonomy_mode": "goal_driven",
+        "task_objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the complete existing test suite, commit the product changes to main, push them to the configured GitHub remote, and emit strict structured evidence with product and remote commit SHAs.",
+        "constraints": [
+          "Modify only the standalone product repository; do not place product code in ORIS.",
+          "Preserve all existing task-board API behavior and public contracts.",
+          "Use existing FastAPI and pytest conventions.",
+          "Keep implementation minimal and deterministic.",
+          "Do not add external dependencies unless strictly necessary.",
+          "Do not ask the human to decide routine engineering details.",
+          "Commit and push only after all tests pass."
+        ],
+        "expected_checks": [
+          "python3 -m py_compile app/main.py",
+          "pytest -q",
+          "GET /readonly-e2e returns HTTP 200 and exactly {\"readonly_e2e\": true}",
+          "product commit SHA equals product remote main SHA"
+        ],
+        "claimed_at": "2026-06-16T04:40:53+08:00",
+        "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log",
+        "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json",
+        "codex_auth_preflight_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_auth_preflight.json",
+        "started_at": "2026-06-16T04:40:53+08:00",
+        "executor_preflight": {
+          "ok": true,
+          "status": "ready",
+          "executor_path": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+          "executor_version": "codex-cli 0.133.0",
+          "linux_user": "admin",
+          "uid": 1000,
+          "home": "/home/admin",
+          "workdir": "/home/admin/projects"
+        },
+        "product_result": {
+          "ok": true,
+          "committed": true,
+          "commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+          "remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+          "status_before": " M app/main.py\n M tests/test_tasks_api.py\n",
+          "push_stdout": "",
+          "push_stderr": "To github.com:ShanGouXueHui/oris-final-acceptance-api.git\n   8aad2de..3207f20  main -> main\n",
+          "remote_stdout": "3207f20a2afdf109beac9a4a95523e7792e0ae33\trefs/heads/main\n",
+          "remote_stderr": ""
+        },
+        "oris_result": {
+          "ok": true,
+          "committed": true,
+          "commit_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+          "remote_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+          "push_stdout": "",
+          "push_stderr": "To github.com:ShanGouXueHui/oris.git\n   2348a84..188a17e  main -> main\n",
+          "files": [
+            "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+            "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.supervised_result.json",
+            "logs/dev_employee/latest_task_progress.json",
+            "logs/dev_employee/latest_task_progress.md",
+            "logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+            "logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+            "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_py_compile.txt",
+            "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest.txt",
+            "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest_werror.txt"
+          ]
+        },
+        "oris_evidence_index_result": {
+          "ok": true,
+          "committed": true,
+          "commit_sha": "4425edbe8e29912ff44d41da2a5e458bdac292d3",
+          "remote_sha": "4425edbe8e29912ff44d41da2a5e458bdac292d3",
+          "push_stdout": "",
+          "push_stderr": "To github.com:ShanGouXueHui/oris.git\n   188a17e..4425edb  main -> main\n",
+          "files": [
+            "logs/dev_employee/evidence_commit_index/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json"
+          ]
+        },
+        "finished_at": "2026-06-16T04:43:16+08:00"
+      }
+    }
+  ],
+  "runs": [
+    {
+      "path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json",
+      "data": {
+        "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+        "status": "local_checks_passed",
+        "product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "plan": [
+          "Inspect durable ORIS context and runtime descriptor",
+          "Resolve required capabilities with the ORIS skill resolver",
+          "Inspect the FastAPI app and existing pytest conventions",
+          "Add the minimal /readonly-e2e route and exact-response coverage",
+          "Run required local checks and capture logs",
+          "Write strict structured result evidence for the supervised bridge"
+        ],
+        "design_summary": "Added a single deterministic FastAPI GET /readonly-e2e handler in app/main.py returning exactly {\"readonly_e2e\": true}. Added one pytest in the existing API test module to assert HTTP 200 and the exact JSON body, preserving all existing task-board behavior.",
+        "skill_resolution": {
+          "needed": [
+            "github_evidence",
+            "fastapi_pytest",
+            "safe_execution"
+          ],
+          "used_existing": [
+            "scripts/dev_employee_supervised_bridge_v2.py",
+            "scripts/dev_employee_task_status.py",
+            "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+            "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+            "schemas/dev_employee_task_result.schema.json",
+            "scripts/dev_employee_supervised_bridge_v2.py",
+            "scripts/dev_employee_recover_stale_tasks.py"
+          ],
+          "downloaded_quarantine": [],
+          "blocked": []
+        },
+        "changed_files": [
+          "app/main.py",
+          "tests/test_tasks_api.py"
+        ],
+        "check_logs": {
+          "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+          "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+          "py_compile": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_py_compile.txt",
+          "pytest": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_pytest.txt"
+        },
+        "iteration_summary": [
+          {
+            "attempt": 1,
+            "result": "py_compile passed; pytest with system python failed because pytest is not installed in that interpreter",
+            "action": "Reran pytest with the product virtualenv Python that contains the project dependencies"
+          },
+          {
+            "attempt": 2,
+            "result": "local checks passed: 24 passed in 0.38s",
+            "action": "No repair needed after using the product Python environment"
+          }
+        ],
+        "blockers": [],
+        "notes": "Local checks passed. Before the supervised bridge commit step, product HEAD and origin/main both resolved to 8aad2de69577fa1367db0ef8d010ed1a912679e0. Per the injected bridge v2 descriptor, the outer supervised bridge owns final product commit, push, remote main verification, and final product/remote commit SHA evidence."
+      }
+    },
+    {
+      "path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+      "data": {
+        "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+        "status": "completed",
+        "updated_at": "2026-06-16T04:43:05+08:00",
+        "product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+        "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+        "checks": {
+          "ok": true,
+          "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "results": [
+            {
+              "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+              "return_code": 0,
+              "log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_py_compile.txt"
+            },
+            {
+              "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+              "return_code": 0,
+              "log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest.txt"
+            },
+            {
+              "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+              "return_code": 0,
+              "log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest_werror.txt"
+            }
+          ]
+        },
+        "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json",
+        "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log",
+        "strict_result_schema": true,
+        "task_objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the complete existing test suite, commit the product changes to main, push them to the configured GitHub remote, and emit strict structured evidence with product and remote commit SHAs.",
+        "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+        "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+        "autonomous_result": {
+          "plan": [
+            "Inspect durable ORIS context and runtime descriptor",
+            "Resolve required capabilities with the ORIS skill resolver",
+            "Inspect the FastAPI app and existing pytest conventions",
+            "Add the minimal /readonly-e2e route and exact-response coverage",
+            "Run required local checks and capture logs",
+            "Write strict structured result evidence for the supervised bridge"
+          ],
+          "design_summary": "Added a single deterministic FastAPI GET /readonly-e2e handler in app/main.py returning exactly {\"readonly_e2e\": true}. Added one pytest in the existing API test module to assert HTTP 200 and the exact JSON body, preserving all existing task-board behavior.",
+          "skill_resolution": {
+            "needed": [
+              "github_evidence",
+              "fastapi_pytest",
+              "safe_execution"
+            ],
+            "used_existing": [
+              "scripts/dev_employee_supervised_bridge_v2.py",
+              "scripts/dev_employee_task_status.py",
+              "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+              "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+              "schemas/dev_employee_task_result.schema.json",
+              "scripts/dev_employee_supervised_bridge_v2.py",
+              "scripts/dev_employee_recover_stale_tasks.py"
+            ],
+            "downloaded_quarantine": [],
+            "blocked": []
+          },
+          "changed_files": [
+            "app/main.py",
+            "tests/test_tasks_api.py"
+          ],
+          "iteration_summary": [
+            {
+              "attempt": 1,
+              "result": "py_compile passed; pytest with system python failed because pytest is not installed in that interpreter",
+              "action": "Reran pytest with the product virtualenv Python that contains the project dependencies"
+            },
+            {
+              "attempt": 2,
+              "result": "local checks passed: 24 passed in 0.38s",
+              "action": "No repair needed after using the product Python environment"
+            }
+          ],
+          "blockers": [],
+          "notes": "Local checks passed. Before the supervised bridge commit step, product HEAD and origin/main both resolved to 8aad2de69577fa1367db0ef8d010ed1a912679e0. Per the injected bridge v2 descriptor, the outer supervised bridge owns final product commit, push, remote main verification, and final product/remote commit SHA evidence."
+        }
+      }
+    },
+    {
+      "path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.supervised_result.json",
+      "data": {
+        "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+        "status": "completed",
+        "updated_at": "2026-06-16T04:43:05+08:00",
+        "product_path": "/home/admin/projects/oris-final-acceptance-api",
+        "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+        "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+        "checks": {
+          "ok": true,
+          "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+          "results": [
+            {
+              "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+              "return_code": 0,
+              "log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_py_compile.txt"
+            },
+            {
+              "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+              "return_code": 0,
+              "log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest.txt"
+            },
+            {
+              "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+              "return_code": 0,
+              "log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest_werror.txt"
+            }
+          ]
+        },
+        "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json",
+        "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log",
+        "strict_result_schema": true,
+        "task_objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the complete existing test suite, commit the product changes to main, push them to the configured GitHub remote, and emit strict structured evidence with product and remote commit SHAs.",
+        "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+        "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+        "autonomous_result": {
+          "plan": [
+            "Inspect durable ORIS context and runtime descriptor",
+            "Resolve required capabilities with the ORIS skill resolver",
+            "Inspect the FastAPI app and existing pytest conventions",
+            "Add the minimal /readonly-e2e route and exact-response coverage",
+            "Run required local checks and capture logs",
+            "Write strict structured result evidence for the supervised bridge"
+          ],
+          "design_summary": "Added a single deterministic FastAPI GET /readonly-e2e handler in app/main.py returning exactly {\"readonly_e2e\": true}. Added one pytest in the existing API test module to assert HTTP 200 and the exact JSON body, preserving all existing task-board behavior.",
+          "skill_resolution": {
+            "needed": [
+              "github_evidence",
+              "fastapi_pytest",
+              "safe_execution"
+            ],
+            "used_existing": [
+              "scripts/dev_employee_supervised_bridge_v2.py",
+              "scripts/dev_employee_task_status.py",
+              "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+              "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+              "schemas/dev_employee_task_result.schema.json",
+              "scripts/dev_employee_supervised_bridge_v2.py",
+              "scripts/dev_employee_recover_stale_tasks.py"
+            ],
+            "downloaded_quarantine": [],
+            "blocked": []
+          },
+          "changed_files": [
+            "app/main.py",
+            "tests/test_tasks_api.py"
+          ],
+          "iteration_summary": [
+            {
+              "attempt": 1,
+              "result": "py_compile passed; pytest with system python failed because pytest is not installed in that interpreter",
+              "action": "Reran pytest with the product virtualenv Python that contains the project dependencies"
+            },
+            {
+              "attempt": 2,
+              "result": "local checks passed: 24 passed in 0.38s",
+              "action": "No repair needed after using the product Python environment"
+            }
+          ],
+          "blockers": [],
+          "notes": "Local checks passed. Before the supervised bridge commit step, product HEAD and origin/main both resolved to 8aad2de69577fa1367db0ef8d010ed1a912679e0. Per the injected bridge v2 descriptor, the outer supervised bridge owns final product commit, push, remote main verification, and final product/remote commit SHA evidence."
+        }
+      }
+    }
+  ],
+  "latest_task_progress": {
+    "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+    "status": "completed",
+    "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "oris_evidence_pending": false,
+    "strict_result_schema": true,
+    "updated_at": "2026-06-16T04:43:05+08:00"
+  },
+  "evidence": {
+    "task_run_json": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+    "codex_result_json": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json",
+    "skill_resolution_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+    "codex_log": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log"
+  },
+  "github_evidence": {
+    "repo": "ShanGouXueHui/oris",
+    "branch": "main",
+    "files": [
+      {
+        "label": "task_run_json",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json"
+      },
+      {
+        "label": "codex_result_json",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json"
+      },
+      {
+        "label": "skill_resolution_json",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json"
+      },
+      {
+        "label": "skill_resolution_markdown",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.md"
+      },
+      {
+        "label": "codex_log",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log"
+      },
+      {
+        "label": "host_py_compile_log",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_py_compile.txt",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_py_compile.txt"
+      },
+      {
+        "label": "host_pytest_log",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest.txt",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest.txt"
+      },
+      {
+        "label": "host_pytest_werror_log",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest_werror.txt",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_host_pytest_werror.txt"
+      },
+      {
+        "label": "evidence_commit_index",
+        "exists": true,
+        "local_path": "/home/admin/projects/oris/logs/dev_employee/evidence_commit_index/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json",
+        "repo": "ShanGouXueHui/oris",
+        "branch": "main",
+        "repo_path": "logs/dev_employee/evidence_commit_index/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json"
+      }
+    ],
+    "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+    "oris_evidence_sha": null,
+    "oris_evidence_commit_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+    "oris_evidence_remote_sha": "188a17eeba4acb43f5b922560ad98c3d8d28c587",
+    "evidence_index_commit_sha": null,
+    "strict_result_schema": true,
+    "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json"
+  },
+  "lifecycle": {
+    "records": {
+      "done": "/home/admin/projects/oris/orchestration/dev_employee_queue/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.done.json"
+    },
+    "lease": null,
+    "cancel_request": null,
+    "event_ledger": null
+  },
+  "idempotency": {
+    "request_fingerprint": null,
+    "attempt": null,
+    "max_attempts": null,
+    "retry_of": null,
+    "root_task_id": null,
+    "retries": []
+  }
+}

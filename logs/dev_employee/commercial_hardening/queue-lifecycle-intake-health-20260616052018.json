@@ -1,0 +1,5 @@
+{
+  "status": "ok",
+  "service": "dev_employee_intake_api_v2",
+  "queue_kernel": "transactional-filesystem-v1"
+}

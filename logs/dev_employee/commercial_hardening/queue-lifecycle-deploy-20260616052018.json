@@ -1,0 +1,26 @@
+{
+  "task_id": "commercial-hardening-queue-lifecycle-20260616",
+  "checked_at": "2026-06-16T05:20:41+08:00",
+  "result": "PASS",
+  "failure_code": "",
+  "static_checks": "PASS",
+  "test_result": "PASS",
+  "codex_preflight": "PASS",
+  "active_queue_gate": "PASS",
+  "service_switch": "PASS",
+  "loopback_smoke": "PASS",
+  "compatibility_status": "PASS",
+  "web_controls": "PASS",
+  "stale_policy": "PASS",
+  "bridge_worker_slot": "PASS",
+  "local_stash": "RESTORED",
+  "local_stash_restore": "PASS",
+  "services": {
+    "bridge": "active",
+    "intake": "active",
+    "web_console": "active"
+  },
+  "real_product_task_submitted": false,
+  "browser_test_performed": false,
+  "next_action": "REQUEST_BROWSER_LIFECYCLE_TEST"
+}
