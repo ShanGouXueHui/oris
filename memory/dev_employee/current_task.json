@@ -5,7 +5,7 @@
   "target_project": "oris-final-acceptance-api",
   "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
   "target_path": "/home/admin/projects/oris-final-acceptance-api",
-  "current_step": "repair_executor_authentication_and_rerun_with_new_task_id",
+  "current_step": "run_admin_codex_reauthentication_and_hardening_script",
   "completed_steps": [
     "final_acceptance_api_created_and_registered",
     "loopback_intake_status_api_verified",
@@ -18,7 +18,12 @@
     "web_console_project_dropdown_fixed",
     "web_console_javascript_verified",
     "public_real_task_accepted_queued_and_claimed",
-    "executor_failure_persisted_and_diagnosed"
+    "executor_failure_persisted_and_diagnosed",
+    "canonical_terminal_state_module_prepared",
+    "sanitized_codex_auth_preflight_prepared",
+    "bridge_intake_finisher_hardening_migration_prepared",
+    "interactive_reauthentication_and_bridge_context_runbook_prepared",
+    "executor_auth_failure_regression_tests_prepared"
   ],
   "failed_steps": [
     {
@@ -28,11 +33,20 @@
       "return_code": 1
     }
   ],
-  "next_action": "Restore Codex login for user admin, verify a harmless non-interactive execution in the same environment used by the bridge service, add executor-auth preflight and terminal-state handling, then submit the same objective with a new task id.",
+  "next_action": "As Linux user admin on 43.106.55.255, pull main and run scripts/dev_employee_repair_codex_auth_and_harden_20260616.sh. Complete the interactive Codex login when prompted. Do not submit a new real product task until the script reports PASS for both admin and systemd bridge-context preflights.",
   "last_error": {
     "type": "codex_authentication",
     "http_status": 401,
     "provider_error_code": "refresh_token_reused"
+  },
+  "prepared_changes": {
+    "task_state_module_commit": "b6a7d5420e07ac460a7abc2122917584855ca43c",
+    "codex_auth_preflight_commit": "ad07c687e16896f9fadab5b4eac8b05152f987f2",
+    "task_state_tests_commit": "30cc67a2ab2d648b94c449fd999a8c168ac97817",
+    "auth_preflight_tests_initial_commit": "f42a29d1506f63813b256cacc9a822ba4f38cea2",
+    "hardening_migration_commit": "0c3c3e69d04e76a0e27e34504035726a9621327c",
+    "reauth_runbook_commit": "4ffe9bc79b06018bca878e8cdc70e3e7397967f9",
+    "auth_failure_simulation_test_commit": "ccddc66d6a818ad64f89f9cadda09d70ad750c8b"
   },
   "latest_task_evidence": {
     "failure_evidence_commit_sha": "ea2089c5344c67e016601de8993ef365591daa06",
@@ -54,10 +68,10 @@
     ],
     "web_console_service": "active",
     "intake_service": "active",
-    "bridge_service": "active",
+    "bridge_service": "active_before_repair_run",
     "direct_public_intake_exposure": false
   },
-  "blocked_reason": "The coding executor is not authenticated in the execution context. Do not rerun a real task until login and preflight verification pass.",
+  "blocked_reason": "Codex login repair requires one interactive admin action. The GitHub-hosted runbook will stop the bridge, apply and test generic auth/terminal-state hardening, perform the login without logging credentials, verify non-interactive execution under admin and a transient user-systemd context, and restart the bridge only after both pass.",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-16.md",
