@@ -1,0 +1,17 @@
+{
+  "task_id": "goal-oris-final-acceptance-api-20260616-031022",
+  "status": "codex_failed",
+  "updated_at": "2026-06-16T03:10:45+08:00",
+  "strict_result_schema": true,
+  "task_objective": "Add a minimal FastAPI GET /readonly-e2e endpoint that returns exactly {\"readonly_e2e\": true}. Add pytest coverage for the status code and exact JSON response. Run the tests, commit the changes, and push them to the configured GitHub remote.",
+  "failure_stage": "codex_failed",
+  "failure_details": {
+    "return_code": 1
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/goal-oris-final-acceptance-api-20260616-031022.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022.codex.log",
+  "skill_resolver_report_json": null,
+  "skill_resolver_report_markdown": null,
+  "next_recommended_action": "Inspect Codex log and runtime descriptor; repair prompt/tooling or resource issue, then rerun with a new task id.",
+  "return_code": 1
+}

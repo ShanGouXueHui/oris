@@ -1,13 +1,11 @@
 # Latest Dev Employee Task Progress
 
-Task id: `web-console-submit-consolez-20260531-r1`
+Task id: `goal-oris-final-acceptance-api-20260616-031022`
 
-Status: completed
-
-Product commit SHA: `8aad2de69577fa1367db0ef8d010ed1a912679e0`
-
-Remote verification: `8aad2de69577fa1367db0ef8d010ed1a912679e0`
+Status: codex_failed
 
 Strict result schema: `True`
 
 ORIS evidence pending: `false`
+
+Next recommended action: Inspect Codex log and runtime descriptor; repair prompt/tooling or resource issue, then rerun with a new task id.
