@@ -1,8 +1,8 @@
 # Current AI Dev Employee Task
 
-Status: implementation prepared; server-side deployment pending
+Status: conversational implementation prepared; OpenClaw runtime discovery pending
 
-Task id: `commercial-hardening-queue-lifecycle-20260616`
+Task id: `commercial-conversational-openclaw-web-20260616`
 
 Target project: `oris`
 
@@ -12,77 +12,85 @@ Target local path: `/home/admin/projects/oris`
 
 ## Objective
 
-Deploy the first commercial hardening slice after final acceptance:
+Replace the engineering form/JSON landing page with the intended commercial interaction:
 
-- transaction-safe filesystem queue ownership;
-- canonical lifecycle state machine;
-- per-task lease and heartbeat;
-- bounded execution timeout;
-- cancellation with pre-delivery product rollback;
-- explicit retry with new Task ID and bounded attempts;
-- configurable worker concurrency;
-- safe stale-task expiry without automatic re-execution;
-- append-only lifecycle event ledger.
+`human conversation → OpenClaw intent/session orchestration → ORIS task control plane → Codex executor → evidence/result conversation`
 
-This task does not modify a product repository and does not submit a real Codex product task during deployment acceptance.
+The accepted ORIS queue, lease, lifecycle, cancellation, retry, bridge v3, Codex, Git delivery, evidence, and audit chain remains the authority. The conversation layer is an adapter, not a competing task engine.
+
+## Product decision
+
+The normal user opens `https://control.orisfy.com` and sees a chat immediately.
+
+Normal users do not manually enter:
+
+- Console Token;
+- Task ID;
+- expected checks;
+- commit message;
+- constraints JSON;
+- raw API payloads.
+
+The existing engineering console moves to `/admin`. Raw evidence remains available only under collapsed technical details.
 
 ## Prepared implementation
 
-- `scripts/dev_employee_queue_kernel.py`
-- `scripts/dev_employee_supervised_bridge_v3.py`
-- `scripts/dev_employee_intake_api_v2.py`
-- `scripts/dev_employee_web_console_v2.py`
-- `scripts/dev_employee_recover_stale_tasks.py`
-- `scripts/dev_employee_task_states.py`
-- standard-library regression tests under `tests/`
-- `docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md`
-- evidence-safe deployment script `scripts/dev_employee_deploy_queue_lifecycle_hardening_v2_20260616.sh`
+- `docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md`
+- `scripts/dev_employee_chat_store.py`
+- `scripts/dev_employee_openclaw_provider.py`
+- `scripts/dev_employee_chat_orchestrator.py`
+- `scripts/dev_employee_web_console_v3.py`
+- `tests/test_dev_employee_chat_store.py`
+- `tests/test_dev_employee_openclaw_provider.py`
+- `tests/test_dev_employee_chat_orchestrator.py`
+- `tests/test_dev_employee_web_console_v3.py`
+- `scripts/dev_employee_discover_openclaw_runtime_20260616.sh`
 
-## Key commercial policy
+## Conversational behavior
 
-- worker loss does not automatically requeue or duplicate execution;
-- lease expiry becomes terminal `failed` with `failure_code=lease_expired`;
-- retry is explicit and creates a new Task ID;
-- queued cancellation is atomic;
-- running cancellation is observed by bridge heartbeat;
-- cancellation/timeout before delivery resets the product repository to its verified clean baseline;
-- cancellation is rejected once commit or push begins;
-- default concurrency is one worker slot until quota policy is productized.
+The user can say:
 
-## Deployment acceptance
+- `给 oris-final-acceptance-api 增加一个 /healthz 接口，自己完成并测试。`
+- `查看进度`
+- `停止任务`
+- `重试`
 
-The deployment script must prove:
+The Web layer returns plain-language messages and a compact task card. Canonical state, Task ID, SHAs and evidence remain inside technical details.
 
-1. no queued/running task exists before service switch;
-2. Python compilation and all standard-library tests pass;
-3. Codex non-interactive preflight passes;
-4. bridge/intake/Web services switch to v3/v2/v2 and remain active;
-5. loopback health and authentication boundaries pass;
-6. the completed final-acceptance task remains readable with evidence;
-7. Web lifecycle controls are rendered;
-8. stale recovery does not automatically requeue;
-9. bridge v3 acquires one configured worker slot;
-10. no real product task is submitted.
+## Provider boundary
 
-## Browser acceptance
+The preferred provider is the existing OpenClaw runtime through a structured HTTP adapter.
 
-Only after the server-side deployment returns `PASS` and `NEXT_ACTION=REQUEST_BROWSER_LIFECYCLE_TEST`:
+The provider must return:
 
-- the operator logs into `https://control.orisfy.com`;
-- verifies status and lifecycle fields;
-- verifies Cancel and Retry controls;
-- uses a dedicated lifecycle test task, not the completed final-acceptance task.
+- intent;
+- user-facing response;
+- selected project;
+- structured objective;
+- derived constraints/checks;
+- optional risk confirmation.
 
-## Prerequisite evidence
+A deterministic fallback is allowed for status, cancel, retry, help, and direct single-project goal translation. It must not be represented as verified OpenClaw operation when the OpenClaw provider is unavailable.
 
-Final commercial-chain acceptance remains complete:
+## Current prerequisite state
 
-- accepted task: `goal-oris-final-acceptance-api-readonly-e2e-20260616-044030`
-- product SHA: `3207f20a2afdf109beac9a4a95523e7792e0ae33`
-- ORIS evidence SHA: `188a17eeba4acb43f5b922560ad98c3d8d28c587`
-- evidence index SHA: `4425edbe8e29912ff44d41da2a5e458bdac292d3`
-- independent verification SHA: `f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e`
+- queue lifecycle P1-A server acceptance: `PASS`;
+- bridge v3: `active`;
+- intake v2: `active`;
+- Web Console v2: `active`;
+- form-based browser test: safely aborted;
+- one queued test task: cancelled;
+- bridge restored: `YES`;
+- product SHA unchanged: `PASS`;
+- product tracked worktree clean: `PASS`;
+- abort evidence commit: `9def6001a6488296b9ec79a08aa74a9741d24888`.
+
+## Current blocker
+
+The ORIS repository does not yet contain the server's actual OpenClaw binary path, user service, listener, endpoint, or provider response contract. These must be discovered without exposing tokens, passwords, config values, or credentials.
 
 ## Next action
 
-Run the GitHub-hosted deployment script as Linux user `admin` on `43.106.55.255`. Send only the final `===== SUMMARY =====` block. Do not log into the Web Console for lifecycle testing until the server-side deployment passes.
+Run `scripts/dev_employee_discover_openclaw_runtime_20260616.sh` as Linux user `admin` on `43.106.55.255`.
+
+The discovery is read-only, changes no service, submits no task, and commits only sanitized runtime evidence. Send only its final `===== SUMMARY =====` block. After the real OpenClaw contract is mapped, run the full conversational code tests and deploy Web Console v3. Browser acceptance will then be performed from the chat interface only.
