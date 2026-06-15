@@ -1,0 +1,179 @@
+===== timestamp =====
+2026-06-16T05:12:51+08:00
+===== starting revision =====
+HEAD=f1bb1cfcefbd7a3b5abb2a4f3bf6b4c00707605e
+Saved working directory and index state On main: temp-before-queue-lifecycle-20260616051251
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+[KSuccessfully rebased and updated refs/heads/main.
+===== test tests/test_dev_employee_task_states.py =====
+test_active_states_are_not_terminal (__main__.TaskStateTests) ... ok
+test_blocked_family_is_terminal (__main__.TaskStateTests) ... ok
+test_canonical_failure_stages_remain_distinct_and_terminal (__main__.TaskStateTests) ... ok
+test_completed_is_terminal (__main__.TaskStateTests) ... ok
+test_legacy_codex_failed_is_terminal_failed (__main__.TaskStateTests) ... ok
+test_runtime_states_map_to_canonical_active_states (__main__.TaskStateTests) ... ok
+test_transition_policy_allows_happy_path_and_rejects_terminal_restart (__main__.TaskStateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+===== test tests/test_dev_employee_queue_kernel.py =====
+test_cancel_queued_is_terminal_and_idempotent (__main__.QueueKernelTests) ... ok
+test_claim_is_exactly_once_and_creates_lease (__main__.QueueKernelTests) ... ok
+test_event_ledger_is_append_only_jsonl (__main__.QueueKernelTests) ... ok
+test_expired_lease_fails_instead_of_automatic_requeue (__main__.QueueKernelTests) ... ok
+test_heartbeat_updates_phase_and_observes_cancel (__main__.QueueKernelTests) ... ok
+test_request_fingerprint_is_stable_and_material (__main__.QueueKernelTests) ... ok
+test_retry_id_is_new_and_monotonic (__main__.QueueKernelTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.029s
+
+OK
+===== test tests/test_dev_employee_intake_api_v2.py =====
+test_cancel_goal_moves_queued_task_to_cancelled (__main__.IntakeApiV2Tests) ... ok
+test_retry_reuses_active_retry_instead_of_duplicate_submission (__main__.IntakeApiV2Tests) ... ok
+test_same_task_and_request_is_idempotent_but_conflict_is_rejected (__main__.IntakeApiV2Tests) ... ERROR
+
+======================================================================
+ERROR: test_same_task_and_request_is_idempotent_but_conflict_is_rejected (__main__.IntakeApiV2Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/admin/projects/oris/tests/test_dev_employee_intake_api_v2.py", line 94, in test_same_task_and_request_is_idempotent_but_conflict_is_rejected
+    intake.create_goal(changed)
+  File "/home/admin/projects/oris/scripts/dev_employee_intake_api_v2.py", line 146, in create_goal
+    raise IntakeConflict(f"task_id already exists with a different request: {task_id}")
+scripts.dev_employee_intake_api_v2.IntakeConflict: task_id already exists with a different request: goal-demo-001
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.017s
+
+FAILED (errors=1)
+FAILURE_CODE=platform_regression_tests_failed
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   scripts/dev_employee_diagnose_codex_failed_task.sh
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	logs/dev_employee/autonomous-api-list-filters-20260526.codex.log
+	logs/dev_employee/autonomous-api-list-filters-20260526_py_compile.txt
+	logs/dev_employee/autonomous-api-list-filters-20260526_pytest.txt
+	logs/dev_employee/autonomous-api-list-filters-20260526_pytest_werror.txt
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526.codex.log
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_py_compile.txt
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest.txt
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest_werror.txt
+	logs/dev_employee/autonomous-api-tags-20260526.codex.log
+	logs/dev_employee/autonomous-api-tags-20260526_py_compile.txt
+	logs/dev_employee/autonomous-api-tags-20260526_pytest.txt
+	logs/dev_employee/bridge-client-smoke-20260526.codex.log
+	logs/dev_employee/bridge-runtime-contract-smoke-20260526.codex.log
+	logs/dev_employee/bridge-service-smoke-20260525.codex.log
+	logs/dev_employee/bridge-service-smoke-http-20260525.codex.log
+	logs/dev_employee/bridge_service_smoke_http_py_compile_20260525.txt
+	logs/dev_employee/bridge_service_smoke_http_pytest_20260525.txt
+	logs/dev_employee/bridge_service_smoke_http_pytest_werror_20260525.txt
+	logs/dev_employee/bridge_service_smoke_py_compile_20260525.txt
+	logs/dev_employee/bridge_service_smoke_pytest_20260525.txt
+	logs/dev_employee/bridge_service_smoke_pytest_werror_20260525.txt
+	logs/dev_employee/commercial_hardening/
+	logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_failure_triage.txt
+	logs/dev_employee/failure-evidence-bridge-exception-20260526.codex.log
+	logs/dev_employee/failure-evidence-real-product-healthz-20260526-r1_host_pytest.txt
+	logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json
+	logs/dev_employee/final_acceptance_codex_run_20260524.log
+	logs/dev_employee/final_acceptance_refresh_evidence_20260525.log
+	logs/dev_employee/final_acceptance_refresh_evidence_v2_20260525.log
+	logs/dev_employee/formal-test-pydantic-cleanup-20260524.codex.log
+	logs/dev_employee/formal-test-pydantic-cleanup-20260524.log
+	logs/dev_employee/formal-test-pydantic-cleanup-v2-20260525.codex.log
+	logs/dev_employee/formal_test_pydantic_git_20260524.txt
+	logs/dev_employee/formal_test_pydantic_py_compile_20260524.txt
+	logs/dev_employee/formal_test_pydantic_pytest_20260524.txt
+	logs/dev_employee/formal_test_pydantic_pytest_werror_20260524.txt
+	logs/dev_employee/formal_test_pydantic_v2_py_compile_20260525.txt
+	logs/dev_employee/formal_test_pydantic_v2_pytest_20260525.txt
+	logs/dev_employee/formal_test_pydantic_v2_pytest_werror_20260525.txt
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1.codex.log
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1_py_compile.txt
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest.txt
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest_werror.txt
+	logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022_failure_triage.txt
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_auth_preflight.json
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_py_compile.txt
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_pytest.txt
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1.codex.log
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_py_compile.txt
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest.txt
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest_werror.txt
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1.codex.log
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_py_compile.txt
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest.txt
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest_werror.txt
+	logs/dev_employee/install_dev_employee_bridge_service.log
+	logs/dev_employee/install_dev_employee_enqueue_service.log
+	logs/dev_employee/intake_api_post_smoke_intake-smoke-noexec-20260529042041.log
+	logs/dev_employee/intake_api_smoke_20260529_041653.log
+	logs/dev_employee/intake_api_smoke_intake-smoke-noexec-20260529-r1.log
+	logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json
+	logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-oris-com.json
+	logs/dev_employee/repair-real-product-healthz-20260526-r1.codex.log
+	logs/dev_employee/repair-real-product-healthz-20260526-r1_py_compile.txt
+	logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest.txt
+	logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest_werror.txt
+	logs/dev_employee/repair_plans/guard-validate-plan-mismatch-20260526-r1.json
+	logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.json
+	logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.md
+	logs/dev_employee/stale_task_recovery_latest.json
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1.codex.log
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_py_compile.txt
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest.txt
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest_werror.txt
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1.codex.log
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_py_compile.txt
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest.txt
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest_werror.txt
+	logs/dev_employee/web-console-submit-consolez-20260531-r1.codex.log
+	logs/dev_employee/web-console-submit-consolez-20260531-r1_py_compile.txt
+	logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest.txt
+	logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest_werror.txt
+	logs/dev_employee/web_console_audit/
+	logs/dev_employee/web_console_public_submit_e2e/finish-public-web-submit-20260616031437.log
+	logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.final-pycompile-20260616045142.txt
+	logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.final-status-20260616045142.json
+	logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.finalize-20260616045142.log
+	orchestration/dev_employee_intake_catalog/
+	orchestration/task_runs/autonomous-api-list-filters-20260526.codex_result.json
+	orchestration/task_runs/autonomous-api-stats-skill-resolution-20260526.codex_result.json
+	orchestration/task_runs/autonomous-api-tags-20260526.codex_result.json
+	orchestration/task_runs/bridge-client-smoke-20260526.codex_result.json
+	orchestration/task_runs/bridge-runtime-contract-smoke-20260526.codex_result.json
+	orchestration/task_runs/bridge-service-smoke-20260525.codex_result.json
+	orchestration/task_runs/bridge-service-smoke-http-20260525.codex_result.json
+	orchestration/task_runs/failure-evidence-auto-triage-host-checks-20260526-r1.codex_result.json
+	orchestration/task_runs/failure-evidence-bridge-exception-20260526.json
+	orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.codex_result.json
+	orchestration/task_runs/failure-evidence-real-product-healthz-20260526-r1.failure_result.json
+	orchestration/task_runs/failure-evidence-skill-resolution-invalid-20260526-r1.codex_result.json
+	orchestration/task_runs/formal-test-pydantic-cleanup-20260524.json
+	orchestration/task_runs/formal-test-pydantic-cleanup-v2-20260525.codex_result.json
+	orchestration/task_runs/goal-api-info-endpoint-20260526-r1.codex_result.json
+	orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json
+	orchestration/task_runs/goal-readyz-endpoint-clean-check-20260529-r1.codex_result.json
+	orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.codex_result.json
+	orchestration/task_runs/repair-real-product-healthz-20260526-r1.codex_result.json
+	orchestration/task_runs/web-adapter-goal-livez-endpoint-20260529-r1.codex_result.json
+	orchestration/task_runs/web-adapter-goal-ping-endpoint-20260529-r1.codex_result.json
+	orchestration/task_runs/web-console-submit-consolez-20260531-r1.codex_result.json
+	vendor/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (90da59c558369c004253f23f0aea44ad95bfe084)
