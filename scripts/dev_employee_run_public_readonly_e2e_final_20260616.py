@@ -80,6 +80,38 @@ def env_value(key: str) -> str:
     return ""
 
 
+def basic_auth_username() -> str:
+    nginx_conf = Path("/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf")
+    if not nginx_conf.is_file():
+        raise RuntimeError("public_basic_auth_nginx_config_missing")
+    auth_file = ""
+    for raw in nginx_conf.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if line.startswith("#") or "auth_basic_user_file" not in line:
+            continue
+        auth_file = line.split("auth_basic_user_file", 1)[1].split(";", 1)[0].strip().strip('"').strip("'")
+        break
+    if not auth_file:
+        raise RuntimeError("public_basic_auth_user_file_not_configured")
+    auth_path = Path(auth_file)
+    if not auth_path.is_absolute():
+        auth_path = Path("/etc/nginx") / auth_path
+    try:
+        content = auth_path.read_text(encoding="utf-8")
+    except PermissionError:
+        read_result = proc(["sudo", "-n", "cat", str(auth_path)], timeout=30)
+        if read_result.returncode != 0:
+            raise RuntimeError("public_basic_auth_user_file_unreadable")
+        content = read_result.stdout
+    for raw in content.splitlines():
+        line = raw.strip()
+        if line and ":" in line:
+            username = line.split(":", 1)[0].strip()
+            if username:
+                return username
+    raise RuntimeError("public_basic_auth_username_missing")
+
+
 def public_request(
     method: str,
     path: str,
@@ -299,10 +331,11 @@ def main() -> int:
         console_token = env_value("ORIS_DEV_EMPLOYEE_WEB_CONSOLE_TOKEN")
         if not console_token:
             raise RuntimeError("console_token_missing")
-        username = input("Public Basic Auth username: ").strip()
+        username = basic_auth_username()
+        log(f"PUBLIC_BASIC_AUTH_USERNAME={username}")
         password = getpass.getpass("Public Basic Auth password: ")
-        if not username or not password:
-            raise RuntimeError("public_basic_auth_missing")
+        if not password:
+            raise RuntimeError("public_basic_auth_password_missing")
 
         unauth_code, _ = public_request("GET", "/health")
         log(f"PUBLIC_UNAUTH_HEALTH_HTTP={unauth_code}")
