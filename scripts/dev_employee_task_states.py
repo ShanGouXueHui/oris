@@ -47,6 +47,8 @@ def normalize_status(status: Any) -> str:
 
 def canonical_status(status: Any) -> str:
     value = normalize_status(status)
+    if value in CANONICAL_TERMINAL_STATES:
+        return value
     if value in LEGACY_STATUS_CANONICAL_MAP:
         return LEGACY_STATUS_CANONICAL_MAP[value]
     if value.startswith("blocked_"):
