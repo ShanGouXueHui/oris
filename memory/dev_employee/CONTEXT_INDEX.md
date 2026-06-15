@@ -16,9 +16,10 @@ Do not reconstruct the project from chat history when these GitHub files are ava
 5. `docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md`
 6. `docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md`
 7. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
-8. `docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md`
-9. `orchestration/project_registry.json`
-10. `memory/dev_employee/NEW_CHAT_BOOTSTRAP_PROMPT_2026-06-16.md`
+8. `docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY_ADDENDUM_2026-06-16.md`
+9. `docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md`
+10. `orchestration/project_registry.json`
+11. `memory/dev_employee/NEW_CHAT_BOOTSTRAP_PROMPT_2026-06-16.md`
 
 ## Authority hierarchy
 
@@ -43,7 +44,7 @@ Do not delete historical evidence. Correct current truth by adding a newer autho
 
 ## Current critical blocker
 
-The public Web Console path is operational, but the first real public Web task failed at Codex execution because the Codex refresh token was reused/invalid.
+The public Web Console path is operational, but the first real public Web task failed at Codex execution because the executor login state is invalid.
 
 Authoritative task:
 
