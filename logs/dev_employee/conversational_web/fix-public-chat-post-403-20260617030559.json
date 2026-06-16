@@ -1,0 +1,33 @@
+{
+  "task_id": "fix-public-chat-post-403-20260617",
+  "checked_at": "2026-06-17T03:06:07+08:00",
+  "result": "FAILED",
+  "failure_code": "public_post_still_blocked",
+  "direct_app_post": "PASS",
+  "nginx_config_found": "YES",
+  "nginx_config_path": "/etc/nginx/sites-available/control.orisfy.com.conf",
+  "nginx_method_guard_detected": "NO",
+  "nginx_exact_chat_location": "PASS",
+  "nginx_config_test": "PASS",
+  "nginx_reload": "PASS",
+  "public_unauth_get": "401",
+  "public_unauth_post": "403",
+  "public_post_gate": "NOT_VERIFIED",
+  "config_backup": "PASS",
+  "backup_sha256": "7b506fae71f3f3ace1c72d36b8582f0bc5f519374dcaeafc887186a8ed66d9d9",
+  "rollback": "PASS",
+  "product_sha_unchanged": "NOT_VERIFIED",
+  "product_worktree_clean": "NOT_VERIFIED",
+  "services": {
+    "openclaw_gateway": "active",
+    "bridge": "active",
+    "intake": "active",
+    "web_console": "active",
+    "nginx": "active"
+  },
+  "openclaw_reinstalled": false,
+  "agent_harness_changed": false,
+  "real_product_task_submitted": false,
+  "real_product_change": false,
+  "next_action": "INSPECT_SERVER_LEVEL_METHOD_GUARD"
+}

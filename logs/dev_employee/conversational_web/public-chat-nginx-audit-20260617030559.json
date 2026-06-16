@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "config_path": "/etc/nginx/sites-available/control.orisfy.com.conf",
+  "server_block_start_line": 1,
+  "server_block_end_line": 7,
+  "method_guard_detected": false,
+  "exact_location_preexisting": false,
+  "config_changed": true,
+  "secret_values_recorded": false
+}

@@ -1,0 +1,22 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Unstaged changes after reset:
+M	memory/dev_employee/current_task.json
+M	memory/dev_employee/current_task.md
+D	scripts/dev_employee_fix_public_chat_post_403_20260617.sh
+METHOD_GUARD_DETECTED=NO
+EXACT_LOCATION_PREEXISTING=NO
+CONFIG_CHANGED=YES
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:443, ignored
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+PUBLIC_UNAUTH_GET_HTTP=401
+PUBLIC_UNAUTH_POST_HTTP=403
+FAILURE_CODE=public_post_still_blocked
+NGINX_ROLLBACK=START
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:443, ignored
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+NGINX_ROLLBACK=PASS
