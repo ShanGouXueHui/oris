@@ -5,7 +5,7 @@
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "restore_native_openclaw_ui_as_primary_public_experience",
+  "current_step": "read_only_discovery_before_native_openclaw_root_switch",
   "objective": "Use the existing native OpenClaw UI as the primary commercial conversation experience. Keep Agent Harness and ORIS behind it as tool, policy, lifecycle and evidence layers, and keep Codex as the code executor. Retire the custom ORIS chat shell from the primary user path instead of rebuilding standard conversation features.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -46,16 +46,17 @@
     "final_acceptance": "partial; must repair README and verify evidence before calling the task fully compliant"
   },
   "migration_requirements": [
-    "discover the currently active native OpenClaw UI and session/history behavior without reinstalling or upgrading",
-    "archive the current custom ORIS chat sessions before removing them from the default route",
-    "switch the effective Nginx root route from Web Console v5 to the existing OpenClaw Gateway UI on port 18789",
-    "preserve WebSocket and OpenClaw token/device-pairing behavior",
-    "expose ORIS actions to OpenClaw through a stable tool/plugin contract rather than keyword parsing",
-    "keep /admin restricted for engineering diagnostics",
-    "retain a rollback route for the custom shell during migration",
-    "verify native new-conversation, history, switching and clear/archive behavior in the browser",
-    "verify one natural-language development task without ORIS-specific prompt syntax",
-    "repair the missing README update from the completed /capabilities task and verify product/evidence SHA"
+    "discover the active native OpenClaw UI and session/history behavior without reinstalling or upgrading",
+    "discover effective Nginx route, WebSocket and authentication requirements before mutation",
+    "archive custom ORIS chat sessions outside Git",
+    "switch the effective Nginx root route from Web Console v5 to OpenClaw Gateway port 18789",
+    "preserve WebSocket and token/device-pairing behavior",
+    "expose ORIS actions through a stable tool/plugin contract rather than keyword parsing",
+    "keep /admin restricted",
+    "retain a rollback route for the custom shell",
+    "verify native new-conversation, history, switching and clear/archive behavior",
+    "verify one natural-language development task without ORIS-specific syntax",
+    "repair the missing README update and verify product/evidence SHA"
   ],
   "platform_state": {
     "openclaw_gateway_service": "active_existing_installation",
@@ -66,16 +67,22 @@
     "agent_harness": "active_v1_backend_only_target",
     "active_product_task": false
   },
-  "next_action": "Perform a read-only discovery of the effective native OpenClaw UI route, configuration, history/session support, authentication and WebSocket contract. Then prepare a reversible Nginx/service switch that makes native OpenClaw the root UI, moves the custom ORIS shell to a rollback/diagnostic route, and does not submit another product task until browser acceptance passes.",
+  "next_action": "Create and run a GitHub-hosted read-only discovery script for native OpenClaw UI routes, WebSocket, authentication/pairing, history/session support, effective Nginx load order, service health, active queue and product baselines. Commit sanitized evidence. Only then prepare a reversible root-route switch. Do not submit another product task before browser acceptance.",
   "last_error": "custom_chat_shell_rejected_for_commercial_use",
   "blocked_reason": "default public UI is a custom shell missing standard conversation lifecycle features and using non-native prompt routing",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
+    "memory/dev_employee/CURRENT_STATE_2026-06-17.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
+    "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-17.md",
+    "memory/dev_employee/NEW_CHAT_BOOTSTRAP_PROMPT_2026-06-17.md",
     "docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_DECISION_2026-06-17.md",
-    "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md",
-    "docs/RUNTIME_STATE_GIT_BOUNDARY_2026-06-17.md"
+    "docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_MIGRATION_PLAN_2026-06-17.md",
+    "docs/DEV_EMPLOYEE_ENVIRONMENT_ADDENDUM_2026-06-17.md",
+    "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md",
+    "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
+    "orchestration/project_registry.json"
   ],
   "updated_at": "2026-06-17"
 }
