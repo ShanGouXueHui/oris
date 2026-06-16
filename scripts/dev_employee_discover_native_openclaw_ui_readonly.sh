@@ -6,7 +6,7 @@
 ORIS_ROOT="${ORIS_ROOT:-/home/admin/projects/oris}"
 PAYLOAD="${ORIS_ROOT}/scripts/dev_employee_native_openclaw_readonly_discovery.py.gz.b64"
 STATE_ROOT="${HOME}/.local/state/oris/dev_employee_discovery_runner"
-EXPECTED_SHA256="fe706dd5b0b119902db4f4e90dc4059359330647188cf685b769bef2018c16a3"
+EXPECTED_SHA256="20db4fc26568de4efe0406408b61be73b3c64eb0283b47eea769d5d6e3e82389"
 
 summary_failed() {
   echo "===== SUMMARY ====="
