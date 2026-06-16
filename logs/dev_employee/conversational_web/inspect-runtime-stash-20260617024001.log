@@ -1,0 +1,22 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+STASH_FILE=M|logs/dev_employee/free_mesh_latency_events.jsonl|expected_runtime
+STASH_FILE=M|orchestration/active_routing.json|expected_runtime
+STASH_FILE=M|orchestration/execution_log.jsonl|expected_runtime
+STASH_FILE=M|orchestration/runtime_plan.json|expected_runtime
+STASH_FILE=M|orchestration/runtime_state.json|expected_runtime
+STASH_FILE=M|scripts/dev_employee_diagnose_codex_failed_task.sh|extra_source
+CHECKED_AT=2026-06-17T02:40:03+08:00
+TASK_ID=inspect-runtime-stash-after-agent-harness-web-20260617
+STASH_REF=stash@{0}
+STASH_COMMIT=39402142a31232ba578205adddb40234f58919f1
+STASH_FOUND=YES
+STASH_FILE_COUNT=6
+EXPECTED_RUNTIME_COUNT=5
+EXTRA_FILE_COUNT=1
+EXTRA_RUNTIME_COUNT=0
+EXTRA_SOURCE_COUNT=1
+STASH_HAS_UNTRACKED_PARENT=NO
+RESULT=PASS
+FAILURE_CODE=
+NEXT_ACTION=BUILD_THREE_WAY_SOURCE_AND_RUNTIME_RECOVERY

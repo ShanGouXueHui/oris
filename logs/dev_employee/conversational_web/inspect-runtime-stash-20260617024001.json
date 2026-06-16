@@ -1,0 +1,52 @@
+{
+  "task_id": "inspect-runtime-stash-after-agent-harness-web-20260617",
+  "checked_at": "2026-06-17T02:40:03+08:00",
+  "result": "PASS",
+  "failure_code": null,
+  "stash_found": true,
+  "stash_ref": "stash@{0}",
+  "stash_commit": "39402142a31232ba578205adddb40234f58919f1",
+  "stash_file_count": 6,
+  "expected_runtime_count": 5,
+  "extra_file_count": 1,
+  "extra_runtime_count": 0,
+  "extra_source_count": 1,
+  "stash_has_untracked_parent": false,
+  "files": [
+    {
+      "status": "M",
+      "path": "logs/dev_employee/free_mesh_latency_events.jsonl",
+      "category": "expected_runtime"
+    },
+    {
+      "status": "M",
+      "path": "orchestration/active_routing.json",
+      "category": "expected_runtime"
+    },
+    {
+      "status": "M",
+      "path": "orchestration/execution_log.jsonl",
+      "category": "expected_runtime"
+    },
+    {
+      "status": "M",
+      "path": "orchestration/runtime_plan.json",
+      "category": "expected_runtime"
+    },
+    {
+      "status": "M",
+      "path": "orchestration/runtime_state.json",
+      "category": "expected_runtime"
+    },
+    {
+      "status": "M",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "category": "extra_source"
+    }
+  ],
+  "stash_mutated": false,
+  "services_changed": false,
+  "real_product_task_submitted": false,
+  "real_product_change": false,
+  "next_action": "BUILD_THREE_WAY_SOURCE_AND_RUNTIME_RECOVERY"
+}
