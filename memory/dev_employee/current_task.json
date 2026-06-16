@@ -1,83 +1,68 @@
 {
   "task_id": "commercial-conversational-agent-harness-web-20260617",
-  "status": "browser_acceptance_pass_controlled_real_task_pending",
+  "status": "conversation_history_ux_hardening_pending",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "submit_one_controlled_real_product_goal_from_conversation_ui",
-  "objective": "Validate the full commercial conversation-to-delivery chain with one controlled product change submitted through the public chat UI, including task card, conversational progress, Codex execution, tests, product commit and remote SHA, ORIS evidence, and completed status.",
+  "current_step": "add_openclaw_like_conversation_navigation_and_history_controls",
+  "objective": "Complete the commercial conversation shell before submitting another real product task. Preserve the existing OpenClaw provider, ORIS control plane and Codex execution chain, while adding clear conversation navigation, new-conversation creation, history visibility and safe archive/delete controls.",
   "completed_prerequisites": [
     "full_public_web_to_codex_product_delivery_acceptance_passed",
     "transactional_queue_kernel_deployed",
     "canonical_lifecycle_state_machine_deployed",
     "lease_heartbeat_timeout_cancel_retry_and_concurrency_deployed",
-    "bridge_v3_active",
-    "intake_v2_active",
     "existing_openclaw_runtime_discovered_without_install_or_upgrade",
-    "openclaw_gateway_active",
-    "openclaw_infer_gateway_contract_probe_passed",
     "provider_neutral_agent_harness_added",
     "conversation_first_web_v5_deployed",
-    "runtime_state_removed_from_git_tracking",
-    "raw_chat_and_harness_trace_ignored",
-    "historical_stash_privately_archived_and_dropped",
-    "public_chat_post_route_repaired_with_other_write_routes_still_blocked",
+    "public_chat_post_route_repaired",
     "safe_no_task_browser_smoke_passed",
-    "help_conversation_passed",
-    "no_task_progress_conversation_passed"
+    "conversational_intent_boundary_repair_passed",
+    "status_code_no_longer_misclassified_as_status_command",
+    "negated_secret_constraint_no_longer_misclassified_as_secret_operation"
   ],
-  "product_decision": {
-    "public_entry": "https://control.orisfy.com",
-    "default_experience": "conversation_first",
-    "admin_console_route": "/admin",
-    "conversation_chain": "human -> Agent Harness -> OpenClaw provider -> ORIS control plane -> Codex executor -> evidence/result conversation",
-    "normal_user_enters_engineering_form_fields": false
+  "diagnosis": {
+    "current_ui_is_native_openclaw_ui": false,
+    "current_ui": "custom ORIS conversation-first shell backed by the OpenClaw provider",
+    "session_model": "single 30-day HttpOnly cookie automatically reuses one server-side session",
+    "history_sidebar_present": false,
+    "new_conversation_control_present": false,
+    "session_list_api_present": false,
+    "session_archive_delete_api_present": false,
+    "observed_effect": "old failed messages remain in the reused session and the operator cannot clearly switch, archive or clear conversation history"
   },
+  "product_decision": {
+    "do_not_reinstall_openclaw": true,
+    "do_not_replace_oris_control_plane": true,
+    "keep_admin_console_at": "/admin",
+    "default_public_entry": "https://control.orisfy.com",
+    "target_experience": "OpenClaw-like conversation shell with ORIS task cards",
+    "history_storage": "server-side runtime state, excluded from Git",
+    "normal_user_sees_raw_json": false
+  },
+  "required_ux_capabilities": [
+    "left conversation sidebar",
+    "new conversation button",
+    "conversation titles derived from the first meaningful user goal",
+    "updated time and task status in conversation list",
+    "switch between conversations",
+    "archive inactive conversations",
+    "delete or clear only conversations without an active task",
+    "prevent deletion of a conversation with a queued or running task",
+    "preserve task and evidence history for completed work",
+    "responsive mobile layout"
+  ],
   "controlled_real_task": {
     "project": "oris-final-acceptance-api",
-    "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
     "operator_message": "给 oris-final-acceptance-api 增加一个只读 GET /capabilities 接口，返回 service、storage 和 features 三个字段；features 至少包含 task_crud、filtering 和 stats。补充 pytest 覆盖接口状态码和字段契约，更新 README 的 API 列表，运行 py_compile 和 pytest，完成后提交并推送。不要修改 ORIS 平台代码或任何密钥。",
-    "expected_product_scope": [
-      "app/",
-      "tests/",
-      "README.md"
-    ],
-    "must_verify": [
-      "exactly_one_task_created",
-      "task_card_visible",
-      "progress_query_works",
-      "codex_exec_used",
-      "py_compile_pass",
-      "pytest_pass",
-      "endpoint_contract_pass",
-      "product_commit_sha_present",
-      "product_remote_sha_matches",
-      "product_worktree_clean",
-      "oris_evidence_commit_present",
-      "canonical_status_completed"
-    ]
-  },
-  "browser_test": {
-    "operator_will_login_from_web": true,
-    "safe_no_task_smoke": "PASS",
-    "controlled_real_task": "PENDING",
-    "performed_at": "2026-06-17",
-    "observed": [
-      "ORIS AI 开发员工 landing page",
-      "natural-language help response",
-      "no-task progress response",
-      "no engineering form fields",
-      "no HTTP 403",
-      "no task created during safe smoke"
-    ]
+    "status": "paused_until_history_ux_acceptance",
+    "real_task_created": false
   },
   "latest_evidence": {
-    "browser_acceptance_record_commit": "fed4fc9ad2e3aca30263b4fab6fdfc60527b0f58",
+    "intent_boundary_code_commit": "d7ba5754ff1295432b8771e908418c99719f42ee",
+    "intent_boundary_evidence_commit": "467ff998b6687d35d52c4afacbaddf09fb0f448a",
     "public_chat_post_repair_log_commit": "6e992978146bd8686d450638753acad098d22fc0",
-    "runtime_boundary_finalization_log_commit": "db38c220c41709da959c9e7add13888216d99ccb",
-    "final_acceptance_task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
-    "final_acceptance_product_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33"
+    "runtime_boundary_finalization_log_commit": "db38c220c4172a92fbdcdc6d95e429f2dec2b53"
   },
   "platform_state": {
     "web_console_service": "active_v5_conversation_first",
@@ -86,12 +71,11 @@
     "openclaw_gateway_service": "active_existing_installation",
     "agent_harness": "active_v1",
     "active_product_task": false,
-    "runtime_files_tracked_by_git": false,
-    "raw_chat_data_committed_to_git": false
+    "real_product_change": false
   },
-  "next_action": "Operator sends the controlled /capabilities goal through the existing browser chat session, then sends 查看进度 after a task card appears. Report screenshots of the initial interpretation/task card, one progress response, and the final completion/evidence response.",
-  "last_error": null,
-  "blocked_reason": "controlled real task requires operator submission through the authenticated public chat UI",
+  "next_action": "Implement and server-test the conversation history UX and session-management API without submitting a real product task. Then request a browser test for new conversation, history switching and safe archive/delete before resuming the controlled /capabilities task.",
+  "last_error": "conversation_history_navigation_missing",
+  "blocked_reason": "commercial browser experience lacks explicit session history and lifecycle controls",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/current_task.json",
