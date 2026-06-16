@@ -18,15 +18,30 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from dev_employee_openclaw_provider import (
-    DeterministicFallbackProvider,
-    ProviderContractError,
-    ProviderResult,
-    ProviderUnavailable,
-    configured_provider,
-    explicit_control_intent,
-    merge_mandatory_policy,
-)
+# Prefer package-relative imports when loaded as ``scripts.dev_employee_agent_harness``
+# so exception/dataclass identity is shared with package-based tests. Fall back to
+# top-level imports when systemd executes the sibling Web script directly and the
+# scripts directory is placed on sys.path.
+try:
+    from .dev_employee_openclaw_provider import (
+        DeterministicFallbackProvider,
+        ProviderContractError,
+        ProviderResult,
+        ProviderUnavailable,
+        configured_provider,
+        explicit_control_intent,
+        merge_mandatory_policy,
+    )
+except ImportError:  # pragma: no cover - exercised by direct script runtime
+    from dev_employee_openclaw_provider import (
+        DeterministicFallbackProvider,
+        ProviderContractError,
+        ProviderResult,
+        ProviderUnavailable,
+        configured_provider,
+        explicit_control_intent,
+        merge_mandatory_policy,
+    )
 
 TRACE_DIR = Path("/home/admin/projects/oris/logs/dev_employee/agent_harness")
 HARNESS_VERSION = "1.0"
