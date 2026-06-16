@@ -1,0 +1,27 @@
+{
+  "task_id": "fix-conversational-intent-boundaries-20260617",
+  "checked_at": "2026-06-17T04:44:49+08:00",
+  "result": "FAILED",
+  "failure_code": "intent_boundary_tests_failed",
+  "patch_result": "PASS",
+  "static_checks": "PASS",
+  "test_result": "NOT_RUN",
+  "regression_message": "NOT_RUN",
+  "control_commands": "NOT_RUN",
+  "negated_secret_policy": "NOT_RUN",
+  "service_restart": "NOT_RUN",
+  "web_health": "NOT_RUN",
+  "active_queue_gate": "PASS",
+  "product_sha_unchanged": "NOT_VERIFIED",
+  "product_worktree_clean": "NOT_VERIFIED",
+  "code_commit": null,
+  "services": {
+    "openclaw": "active",
+    "bridge": "active",
+    "intake": "active",
+    "web": "active"
+  },
+  "real_product_task_submitted": false,
+  "real_product_change": false,
+  "next_action": "FIX_INTENT_BOUNDARY_TESTS"
+}
