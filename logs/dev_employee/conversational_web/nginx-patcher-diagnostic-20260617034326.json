@@ -1,0 +1,11 @@
+{
+  "server_block_count": 2,
+  "https_match_count": 1,
+  "if_block_count": 4,
+  "method_guard_count": 4,
+  "map_marker_present": false,
+  "chat_location_present": false,
+  "patch_result": "FAILED",
+  "patch_error_type": "ValueError",
+  "patch_error_message": "request-method deny block count=4"
+}
