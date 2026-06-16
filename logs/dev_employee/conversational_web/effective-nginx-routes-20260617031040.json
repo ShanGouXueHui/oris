@@ -1,0 +1,132 @@
+{
+  "result": "PASS",
+  "matching_server_blocks": 4,
+  "effective_https": {
+    "order": 1,
+    "config_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+    "start_line_in_dump": 216,
+    "listens": [
+      "443 ssl http2"
+    ],
+    "locations": [
+      "= /api/goals",
+      "/api/goals/",
+      "= /api/projects",
+      "/"
+    ],
+    "proxy_pass": [
+      "http://127.0.0.1:18893/api/goals",
+      "http://127.0.0.1:18893",
+      "http://127.0.0.1:18893/api/projects",
+      "http://127.0.0.1:18893"
+    ],
+    "includes": [],
+    "auth_basic_present": true,
+    "method_guards": [
+      "request_method_if",
+      "return_403"
+    ]
+  },
+  "effective_http": {
+    "order": 2,
+    "config_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+    "start_line_in_dump": 281,
+    "listens": [
+      "80"
+    ],
+    "locations": [],
+    "proxy_pass": [],
+    "includes": [],
+    "auth_basic_present": false,
+    "method_guards": []
+  },
+  "duplicate_https_count": 1,
+  "duplicate_http_count": 1,
+  "all_blocks": [
+    {
+      "order": 1,
+      "config_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+      "start_line_in_dump": 216,
+      "listens": [
+        "443 ssl http2"
+      ],
+      "locations": [
+        "= /api/goals",
+        "/api/goals/",
+        "= /api/projects",
+        "/"
+      ],
+      "proxy_pass": [
+        "http://127.0.0.1:18893/api/goals",
+        "http://127.0.0.1:18893",
+        "http://127.0.0.1:18893/api/projects",
+        "http://127.0.0.1:18893"
+      ],
+      "includes": [],
+      "auth_basic_present": true,
+      "method_guards": [
+        "request_method_if",
+        "return_403"
+      ]
+    },
+    {
+      "order": 2,
+      "config_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+      "start_line_in_dump": 281,
+      "listens": [
+        "80"
+      ],
+      "locations": [],
+      "proxy_pass": [],
+      "includes": [],
+      "auth_basic_present": false,
+      "method_guards": []
+    },
+    {
+      "order": 3,
+      "config_file": "/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754",
+      "start_line_in_dump": 288,
+      "listens": [
+        "80",
+        "[::]:80"
+      ],
+      "locations": [],
+      "proxy_pass": [],
+      "includes": [],
+      "auth_basic_present": false,
+      "method_guards": []
+    },
+    {
+      "order": 4,
+      "config_file": "/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754",
+      "start_line_in_dump": 296,
+      "listens": [
+        "443 ssl http2",
+        "[::]:443 ssl http2"
+      ],
+      "locations": [
+        "= /oris-api",
+        "= /oris-api/v1/health",
+        "= /oris-api/v1/runtime/plan",
+        "= /oris-api/v1/infer",
+        "= /oris-api/v1/feishu/health",
+        "= /oris-api/v1/feishu/events",
+        "^~ /oris-download/",
+        "/"
+      ],
+      "proxy_pass": [
+        "http://127.0.0.1:8788/v1/health",
+        "http://127.0.0.1:8788/v1/runtime/plan",
+        "http://127.0.0.1:8788/v1/infer",
+        "http://127.0.0.1:8790/health",
+        "http://127.0.0.1:8790/v1/feishu/events",
+        "http://127.0.0.1:8791",
+        "http://127.0.0.1:18789"
+      ],
+      "includes": [],
+      "auth_basic_present": false,
+      "method_guards": []
+    }
+  ],
+  "secret_values_recorded": false
+}

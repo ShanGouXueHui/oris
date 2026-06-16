@@ -1,0 +1,18 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Unstaged changes after reset:
+D	scripts/dev_employee_inspect_effective_public_nginx_20260617.sh
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:443, ignored
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+MATCHING_SERVER_BLOCKS=4
+EFFECTIVE_HTTPS_CONFIG=/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf
+EFFECTIVE_HTTP_CONFIG=/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf
+DUPLICATE_HTTPS_COUNT=1
+DUPLICATE_HTTP_COUNT=1
+METHOD_GUARD_LOCATIONS=1
+PUBLIC_POST_HTTP=403
+LOCAL_TLS_POST_HTTP=403
+LOCAL_HTTP_POST_HTTP=301
+DIRECT_APP_POST_HTTP=400
