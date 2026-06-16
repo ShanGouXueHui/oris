@@ -1,8 +1,8 @@
 # Current AI Dev Employee Task
 
-Status: server acceptance passed; browser acceptance pending
+Status: native OpenClaw UI migration pending
 
-Task id: `commercial-conversational-agent-harness-web-20260617`
+Task id: `commercial-native-openclaw-ui-20260617`
 
 Target project: `oris`
 
@@ -10,75 +10,92 @@ Target repository: `ShanGouXueHui/oris`
 
 Target local path: `/home/admin/projects/oris`
 
-## Current architecture
+## Architecture decision
 
-The deployed commercial interaction chain is:
+The primary commercial UI will be the existing native OpenClaw Gateway UI, not the custom ORIS Web Console v5 chat shell.
 
-`human → Agent Harness → OpenClaw provider → ORIS control plane → Codex executor → evidence/result conversation`
+Target chain:
 
-Responsibilities remain separated:
+`human → native OpenClaw UI → Agent Harness tool/policy adapter → ORIS control plane → Codex executor → evidence/status back to OpenClaw`
 
-- Agent Harness: deterministic control commands, provider routing/fallback, structured-output validation, allowlist/risk policy, sanitized trace metadata;
-- OpenClaw: model-backed intent extraction and response drafting through the existing Gateway installation;
-- ORIS: task identity, lifecycle, queue, lease, cancellation, retry, policy, evidence and audit;
-- Codex: implementation, testing, repair, commit and controlled push.
+Responsibilities:
 
-OpenClaw was not reinstalled or upgraded.
+- OpenClaw native UI: standard conversation lifecycle, history, new conversation, switching and native prompt behavior;
+- Agent Harness: backend tool contract, policy validation, structured output and fallback; not the primary UI;
+- ORIS: allowlist, task identity, lifecycle, queue, lease, cancellation, retry, evidence and audit;
+- Codex: implementation, tests, repair, commit and controlled push;
+- custom ORIS shell: temporary restricted diagnostic/rollback route only.
 
-## Deployed Web experience
+OpenClaw must not be reinstalled or upgraded during this migration.
+
+## Why the custom shell is rejected as the default UI
+
+The page currently shown at `https://control.orisfy.com` was developed inside the ORIS repository. It is not the native OpenClaw interface. It uses OpenClaw only as an inference provider.
+
+Observed gaps:
+
+- no new-conversation control;
+- no conversation-history sidebar;
+- no session switching;
+- no clear/archive lifecycle;
+- one long-lived cookie silently reuses one server-side session;
+- custom keyword and intent routing changes normal prompt semantics;
+- task cards repeat inside the transcript;
+- ordinary user prompts can be affected by ORIS-specific rules.
+
+Do not continue rebuilding these standard capabilities in the custom shell.
+
+## Current runtime facts
 
 - Public entry: `https://control.orisfy.com`
-- `/`: conversation-first `ORIS AI 开发员工`
-- `/admin`: restricted engineering diagnostics console
-- Web runtime: v5
-- Agent Harness: v1
+- Existing native OpenClaw Gateway service: active
+- Historical native OpenClaw local gateway: `127.0.0.1:18789`
+- Custom ORIS Web Console service: active on `127.0.0.1:18893`
+- Intake v2: active
+- Bridge v3: active
+- Agent Harness v1: active as backend component
+- `/admin`: keep restricted for engineering diagnostics
 
-The normal user does not enter Console Token, Task ID, expected checks, commit message, constraints JSON, or raw API payloads.
+## Completed controlled task and acceptance gap
 
-## Completed server acceptance
+Task:
 
-- OpenClaw Gateway: `active`
-- Agent Harness provider probe: `PASS`
-- Web conversation page contract: `PASS`
-- `/admin` contract: `PASS`
-- Chat API smoke: `PASS`
-- Harness trace: `PASS`
-- bridge: `active`
-- intake: `active`
-- Web Console: `active`
-- product SHA unchanged: `PASS`
-- product worktree clean: `PASS`
-- real product task submitted: `NO`
-- real product change: `NO`
+`chat-oris-final-acceptance-api-20260617-051313-c802347ff17c`
 
-## Runtime/Git boundary
+UI status: `completed`
 
-Live routing state, runtime plans, runtime state, execution logs and latency telemetry are no longer tracked by Git. Raw chat sessions and raw Harness traces are ignored and must not enter GitHub.
+Product commit:
 
-The historical stash was privately archived with checksums and safely dropped after all validation passed.
+`927f1968cc86bfd5213670f4eaa171fc1a3be620`
 
-Latest finalization evidence commit:
+Completed in the product commit:
 
-`db38c220c41709da959c9e7add13888216d99ccb`
+- `GET /capabilities`;
+- `service`, `storage` and `features` contract;
+- tests for status code and response fields.
 
-Final private archive manifest:
+Acceptance gap:
 
-`5a6872aff7280634576a3a97329c40485cec99d25453fd27b70246cb553ebf15`
+- the requested `README.md` API-list update was not included.
 
-## Current browser test
+Therefore this delivery is partial, not fully compliant. Repair it only after native OpenClaw UI browser acceptance.
 
-The first browser test is intentionally a no-task smoke.
+## Migration requirements
 
-1. Open `https://control.orisfy.com` and complete Basic Auth.
-2. Confirm the landing page is a chat titled `ORIS AI 开发员工`.
-3. Confirm no engineering form fields are visible.
-4. Send `帮助`.
-5. Confirm the response explains how to describe a development goal, without creating a task.
-6. Send `查看进度`.
-7. Confirm the response states that the current session has no task.
-
-Do not submit a real engineering goal during this first smoke. After the safe browser experience is accepted, the next stage will run one controlled conversational product task and verify task card, progress narration, Codex delivery and evidence presentation.
+1. Read-only discover the active native OpenClaw UI routes, session/history behavior, authentication and WebSocket contract.
+2. Archive custom ORIS chat-session runtime data outside Git.
+3. Prepare a reversible Nginx switch from the custom root UI to the existing OpenClaw Gateway on port 18789.
+4. Preserve OpenClaw token/device pairing and WebSocket behavior.
+5. Move the custom shell to a non-default rollback/diagnostic route.
+6. Expose ORIS capabilities to OpenClaw as tools/actions, not through prompt keyword matching.
+7. Browser-test native new conversation, history, switching and clear/archive behavior.
+8. Browser-test one natural-language development goal without ORIS-specific command syntax.
+9. Repair the missing README update and verify product commit SHA, remote SHA, tests and ORIS evidence.
 
 ## Next action
 
-The operator logs in through the public Web entry and reports the observed page and responses, preferably with a screenshot. No server command is required for this step.
+Do not submit another product task. First run read-only discovery of the native OpenClaw UI and effective Nginx routing. Then build a reversible migration script with backup, `nginx -t`, rollback and no OpenClaw reinstall.
+
+Authoritative decision document:
+
+`docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_DECISION_2026-06-17.md`
