@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "agent_harness": true,
+  "harness_version": "1.0",
+  "provider_mode": "openclaw",
+  "selected_provider": "openclaw_infer_gateway",
+  "fallback_used": false,
+  "intent": "create_task",
+  "project_key": "oris-final-acceptance-api",
+  "objective_contains_healthz": true,
+  "requires_confirmation": false,
+  "real_product_task_submitted": false,
+  "product_changed": false
+}

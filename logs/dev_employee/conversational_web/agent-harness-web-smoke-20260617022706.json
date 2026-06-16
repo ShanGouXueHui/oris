@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "session_created": true,
+  "help_message_processed": true,
+  "provider": "deterministic_fallback",
+  "agent_harness_observed": true,
+  "harness_trace_event_count": 1,
+  "task_created": false,
+  "queue_remained_empty": true,
+  "test_session_removed": true
+}

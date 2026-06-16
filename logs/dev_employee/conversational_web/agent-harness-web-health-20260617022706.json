@@ -1,0 +1,1 @@
+{"status": "ok", "service": "dev_employee_web_console_v5", "default_experience": "conversation", "admin_route": "/admin", "agent_harness_enabled": true, "agent_harness_version": "1.0", "agent_harness_provider_mode": "openclaw", "openclaw_provider_configured": true, "openclaw_provider_type": "OpenClawInferCLIProvider", "openclaw_gateway_required": true}

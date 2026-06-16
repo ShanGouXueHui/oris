@@ -1,0 +1,232 @@
+===== timestamp =====
+2026-06-17T02:27:06+08:00
+===== starting revision =====
+HEAD=d706e9a7ecc59b0417ee412d08a906643a5087e5
+Saved working directory and index state On main: temp-before-agent-harness-web-20260617022706
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+[KSuccessfully rebased and updated refs/heads/main.
+===== test tests/test_dev_employee_agent_harness.py =====
+test_explicit_control_is_deterministic (__main__.AgentHarnessTests) ... ok
+test_openclaw_result_is_policy_validated (__main__.AgentHarnessTests) ... ok
+test_provider_failure_falls_back_and_is_visible (__main__.AgentHarnessTests) ... ok
+test_trace_contains_metadata_but_not_raw_message (__main__.AgentHarnessTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.008s
+
+OK
+===== test tests/test_dev_employee_chat_store.py =====
+test_create_append_and_public_view (__main__.ChatSessionStoreTests) ... ok
+test_mutate_serializes_session_update (__main__.ChatSessionStoreTests) ... ok
+test_rejects_invalid_session_id (__main__.ChatSessionStoreTests) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.008s
+
+OK
+===== test tests/test_dev_employee_openclaw_provider.py =====
+test_explicit_control_does_not_call_model_provider (__main__.OpenClawInferContractTests) ... ok
+test_extracts_intent_from_openclaw_outputs_text (__main__.OpenClawInferContractTests) ... ok
+test_extracts_markdown_wrapped_json_defensively (__main__.OpenClawInferContractTests) ... ok
+test_gateway_requirement_rejects_explicit_local_transport (__main__.OpenClawInferContractTests) ... ok
+test_mandatory_policy_is_merged_after_model_result (__main__.OpenClawInferContractTests) ... ok
+test_multiple_projects_without_match_asks_for_clarification (__main__.OpenClawProviderFallbackTests) ... ok
+test_risky_request_requires_confirmation (__main__.OpenClawProviderFallbackTests) ... ok
+test_single_project_goal_becomes_create_task (__main__.OpenClawProviderFallbackTests) ... ok
+test_status_cancel_retry_are_deterministic (__main__.OpenClawProviderFallbackTests) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.002s
+
+OK
+===== test tests/test_dev_employee_chat_orchestrator.py =====
+test_natural_language_goal_creates_task_and_card (__main__.ChatOrchestratorTests) ... ok
+test_risky_goal_creates_confirmation_not_task (__main__.ChatOrchestratorTests) ... ok
+test_status_message_reads_current_task_without_new_submission (__main__.ChatOrchestratorTests) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.017s
+
+OK
+===== test tests/test_dev_employee_web_console_v3.py =====
+test_default_page_hides_engineering_form_fields (__main__.WebConsoleV3Tests) ... ok
+test_default_page_is_conversation_first (__main__.WebConsoleV3Tests) ... ok
+test_task_card_keeps_technical_details_collapsed (__main__.WebConsoleV3Tests) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
+===== test tests/test_dev_employee_queue_kernel.py =====
+test_cancel_queued_is_terminal_and_idempotent (__main__.QueueKernelTests) ... ok
+test_claim_is_exactly_once_and_creates_lease (__main__.QueueKernelTests) ... ok
+test_event_ledger_is_append_only_jsonl (__main__.QueueKernelTests) ... ok
+test_expired_lease_fails_instead_of_automatic_requeue (__main__.QueueKernelTests) ... ok
+test_heartbeat_updates_phase_and_observes_cancel (__main__.QueueKernelTests) ... ok
+test_request_fingerprint_is_stable_and_material (__main__.QueueKernelTests) ... ok
+test_retry_id_is_new_and_monotonic (__main__.QueueKernelTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.027s
+
+OK
+===== test tests/test_dev_employee_task_states.py =====
+test_active_states_are_not_terminal (__main__.TaskStateTests) ... ok
+test_blocked_family_is_terminal (__main__.TaskStateTests) ... ok
+test_canonical_failure_stages_remain_distinct_and_terminal (__main__.TaskStateTests) ... ok
+test_completed_is_terminal (__main__.TaskStateTests) ... ok
+test_legacy_codex_failed_is_terminal_failed (__main__.TaskStateTests) ... ok
+test_runtime_states_map_to_canonical_active_states (__main__.TaskStateTests) ... ok
+test_transition_policy_allows_happy_path_and_rejects_terminal_restart (__main__.TaskStateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+{"assistant_message_present": true, "capability": "model.run", "constraint_count": 0, "expected_check_count": 0, "intent": "create_task", "model": "free-auto", "model_provider": "oris", "objective_contains_healthz": true, "openclaw_binary": "/home/admin/.npm-global/bin/openclaw", "product_changed": false, "project_key": "oris-final-acceptance-api", "provider": "openclaw_infer_gateway", "real_product_task_submitted": false, "requires_confirmation": false, "result": "PASS", "secrets_logged": false, "transport": "gateway"}
+{"agent_harness": true, "fallback_used": false, "harness_version": "1.0", "intent": "create_task", "objective_contains_healthz": true, "product_changed": false, "project_key": "oris-final-acceptance-api", "provider_mode": "openclaw", "real_product_task_submitted": false, "requires_confirmation": false, "result": "PASS", "selected_provider": "openclaw_infer_gateway"}
+error: Your local changes to the following files would be overwritten by merge:
+	logs/dev_employee/free_mesh_latency_events.jsonl
+	orchestration/active_routing.json
+	orchestration/execution_log.jsonl
+	orchestration/runtime_plan.json
+	orchestration/runtime_state.json
+Please commit your changes or stash them before you merge.
+Aborting
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   logs/dev_employee/free_mesh_latency_events.jsonl
+	modified:   orchestration/active_routing.json
+	modified:   orchestration/execution_log.jsonl
+	modified:   orchestration/runtime_plan.json
+	modified:   orchestration/runtime_state.json
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	logs/dev_employee/agent_harness/
+	logs/dev_employee/autonomous-api-list-filters-20260526.codex.log
+	logs/dev_employee/autonomous-api-list-filters-20260526_py_compile.txt
+	logs/dev_employee/autonomous-api-list-filters-20260526_pytest.txt
+	logs/dev_employee/autonomous-api-list-filters-20260526_pytest_werror.txt
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526.codex.log
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_py_compile.txt
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest.txt
+	logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest_werror.txt
+	logs/dev_employee/autonomous-api-tags-20260526.codex.log
+	logs/dev_employee/autonomous-api-tags-20260526_py_compile.txt
+	logs/dev_employee/autonomous-api-tags-20260526_pytest.txt
+	logs/dev_employee/bridge-client-smoke-20260526.codex.log
+	logs/dev_employee/bridge-runtime-contract-smoke-20260526.codex.log
+	logs/dev_employee/bridge-service-smoke-20260525.codex.log
+	logs/dev_employee/bridge-service-smoke-http-20260525.codex.log
+	logs/dev_employee/bridge_service_smoke_http_py_compile_20260525.txt
+	logs/dev_employee/bridge_service_smoke_http_pytest_20260525.txt
+	logs/dev_employee/bridge_service_smoke_http_pytest_werror_20260525.txt
+	logs/dev_employee/bridge_service_smoke_py_compile_20260525.txt
+	logs/dev_employee/bridge_service_smoke_pytest_20260525.txt
+	logs/dev_employee/bridge_service_smoke_pytest_werror_20260525.txt
+	logs/dev_employee/conversational_web/agent-harness-probe-20260617022706.json
+	logs/dev_employee/conversational_web/agent-harness-web-health-20260617022706.json
+	logs/dev_employee/conversational_web/agent-harness-web-smoke-20260617022706.json
+	logs/dev_employee/conversational_web/deploy-agent-harness-web-20260617022706.log
+	logs/dev_employee/conversational_web/openclaw-provider-probe-harness-20260617022706.json
+	logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_failure_triage.txt
+	logs/dev_employee/failure-evidence-bridge-exception-20260526.codex.log
+	logs/dev_employee/failure-evidence-real-product-healthz-20260526-r1_host_pytest.txt
+	logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json
+	logs/dev_employee/final_acceptance_codex_run_20260524.log
+	logs/dev_employee/final_acceptance_refresh_evidence_20260525.log
+	logs/dev_employee/final_acceptance_refresh_evidence_v2_20260525.log
+	logs/dev_employee/formal-test-pydantic-cleanup-20260524.codex.log
+	logs/dev_employee/formal-test-pydantic-cleanup-20260524.log
+	logs/dev_employee/formal-test-pydantic-cleanup-v2-20260525.codex.log
+	logs/dev_employee/formal_test_pydantic_git_20260524.txt
+	logs/dev_employee/formal_test_pydantic_py_compile_20260524.txt
+	logs/dev_employee/formal_test_pydantic_pytest_20260524.txt
+	logs/dev_employee/formal_test_pydantic_pytest_werror_20260524.txt
+	logs/dev_employee/formal_test_pydantic_v2_py_compile_20260525.txt
+	logs/dev_employee/formal_test_pydantic_v2_pytest_20260525.txt
+	logs/dev_employee/formal_test_pydantic_v2_pytest_werror_20260525.txt
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1.codex.log
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1_py_compile.txt
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest.txt
+	logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest_werror.txt
+	logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022_failure_triage.txt
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_auth_preflight.json
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_py_compile.txt
+	logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_pytest.txt
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1.codex.log
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_py_compile.txt
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest.txt
+	logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest_werror.txt
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1.codex.log
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_py_compile.txt
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest.txt
+	logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest_werror.txt
+	logs/dev_employee/install_dev_employee_bridge_service.log
+	logs/dev_employee/install_dev_employee_enqueue_service.log
+	logs/dev_employee/intake_api_post_smoke_intake-smoke-noexec-20260529042041.log
+	logs/dev_employee/intake_api_smoke_20260529_041653.log
+	logs/dev_employee/intake_api_smoke_intake-smoke-noexec-20260529-r1.log
+	logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json
+	logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-oris-com.json
+	logs/dev_employee/repair-real-product-healthz-20260526-r1.codex.log
+	logs/dev_employee/repair-real-product-healthz-20260526-r1_py_compile.txt
+	logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest.txt
+	logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest_werror.txt
+	logs/dev_employee/repair_plans/guard-validate-plan-mismatch-20260526-r1.json
+	logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.json
+	logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.md
+	logs/dev_employee/stale_task_recovery_latest.json
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1.codex.log
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_py_compile.txt
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest.txt
+	logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest_werror.txt
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1.codex.log
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_py_compile.txt
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest.txt
+	logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest_werror.txt
+	logs/dev_employee/web-console-submit-consolez-20260531-r1.codex.log
+	logs/dev_employee/web-console-submit-consolez-20260531-r1_py_compile.txt
+	logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest.txt
+	logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest_werror.txt
+	logs/dev_employee/web_console_audit/
+	logs/dev_employee/web_console_public_submit_e2e/finish-public-web-submit-20260616031437.log
+	logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.final-pycompile-20260616045142.txt
+	logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.final-status-20260616045142.json
+	logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.finalize-20260616045142.log
+	orchestration/dev_employee_events/
+	orchestration/dev_employee_intake_catalog/
+	orchestration/dev_employee_queue/goal-oris-final-acceptance-api-20260616-052531.cancelled.json
+	orchestration/task_runs/autonomous-api-list-filters-20260526.codex_result.json
+	orchestration/task_runs/autonomous-api-stats-skill-resolution-20260526.codex_result.json
+	orchestration/task_runs/autonomous-api-tags-20260526.codex_result.json
+	orchestration/task_runs/bridge-client-smoke-20260526.codex_result.json
+	orchestration/task_runs/bridge-runtime-contract-smoke-20260526.codex_result.json
+	orchestration/task_runs/bridge-service-smoke-20260525.codex_result.json
+	orchestration/task_runs/bridge-service-smoke-http-20260525.codex_result.json
+	orchestration/task_runs/failure-evidence-auto-triage-host-checks-20260526-r1.codex_result.json
+	orchestration/task_runs/failure-evidence-bridge-exception-20260526.json
+	orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.codex_result.json
+	orchestration/task_runs/failure-evidence-real-product-healthz-20260526-r1.failure_result.json
+	orchestration/task_runs/failure-evidence-skill-resolution-invalid-20260526-r1.codex_result.json
+	orchestration/task_runs/formal-test-pydantic-cleanup-20260524.json
+	orchestration/task_runs/formal-test-pydantic-cleanup-v2-20260525.codex_result.json
+	orchestration/task_runs/goal-api-info-endpoint-20260526-r1.codex_result.json
+	orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json
+	orchestration/task_runs/goal-readyz-endpoint-clean-check-20260529-r1.codex_result.json
+	orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.codex_result.json
+	orchestration/task_runs/repair-real-product-healthz-20260526-r1.codex_result.json
+	orchestration/task_runs/web-adapter-goal-livez-endpoint-20260529-r1.codex_result.json
+	orchestration/task_runs/web-adapter-goal-ping-endpoint-20260529-r1.codex_result.json
+	orchestration/task_runs/web-console-submit-consolez-20260531-r1.codex_result.json
+	vendor/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+The stash entry is kept in case you need it again.
