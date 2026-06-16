@@ -1,9 +1,9 @@
 {
-  "task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
+  "task_id": "chat-oris-final-acceptance-api-20260617-051313-c802347ff17c",
   "status": "completed",
-  "product_commit_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
-  "product_remote_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33",
+  "product_commit_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+  "product_remote_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-06-16T04:43:05+08:00"
+  "updated_at": "2026-06-17T05:15:30+08:00"
 }

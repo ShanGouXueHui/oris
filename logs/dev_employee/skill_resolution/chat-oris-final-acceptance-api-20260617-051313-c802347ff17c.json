@@ -1,0 +1,69 @@
+{
+  "task_id": "chat-oris-final-acceptance-api-20260617-051313-c802347ff17c",
+  "resolved_at": "2026-06-17T05:13:43+08:00",
+  "objective": "Add a read-only GET /capabilities endpoint to oris-final-acceptance-api that returns service, storage, and features fields; features must include at least task_crud, filtering, and stats. Supplement pytest with interface status code and field contract coverage, update the API list in README, run py_compile and pytest, then commit and push.",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence",
+      "fastapi_pytest",
+      "safe_execution"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_task_status.py",
+      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [
+    {
+      "name": "github_evidence",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "commit",
+        "push"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md"
+      ]
+    },
+    {
+      "name": "fastapi_pytest",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "api",
+        "endpoint",
+        "pytest"
+      ],
+      "owned_assets": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json"
+      ]
+    },
+    {
+      "name": "safe_execution",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "test",
+        "run"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py"
+      ]
+    }
+  ],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
