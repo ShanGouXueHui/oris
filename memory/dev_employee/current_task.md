@@ -1,8 +1,8 @@
 # Current AI Dev Employee Task
 
-Status: conversational implementation prepared; OpenClaw runtime discovery pending
+Status: server acceptance passed; browser acceptance pending
 
-Task id: `commercial-conversational-openclaw-web-20260616`
+Task id: `commercial-conversational-agent-harness-web-20260617`
 
 Target project: `oris`
 
@@ -10,87 +10,75 @@ Target repository: `ShanGouXueHui/oris`
 
 Target local path: `/home/admin/projects/oris`
 
-## Objective
+## Current architecture
 
-Replace the engineering form/JSON landing page with the intended commercial interaction:
+The deployed commercial interaction chain is:
 
-`human conversation → OpenClaw intent/session orchestration → ORIS task control plane → Codex executor → evidence/result conversation`
+`human → Agent Harness → OpenClaw provider → ORIS control plane → Codex executor → evidence/result conversation`
 
-The accepted ORIS queue, lease, lifecycle, cancellation, retry, bridge v3, Codex, Git delivery, evidence, and audit chain remains the authority. The conversation layer is an adapter, not a competing task engine.
+Responsibilities remain separated:
 
-## Product decision
+- Agent Harness: deterministic control commands, provider routing/fallback, structured-output validation, allowlist/risk policy, sanitized trace metadata;
+- OpenClaw: model-backed intent extraction and response drafting through the existing Gateway installation;
+- ORIS: task identity, lifecycle, queue, lease, cancellation, retry, policy, evidence and audit;
+- Codex: implementation, testing, repair, commit and controlled push.
 
-The normal user opens `https://control.orisfy.com` and sees a chat immediately.
+OpenClaw was not reinstalled or upgraded.
 
-Normal users do not manually enter:
+## Deployed Web experience
 
-- Console Token;
-- Task ID;
-- expected checks;
-- commit message;
-- constraints JSON;
-- raw API payloads.
+- Public entry: `https://control.orisfy.com`
+- `/`: conversation-first `ORIS AI 开发员工`
+- `/admin`: restricted engineering diagnostics console
+- Web runtime: v5
+- Agent Harness: v1
 
-The existing engineering console moves to `/admin`. Raw evidence remains available only under collapsed technical details.
+The normal user does not enter Console Token, Task ID, expected checks, commit message, constraints JSON, or raw API payloads.
 
-## Prepared implementation
+## Completed server acceptance
 
-- `docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md`
-- `scripts/dev_employee_chat_store.py`
-- `scripts/dev_employee_openclaw_provider.py`
-- `scripts/dev_employee_chat_orchestrator.py`
-- `scripts/dev_employee_web_console_v3.py`
-- `tests/test_dev_employee_chat_store.py`
-- `tests/test_dev_employee_openclaw_provider.py`
-- `tests/test_dev_employee_chat_orchestrator.py`
-- `tests/test_dev_employee_web_console_v3.py`
-- `scripts/dev_employee_discover_openclaw_runtime_20260616.sh`
+- OpenClaw Gateway: `active`
+- Agent Harness provider probe: `PASS`
+- Web conversation page contract: `PASS`
+- `/admin` contract: `PASS`
+- Chat API smoke: `PASS`
+- Harness trace: `PASS`
+- bridge: `active`
+- intake: `active`
+- Web Console: `active`
+- product SHA unchanged: `PASS`
+- product worktree clean: `PASS`
+- real product task submitted: `NO`
+- real product change: `NO`
 
-## Conversational behavior
+## Runtime/Git boundary
 
-The user can say:
+Live routing state, runtime plans, runtime state, execution logs and latency telemetry are no longer tracked by Git. Raw chat sessions and raw Harness traces are ignored and must not enter GitHub.
 
-- `给 oris-final-acceptance-api 增加一个 /healthz 接口，自己完成并测试。`
-- `查看进度`
-- `停止任务`
-- `重试`
+The historical stash was privately archived with checksums and safely dropped after all validation passed.
 
-The Web layer returns plain-language messages and a compact task card. Canonical state, Task ID, SHAs and evidence remain inside technical details.
+Latest finalization evidence commit:
 
-## Provider boundary
+`db38c220c41709da959c9e7add13888216d99ccb`
 
-The preferred provider is the existing OpenClaw runtime through a structured HTTP adapter.
+Final private archive manifest:
 
-The provider must return:
+`5a6872aff7280634576a3a97329c40485cec99d25453fd27b70246cb553ebf15`
 
-- intent;
-- user-facing response;
-- selected project;
-- structured objective;
-- derived constraints/checks;
-- optional risk confirmation.
+## Current browser test
 
-A deterministic fallback is allowed for status, cancel, retry, help, and direct single-project goal translation. It must not be represented as verified OpenClaw operation when the OpenClaw provider is unavailable.
+The first browser test is intentionally a no-task smoke.
 
-## Current prerequisite state
+1. Open `https://control.orisfy.com` and complete Basic Auth.
+2. Confirm the landing page is a chat titled `ORIS AI 开发员工`.
+3. Confirm no engineering form fields are visible.
+4. Send `帮助`.
+5. Confirm the response explains how to describe a development goal, without creating a task.
+6. Send `查看进度`.
+7. Confirm the response states that the current session has no task.
 
-- queue lifecycle P1-A server acceptance: `PASS`;
-- bridge v3: `active`;
-- intake v2: `active`;
-- Web Console v2: `active`;
-- form-based browser test: safely aborted;
-- one queued test task: cancelled;
-- bridge restored: `YES`;
-- product SHA unchanged: `PASS`;
-- product tracked worktree clean: `PASS`;
-- abort evidence commit: `9def6001a6488296b9ec79a08aa74a9741d24888`.
-
-## Current blocker
-
-The ORIS repository does not yet contain the server's actual OpenClaw binary path, user service, listener, endpoint, or provider response contract. These must be discovered without exposing tokens, passwords, config values, or credentials.
+Do not submit a real engineering goal during this first smoke. After the safe browser experience is accepted, the next stage will run one controlled conversational product task and verify task card, progress narration, Codex delivery and evidence presentation.
 
 ## Next action
 
-Run `scripts/dev_employee_discover_openclaw_runtime_20260616.sh` as Linux user `admin` on `43.106.55.255`.
-
-The discovery is read-only, changes no service, submits no task, and commits only sanitized runtime evidence. Send only its final `===== SUMMARY =====` block. After the real OpenClaw contract is mapped, run the full conversational code tests and deploy Web Console v3. Browser acceptance will then be performed from the chat interface only.
+The operator logs in through the public Web entry and reports the observed page and responses, preferably with a screenshot. No server command is required for this step.
