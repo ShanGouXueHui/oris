@@ -1,0 +1,33 @@
+{
+  "task_id": "commercial-conversational-agent-harness-web-20260616",
+  "checked_at": "2026-06-17T02:19:26+08:00",
+  "result": "FAILED",
+  "failure_code": "agent_harness_tests_failed",
+  "static_checks": "PASS",
+  "test_result": "NOT_RUN",
+  "active_queue_gate": "PASS",
+  "openclaw_gateway": "NOT_VERIFIED",
+  "openclaw_provider_probe": "NOT_RUN",
+  "agent_harness_probe": "NOT_RUN",
+  "service_switch": "NOT_RUN",
+  "chat_page": "NOT_RUN",
+  "admin_page": "NOT_RUN",
+  "chat_api_smoke": "NOT_RUN",
+  "harness_trace": "NOT_RUN",
+  "product_sha_unchanged": "NOT_VERIFIED",
+  "product_worktree_clean": "NOT_VERIFIED",
+  "services": {
+    "openclaw_gateway": "active",
+    "bridge": "active",
+    "intake": "active",
+    "web_console": "active"
+  },
+  "web_runtime": "dev_employee_web_console_v5.py",
+  "agent_harness": "dev_employee_agent_harness.py",
+  "harness_provider_mode": "openclaw",
+  "harness_fallback_enabled": true,
+  "openclaw_reinstalled": false,
+  "real_product_task_submitted": false,
+  "product_changed": false,
+  "next_action": "FIX_AGENT_HARNESS_TESTS"
+}
