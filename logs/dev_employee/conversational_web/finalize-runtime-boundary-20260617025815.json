@@ -1,0 +1,33 @@
+{
+  "task_id": "finalize-runtime-boundary-recovery-20260617",
+  "checked_at": "2026-06-17T02:58:20+08:00",
+  "result": "PASS",
+  "failure_code": null,
+  "archive_verified": "PASS",
+  "tracked_drift_guard": "PASS",
+  "tracked_state_archived": "PASS",
+  "tracked_worktree_sync": "PASS",
+  "local_branch_sync": "PASS",
+  "current_runtime_files_preserved": "PASS",
+  "runtime_files_untracked": "PASS",
+  "runtime_files_ignored": "PASS",
+  "raw_chat_data_ignored": "PASS",
+  "stash_found": "YES",
+  "stash_dropped": "YES",
+  "deployment_acceptance": "PASS",
+  "product_sha_unchanged": "PASS",
+  "product_worktree_clean": "PASS",
+  "private_archive_path": "/home/admin/.local/state/oris/stash_recovery/20260617025439/finalize-20260617025815",
+  "final_archive_manifest_sha256": "5a6872aff7280634576a3a97329c40485cec99d25453fd27b70246cb553ebf15",
+  "services": {
+    "openclaw_gateway": "active",
+    "bridge": "active",
+    "intake": "active",
+    "web_console": "active"
+  },
+  "openclaw_reinstalled": false,
+  "agent_harness_added": true,
+  "real_product_task_submitted": false,
+  "real_product_change": false,
+  "next_action": "REQUEST_CONVERSATIONAL_BROWSER_TEST"
+}

@@ -1,0 +1,16 @@
+===== timestamp =====
+2026-06-17T02:58:15+08:00
+HEAD=affde6501640a2ea7e47dbcd193adb134694a262
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+TRACKED_DRIFT=docs/RUNTIME_STATE_GIT_BOUNDARY_2026-06-17.md
+TRACKED_DRIFT=.gitignore
+TRACKED_DRIFT=scripts/dev_employee_apply_source_runtime_recovery_20260617.sh
+TRACKED_DRIFT=scripts/dev_employee_inspect_runtime_stash_20260617.sh
+TRACKED_DRIFT=scripts/dev_employee_reconcile_runtime_stash_20260617.sh
+TRACKED_DRIFT=scripts/dev_employee_reconcile_runtime_stash_v2_20260617.sh
+TRACKED_DRIFT=scripts/dev_employee_resume_source_runtime_recovery_20260617.sh
+TRACKED_DRIFT=scripts/dev_employee_resume_source_runtime_recovery_v2_20260617.sh
+TRACKED_DRIFT=scripts/dev_employee_three_way_source_merge.py
+TRACKED_DRIFT=scripts/dev_employee_three_way_source_merge_v2.py
+Dropped stash@{0} (39402142a31232ba578205adddb40234f58919f1)
