@@ -1,0 +1,25 @@
+===== timestamp =====
+2026-06-17T02:54:39+08:00
+HEAD=2a885265aeefc0d7ffbe79ad507f37fd8dcc487b
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+STASH_REF=stash@{0}
+{"bash_syntax": "PASS", "merged_equals_origin": true, "merged_path": "/home/admin/.local/state/oris/stash_recovery/20260617025439/source/merged.sh", "result": "PASS", "summary_contract": "PASS", "worktree_class": "matches_origin"}
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Unstaged changes after reset:
+M	.gitignore
+D	docs/RUNTIME_STATE_GIT_BOUNDARY_2026-06-17.md
+D	scripts/dev_employee_apply_source_runtime_recovery_20260617.sh
+D	scripts/dev_employee_inspect_runtime_stash_20260617.sh
+D	scripts/dev_employee_reconcile_runtime_stash_20260617.sh
+D	scripts/dev_employee_reconcile_runtime_stash_v2_20260617.sh
+D	scripts/dev_employee_resume_source_runtime_recovery_20260617.sh
+D	scripts/dev_employee_resume_source_runtime_recovery_v2_20260617.sh
+D	scripts/dev_employee_three_way_source_merge.py
+D	scripts/dev_employee_three_way_source_merge_v2.py
+FAILURE_CODE=runtime_file_not_ignored
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD affde65)
+HEAD is now at affde65 fix(runtime): avoid pycache writes in recovery preflight
