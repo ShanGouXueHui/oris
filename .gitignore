@@ -30,6 +30,15 @@ orchestration/*.lock
 orchestration/*.out
 orchestration/*_state.json
 orchestration/restore_provider_files.json
+orchestration/runtime_plan.json
+orchestration/active_routing.json
+
+# Conversational runtime data (may contain user content)
+orchestration/dev_employee_chat_sessions/
+logs/dev_employee/agent_harness/*.jsonl
+
+# Runtime telemetry
+logs/dev_employee/free_mesh_latency_events.jsonl
 
 # Dev Employee local runtime queue
 orchestration/dev_employee_queue/*.queued.json
@@ -51,5 +60,4 @@ orchestration/*nohup*.log
 orchestration/provider_health_snapshot.json
 orchestration/provider_registry.json
 orchestration/provider_scoreboard.json
-orchestration/runtime_plan.json
 *.bak
