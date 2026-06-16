@@ -6,17 +6,18 @@ Date: 2026-06-17
 
 1. `memory/dev_employee/CONTEXT_INDEX.md`
 2. `memory/dev_employee/CURRENT_STATE_2026-06-17.md`
-3. `memory/dev_employee/current_task.json`
-4. `memory/dev_employee/current_task.md`
-5. `docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_DECISION_2026-06-17.md`
-6. `docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_MIGRATION_PLAN_2026-06-17.md`
-7. `docs/DEV_EMPLOYEE_ENVIRONMENT_ADDENDUM_2026-06-17.md`
-8. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
-9. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md`
-10. `docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md`
-11. `memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md`
-12. `orchestration/project_registry.json`
-13. `memory/dev_employee/NEW_CHAT_BOOTSTRAP_PROMPT_2026-06-17.md`
+3. `memory/dev_employee/SESSION_ARCHIVE_2026-06-17.md`
+4. `memory/dev_employee/current_task.json`
+5. `memory/dev_employee/current_task.md`
+6. `docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_DECISION_2026-06-17.md`
+7. `docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_MIGRATION_PLAN_2026-06-17.md`
+8. `docs/DEV_EMPLOYEE_ENVIRONMENT_ADDENDUM_2026-06-17.md`
+9. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
+10. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md`
+11. `docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md`
+12. `memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md`
+13. `orchestration/project_registry.json`
+14. `memory/dev_employee/NEW_CHAT_BOOTSTRAP_PROMPT_2026-06-17.md`
 
 Do not reconstruct the project from chat history when these files exist.
 
