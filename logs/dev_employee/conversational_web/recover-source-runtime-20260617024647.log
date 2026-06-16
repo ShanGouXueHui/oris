@@ -1,0 +1,12 @@
+===== timestamp =====
+2026-06-17T02:46:47+08:00
+HEAD=2a885265aeefc0d7ffbe79ad507f37fd8dcc487b
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+STASH_REF=stash@{0}
+python3: can't open file '/home/admin/projects/oris/scripts/dev_employee_three_way_source_merge.py': [Errno 2] No such file or directory
+FAILURE_CODE=source_three_way_merge_failed
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD d4c1468)
+HEAD is now at d4c1468 ops(runtime): apply guarded source and runtime stash recovery
