@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "changed": true,
+  "map_policy_present": false,
+  "effective_guard_present": false,
+  "server_guard_safe": true,
+  "server_method_guard_count_before": 0,
+  "location_method_guard_count_before": 4,
+  "location_method_guard_count_after": 4,
+  "exact_chat_location_present": true,
+  "allowed_write_route": "POST:/api/chat/messages",
+  "other_write_routes_allowed": false,
+  "secret_values_recorded": false
+}

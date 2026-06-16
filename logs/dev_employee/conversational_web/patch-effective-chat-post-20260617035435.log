@@ -1,0 +1,12 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+{"result": "PASS", "fixtures": 3, "idempotent": true}
+{"allowed_write_route": "POST:/api/chat/messages", "changed": true, "effective_guard_present": false, "exact_chat_location_present": true, "location_method_guard_count_after": 4, "location_method_guard_count_before": 4, "map_policy_present": false, "other_write_routes_allowed": false, "result": "PASS", "secret_values_recorded": false, "server_guard_safe": true, "server_method_guard_count_before": 0}
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:443, ignored
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+PUBLIC_GET_HTTP=401
+PUBLIC_CHAT_POST_HTTP=401
+PUBLIC_OTHER_POST_HTTP=403
+LOCAL_TLS_CHAT_POST_HTTP=401
