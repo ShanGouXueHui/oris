@@ -73,6 +73,7 @@
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-17.md",
+    "memory/dev_employee/SESSION_ARCHIVE_2026-06-17.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
     "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-17.md",
