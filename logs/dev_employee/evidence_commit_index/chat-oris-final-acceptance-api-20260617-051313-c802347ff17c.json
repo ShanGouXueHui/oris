@@ -1,0 +1,20 @@
+{
+  "task_id": "chat-oris-final-acceptance-api-20260617-051313-c802347ff17c",
+  "status": "completed",
+  "indexed_at": "2026-06-17T05:15:35+08:00",
+  "oris_evidence_commit_sha": "e87ba4053f35382763694f60e0a482397f3890b6",
+  "oris_evidence_remote_sha": "e87ba4053f35382763694f60e0a482397f3890b6",
+  "oris_evidence_files": [
+    "orchestration/task_runs/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.json",
+    "orchestration/task_runs/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.supervised_result.json",
+    "logs/dev_employee/latest_task_progress.json",
+    "logs/dev_employee/latest_task_progress.md",
+    "logs/dev_employee/skill_resolution/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.json",
+    "logs/dev_employee/skill_resolution/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.md",
+    "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c_host_py_compile.txt",
+    "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c_host_pytest.txt",
+    "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c_host_pytest_werror.txt"
+  ],
+  "product_commit_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+  "product_remote_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620"
+}
