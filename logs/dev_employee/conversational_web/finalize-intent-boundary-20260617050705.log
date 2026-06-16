@@ -1,0 +1,33 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+test_explicit_control_does_not_call_model_provider (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_extracts_intent_from_openclaw_outputs_text (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_extracts_markdown_wrapped_json_defensively (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_gateway_requirement_rejects_explicit_local_transport (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_mandatory_policy_is_merged_after_model_result (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_long_goal_with_status_code_is_not_control_command (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_multiple_projects_without_match_asks_for_clarification (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_negated_secret_constraint_is_not_risky (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_polite_exact_control_commands_remain_deterministic (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_risky_request_requires_confirmation (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_single_project_goal_becomes_create_task (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_status_cancel_retry_are_deterministic (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_explicit_control_is_deterministic (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_openclaw_result_is_policy_validated (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_provider_failure_falls_back_and_is_visible (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_trace_contains_metadata_but_not_raw_message (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_natural_language_goal_creates_task_and_card (tests.test_dev_employee_chat_orchestrator.ChatOrchestratorTests) ... ok
+test_risky_goal_creates_confirmation_not_task (tests.test_dev_employee_chat_orchestrator.ChatOrchestratorTests) ... ok
+test_status_message_reads_current_task_without_new_submission (tests.test_dev_employee_chat_orchestrator.ChatOrchestratorTests) ... ok
+test_default_page_hides_engineering_form_fields (tests.test_dev_employee_web_console_v3.WebConsoleV3Tests) ... ok
+test_default_page_is_conversation_first (tests.test_dev_employee_web_console_v3.WebConsoleV3Tests) ... ok
+test_task_card_keeps_technical_details_collapsed (tests.test_dev_employee_web_console_v3.WebConsoleV3Tests) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.027s
+
+OK
+[main d7ba575] fix(dev-employee): harden conversational intent boundaries
+ 2 files changed, 93 insertions(+), 19 deletions(-)
+To github.com:ShanGouXueHui/oris.git
+   c2f83de..d7ba575  main -> main
