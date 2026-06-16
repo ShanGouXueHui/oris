@@ -1,12 +1,12 @@
 {
   "task_id": "commercial-conversational-agent-harness-web-20260617",
-  "status": "server_acceptance_pass_browser_acceptance_pending",
+  "status": "browser_acceptance_pass_controlled_real_task_pending",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "operator_browser_smoke_without_real_product_task",
-  "objective": "Complete browser acceptance of the conversation-first ORIS AI Dev Employee Web experience. The operator must see a chat landing page, interact in natural language, and not encounter engineering form fields. The first browser smoke must not create a real development task.",
+  "current_step": "submit_one_controlled_real_product_goal_from_conversation_ui",
+  "objective": "Validate the full commercial conversation-to-delivery chain with one controlled product change submitted through the public chat UI, including task card, conversational progress, Codex execution, tests, product commit and remote SHA, ORIS evidence, and completed status.",
   "completed_prerequisites": [
     "full_public_web_to_codex_product_delivery_acceptance_passed",
     "transactional_queue_kernel_deployed",
@@ -19,100 +19,63 @@
     "openclaw_infer_gateway_contract_probe_passed",
     "provider_neutral_agent_harness_added",
     "conversation_first_web_v5_deployed",
-    "default_chat_page_server_contract_passed",
-    "admin_console_route_server_contract_passed",
-    "chat_api_smoke_passed",
-    "harness_trace_passed",
     "runtime_state_removed_from_git_tracking",
     "raw_chat_and_harness_trace_ignored",
     "historical_stash_privately_archived_and_dropped",
-    "tracked_worktree_synced_to_origin_main",
-    "product_sha_unchanged",
-    "product_worktree_clean"
+    "public_chat_post_route_repaired_with_other_write_routes_still_blocked",
+    "safe_no_task_browser_smoke_passed",
+    "help_conversation_passed",
+    "no_task_progress_conversation_passed"
   ],
   "product_decision": {
     "public_entry": "https://control.orisfy.com",
-    "default_public_route": "/",
     "default_experience": "conversation_first",
     "admin_console_route": "/admin",
-    "normal_user_enters_console_token": false,
-    "normal_user_enters_task_id": false,
-    "normal_user_enters_expected_checks": false,
-    "normal_user_enters_commit_message": false,
-    "raw_json_visible_by_default": false,
-    "technical_evidence_collapsed": true,
-    "conversation_chain": "human -> Agent Harness -> OpenClaw provider -> ORIS control plane -> Codex executor -> evidence/result conversation"
+    "conversation_chain": "human -> Agent Harness -> OpenClaw provider -> ORIS control plane -> Codex executor -> evidence/result conversation",
+    "normal_user_enters_engineering_form_fields": false
   },
-  "architecture_boundaries": {
-    "agent_harness": [
-      "deterministic_control_intents",
-      "provider_selection_and_fallback",
-      "structured_output_validation",
-      "project_allowlist_validation",
-      "mandatory_risk_policy",
-      "sanitized_trace_metadata"
+  "controlled_real_task": {
+    "project": "oris-final-acceptance-api",
+    "target_repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "operator_message": "给 oris-final-acceptance-api 增加一个只读 GET /capabilities 接口，返回 service、storage 和 features 三个字段；features 至少包含 task_crud、filtering 和 stats。补充 pytest 覆盖接口状态码和字段契约，更新 README 的 API 列表，运行 py_compile 和 pytest，完成后提交并推送。不要修改 ORIS 平台代码或任何密钥。",
+    "expected_product_scope": [
+      "app/",
+      "tests/",
+      "README.md"
     ],
-    "openclaw_provider": [
-      "model_backed_intent_extraction",
-      "project_identification",
-      "plain_language_response_draft",
-      "structured_goal_derivation"
-    ],
-    "oris_control_plane": [
-      "task_creation",
-      "idempotency",
-      "lifecycle",
-      "queue_and_lease",
-      "cancel_and_retry",
-      "policy_authority",
-      "evidence_and_audit"
-    ],
-    "codex_executor": [
-      "implementation",
-      "tests_and_repairs",
-      "structured_result",
-      "controlled_commit_and_push"
+    "must_verify": [
+      "exactly_one_task_created",
+      "task_card_visible",
+      "progress_query_works",
+      "codex_exec_used",
+      "py_compile_pass",
+      "pytest_pass",
+      "endpoint_contract_pass",
+      "product_commit_sha_present",
+      "product_remote_sha_matches",
+      "product_worktree_clean",
+      "oris_evidence_commit_present",
+      "canonical_status_completed"
     ]
-  },
-  "provider_policy": {
-    "preferred_provider": "existing_openclaw_runtime",
-    "provider_contract": "openclaw_infer_model_run_gateway_json",
-    "openclaw_reinstalled": false,
-    "openclaw_upgraded": false,
-    "provider_is_replaceable": true,
-    "harness_provider_mode": "openclaw",
-    "fallback_allowed": true,
-    "deterministic_control_scope": [
-      "status",
-      "cancel",
-      "retry",
-      "help"
-    ],
-    "secret_values_must_not_enter_logs_or_github": true
   },
   "browser_test": {
     "operator_will_login_from_web": true,
-    "stage": "safe_no_task_smoke",
-    "performed": false,
-    "must_not_create_task": true,
-    "steps": [
-      "Open https://control.orisfy.com and complete Basic Auth.",
-      "Confirm the landing page title is ORIS AI 开发员工 and the primary UI is a chat composer.",
-      "Confirm there are no Console Token, Task ID, expected checks, commit message, constraints JSON, or raw response fields.",
-      "Send 帮助.",
-      "Confirm ORIS replies in normal language and no task card or development task is created.",
-      "Send 查看进度.",
-      "Confirm ORIS explains that the current session has no task."
-    ],
-    "do_not_send_yet": "Do not submit a real engineering goal until the safe smoke is accepted."
+    "safe_no_task_smoke": "PASS",
+    "controlled_real_task": "PENDING",
+    "performed_at": "2026-06-17",
+    "observed": [
+      "ORIS AI 开发员工 landing page",
+      "natural-language help response",
+      "no-task progress response",
+      "no engineering form fields",
+      "no HTTP 403",
+      "no task created during safe smoke"
+    ]
   },
   "latest_evidence": {
-    "queue_lifecycle_server_acceptance_log_commit": "7540e90f54c0b397477c014305e6101d9513a647",
-    "form_browser_abort_log_commit": "9def6001a6488296b9ec79a08aa74a9741d24888",
-    "openclaw_runtime_discovery_log_commit": "7e110e8c9ee24c37d53295e5faf59028e34aaa4f",
-    "agent_harness_web_deployment_log_commit": "2a885265aeefc0d7ffbe79ad507f37fd8dcc487b",
+    "browser_acceptance_record_commit": "fed4fc9ad2e3aca30263b4fab6fdfc60527b0f58",
+    "public_chat_post_repair_log_commit": "6e992978146bd8686d450638753acad098d22fc0",
     "runtime_boundary_finalization_log_commit": "db38c220c41709da959c9e7add13888216d99ccb",
-    "private_archive_manifest_sha256": "5a6872aff7280634576a3a97329c40485cec99d25453fd27b70246cb553ebf15",
     "final_acceptance_task_id": "goal-oris-final-acceptance-api-readonly-e2e-20260616-044030",
     "final_acceptance_product_sha": "3207f20a2afdf109beac9a4a95523e7792e0ae33"
   },
@@ -123,24 +86,20 @@
     "openclaw_gateway_service": "active_existing_installation",
     "agent_harness": "active_v1",
     "active_product_task": false,
-    "real_product_change_during_conversational_deployment": false,
     "runtime_files_tracked_by_git": false,
     "raw_chat_data_committed_to_git": false
   },
-  "next_action": "Operator performs the safe no-task browser smoke from https://control.orisfy.com and reports either a screenshot or the observed UI and responses. Do not submit a real engineering task during this first smoke.",
+  "next_action": "Operator sends the controlled /capabilities goal through the existing browser chat session, then sends 查看进度 after a task card appears. Report screenshots of the initial interpretation/task card, one progress response, and the final completion/evidence response.",
   "last_error": null,
-  "blocked_reason": "browser acceptance requires operator login through the public Web entry",
+  "blocked_reason": "controlled real task requires operator submission through the authenticated public chat UI",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
+    "memory/dev_employee/BROWSER_ACCEPTANCE_2026-06-17.md",
     "docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md",
     "docs/RUNTIME_STATE_GIT_BOUNDARY_2026-06-17.md",
-    "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
-    "memory/dev_employee/FINAL_ACCEPTANCE_COMPLETION_2026-06-16.md",
-    "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md",
-    "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md",
-    "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md"
+    "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md"
   ],
   "updated_at": "2026-06-17"
 }
