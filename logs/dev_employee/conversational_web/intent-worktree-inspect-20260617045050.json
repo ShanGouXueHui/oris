@@ -1,0 +1,24 @@
+{
+  "task_id": "inspect-intent-boundary-worktree-20260617",
+  "checked_at": "2026-06-17T04:50:53+08:00",
+  "result": "PASS",
+  "tracked_dirty_count": 4,
+  "index_dirty_count": 0,
+  "worktree_dirty_count": 4,
+  "expected_patch_count": 2,
+  "source_patch_present": "YES",
+  "test_patch_present": "YES",
+  "extra_dirty_count": 2,
+  "extra_log_count": 2,
+  "extra_source_count": 0,
+  "dirty_paths": [
+    "logs/dev_employee/conversational_web/fix-intent-boundaries-20260617044443.log",
+    "logs/dev_employee/conversational_web/resume-intent-boundaries-20260617044856.log",
+    "scripts/dev_employee_openclaw_provider.py",
+    "tests/test_dev_employee_openclaw_provider.py"
+  ],
+  "git_state_mutated": false,
+  "services_changed": false,
+  "real_product_task_submitted": false,
+  "real_product_change": false
+}

@@ -1,0 +1,8 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+DIRTY_PATH=logs/dev_employee/conversational_web/fix-intent-boundaries-20260617044443.log
+DIRTY_PATH=logs/dev_employee/conversational_web/resume-intent-boundaries-20260617044856.log
+DIRTY_PATH=scripts/dev_employee_openclaw_provider.py
+DIRTY_PATH=tests/test_dev_employee_openclaw_provider.py
+Preparing worktree (detached HEAD 3c3c073)
+HEAD is now at 3c3c073 ops(dev-employee): inspect intent boundary worktree drift
