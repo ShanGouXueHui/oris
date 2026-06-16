@@ -53,10 +53,23 @@ git show origin/main:scripts/dev_employee_three_way_source_merge_v2.py > "$HELPE
   exit 1
 }
 
-/usr/bin/python3 -m py_compile "$HELPER" >/tmp/oris-source-runtime-v2-compile.log 2>&1 || {
-  cat /tmp/oris-source-runtime-v2-compile.log
+/usr/bin/python3 - "$HELPER" <<'PY'
+from pathlib import Path
+import sys
+path=Path(sys.argv[1])
+source=path.read_text(encoding='utf-8')
+compile(source,str(path),'exec')
+PY
+if [ "$?" -ne 0 ]; then
   cleanup
-  summary_failure "merge_helper_compile_failed" "FIX_MERGE_HELPER_V2"
+  summary_failure "merge_helper_syntax_failed" "FIX_MERGE_HELPER_V2"
+  exit 1
+fi
+
+PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 "$HELPER" --help >/tmp/oris-source-runtime-v2-help.log 2>&1 || {
+  cat /tmp/oris-source-runtime-v2-help.log
+  cleanup
+  summary_failure "merge_helper_start_failed" "FIX_MERGE_HELPER_V2"
   exit 1
 }
 
@@ -67,7 +80,7 @@ runner=Path(sys.argv[1])
 helper=Path(sys.argv[2])
 text=runner.read_text(encoding='utf-8')
 old='PYTHONPATH="$ORIS:$ORIS/scripts" python3 scripts/dev_employee_three_way_source_merge.py'
-new='/usr/bin/python3 "%s"' % helper
+new='PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 "%s"' % helper
 if text.count(old) != 1:
     raise SystemExit('helper invocation anchor count=%s' % text.count(old))
 runner.write_text(text.replace(old,new,1),encoding='utf-8')
