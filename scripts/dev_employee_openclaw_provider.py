@@ -122,6 +122,7 @@ def build_router_prompt(
         "Routine implementation decisions should not be delegated back to the user.\n"
         "Ask a clarification only when the target project or engineering outcome is genuinely ambiguous.\n"
         "Set requires_confirmation=true for production changes, destructive/irreversible operations, secret handling, billing, or purchases.\n"
+        "A negative safety constraint such as do not read or modify secrets is not a secret operation and must not require confirmation.\n"
         "For create_task, preserve the user's real objective and select exactly one available project.\n"
         "Return exactly one JSON object, with no markdown fence and no text before or after it.\n"
         f"Required schema example: {json.dumps(schema, ensure_ascii=False, separators=(',', ':'))}\n"
@@ -293,10 +294,42 @@ class OpenClawInferCLIProvider:
 
 
 class DeterministicFallbackProvider:
-    STATUS_WORDS = ("进度", "状态", "怎么样了", "完成了吗", "status", "progress", "how is")
-    CANCEL_WORDS = ("停止任务", "取消任务", "停掉", "停止", "取消", "stop task", "cancel task")
-    RETRY_WORDS = ("重试", "再试一次", "重新执行", "retry", "try again")
-    HELP_WORDS = ("帮助", "怎么用", "help", "what can you do")
+    CONTROL_PHRASES = {
+        "status": {
+            "进度", "查看进度", "任务进度", "查看任务进度",
+            "状态", "查看状态", "任务状态", "查看任务状态",
+            "怎么样了", "现在怎么样了", "完成了吗", "任务完成了吗",
+            "status", "checkstatus", "progress", "showprogress", "howisitgoing",
+        },
+        "cancel": {
+            "停止任务", "取消任务", "停止当前任务", "取消当前任务", "停掉任务",
+            "stop", "stoptask", "cancel", "canceltask",
+        },
+        "retry": {
+            "重试", "重试任务", "重新执行", "重新执行任务", "再试一次",
+            "retry", "tryagain",
+        },
+        "help": {
+            "帮助", "怎么用", "如何使用", "你能做什么",
+            "help", "whatcanyoudo",
+        },
+    }
+
+    @classmethod
+    def control_intent(cls, text: str) -> str | None:
+        normalized = re.sub(r"[\s，。！？!?；;：:、]+", "", text.strip().lower())
+        for prefix in ("麻烦帮我", "请帮我", "麻烦", "请"):
+            if normalized.startswith(prefix):
+                normalized = normalized[len(prefix):]
+                break
+        for suffix in ("一下", "吧", "呢"):
+            if normalized.endswith(suffix):
+                normalized = normalized[:-len(suffix)]
+                break
+        for intent, phrases in cls.CONTROL_PHRASES.items():
+            if normalized in phrases:
+                return intent
+        return None
 
     def infer_project(self, text: str, projects: dict[str, dict[str, Any]], selected: str | None) -> str | None:
         lowered = text.lower()
@@ -315,14 +348,34 @@ class DeterministicFallbackProvider:
 
     def is_risky(self, text: str) -> str | None:
         lowered = text.lower()
+        negative_safety = (
+            r"(?:不要|不得|禁止|避免|无需|不需要|不能|不可)[^。；;\n]{0,80}"
+            r"(?:生产环境|production|数据库|database|密码|密钥|token|secret|private key|付款|付费|购买)",
+            r"(?:do not|don't|never|must not)[^.;\n]{0,100}"
+            r"(?:production|database|password|token|secret|private key|billing|purchase)",
+        )
+        for pattern in negative_safety:
+            lowered = re.sub(pattern, "", lowered, flags=re.IGNORECASE)
         patterns = {
-            "production_change": ("生产环境", "production", "prod ", "上线", "部署到生产"),
-            "destructive_change": ("删除数据库", "drop database", "清空数据", "永久删除", "force push"),
-            "secret_operation": ("密码", "密钥", "token", "secret", "private key"),
-            "billing_operation": ("付款", "付费", "购买", "billing", "purchase"),
+            "production_change": (
+                r"生产环境", r"部署到生产", r"发布到生产", r"上线",
+                r"production", r"deploy to prod", r"deploy to production",
+            ),
+            "destructive_change": (
+                r"删除数据库", r"清空数据", r"永久删除", r"drop database", r"force push",
+            ),
+            "secret_operation": (
+                r"(?:读取|查看|显示|输出|打印|修改|更新|写入|替换|轮换|使用|获取|上传|提交|暴露)"
+                r"[^。；;\n]{0,30}(?:密码|密钥|token|secret|private key)",
+                r"(?:密码|密钥|token|secret|private key)[^。；;\n]{0,30}"
+                r"(?:读取|查看|显示|输出|打印|修改|更新|写入|替换|轮换|使用|获取|上传|提交|暴露)",
+                r"(?:read|show|print|modify|update|write|rotate|use|fetch|upload|commit|expose)"
+                r"[^.;\n]{0,40}(?:password|token|secret|private key)",
+            ),
+            "billing_operation": (r"付款", r"付费", r"购买", r"billing", r"purchase"),
         }
-        for reason, words in patterns.items():
-            if any(word in lowered for word in words):
+        for reason, expressions in patterns.items():
+            if any(re.search(expression, lowered, flags=re.IGNORECASE) for expression in expressions):
                 return reason
         return None
 
@@ -349,21 +402,21 @@ class DeterministicFallbackProvider:
         current_task: dict[str, Any] | None,
     ) -> ProviderResult:
         text = user_message.strip()
-        lowered = text.lower()
-        if any(word in lowered for word in self.HELP_WORDS):
+        control_intent = self.control_intent(text)
+        if control_intent == "help":
             return ProviderResult(
                 intent="help",
                 assistant_message="你可以直接告诉我：哪个项目需要完成什么开发目标。我会自行规划、实现、测试和交付。也可以说“查看进度”“停止任务”或“重试”。",
             )
-        if any(word in lowered for word in self.CANCEL_WORDS):
+        if control_intent == "cancel":
             if not session.get("current_task_id"):
                 return ProviderResult(intent="clarify", assistant_message="当前会话没有正在处理的任务。请先告诉我要完成什么开发工作。")
             return ProviderResult(intent="cancel", assistant_message="我会安全停止当前任务，并保留完整审计记录。")
-        if any(word in lowered for word in self.RETRY_WORDS):
+        if control_intent == "retry":
             if not session.get("current_task_id"):
                 return ProviderResult(intent="clarify", assistant_message="当前会话没有可重试的任务。")
             return ProviderResult(intent="retry", assistant_message="我会为当前终态任务创建一次显式重试，并继续在同一会话中跟踪。")
-        if any(word in lowered for word in self.STATUS_WORDS):
+        if control_intent == "status":
             if not session.get("current_task_id"):
                 return ProviderResult(intent="chat", assistant_message="当前会话还没有任务。直接告诉我需要完成的开发目标即可。")
             return ProviderResult(intent="status", assistant_message="我正在读取当前任务的最新状态。")
@@ -403,10 +456,7 @@ class DeterministicFallbackProvider:
 
 
 def explicit_control_intent(text: str) -> bool:
-    lowered = text.lower()
-    provider = DeterministicFallbackProvider()
-    groups = [provider.STATUS_WORDS, provider.CANCEL_WORDS, provider.RETRY_WORDS, provider.HELP_WORDS]
-    return any(word in lowered for group in groups for word in group)
+    return DeterministicFallbackProvider.control_intent(text) is not None
 
 
 def configured_provider() -> OpenClawInferCLIProvider | None:

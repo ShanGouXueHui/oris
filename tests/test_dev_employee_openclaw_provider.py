@@ -10,6 +10,7 @@ from scripts.dev_employee_openclaw_provider import (
     OpenClawInferCLIProvider,
     ProviderUnavailable,
     analyze_message,
+    explicit_control_intent,
     extract_router_result,
     validate_provider_result,
 )
@@ -60,6 +61,29 @@ class OpenClawProviderFallbackTests(unittest.TestCase):
                     current_task={"task_id": "goal-demo"},
                 )
                 self.assertEqual(result.intent, intent)
+
+    def test_long_goal_with_status_code_is_not_control_command(self) -> None:
+        message = (
+            "给 Demo Project 增加一个只读 GET /capabilities 接口，"
+            "补充 pytest 覆盖接口状态码和字段契约，完成后提交并推送。"
+        )
+        self.assertFalse(explicit_control_intent(message))
+        result = self.provider.analyze(
+            session=self.session,
+            user_message=message,
+            projects=self.projects,
+            current_task=None,
+        )
+        self.assertEqual(result.intent, "create_task")
+
+    def test_negated_secret_constraint_is_not_risky(self) -> None:
+        message = "不要修改 ORIS 平台代码或任何密钥。"
+        self.assertIsNone(self.provider.is_risky(message))
+
+    def test_polite_exact_control_commands_remain_deterministic(self) -> None:
+        self.assertTrue(explicit_control_intent("请查看进度一下"))
+        self.assertTrue(explicit_control_intent("请停止当前任务"))
+        self.assertFalse(explicit_control_intent("补充接口状态码测试并提交"))
 
     def test_risky_request_requires_confirmation(self) -> None:
         result = self.provider.analyze(
