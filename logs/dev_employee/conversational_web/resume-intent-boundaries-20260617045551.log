@@ -1,0 +1,54 @@
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+test_explicit_control_does_not_call_model_provider (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_extracts_intent_from_openclaw_outputs_text (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_extracts_markdown_wrapped_json_defensively (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_gateway_requirement_rejects_explicit_local_transport (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_mandatory_policy_is_merged_after_model_result (tests.test_dev_employee_openclaw_provider.OpenClawInferContractTests) ... ok
+test_long_goal_with_status_code_is_not_control_command (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_multiple_projects_without_match_asks_for_clarification (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_negated_secret_constraint_is_not_risky (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_polite_exact_control_commands_remain_deterministic (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_risky_request_requires_confirmation (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_single_project_goal_becomes_create_task (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_status_cancel_retry_are_deterministic (tests.test_dev_employee_openclaw_provider.OpenClawProviderFallbackTests) ... ok
+test_explicit_control_is_deterministic (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_openclaw_result_is_policy_validated (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_provider_failure_falls_back_and_is_visible (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_trace_contains_metadata_but_not_raw_message (tests.test_dev_employee_agent_harness.AgentHarnessTests) ... ok
+test_dev_employee_chat_orchestrator (unittest.loader._FailedTest) ... ERROR
+test_dev_employee_web_console_v3 (unittest.loader._FailedTest) ... ERROR
+
+======================================================================
+ERROR: test_dev_employee_chat_orchestrator (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_dev_employee_chat_orchestrator
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/home/admin/projects/oris/tests/test_dev_employee_chat_orchestrator.py", line 7, in <module>
+    import scripts.dev_employee_chat_orchestrator as orchestrator
+  File "/home/admin/projects/oris/scripts/dev_employee_chat_orchestrator.py", line 17, in <module>
+    import dev_employee_web_console as web_base
+ModuleNotFoundError: No module named 'dev_employee_web_console'
+
+
+======================================================================
+ERROR: test_dev_employee_web_console_v3 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_dev_employee_web_console_v3
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/home/admin/projects/oris/tests/test_dev_employee_web_console_v3.py", line 3, in <module>
+    from scripts.dev_employee_web_console_v3 import chat_page
+  File "/home/admin/projects/oris/scripts/dev_employee_web_console_v3.py", line 18, in <module>
+    import dev_employee_web_console as web_base
+ModuleNotFoundError: No module named 'dev_employee_web_console'
+
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.012s
+
+FAILED (errors=2)
+FAILURE_CODE=intent_boundary_unittest_failed
