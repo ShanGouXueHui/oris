@@ -1,0 +1,53 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T213905Z",
+  "result": "ACCEPTED_WITH_SUPPLEMENT",
+  "failure_code": "",
+  "correction": {
+    "supersedes": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-acceptance-v2-20260617T212356Z.json",
+    "reason": "User clarified that session delete/archive was not actually tested; Context delete was clicked instead.",
+    "previous_acceptance_superseded": true
+  },
+  "supplemental_checks": {
+    "session_delete_verified": true,
+    "first_session_preserved": true,
+    "comparison": {
+      "before_count": 8,
+      "after_count": 7,
+      "deleted_count": 1,
+      "retained_count": 7,
+      "new_count": 0
+    }
+  },
+  "latency": {
+    "samples": {
+      "sample_count": 0,
+      "latest_runtime_ms": null,
+      "median_runtime_ms": null,
+      "max_runtime_ms": null,
+      "scope": "Latest runtimeMs values exposed by OpenClaw session metadata; not browser rendering time."
+    },
+    "latest_classification": "UNKNOWN",
+    "thresholds_ms": {
+      "good_max": 10000,
+      "acceptable_max": 30000,
+      "slow_max": 60000
+    },
+    "threshold_basis": "Commercial UX engineering thresholds for a simple exact-echo prompt, not an OpenClaw vendor SLA."
+  },
+  "final_acceptance": "PASS",
+  "safety": {
+    "product_baseline_preserved": true,
+    "current_task_updated": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "openclaw_config_mutated": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "COMPLETE_EXISTING_PRODUCT_README_GAP_RUN_TESTS_COMMIT_PUSH_AND_VERIFY_EVIDENCE",
+  "evidence": {
+    "log_path": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-supplemental-acceptance-20260617T213905Z.log",
+    "json_path": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-supplemental-acceptance-20260617T213905Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
