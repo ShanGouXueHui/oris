@@ -1,0 +1,93 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T212356Z",
+  "result": "ACCEPTED_V2",
+  "failure_code": "",
+  "automated_preflight": "PASS",
+  "manual_acceptance": "PASS",
+  "public": {
+    "root_status": "200",
+    "admin_without_credentials": "401",
+    "rollback_without_credentials": "401",
+    "bootstrap_without_credentials": "401",
+    "session_without_credentials": "401",
+    "messages_without_credentials": "401",
+    "root_matches_direct_openclaw": true
+  },
+  "manual_checks": [
+    {
+      "check": "INCOGNITO_AND_NATIVE_UI",
+      "result": "PASS"
+    },
+    {
+      "check": "TOKEN_AUTH_CONNECTED",
+      "result": "PASS"
+    },
+    {
+      "check": "NEW_CONVERSATION_WORKS",
+      "result": "PASS"
+    },
+    {
+      "check": "FIRST_MESSAGE_RESPONSE_WORKS",
+      "result": "PASS"
+    },
+    {
+      "check": "SECOND_CONVERSATION_WORKS",
+      "result": "PASS"
+    },
+    {
+      "check": "HISTORY_LIST_VISIBLE",
+      "result": "PASS"
+    },
+    {
+      "check": "SWITCH_PRESERVES_FIRST_CONVERSATION",
+      "result": "PASS"
+    },
+    {
+      "check": "CLEAR_OR_ARCHIVE_SECOND_CONVERSATION",
+      "result": "PASS"
+    },
+    {
+      "check": "REFRESH_PRESERVES_HISTORY",
+      "result": "PASS"
+    },
+    {
+      "check": "ADMIN_CONSOLE_LOADS_WITHOUT_HTTP404",
+      "result": "PASS"
+    },
+    {
+      "check": "ROLLBACK_CONSOLE_LOADS_WITHOUT_HTTP404",
+      "result": "PASS"
+    },
+    {
+      "check": "NO_CRITICAL_BLANK_OR_DISCONNECT",
+      "result": "PASS"
+    }
+  ],
+  "pass_count": 12,
+  "fail_count": 0,
+  "failed_checks": [],
+  "safety": {
+    "nginx_conflict_warning_count": 0,
+    "private_token_valid": true,
+    "intake_loopback_only": true,
+    "product_baseline_preserved": true,
+    "current_task_updated": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "openclaw_config_mutated": false,
+    "token_recorded_in_evidence": false
+  },
+  "product": {
+    "head": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "remote_main": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "status": " M README.md",
+    "readme_sha256": "d31250492632708254ea3fb1d653765031f1fe5fcdada4bdce6089847cb69ea7"
+  },
+  "next_action": "COMPLETE_EXISTING_PRODUCT_README_GAP_RUN_TESTS_COMMIT_PUSH_AND_VERIFY_EVIDENCE",
+  "evidence": {
+    "log_path": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-acceptance-v2-20260617T212356Z.log",
+    "json_path": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-acceptance-v2-20260617T212356Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
