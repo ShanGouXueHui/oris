@@ -1,0 +1,99 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T203639Z",
+  "result": "REJECTED",
+  "failure_code": "manual_browser_acceptance_failed",
+  "automated_preflight": "PASS",
+  "manual_acceptance": "FAIL",
+  "public": {
+    "root_status": "200",
+    "admin_without_credentials_status": "401",
+    "rollback_without_credentials_status": "401",
+    "root_matches_direct_openclaw": true
+  },
+  "safety": {
+    "intake_loopback_only": true,
+    "product_baseline_preserved": true,
+    "current_task_updated": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "secret_values_recorded": false
+  },
+  "product": {
+    "head": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "remote_main": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "status": " M README.md",
+    "readme_sha256": "d31250492632708254ea3fb1d653765031f1fe5fcdada4bdce6089847cb69ea7"
+  },
+  "manual_checks": [
+    {
+      "check": "ROOT_IS_NATIVE_OPENCLAW",
+      "result": "PASS"
+    },
+    {
+      "check": "AUTH_OR_DEVICE_PAIRING_WORKS",
+      "result": "FAIL"
+    },
+    {
+      "check": "NEW_CONVERSATION_WORKS",
+      "result": "FAIL"
+    },
+    {
+      "check": "FIRST_MESSAGE_RESPONSE_WORKS",
+      "result": "FAIL"
+    },
+    {
+      "check": "SECOND_CONVERSATION_WORKS",
+      "result": "FAIL"
+    },
+    {
+      "check": "HISTORY_LIST_VISIBLE",
+      "result": "FAIL"
+    },
+    {
+      "check": "SWITCH_PRESERVES_FIRST_CONVERSATION",
+      "result": "FAIL"
+    },
+    {
+      "check": "CLEAR_OR_ARCHIVE_SECOND_CONVERSATION",
+      "result": "FAIL"
+    },
+    {
+      "check": "REFRESH_PRESERVES_HISTORY",
+      "result": "FAIL"
+    },
+    {
+      "check": "ADMIN_REQUIRES_AUTH_AND_LOADS",
+      "result": "FAIL"
+    },
+    {
+      "check": "ROLLBACK_ROUTE_REQUIRES_AUTH_AND_LOADS",
+      "result": "FAIL"
+    },
+    {
+      "check": "NO_CRITICAL_BLANK_OR_DISCONNECT",
+      "result": "FAIL"
+    }
+  ],
+  "pass_count": 1,
+  "fail_count": 11,
+  "failed_checks": [
+    "AUTH_OR_DEVICE_PAIRING_WORKS",
+    "NEW_CONVERSATION_WORKS",
+    "FIRST_MESSAGE_RESPONSE_WORKS",
+    "SECOND_CONVERSATION_WORKS",
+    "HISTORY_LIST_VISIBLE",
+    "SWITCH_PRESERVES_FIRST_CONVERSATION",
+    "CLEAR_OR_ARCHIVE_SECOND_CONVERSATION",
+    "REFRESH_PRESERVES_HISTORY",
+    "ADMIN_REQUIRES_AUTH_AND_LOADS",
+    "ROLLBACK_ROUTE_REQUIRES_AUTH_AND_LOADS",
+    "NO_CRITICAL_BLANK_OR_DISCONNECT"
+  ],
+  "evidence": {
+    "log_path": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-acceptance-20260617T203639Z.log",
+    "json_path": "logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-acceptance-20260617T203639Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "next_action": "RUN_NATIVE_OPENCLAW_NGINX_ROLLBACK_AND_INSPECT_FAILED_CHECKS"
+}
