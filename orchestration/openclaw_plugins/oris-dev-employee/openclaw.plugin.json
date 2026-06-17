@@ -1,0 +1,65 @@
+{
+  "id": "oris-dev-employee",
+  "name": "ORIS Dev Employee",
+  "description": "Read-only ORIS task status tools with latency telemetry.",
+  "version": "0.1.0",
+  "activation": {
+    "onStartup": true
+  },
+  "contracts": {
+    "tools": [
+      "oris_queue_status",
+      "oris_task_status",
+      "oris_latest_task_status"
+    ]
+  },
+  "toolMetadata": {
+    "oris_queue_status": {
+      "optional": true
+    },
+    "oris_task_status": {
+      "optional": true
+    },
+    "oris_latest_task_status": {
+      "optional": true
+    }
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "baseUrl": {
+        "type": "string",
+        "default": "http://127.0.0.1:18891"
+      },
+      "requestTimeoutMs": {
+        "type": "integer",
+        "minimum": 500,
+        "maximum": 30000,
+        "default": 5000
+      },
+      "telemetryEnabled": {
+        "type": "boolean",
+        "default": true
+      },
+      "telemetryPath": {
+        "type": "string",
+        "default": "~/.local/state/oris/openclaw-plugin/latency.jsonl"
+      },
+      "telemetryMaxBytes": {
+        "type": "integer",
+        "minimum": 65536,
+        "maximum": 52428800,
+        "default": 5242880
+      }
+    }
+  },
+  "uiHints": {
+    "baseUrl": {
+      "label": "ORIS loopback status API"
+    },
+    "telemetryPath": {
+      "label": "Local telemetry JSONL path"
+    }
+  }
+}
