@@ -1,0 +1,1888 @@
+
+===== DISCOVERY CONTRACT =====
+CHECKED_AT=2026-06-18T04:11:54+08:00
+TASK_ID=commercial-native-openclaw-ui-20260617
+MODE=READ_ONLY_DISCOVERY
+ORIS_REPO=/home/admin/projects/oris
+PRODUCT_REPO=/home/admin/projects/oris-final-acceptance-api
+DOMAIN=control.orisfy.com
+CONFIG_OR_SERVICE_CHANGED=NO
+PRODUCT_TASK_SUBMITTED=NO
+MAIN_WORKTREE_MUTATED_BY_DISCOVERY=NO
+
+===== ORIS MAIN WORKTREE BASELINE =====
+ORIS_HEAD=f758e873007d5a7684617dc9cec02302f3e1d44b
+ORIS_BRANCH=main
+ORIS_TRACKED_DIRTY_COUNT=0
+ORIS_UNTRACKED_COUNT=145
+ORIS_REMOTE=git@github.com:ShanGouXueHui/oris.git
+
+===== OPENCLAW SYSTEMD UNIT =====
+OPENCLAW_UNIT_FOUND=YES
+OPENCLAW_UNIT_SCOPE=user
+OPENCLAW_UNIT_ACTIVE_STATE=active
+MainPID=68596
+Id=openclaw-gateway.service
+LoadState=loaded
+ActiveState=active
+SubState=running
+FragmentPath=/home/admin/.config/systemd/user/openclaw-gateway.service
+DropInPaths=
+OPENCLAW_EXEC_START={ path=/home/admin/.npm-global/bin/openclaw ; argv[]=/home/admin/.npm-global/bin/openclaw gateway --port 18789 ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+OPENCLAW_UNIT_ENVIRONMENT_KEYS=PATH
+
+===== OPENCLAW PROCESS AND LISTENERS =====
+OPENCLAW_PROCESS=  68596 admin    Sat May 23 15:23:36 2026 25-12:48:18 openclaw        openclaw
+OPENCLAW_PROCESS_EXE=/usr/bin/node
+OPENCLAW_PROCESS_ENVIRONMENT_KEYS=DBUS_SESSION_BUS_ADDRESS,HOME,INVOCATION_ID,JOURNAL_STREAM,LANG,LOGNAME,MANAGERPID,PATH,SHELL,SYSTEMD_EXEC_PID,USER,XDG_DATA_DIRS,XDG_RUNTIME_DIR
+LISTENER=LISTEN 0      5          127.0.0.1:18893      0.0.0.0:*    users:(("python3",pid=466580,fd=3))
+LISTENER=LISTEN 0      5          127.0.0.1:18892      0.0.0.0:*    users:(("python3",pid=447932,fd=3))
+LISTENER=LISTEN 0      511        127.0.0.1:18791      0.0.0.0:*    users:(("openclaw",pid=68596,fd=27))
+LISTENER=LISTEN 0      511        127.0.0.1:18789      0.0.0.0:*    users:(("openclaw",pid=68596,fd=25))
+LISTENER=LISTEN 0      511            [::1]:18789         [::]:*    users:(("openclaw",pid=68596,fd=26))
+INTAKE_LISTENER_ADDRESS=127.0.0.1:18892
+INTAKE_LOOPBACK_ONLY=YES
+OPENCLAW_BINARY=/home/admin/.npm-global/bin/openclaw
+OPENCLAW_VERSION=OpenClaw 2026.5.19 (a185ca2)
+OPENCLAW_CLI_COMMANDS=--container,named,--dev,gateway,-h,,--log-level,--no-color,--profile,-V,,acp,agent,agents,approvals,backup,state,capability,channels,chat,clawbot,commitments,completion,config,configure,gateway,,crestodian,cron,daemon,dashboard,devices,directory,supported,dns,docs,doctor,problems,exec-policy,approvals,gateway,health,help,hooks,infer,commands,logs,mcp,memory,message,migrate,models,node,nodes,onboard,pairing,plugins,proxy,qr,reset,sandbox,secrets,security,sessions,setup,skills,status,system,tasks,terminal,tui,uninstall,update,webhooks,openclaw,Run,openclaw,Create,openclaw,Change,openclaw,Check,openclaw,Repair,openclaw,Add,openclaw,See,openclaw,Run,openclaw,Start,openclaw,Show,openclaw,Inspect,openclaw,Run,openclaw,Send
+===== OPENCLAW CONFIG KEY NAMES ONLY =====
+{
+    "roots_checked": [
+        "/home/admin/.openclaw",
+        "/home/admin/.config/openclaw",
+        "/home/admin/.config/OpenClaw",
+        "/etc/openclaw"
+    ],
+    "files": [
+        {
+            "path": "/home/admin/.openclaw/agents/main/agent/auth-profiles.json",
+            "mode": "0o600",
+            "size": 407,
+            "keys": [
+                "id",
+                "key",
+                "keyRef",
+                "openrouter",
+                "openrouter:default",
+                "oris",
+                "oris:default",
+                "profiles",
+                "provider",
+                "source",
+                "type",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/agents/main/agent/auth-state.json",
+            "mode": "0o600",
+            "size": 303,
+            "keys": [
+                "errorCount",
+                "lastGood",
+                "lastUsed",
+                "openrouter",
+                "openrouter:default",
+                "oris",
+                "oris:default",
+                "usageStats",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/agents/main/agent/models.json",
+            "mode": "0o600",
+            "size": 53266,
+            "keys": [
+                "api",
+                "apiKey",
+                "baseUrl",
+                "cacheRead",
+                "cacheWrite",
+                "contextWindow",
+                "cost",
+                "huggingface",
+                "id",
+                "input",
+                "maxTokens",
+                "models",
+                "name",
+                "openrouter",
+                "oris",
+                "output",
+                "providers",
+                "reasoning"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/credentials/feishu-main-allowFrom.json",
+            "mode": "0o600",
+            "size": 83,
+            "keys": [
+                "allowFrom",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/credentials/feishu-pairing.json",
+            "mode": "0o600",
+            "size": 37,
+            "keys": [
+                "requests",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/devices/paired.json",
+            "mode": "0o600",
+            "size": 7025,
+            "keys": [
+                "006e96c231f452a0332d3ab3c438ee5213632ecd268d30c0eb514ffd074d8f29",
+                "1b327a2399aa33a8ba2fa3a16e7046152df3004c12d2a383235346d6a2055367",
+                "3418bcd408519d1e7c1e80b6134b65a27afde53c3587bdc9c18cb3bd05d2eee2",
+                "58707e091d87e9725be1829b57b1b9c8b900a93f97f67115997ed7edce72b51e",
+                "7ca624ff6d47de5a1a468773f29fd7903596070d1660c601fb5b18593970c896",
+                "approvedAtMs",
+                "approvedScopes",
+                "clientId",
+                "clientMode",
+                "createdAtMs",
+                "d61d29aaf35a0f69b014db9fa90186d748268ccb7ec7709eeba1e17c60862f6e",
+                "deviceId",
+                "lastUsedAtMs",
+                "operator",
+                "platform",
+                "publicKey",
+                "remoteIp",
+                "role",
+                "roles",
+                "rotatedAtMs",
+                "scopes",
+                "token",
+                "tokens"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/devices/pending.json",
+            "mode": "0o600",
+            "size": 551,
+            "keys": [
+                "137c5064-0682-4d94-81b6-a31e6650a5b0",
+                "clientId",
+                "clientMode",
+                "deviceFamily",
+                "deviceId",
+                "displayName",
+                "isRepair",
+                "platform",
+                "publicKey",
+                "requestId",
+                "role",
+                "roles",
+                "scopes",
+                "silent",
+                "ts"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/feishu/dedup/main.json",
+            "mode": "0o600",
+            "size": 843,
+            "keys": [
+                "om_x100b52040043c8a4c38090ae3a4bfa7",
+                "om_x100b52040d27fca0c2dc1d05bc241cd",
+                "om_x100b520424aaf8acc3883061c5646a3",
+                "om_x100b520425c8d4a4c339817077445d5",
+                "om_x100b5204c12ec8a4c30a6aa4d898078",
+                "om_x100b5204c1ddfcb0c35c52d04133ab4",
+                "om_x100b5204e8ab98b0c33e5935dfa1e50",
+                "om_x100b5204e9ee80a0c4f05b5805d60bc",
+                "om_x100b5204ebd778a4c32363e50eda6e7",
+                "om_x100b5204f70eb4fcc36e57b62d9292e",
+                "om_x100b521d41bd0ca4c1435eec85202ca",
+                "om_x100b521d546750a8c44fe58678aa586",
+                "om_x100b521d6abd94a0c22e7eceb820872",
+                "om_x100b521d6d84d4a0c2beeae7dc54553",
+                "om_x100b521d6f237934c3c3df8c9871794"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/gateway-supervisor-restart-handoff.json",
+            "mode": "0o600",
+            "size": 306,
+            "keys": [
+                "createdAt",
+                "expiresAt",
+                "intentId",
+                "kind",
+                "pid",
+                "processInstanceId",
+                "restartKind",
+                "source",
+                "supervisorMode",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/identity/device-auth.json",
+            "mode": "0o600",
+            "size": 428,
+            "keys": [
+                "deviceId",
+                "operator",
+                "role",
+                "scopes",
+                "token",
+                "tokens",
+                "updatedAtMs",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/identity/device.json",
+            "mode": "0o600",
+            "size": 416,
+            "keys": [
+                "createdAtMs",
+                "deviceId",
+                "privateKeyPem",
+                "publicKeyPem",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/node.json",
+            "mode": "0o600",
+            "size": 195,
+            "keys": [
+                "displayName",
+                "gateway",
+                "host",
+                "nodeId",
+                "port",
+                "tls",
+                "version"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/openclaw.json",
+            "mode": "0o600",
+            "size": 2801,
+            "keys": [
+                "accounts",
+                "agents",
+                "alias",
+                "allowInsecureAuth",
+                "allowedOrigins",
+                "appId",
+                "appSecret",
+                "auth",
+                "bind",
+                "channels",
+                "coding-agent",
+                "connectionMode",
+                "controlUi",
+                "default",
+                "defaultAccount",
+                "defaults",
+                "denyCommands",
+                "dmPolicy",
+                "dmScope",
+                "duckduckgo",
+                "enabled",
+                "entries",
+                "feishu",
+                "gateway",
+                "groupPolicy",
+                "hooks",
+                "http",
+                "https",
+                "id",
+                "internal",
+                "lastRunAt",
+                "lastRunCommand",
+                "lastRunMode",
+                "lastRunVersion",
+                "lastTouchedAt",
+                "lastTouchedVersion",
+                "localfile",
+                "main",
+                "meta",
+                "mode",
+                "model",
+                "models",
+                "name",
+                "nodes",
+                "openrouter",
+                "openrouter:default",
+                "oris/free-auto",
+                "path",
+                "plugins",
+                "port",
+                "primary",
+                "profile",
+                "profiles",
+                "provider",
+                "providers",
+                "resetOnExit",
+                "resolveSenderNames",
+                "search",
+                "secrets",
+                "session",
+                "session-memory",
+                "skills",
+                "source",
+                "tailscale",
+                "token",
+                "tools",
+                "trustedProxies",
+                "typingIndicator",
+                "web",
+                "wizard",
+                "workspace"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/plugins/installs.json",
+            "mode": "0o600",
+            "size": 60353,
+            "keys": [
+                "agentHarnesses",
+                "compat",
+                "compatRegistryVersion",
+                "ctimeMs",
+                "deferConfiguredChannelFullLoadUntilAfterListen",
+                "diagnostics",
+                "enabled",
+                "enabledByDefault",
+                "fileSignature",
+                "generatedAtMs",
+                "hash",
+                "hostContractVersion",
+                "installRecords",
+                "manifestFile",
+                "manifestHash",
+                "manifestPath",
+                "memory",
+                "migrationVersion",
+                "mtimeMs",
+                "origin",
+                "packageJson",
+                "packageName",
+                "packageVersion",
+                "path",
+                "pluginId",
+                "plugins",
+                "policyHash",
+                "refreshReason",
+                "rootDir",
+                "sidecar",
+                "size",
+                "source",
+                "startup",
+                "syntheticAuthRefs",
+                "version",
+                "warning"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/secrets.json",
+            "mode": "0o600",
+            "size": 1414,
+            "keys": [
+                "accounts",
+                "alibaba_bailian",
+                "apiKey",
+                "appId",
+                "appSecret",
+                "auth",
+                "bearerToken",
+                "channels",
+                "download_signing_key",
+                "encryptKey",
+                "feishu",
+                "gateway",
+                "gemini",
+                "main",
+                "models",
+                "openrouter",
+                "oris_api",
+                "oris_insight",
+                "password",
+                "postgres",
+                "providers",
+                "qqbot",
+                "report_delivery",
+                "report_download",
+                "services",
+                "signing_key",
+                "tencent_hunyuan",
+                "token",
+                "verificationToken",
+                "zhipu"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/update-check.json",
+            "mode": "0o600",
+            "size": 187,
+            "keys": [
+                "lastAvailableTag",
+                "lastAvailableVersion",
+                "lastCheckedAt",
+                "lastNotifiedTag",
+                "lastNotifiedVersion"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/workspace/.git/config",
+            "mode": "0o664",
+            "size": 92,
+            "keys": [
+                "bare",
+                "filemode",
+                "logallrefupdates",
+                "repositoryformatversion"
+            ]
+        },
+        {
+            "path": "/home/admin/.openclaw/workspace/.openclaw/workspace-state.json",
+            "mode": "0o600",
+            "size": 120,
+            "keys": [
+                "bootstrapSeededAt",
+                "setupCompletedAt",
+                "version"
+            ]
+        }
+    ],
+    "all_key_names": [
+        "006e96c231f452a0332d3ab3c438ee5213632ecd268d30c0eb514ffd074d8f29",
+        "137c5064-0682-4d94-81b6-a31e6650a5b0",
+        "1b327a2399aa33a8ba2fa3a16e7046152df3004c12d2a383235346d6a2055367",
+        "3418bcd408519d1e7c1e80b6134b65a27afde53c3587bdc9c18cb3bd05d2eee2",
+        "58707e091d87e9725be1829b57b1b9c8b900a93f97f67115997ed7edce72b51e",
+        "7ca624ff6d47de5a1a468773f29fd7903596070d1660c601fb5b18593970c896",
+        "accounts",
+        "agentHarnesses",
+        "agents",
+        "alias",
+        "alibaba_bailian",
+        "allowFrom",
+        "allowInsecureAuth",
+        "allowedOrigins",
+        "api",
+        "apiKey",
+        "appId",
+        "appSecret",
+        "approvedAtMs",
+        "approvedScopes",
+        "auth",
+        "bare",
+        "baseUrl",
+        "bearerToken",
+        "bind",
+        "bootstrapSeededAt",
+        "cacheRead",
+        "cacheWrite",
+        "channels",
+        "clientId",
+        "clientMode",
+        "coding-agent",
+        "compat",
+        "compatRegistryVersion",
+        "connectionMode",
+        "contextWindow",
+        "controlUi",
+        "cost",
+        "createdAt",
+        "createdAtMs",
+        "ctimeMs",
+        "d61d29aaf35a0f69b014db9fa90186d748268ccb7ec7709eeba1e17c60862f6e",
+        "default",
+        "defaultAccount",
+        "defaults",
+        "deferConfiguredChannelFullLoadUntilAfterListen",
+        "denyCommands",
+        "deviceFamily",
+        "deviceId",
+        "diagnostics",
+        "displayName",
+        "dmPolicy",
+        "dmScope",
+        "download_signing_key",
+        "duckduckgo",
+        "enabled",
+        "enabledByDefault",
+        "encryptKey",
+        "entries",
+        "errorCount",
+        "expiresAt",
+        "feishu",
+        "fileSignature",
+        "filemode",
+        "gateway",
+        "gemini",
+        "generatedAtMs",
+        "groupPolicy",
+        "hash",
+        "hooks",
+        "host",
+        "hostContractVersion",
+        "http",
+        "https",
+        "huggingface",
+        "id",
+        "input",
+        "installRecords",
+        "intentId",
+        "internal",
+        "isRepair",
+        "key",
+        "keyRef",
+        "kind",
+        "lastAvailableTag",
+        "lastAvailableVersion",
+        "lastCheckedAt",
+        "lastGood",
+        "lastNotifiedTag",
+        "lastNotifiedVersion",
+        "lastRunAt",
+        "lastRunCommand",
+        "lastRunMode",
+        "lastRunVersion",
+        "lastTouchedAt",
+        "lastTouchedVersion",
+        "lastUsed",
+        "lastUsedAtMs",
+        "localfile",
+        "logallrefupdates",
+        "main",
+        "manifestFile",
+        "manifestHash",
+        "manifestPath",
+        "maxTokens",
+        "memory",
+        "meta",
+        "migrationVersion",
+        "mode",
+        "model",
+        "models",
+        "mtimeMs",
+        "name",
+        "nodeId",
+        "nodes",
+        "om_x100b52040043c8a4c38090ae3a4bfa7",
+        "om_x100b52040d27fca0c2dc1d05bc241cd",
+        "om_x100b520424aaf8acc3883061c5646a3",
+        "om_x100b520425c8d4a4c339817077445d5",
+        "om_x100b5204c12ec8a4c30a6aa4d898078",
+        "om_x100b5204c1ddfcb0c35c52d04133ab4",
+        "om_x100b5204e8ab98b0c33e5935dfa1e50",
+        "om_x100b5204e9ee80a0c4f05b5805d60bc",
+        "om_x100b5204ebd778a4c32363e50eda6e7",
+        "om_x100b5204f70eb4fcc36e57b62d9292e",
+        "om_x100b521d41bd0ca4c1435eec85202ca",
+        "om_x100b521d546750a8c44fe58678aa586",
+        "om_x100b521d6abd94a0c22e7eceb820872",
+        "om_x100b521d6d84d4a0c2beeae7dc54553",
+        "om_x100b521d6f237934c3c3df8c9871794",
+        "openrouter",
+        "openrouter:default",
+        "operator",
+        "origin",
+        "oris",
+        "oris/free-auto",
+        "oris:default",
+        "oris_api",
+        "oris_insight",
+        "output",
+        "packageJson",
+        "packageName",
+        "packageVersion",
+        "password",
+        "path",
+        "pid",
+        "platform",
+        "pluginId",
+        "plugins",
+        "policyHash",
+        "port",
+        "postgres",
+        "primary",
+        "privateKeyPem",
+        "processInstanceId",
+        "profile",
+        "profiles",
+        "provider",
+        "providers",
+        "publicKey",
+        "publicKeyPem",
+        "qqbot",
+        "reasoning",
+        "refreshReason",
+        "remoteIp",
+        "report_delivery",
+        "report_download",
+        "repositoryformatversion",
+        "requestId",
+        "requests",
+        "resetOnExit",
+        "resolveSenderNames",
+        "restartKind",
+        "role",
+        "roles",
+        "rootDir",
+        "rotatedAtMs",
+        "scopes",
+        "search",
+        "secrets",
+        "services",
+        "session",
+        "session-memory",
+        "setupCompletedAt",
+        "sidecar",
+        "signing_key",
+        "silent",
+        "size",
+        "skills",
+        "source",
+        "startup",
+        "supervisorMode",
+        "syntheticAuthRefs",
+        "tailscale",
+        "tencent_hunyuan",
+        "tls",
+        "token",
+        "tokens",
+        "tools",
+        "trustedProxies",
+        "ts",
+        "type",
+        "typingIndicator",
+        "updatedAtMs",
+        "usageStats",
+        "verificationToken",
+        "version",
+        "warning",
+        "web",
+        "wizard",
+        "workspace",
+        "zhipu"
+    ],
+    "key_classes_present": {
+        "token": true,
+        "device_pairing": true,
+        "authentication": true,
+        "session_history": true,
+        "websocket": false
+    }
+}
+
+===== OPENCLAW SESSION AND HISTORY STORAGE NAMES =====
+OPENCLAW_STORAGE_NAME=f 600 428 /home/admin/.openclaw/identity/device-auth.json
+OPENCLAW_STORAGE_NAME=f 600 416 /home/admin/.openclaw/identity/device.json
+OPENCLAW_STORAGE_NAME=f 600 37 /home/admin/.openclaw/credentials/feishu-pairing.json
+OPENCLAW_STORAGE_NAME=d 775 12288 /home/admin/.openclaw/agents/main/sessions
+OPENCLAW_STORAGE_NAME=f 600 143950 /home/admin/.openclaw/agents/main/sessions/sessions.json
+OPENCLAW_STORAGE_NAME=d 775 4096 /home/admin/.openclaw/devices
+OPENCLAW_STORAGE_NAME=f 600 7025 /home/admin/.openclaw/devices/paired.json
+
+===== OPENCLAW HTTP ROOT STATIC ASSETS AND SPA =====
+OPENCLAW_ROOT_STATUS=200
+OPENCLAW_ROOT_BODY_SIZE=9803
+OPENCLAW_ROOT_BODY_SHA256=8e9c40d11dc3b667ec663efdfec125cc49113dc89cc27fa6f17686e8d9783132
+HTTP_HEADER_X_CONTENT_TYPE_OPTIONS=nosniff
+HTTP_HEADER_X_FRAME_OPTIONS=DENY
+HTTP_HEADER_CONTENT_SECURITY_POLICY=default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'sha256-RxCZFmTWY/yQmhYxMDn+blaCuwLzOsV/XsVb0n5EkRU=' 'sha256-adgab4UIWTKx2g8TyCZdZsqfSGvLRcCJwl2GtfP0aKw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' https://fonts.gstatic.com; worker-src 'self'; connect-src 'self' ws: wss: https://api.openai.com https://tweakcn.com
+HTTP_HEADER_CONTENT_TYPE=text/html; charset=utf-8
+HTTP_HEADER_CACHE_CONTROL=no-cache
+HTTP_HEADER_CONNECTION=keep-alive
+HTTP_HEADER_CONTENT_LENGTH=9803
+HTTP_SET_COOKIE_NAMES=
+OPENCLAW_ASSET_PATH=/favicon.svg status=200 content_type=image/svg+xml size=1194
+OPENCLAW_ASSET_PATH=/favicon-32.png status=200 content_type=image/png size=1015
+OPENCLAW_ASSET_PATH=/apple-touch-icon.png status=200 content_type=image/png size=5920
+OPENCLAW_ASSET_PATH=/manifest.webmanifest status=200 content_type=application/manifest+json; charset=utf-8 size=565
+OPENCLAW_ASSET_PATH=/assets/index-BsIpAbsh.js status=200 content_type=application/javascript; charset=utf-8 size=1248310
+OPENCLAW_ASSET_PATH=/assets/index-BLibMLn_.css status=200 content_type=text/css; charset=utf-8 size=327655
+OPENCLAW_ASSET_COUNT=6
+OPENCLAW_SPA_PROBE_PATH=/_oris_readonly_spa_probe_20260617T201154Z
+OPENCLAW_SPA_PROBE_STATUS=200
+OPENCLAW_SPA_PROBE_CONTENT_TYPE=text/html; charset=utf-8
+OPENCLAW_SPA_ROOT_HASH_MATCH=YES
+OPENCLAW_SPA_FALLBACK=YES
+
+===== OPENCLAW UI CAPABILITY AUTH AND WEBSOCKET SIGNALS =====
+{
+    "assets_scanned": [
+        "/manifest.webmanifest",
+        "/assets/index-BsIpAbsh.js"
+    ],
+    "bytes_scanned": 1248875,
+    "capability_signals": {
+        "new_conversation": true,
+        "history_list": true,
+        "conversation_switching": true,
+        "clear_archive_delete": true,
+        "device_pairing": true,
+        "token_auth": true,
+        "local_storage": true,
+        "session_storage": true,
+        "indexed_db": false
+    },
+    "websocket_candidate_paths": [],
+    "api_candidate_paths": [
+        "/api/chat/media/outgoing"
+    ],
+    "interpretation": "Signals from installed UI assets are discovery evidence, not browser acceptance."
+}
+
+===== OPENCLAW WEBSOCKET HANDSHAKE PROBES =====
+OPENCLAW_WS_PROBE_PATH=/ws status=400
+HTTP_HEADER_CONNECTION=close
+HTTP_SET_COOKIE_NAMES=
+OPENCLAW_WS_PROBE_PATH=/api/ws status=400
+HTTP_HEADER_CONNECTION=close
+HTTP_SET_COOKIE_NAMES=
+OPENCLAW_WS_PROBE_PATH=/websocket status=400
+HTTP_HEADER_CONNECTION=close
+HTTP_SET_COOKIE_NAMES=
+OPENCLAW_WS_PROBE_PATH=/socket status=400
+HTTP_HEADER_CONNECTION=close
+HTTP_SET_COOKIE_NAMES=
+OPENCLAW_WS_PROBE_COUNT=4
+
+===== DIRECT SERVICE HEALTH =====
+DIRECT_HTTP_PROBE=openclaw_root status=200
+DIRECT_HTTP_PROBE=openclaw_health status=200
+DIRECT_HTTP_PROBE=openclaw_v1_health status=200
+DIRECT_HTTP_PROBE=web_console_root status=200
+DIRECT_HTTP_PROBE=web_console_health status=200
+DIRECT_HTTP_PROBE=intake_health status=200
+SERVICE_STATE=openclaw-gateway.service state=active
+SERVICE_STATE=oris-dev-employee-web-console.service state=active
+SERVICE_STATE=oris-dev-employee-intake.service state=active
+SERVICE_STATE=oris-dev-employee-bridge.service state=active
+
+===== EFFECTIVE NGINX CONFIGURATION =====
+NGINX_T_RESULT=PASS
+{
+    "nginx_test_output_present": true,
+    "configuration_load_order": [
+        "/etc/nginx/nginx.conf",
+        "/etc/nginx/modules-enabled/50-mod-http-geoip2.conf",
+        "/etc/nginx/modules-enabled/50-mod-http-image-filter.conf",
+        "/etc/nginx/modules-enabled/50-mod-http-xslt-filter.conf",
+        "/etc/nginx/modules-enabled/50-mod-mail.conf",
+        "/etc/nginx/modules-enabled/50-mod-stream.conf",
+        "/etc/nginx/modules-enabled/70-mod-stream-geoip2.conf",
+        "/etc/nginx/mime.types",
+        "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+        "/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754"
+    ],
+    "matching_server_blocks": [
+        {
+            "order": 1,
+            "source_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+            "source_line": 21,
+            "scheme": "https",
+            "server_names": [
+                "control.orisfy.com"
+            ],
+            "listen": [
+                "443 ssl http2"
+            ],
+            "locations": [
+                {
+                    "pattern": "= /api/goals",
+                    "proxy_pass": [
+                        "http://127.0.0.1:18893/api/goals"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "/api/goals/",
+                    "proxy_pass": [
+                        "http://127.0.0.1:18893"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /api/projects",
+                    "proxy_pass": [
+                        "http://127.0.0.1:18893/api/projects"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "/",
+                    "proxy_pass": [
+                        "http://127.0.0.1:18893"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /api/chat/messages",
+                    "proxy_pass": [
+                        "http://127.0.0.1:18893"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [
+                        "120s"
+                    ],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                }
+            ],
+            "root_proxy_pass": [
+                "http://127.0.0.1:18893/api/goals",
+                "http://127.0.0.1:18893",
+                "http://127.0.0.1:18893/api/projects",
+                "http://127.0.0.1:18893",
+                "http://127.0.0.1:18893"
+            ],
+            "auth_basic": true,
+            "block": "server {\n    listen 443 ssl http2;\n    server_name control.orisfy.com;\n\n    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;\n\n    access_log /var/log/nginx/oris-dev-employee-console.access.log;\n    error_log /var/log/nginx/oris-dev-employee-console.error.log warn;\n\n    client_max_body_size 64k;\n\n    add_header X-Frame-Options \"DENY\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n    add_header Referrer-Policy \"no-referrer\" always;\n    add_header Content-Security-Policy \"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'\" always;\n\n    auth_basic \"ORIS Dev Employee Console\";\n    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;\n\n    location = /api/goals {\n        if ($request_method !~ ^(GET|POST)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;\n        proxy_pass http://127.0.0.1:18893/api/goals;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location /api/goals/ {\n        if ($request_method !~ ^(GET)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;\n        proxy_pass http://127.0.0.1:18893;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location = /api/projects {\n        if ($request_method !~ ^(GET)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;\n        proxy_pass http://127.0.0.1:18893/api/projects;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location / {\n        if ($request_method !~ ^(GET|HEAD)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=20 nodelay;\n        proxy_pass http://127.0.0.1:18893;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    # ORIS_CHAT_MESSAGES_BEGIN\n    location = /api/chat/messages {\n        proxy_pass http://127.0.0.1:18893;\n        proxy_http_version 1.1;\n        proxy_pass_request_headers on;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        proxy_set_header X-Forwarded-User $remote_user;\n        proxy_set_header X-ORIS-Chat-CSRF $http_x_oris_chat_csrf;\n        client_max_body_size 64k;\n        proxy_connect_timeout 10s;\n        proxy_read_timeout 120s;\n    }\n    # ORIS_CHAT_MESSAGES_END\n}",
+            "effective_candidate": true,
+            "later_matching_candidate": false
+        },
+        {
+            "order": 2,
+            "source_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+            "source_line": 103,
+            "scheme": "http",
+            "server_names": [
+                "control.orisfy.com"
+            ],
+            "listen": [
+                "80"
+            ],
+            "locations": [],
+            "root_proxy_pass": [],
+            "auth_basic": false,
+            "block": "server {\n    listen 80;\n    server_name control.orisfy.com;\n    return 301 https://$host$request_uri;\n}",
+            "effective_candidate": true,
+            "later_matching_candidate": false
+        },
+        {
+            "order": 3,
+            "source_file": "/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754",
+            "source_line": 1,
+            "scheme": "http",
+            "server_names": [
+                "control.orisfy.com"
+            ],
+            "listen": [
+                "80",
+                "[::]:80"
+            ],
+            "locations": [],
+            "root_proxy_pass": [],
+            "auth_basic": false,
+            "block": "server {\n    listen 80;\n    listen [::]:80;\n    server_name control.orisfy.com;\n#     auth_basic off;\n    return 301 https://$host$request_uri;\n}",
+            "effective_candidate": false,
+            "later_matching_candidate": true
+        },
+        {
+            "order": 4,
+            "source_file": "/etc/nginx/sites-enabled/control.orisfy.com.conf.disabled_20260601011754",
+            "source_line": 9,
+            "scheme": "https",
+            "server_names": [
+                "control.orisfy.com"
+            ],
+            "listen": [
+                "443 ssl http2",
+                "[::]:443 ssl http2"
+            ],
+            "locations": [
+                {
+                    "pattern": "= /oris-api",
+                    "proxy_pass": [],
+                    "proxy_http_version": [],
+                    "proxy_set_header": [],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /oris-api/v1/health",
+                    "proxy_pass": [
+                        "http://127.0.0.1:8788/v1/health"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /oris-api/v1/runtime/plan",
+                    "proxy_pass": [
+                        "http://127.0.0.1:8788/v1/runtime/plan"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [
+                        "300s"
+                    ],
+                    "proxy_send_timeout": [
+                        "300s"
+                    ],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /oris-api/v1/infer",
+                    "proxy_pass": [
+                        "http://127.0.0.1:8788/v1/infer"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [
+                        "300s"
+                    ],
+                    "proxy_send_timeout": [
+                        "300s"
+                    ],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /oris-api/v1/feishu/health",
+                    "proxy_pass": [
+                        "http://127.0.0.1:8790/health"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [],
+                    "proxy_send_timeout": [],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "= /oris-api/v1/feishu/events",
+                    "proxy_pass": [
+                        "http://127.0.0.1:8790/v1/feishu/events"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [
+                        "300s"
+                    ],
+                    "proxy_send_timeout": [
+                        "300s"
+                    ],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "^~ /oris-download/",
+                    "proxy_pass": [
+                        "http://127.0.0.1:8791"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Host $host"
+                    ],
+                    "proxy_read_timeout": [
+                        "300s"
+                    ],
+                    "proxy_send_timeout": [
+                        "300s"
+                    ],
+                    "auth_basic": false
+                },
+                {
+                    "pattern": "/",
+                    "proxy_pass": [
+                        "http://127.0.0.1:18789"
+                    ],
+                    "proxy_http_version": [
+                        "1.1"
+                    ],
+                    "proxy_set_header": [
+                        "Upgrade $http_upgrade",
+                        "Connection \"upgrade\"",
+                        "Host $host",
+                        "X-Forwarded-Host $host"
+                    ],
+                    "proxy_read_timeout": [
+                        "3600s"
+                    ],
+                    "proxy_send_timeout": [
+                        "3600s"
+                    ],
+                    "auth_basic": false
+                }
+            ],
+            "root_proxy_pass": [
+                "http://127.0.0.1:8788/v1/health",
+                "http://127.0.0.1:8788/v1/runtime/plan",
+                "http://127.0.0.1:8788/v1/infer",
+                "http://127.0.0.1:8790/health",
+                "http://127.0.0.1:8790/v1/feishu/events",
+                "http://127.0.0.1:8791",
+                "http://127.0.0.1:18789"
+            ],
+            "auth_basic": false,
+            "block": "server {\n    listen 443 ssl http2;\n    listen [::]:443 ssl http2;\n    server_name control.orisfy.com;\n#     auth_basic \"Restricted\";\n#     auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n#     auth_basic off;\n\n    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;\n\n    add_header X-Content-Type-Options \"nosniff\" always;\n    add_header Referrer-Policy no-referrer always;\n    add_header Permissions-Policy \"camera=(), microphone=(), geolocation=()\" always;\n    add_header X-Frame-Options DENY always;\n    add_header Cache-Control no-cache always;\n\n    location = /oris-api {\n#         auth_basic off;\n#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n        return 301 /oris-api/v1/health;\n    }\n\n    location = /oris-api/v1/health {\n#         auth_basic off;\n#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n        proxy_pass http://127.0.0.1:8788/v1/health;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location = /oris-api/v1/runtime/plan {\n#         auth_basic off;\n#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n        proxy_pass http://127.0.0.1:8788/v1/runtime/plan;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n        proxy_read_timeout 300s;\n        proxy_send_timeout 300s;\n    }\n\n    location = /oris-api/v1/infer {\n#         auth_basic off;\n#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n        proxy_pass http://127.0.0.1:8788/v1/infer;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n        proxy_read_timeout 300s;\n        proxy_send_timeout 300s;\n    }\n\n    location = /oris-api/v1/feishu/health {\n        proxy_pass http://127.0.0.1:8790/health;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location = /oris-api/v1/feishu/events {\n        proxy_pass http://127.0.0.1:8790/v1/feishu/events;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n        proxy_read_timeout 300s;\n        proxy_send_timeout 300s;\n    }\n\n    # ORIS_REPORT_DOWNLOAD_BEGIN\n    location ^~ /oris-download/ {\n#         auth_basic off;\n        rewrite ^/oris-download/?(.*)$ /download/$1 break;\n        proxy_pass http://127.0.0.1:8791;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n        proxy_read_timeout 300s;\n        proxy_send_timeout 300s;\n    }\n    # ORIS_REPORT_DOWNLOAD_END\n\n    location / {\n#         auth_basic off;\n#         auth_basic_user_file /etc/nginx/.htpasswd-openclaw;\n#         auth_basic off;\n        proxy_pass http://127.0.0.1:18789;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection \"upgrade\";\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        proxy_set_header X-Forwarded-Host $host;\n        proxy_read_timeout 3600s;\n        proxy_send_timeout 3600s;\n        proxy_buffering off;\n    }\n}",
+            "effective_candidate": false,
+            "later_matching_candidate": true
+        }
+    ],
+    "effective_http_candidate": {
+        "order": 2,
+        "source_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+        "source_line": 103,
+        "scheme": "http",
+        "server_names": [
+            "control.orisfy.com"
+        ],
+        "listen": [
+            "80"
+        ],
+        "locations": [],
+        "root_proxy_pass": [],
+        "auth_basic": false,
+        "block": "server {\n    listen 80;\n    server_name control.orisfy.com;\n    return 301 https://$host$request_uri;\n}",
+        "effective_candidate": true,
+        "later_matching_candidate": false
+    },
+    "effective_https_candidate": {
+        "order": 1,
+        "source_file": "/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf",
+        "source_line": 21,
+        "scheme": "https",
+        "server_names": [
+            "control.orisfy.com"
+        ],
+        "listen": [
+            "443 ssl http2"
+        ],
+        "locations": [
+            {
+                "pattern": "= /api/goals",
+                "proxy_pass": [
+                    "http://127.0.0.1:18893/api/goals"
+                ],
+                "proxy_http_version": [
+                    "1.1"
+                ],
+                "proxy_set_header": [
+                    "Host $host"
+                ],
+                "proxy_read_timeout": [],
+                "proxy_send_timeout": [],
+                "auth_basic": false
+            },
+            {
+                "pattern": "/api/goals/",
+                "proxy_pass": [
+                    "http://127.0.0.1:18893"
+                ],
+                "proxy_http_version": [
+                    "1.1"
+                ],
+                "proxy_set_header": [
+                    "Host $host"
+                ],
+                "proxy_read_timeout": [],
+                "proxy_send_timeout": [],
+                "auth_basic": false
+            },
+            {
+                "pattern": "= /api/projects",
+                "proxy_pass": [
+                    "http://127.0.0.1:18893/api/projects"
+                ],
+                "proxy_http_version": [
+                    "1.1"
+                ],
+                "proxy_set_header": [
+                    "Host $host"
+                ],
+                "proxy_read_timeout": [],
+                "proxy_send_timeout": [],
+                "auth_basic": false
+            },
+            {
+                "pattern": "/",
+                "proxy_pass": [
+                    "http://127.0.0.1:18893"
+                ],
+                "proxy_http_version": [
+                    "1.1"
+                ],
+                "proxy_set_header": [
+                    "Host $host"
+                ],
+                "proxy_read_timeout": [],
+                "proxy_send_timeout": [],
+                "auth_basic": false
+            },
+            {
+                "pattern": "= /api/chat/messages",
+                "proxy_pass": [
+                    "http://127.0.0.1:18893"
+                ],
+                "proxy_http_version": [
+                    "1.1"
+                ],
+                "proxy_set_header": [
+                    "Host $host"
+                ],
+                "proxy_read_timeout": [
+                    "120s"
+                ],
+                "proxy_send_timeout": [],
+                "auth_basic": false
+            }
+        ],
+        "root_proxy_pass": [
+            "http://127.0.0.1:18893/api/goals",
+            "http://127.0.0.1:18893",
+            "http://127.0.0.1:18893/api/projects",
+            "http://127.0.0.1:18893",
+            "http://127.0.0.1:18893"
+        ],
+        "auth_basic": true,
+        "block": "server {\n    listen 443 ssl http2;\n    server_name control.orisfy.com;\n\n    ssl_certificate /etc/letsencrypt/live/control.orisfy.com/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/control.orisfy.com/privkey.pem;\n\n    access_log /var/log/nginx/oris-dev-employee-console.access.log;\n    error_log /var/log/nginx/oris-dev-employee-console.error.log warn;\n\n    client_max_body_size 64k;\n\n    add_header X-Frame-Options \"DENY\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n    add_header Referrer-Policy \"no-referrer\" always;\n    add_header Content-Security-Policy \"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'\" always;\n\n    auth_basic \"ORIS Dev Employee Console\";\n    auth_basic_user_file /etc/nginx/oris-dev-employee.htpasswd;\n\n    location = /api/goals {\n        if ($request_method !~ ^(GET|POST)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;\n        proxy_pass http://127.0.0.1:18893/api/goals;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location /api/goals/ {\n        if ($request_method !~ ^(GET)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;\n        proxy_pass http://127.0.0.1:18893;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location = /api/projects {\n        if ($request_method !~ ^(GET)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=10 nodelay;\n        proxy_pass http://127.0.0.1:18893/api/projects;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    location / {\n        if ($request_method !~ ^(GET|HEAD)$) { return 403; }\n        limit_req zone=oris_dev_employee_console_read burst=20 nodelay;\n        proxy_pass http://127.0.0.1:18893;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto https;\n    }\n\n    # ORIS_CHAT_MESSAGES_BEGIN\n    location = /api/chat/messages {\n        proxy_pass http://127.0.0.1:18893;\n        proxy_http_version 1.1;\n        proxy_pass_request_headers on;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n        proxy_set_header X-Forwarded-User $remote_user;\n        proxy_set_header X-ORIS-Chat-CSRF $http_x_oris_chat_csrf;\n        client_max_body_size 64k;\n        proxy_connect_timeout 10s;\n        proxy_read_timeout 120s;\n    }\n    # ORIS_CHAT_MESSAGES_END\n}",
+        "effective_candidate": true,
+        "later_matching_candidate": false
+    },
+    "current_root_route": {
+        "pattern": "/",
+        "proxy_pass": [
+            "http://127.0.0.1:18893"
+        ],
+        "proxy_http_version": [
+            "1.1"
+        ],
+        "proxy_set_header": [
+            "Host $host"
+        ],
+        "proxy_read_timeout": [],
+        "proxy_send_timeout": [],
+        "auth_basic": false
+    },
+    "current_admin_route": null,
+    "duplicate_matching_blocks": 2,
+    "conflict_or_ignored_warnings": [
+        "nginx: [warn] conflicting server name \"control.orisfy.com\" on 0.0.0.0:443, ignored",
+        "nginx: [warn] conflicting server name \"control.orisfy.com\" on 0.0.0.0:80, ignored"
+    ],
+    "interpretation": "The first matching block per HTTP/HTTPS load order is the effective candidate; address-specific listen precedence still requires review before mutation."
+}
+
+===== PUBLIC EDGE WITHOUT CREDENTIALS =====
+PUBLIC_HTTP_PROBE=public_http status=301
+HTTP_HEADER_SERVER=nginx/1.18.0 (Ubuntu)
+HTTP_HEADER_CONTENT_TYPE=text/html
+HTTP_HEADER_CONTENT_LENGTH=178
+HTTP_HEADER_CONNECTION=keep-alive
+HTTP_HEADER_LOCATION=https://control.orisfy.com/
+HTTP_SET_COOKIE_NAMES=
+PUBLIC_HTTP_PROBE=public_https status=401
+HTTP_HEADER_SERVER=nginx/1.18.0 (Ubuntu)
+HTTP_HEADER_CONTENT_TYPE=text/html
+HTTP_HEADER_CONTENT_LENGTH=188
+HTTP_HEADER_X_FRAME_OPTIONS=DENY
+HTTP_HEADER_X_CONTENT_TYPE_OPTIONS=nosniff
+HTTP_HEADER_CONTENT_SECURITY_POLICY=default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+HTTP_SET_COOKIE_NAMES=
+
+===== ACTIVE QUEUE READ ONLY =====
+{
+    "active_count": 0,
+    "active": []
+}
+
+===== REPOSITORY BASELINES READ ONLY =====
+{
+    "oris": {
+        "label": "oris",
+        "exists": true,
+        "path": "/home/admin/projects/oris",
+        "head": "f758e873007d5a7684617dc9cec02302f3e1d44b",
+        "branch": "main",
+        "remote": "git@github.com:ShanGouXueHui/oris.git",
+        "remote_main": "f758e873007d5a7684617dc9cec02302f3e1d44b",
+        "clean": false,
+        "status_entry_count": 145,
+        "status_entries": [
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-list-filters-20260526.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-list-filters-20260526_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-list-filters-20260526_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-list-filters-20260526_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-stats-skill-resolution-20260526.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-stats-skill-resolution-20260526_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-tags-20260526.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-tags-20260526_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/autonomous-api-tags-20260526_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge-client-smoke-20260526.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge-runtime-contract-smoke-20260526.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge-service-smoke-20260525.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge-service-smoke-http-20260525.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge_service_smoke_http_py_compile_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge_service_smoke_http_pytest_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge_service_smoke_http_pytest_werror_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge_service_smoke_py_compile_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge_service_smoke_pytest_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/bridge_service_smoke_pytest_werror_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.codex_auth_preflight.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c_py_compile.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c_pytest.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-direct-smoke-20260617031311.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-direct-smoke-20260617032858.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-direct-smoke-20260617033540.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-post-20260617031311.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-post-20260617031311.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-post-20260617032858.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-post-20260617032858.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-post-20260617033540.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/patch-effective-chat-post-20260617033540.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/reconcile-runtime-stash-v2-20260617023721.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/conversational_web/reconcile-runtime-stash-v2-20260617023721.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/failure-evidence-auto-triage-host-checks-20260526-r1_failure_triage.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/failure-evidence-bridge-exception-20260526.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/failure-evidence-real-product-healthz-20260526-r1_host_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/failure_triage/failure-evidence-real-product-healthz-20260526-r1.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/final_acceptance_codex_run_20260524.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/final_acceptance_refresh_evidence_20260525.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/final_acceptance_refresh_evidence_v2_20260525.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal-test-pydantic-cleanup-20260524.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal-test-pydantic-cleanup-20260524.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal-test-pydantic-cleanup-v2-20260525.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_git_20260524.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_py_compile_20260524.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_pytest_20260524.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_pytest_werror_20260524.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_v2_py_compile_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_v2_pytest_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/formal_test_pydantic_v2_pytest_werror_20260525.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-api-info-endpoint-20260526-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-api-info-endpoint-20260526-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-api-info-endpoint-20260526-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-oris-final-acceptance-api-20260616-031022_failure_triage.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_auth_preflight.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-readyz-endpoint-clean-check-20260529-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/goal-version-endpoint-clean-check-20260526-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/install_dev_employee_bridge_service.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/install_dev_employee_enqueue_service.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/intake_api_post_smoke_intake-smoke-noexec-20260529042041.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/intake_api_smoke_20260529_041653.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/intake_api_smoke_intake-smoke-noexec-20260529-r1.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-control-orisfy-com.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/nginx_readonly_console_preflight/nginx-readonly-console-preflight-oris-com.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/repair-real-product-healthz-20260526-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/repair-real-product-healthz-20260526-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/repair-real-product-healthz-20260526-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/repair_plans/guard-validate-plan-mismatch-20260526-r1.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/skill_resolution/skill-resolver-smoke-20260526.md"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/stale_task_recovery_latest.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-livez-endpoint-20260529-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-adapter-goal-ping-endpoint-20260529-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-console-submit-consolez-20260531-r1.codex.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-console-submit-consolez-20260531-r1_py_compile.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web-console-submit-consolez-20260531-r1_pytest_werror.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_audit/web_console_audit_20260531.jsonl"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_audit/web_console_audit_20260616.jsonl"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_audit/web_console_audit_20260617.jsonl"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_public_submit_e2e/finish-public-web-submit-20260616031437.log"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.final-pycompile-20260616045142.txt"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.final-status-20260616045142.json"
+            },
+            {
+                "code": "??",
+                "path": "logs/dev_employee/web_console_public_submit_e2e/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.finalize-20260616045142.log"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_events/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.jsonl"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_events/goal-oris-final-acceptance-api-20260616-052531.jsonl"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/goal-oris-final-acceptance-api-20260616-031022.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/goal-oris-final-acceptance-api-20260616-052531.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/web-adapter-goal-livez-endpoint-20260529-r1.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/web-adapter-goal-ping-endpoint-20260529-r1.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_intake_catalog/web-console-submit-consolez-20260531-r1.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/dev_employee_queue/goal-oris-final-acceptance-api-20260616-052531.cancelled.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/autonomous-api-list-filters-20260526.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/autonomous-api-stats-skill-resolution-20260526.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/autonomous-api-tags-20260526.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/bridge-client-smoke-20260526.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/bridge-runtime-contract-smoke-20260526.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/bridge-service-smoke-20260525.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/bridge-service-smoke-http-20260525.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/chat-oris-final-acceptance-api-20260617-051313-c802347ff17c.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/failure-evidence-auto-triage-host-checks-20260526-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/failure-evidence-bridge-exception-20260526.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/failure-evidence-host-checks-failed-20260526-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/failure-evidence-real-product-healthz-20260526-r1.failure_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/failure-evidence-skill-resolution-invalid-20260526-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/formal-test-pydantic-cleanup-20260524.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/formal-test-pydantic-cleanup-v2-20260525.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/goal-api-info-endpoint-20260526-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/goal-oris-final-acceptance-api-readonly-e2e-20260616-044030.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/goal-readyz-endpoint-clean-check-20260529-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/goal-version-endpoint-clean-check-20260526-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/repair-real-product-healthz-20260526-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/web-adapter-goal-livez-endpoint-20260529-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/web-adapter-goal-ping-endpoint-20260529-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "orchestration/task_runs/web-console-submit-consolez-20260531-r1.codex_result.json"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/VoltAgent__awesome-openclaw-skills/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/awesome-mcp-servers/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/awesome-openclaw-skills/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/clawdbot-ai__awesome-openclaw-skills-zh/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/clawhub/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/libukai__awesome-agent-skills/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/openclaw__clawhub/"
+            },
+            {
+                "code": "??",
+                "path": "vendor/skill_candidates/punkpeye__awesome-mcp-servers/"
+            }
+        ]
+    },
+    "product": {
+        "label": "oris-final-acceptance-api",
+        "exists": true,
+        "path": "/home/admin/projects/oris-final-acceptance-api",
+        "head": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+        "branch": "main",
+        "remote": "git@github.com:ShanGouXueHui/oris-final-acceptance-api.git",
+        "remote_main": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+        "clean": false,
+        "status_entry_count": 1,
+        "status_entries": [
+            {
+                "code": "M ",
+                "path": "EADME.md"
+            }
+        ],
+        "head_matches_expected": true,
+        "remote_matches_expected": true
+    },
+    "expected_product_commit": "927f1968cc86bfd5213670f4eaa171fc1a3be620"
+}
+
+===== DISCOVERY DECISION =====
+RESULT=DIAGNOSED
+DISCOVERY_COMPLETE=YES
+FAILURE_CODE=
+CRITICAL_FAILURE_COUNT=0
+NEXT_ACTION=REVIEW_ACTIVE_QUEUE_OR_PRODUCT_BASELINE_BEFORE_MIGRATION
+
+===== EVIDENCE SECRET SCAN =====
+SECRET_SCAN=PASS
+
+===== DETACHED WORKTREE EVIDENCE COMMIT =====
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD f758e87)
+HEAD is now at f758e87 fix(dev-employee): include dirty baseline paths in discovery evidence
