@@ -1,0 +1,11 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T204832Z",
+  "result": "ROLLED_BACK",
+  "backup_file": "/etc/nginx/oris-backups/oris-dev-employee-web-console.readonly.conf.20260617T203237Z.bak",
+  "nginx_test": "PASS",
+  "nginx_reload": "PASS",
+  "public_root_status": "401",
+  "product_repository_changed": false,
+  "next_action": "VERIFY_CUSTOM_CONSOLE_AND_REDESIGN_MIGRATION"
+}

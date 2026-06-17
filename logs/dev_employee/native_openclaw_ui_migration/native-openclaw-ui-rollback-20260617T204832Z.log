@@ -1,0 +1,11 @@
+CHECKED_AT=2026-06-18T04:48:32+08:00
+TASK_ID=commercial-native-openclaw-ui-20260617
+BACKUP_FILE=/etc/nginx/oris-backups/oris-dev-employee-web-console.readonly.conf.20260617T203237Z.bak
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:443, ignored
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD 8c40b11)
+HEAD is now at 8c40b11 fix(dev-employee): simplify rejection diagnosis runner
