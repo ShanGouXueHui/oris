@@ -1,0 +1,17 @@
+checked_at=2026-06-18T05:22:04+08:00
+task_id=commercial-native-openclaw-ui-20260617
+result=CHANGED
+auth_mode=token
+device_pairing_bypass=YES
+auth_secret_unchanged=YES
+config_mode=0600
+service_state=active
+direct_root_status=200
+public_root_status=200
+product_baseline_preserved=YES
+backup_file=/home/admin/.openclaw/backups/openclaw.json.before-control-ui-pairing-bypass-20260617T212152Z.bak
+secret_values_recorded=NO
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD cfdc0ee)
+HEAD is now at cfdc0ee fix(dev-employee): commit pairing evidence via detached worktree
