@@ -1,0 +1,108 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T204829Z",
+  "result": "ROLLED_BACK_AND_DIAGNOSED",
+  "failure_code": "",
+  "rollback_result": "ROLLED_BACK",
+  "public": {
+    "root_status": "401",
+    "root_is_openclaw": false
+  },
+  "openclaw_auth": {
+    "config_path": "/home/admin/.openclaw/openclaw.json",
+    "config_mode": "0o600",
+    "auth_mode": "token",
+    "token_configured": true,
+    "password_configured": false,
+    "process_secret_key_names": [],
+    "process_secret_key_count": 0,
+    "config_token_matches_any_process_secret": null,
+    "config_password_matches_any_process_secret": null,
+    "allowed_origin_count": 2,
+    "allow_insecure_auth_configured": true,
+    "allow_insecure_auth_enabled": false,
+    "secret_values_recorded": false
+  },
+  "recent_gateway_events": {
+    "counts": {
+      "auth_mismatch": 1,
+      "unauthorized": 4,
+      "forbidden": 0,
+      "origin": 0,
+      "websocket": 0
+    },
+    "events": [
+      {
+        "classes": [
+          "unauthorized"
+        ],
+        "message": "Jun 18 04:37:01 iZt4n62qkjefjya5xa097pZ openclaw[68596]: 2026-06-18T04:37:01.579+08:00 [ws] unauthorized conn=1b22a4f0-6ae7-4c2c-bfbd-310637fe3629 peer=127.0.0.1:51986->127.0.0.1:18789 remote=127.0.0.1 client=openclaw-control-ui webchat vcontrol-ui role=operator scopes=5 auth=none device=yes platform=Win32 instance=c948f778-64f2-43fe-8740-f09681714334 host=control.orisfy.com origin=https://control.orisfy.com ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chro"
+      },
+      {
+        "classes": [
+          "unauthorized"
+        ],
+        "message": "Jun 18 04:37:01 iZt4n62qkjefjya5xa097pZ openclaw[68596]: 2026-06-18T04:37:01.760+08:00 [ws] closed before connect conn=1b22a4f0-6ae7-4c2c-bfbd-310637fe3629 peer=127.0.0.1:51986->127.0.0.1:18789 remote=127.0.0.1 fwd=2.243.23.105 origin=https://control.orisfy.com host=control.orisfy.com ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 code=1008 reason=unauthorized: gateway token <redacted> (open the dashboard URL and paste the token"
+      },
+      {
+        "classes": [
+          "unauthorized"
+        ],
+        "message": "Jun 18 04:37:54 iZt4n62qkjefjya5xa097pZ openclaw[68596]: 2026-06-18T04:37:54.062+08:00 [ws] unauthorized conn=f8d69340-3c9c-4377-8947-a06f1b233396 peer=127.0.0.1:54452->127.0.0.1:18789 remote=127.0.0.1 client=openclaw-control-ui webchat vcontrol-ui role=operator scopes=5 auth=password <redacted> platform=Win32 instance=c948f778-64f2-43fe-8740-f09681714334 host=control.orisfy.com origin=https://control.orisfy.com ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+      },
+      {
+        "classes": [
+          "auth_mismatch",
+          "unauthorized"
+        ],
+        "message": "Jun 18 04:37:54 iZt4n62qkjefjya5xa097pZ openclaw[68596]: 2026-06-18T04:37:54.326+08:00 [ws] closed before connect conn=f8d69340-3c9c-4377-8947-a06f1b233396 peer=127.0.0.1:54452->127.0.0.1:18789 remote=127.0.0.1 fwd=2.243.23.105 origin=https://control.orisfy.com host=control.orisfy.com ua=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 code=1008 reason=unauthorized: gateway token <redacted> (open the dashboard URL and paste the token"
+      }
+    ],
+    "secret_values_recorded": false
+  },
+  "console_api_discovery": {
+    "assets_scanned": [
+      "/admin"
+    ],
+    "api_paths": [
+      {
+        "path": "/api/chat/bootstrap",
+        "get_status": "200"
+      },
+      {
+        "path": "/api/chat/messages",
+        "get_status": "404"
+      },
+      {
+        "path": "/api/chat/session",
+        "get_status": "400"
+      },
+      {
+        "path": "/api/goals",
+        "get_status": "401"
+      },
+      {
+        "path": "/api/projects",
+        "get_status": "401"
+      }
+    ],
+    "path_count": 5,
+    "status_404_count": 1,
+    "secret_values_recorded": false
+  },
+  "safety": {
+    "product_baseline_preserved": true,
+    "current_task_updated": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "openclaw_config_mutated": false,
+    "openclaw_service_restarted": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "READ_REJECTION_EVIDENCE_AND_BUILD_CREDENTIAL_ROTATION_AND_ROUTING_V2",
+  "evidence": {
+    "log_path": "logs/dev_employee/native_openclaw_ui_rejection/native-openclaw-ui-rejection-v2-20260617T204829Z.log",
+    "json_path": "logs/dev_employee/native_openclaw_ui_rejection/native-openclaw-ui-rejection-v2-20260617T204829Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
