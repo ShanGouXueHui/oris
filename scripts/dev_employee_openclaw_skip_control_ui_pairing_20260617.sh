@@ -8,9 +8,13 @@ SERVICE="openclaw-gateway.service"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 BACKUP_DIR="$HOME/.openclaw/backups"
 BACKUP="$BACKUP_DIR/openclaw.json.before-control-ui-pairing-bypass-$STAMP.bak"
-LOG_DIR="$ORIS_REPO/logs/dev_employee/openclaw_device_auth"
-LOG_FILE="$LOG_DIR/control-ui-pairing-bypass-$STAMP.log"
 EXPECTED_HEAD="927f1968cc86bfd5213670f4eaa171fc1a3be620"
+TMP_ROOT="$(mktemp -d /tmp/oris-control-ui-pairing-bypass-${STAMP}-XXXXXX)"
+PRE_JSON="$TMP_ROOT/pre.json"
+POST_JSON="$TMP_ROOT/post.json"
+RUN_LOG="$TMP_ROOT/change.log"
+WORKTREE="$TMP_ROOT/evidence-worktree"
+EVIDENCE_REL="logs/dev_employee/openclaw_device_auth/control-ui-pairing-bypass-$STAMP.log"
 
 RESULT="FAILED"
 FAILURE_CODE=""
@@ -20,6 +24,20 @@ SERVICE_STATE="unknown"
 DIRECT_ROOT_STATUS="000"
 PUBLIC_ROOT_STATUS="000"
 PRODUCT_BASELINE_PRESERVED="NO"
+ROLLBACK_PERFORMED="NO"
+EVIDENCE_COMMIT=""
+EVIDENCE_REMOTE_VERIFIED="NO"
+
+umask 077
+: > "$RUN_LOG"
+
+cleanup() {
+  if [ -d "$WORKTREE" ]; then
+    git -C "$ORIS_REPO" worktree remove --force "$WORKTREE" >/dev/null 2>&1 || true
+  fi
+  rm -rf "$TMP_ROOT"
+}
+trap cleanup EXIT
 
 summary() {
   echo "===== SUMMARY ====="
@@ -32,11 +50,14 @@ summary() {
   echo "DIRECT_ROOT_STATUS=$DIRECT_ROOT_STATUS"
   echo "PUBLIC_ROOT_STATUS=$PUBLIC_ROOT_STATUS"
   echo "PRODUCT_BASELINE_PRESERVED=$PRODUCT_BASELINE_PRESERVED"
+  echo "ROLLBACK_PERFORMED=$ROLLBACK_PERFORMED"
   echo "BACKUP_FILE=$BACKUP"
-  echo "LOG_FILE=${LOG_FILE#$ORIS_REPO/}"
   echo "TOKEN_OR_PASSWORD_VALUE_CHANGED=NO"
   echo "NGINX_CHANGED=NO"
   echo "PRODUCT_REPOSITORY_MUTATED=NO"
+  echo "EVIDENCE_LOG=$EVIDENCE_REL"
+  echo "EVIDENCE_COMMIT=$EVIDENCE_COMMIT"
+  echo "EVIDENCE_REMOTE_VERIFIED=$EVIDENCE_REMOTE_VERIFIED"
   echo "NEXT_ACTION=RESTART_BROWSER_ACCEPTANCE_V2_IN_FRESH_INCOGNITO_WINDOW"
   echo "SEND_TO_CHAT=THIS_SUMMARY_ONLY"
   echo "===== END SUMMARY ====="
@@ -48,10 +69,24 @@ fail_now() {
   exit 1
 }
 
+restore_config() {
+  [ -f "$BACKUP" ] || return 1
+  cp "$BACKUP" "$CONFIG" >> "$RUN_LOG" 2>&1 || return 1
+  chmod 600 "$CONFIG" >> "$RUN_LOG" 2>&1 || return 1
+  systemctl --user restart "$SERVICE" >> "$RUN_LOG" 2>&1 || return 1
+  ROLLBACK_PERFORMED="YES"
+  DEVICE_PAIRING_BYPASS="NO"
+  return 0
+}
+
 if [ "$(id -un 2>/dev/null)" != "admin" ]; then fail_now "wrong_linux_user"; fi
+for cmd in git curl python3 sha256sum systemctl cp chmod mkdir; do
+  command -v "$cmd" >/dev/null 2>&1 || fail_now "required_tool_missing_$cmd"
+done
 [ -f "$CONFIG" ] || fail_now "openclaw_config_missing"
+[ -d "$ORIS_REPO/.git" ] || fail_now "oris_repo_missing"
 [ -d "$PRODUCT_REPO/.git" ] || fail_now "product_repo_missing"
-mkdir -p "$BACKUP_DIR" "$LOG_DIR" || fail_now "directory_create_failed"
+mkdir -p "$BACKUP_DIR" || fail_now "backup_directory_create_failed"
 chmod 700 "$BACKUP_DIR" || fail_now "backup_permission_failed"
 
 PRODUCT_HEAD_BEFORE="$(git -C "$PRODUCT_REPO" rev-parse HEAD 2>/dev/null || true)"
@@ -62,11 +97,7 @@ README_HASH_BEFORE="$(sha256sum "$PRODUCT_REPO/README.md" 2>/dev/null | awk '{pr
 [ "$PRODUCT_REMOTE_BEFORE" = "$EXPECTED_HEAD" ] || fail_now "unexpected_product_remote"
 [ "$PRODUCT_STATUS_BEFORE" = " M README.md" ] || fail_now "unexpected_product_status"
 
-PRE_JSON="$(mktemp /tmp/openclaw-pairing-pre-XXXXXX.json)"
-POST_JSON="$(mktemp /tmp/openclaw-pairing-post-XXXXXX.json)"
-trap 'rm -f "$PRE_JSON" "$POST_JSON"' EXIT
-
-python3 - "$CONFIG" "$PRE_JSON" <<'PY'
+python3 - "$CONFIG" "$PRE_JSON" <<'PY_PRE'
 import hashlib,json,stat,sys
 from pathlib import Path
 p=Path(sys.argv[1]); out=Path(sys.argv[2]); d=json.loads(p.read_text())
@@ -76,14 +107,15 @@ secret=a.get(mode)
 if not isinstance(secret,str) or not secret: raise SystemExit(3)
 c=d.get("gateway",{}).get("controlUi",{})
 out.write_text(json.dumps({"mode":mode,"secret_sha":hashlib.sha256(secret.encode()).hexdigest(),"before":c.get("dangerouslyDisableDeviceAuth") is True,"mode_bits":oct(stat.S_IMODE(p.stat().st_mode))}))
-PY
+PY_PRE
 [ "$?" -eq 0 ] || fail_now "authenticated_mode_required"
 AUTH_MODE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode"])' "$PRE_JSON")"
+[ "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode_bits"])' "$PRE_JSON")" = "0o600" ] || fail_now "openclaw_config_not_0600"
 
 cp "$CONFIG" "$BACKUP" || fail_now "backup_failed"
 chmod 600 "$BACKUP" || fail_now "backup_permission_failed"
 
-python3 - "$CONFIG" <<'PY'
+python3 - "$CONFIG" <<'PY_CHANGE'
 import json,os,sys
 from pathlib import Path
 p=Path(sys.argv[1]); d=json.loads(p.read_text())
@@ -93,11 +125,11 @@ c["dangerouslyDisableDeviceAuth"]=True
 t=p.with_name(p.name+".tmp")
 t.write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\n")
 os.chmod(t,0o600); json.loads(t.read_text()); os.replace(t,p); os.chmod(p,0o600)
-PY
-[ "$?" -eq 0 ] || { cp "$BACKUP" "$CONFIG"; chmod 600 "$CONFIG"; fail_now "config_update_failed"; }
+PY_CHANGE
+if [ "$?" -ne 0 ]; then restore_config || true; fail_now "config_update_failed"; fi
 
-if ! systemctl --user restart "$SERVICE" >> "$LOG_FILE" 2>&1; then
-  cp "$BACKUP" "$CONFIG"; chmod 600 "$CONFIG"; systemctl --user restart "$SERVICE" >> "$LOG_FILE" 2>&1 || true
+if ! systemctl --user restart "$SERVICE" >> "$RUN_LOG" 2>&1; then
+  restore_config || true
   fail_now "gateway_restart_failed"
 fi
 
@@ -108,19 +140,20 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
   sleep 1
 done
 if [ "$SERVICE_STATE" != "active" ] || [ "$DIRECT_ROOT_STATUS" != "200" ]; then
-  cp "$BACKUP" "$CONFIG"; chmod 600 "$CONFIG"; systemctl --user restart "$SERVICE" >> "$LOG_FILE" 2>&1 || true
+  restore_config || true
   fail_now "gateway_unhealthy_after_change"
 fi
 
-python3 - "$CONFIG" "$POST_JSON" <<'PY'
+python3 - "$CONFIG" "$POST_JSON" <<'PY_POST'
 import hashlib,json,stat,sys
 from pathlib import Path
 p=Path(sys.argv[1]); out=Path(sys.argv[2]); d=json.loads(p.read_text())
 a=d.get("gateway",{}).get("auth",{}); mode=a.get("mode") or "token"; secret=a.get(mode)
 c=d.get("gateway",{}).get("controlUi",{})
+if not isinstance(secret,str) or not secret: raise SystemExit(2)
 out.write_text(json.dumps({"mode":mode,"secret_sha":hashlib.sha256(secret.encode()).hexdigest(),"after":c.get("dangerouslyDisableDeviceAuth") is True,"mode_bits":oct(stat.S_IMODE(p.stat().st_mode))}))
-PY
-[ "$?" -eq 0 ] || fail_now "postcheck_failed"
+PY_POST
+if [ "$?" -ne 0 ]; then restore_config || true; fail_now "postcheck_failed"; fi
 
 PRE_SECRET="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["secret_sha"])' "$PRE_JSON")"
 POST_SECRET="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["secret_sha"])' "$POST_JSON")"
@@ -128,38 +161,61 @@ POST_MODE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["mo
 DEVICE_PAIRING_BYPASS="$(python3 -c 'import json,sys; print("YES" if json.load(open(sys.argv[1]))["after"] else "NO")' "$POST_JSON")"
 POST_PERMS="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["mode_bits"])' "$POST_JSON")"
 if [ "$AUTH_MODE" != "$POST_MODE" ] || [ "$PRE_SECRET" != "$POST_SECRET" ] || [ "$DEVICE_PAIRING_BYPASS" != "YES" ] || [ "$POST_PERMS" != "0o600" ]; then
-  cp "$BACKUP" "$CONFIG"; chmod 600 "$CONFIG"; systemctl --user restart "$SERVICE" >> "$LOG_FILE" 2>&1 || true
+  restore_config || true
   fail_now "security_postcheck_failed"
 fi
 
 PUBLIC_ROOT_STATUS="$(curl -sS -k --max-time 10 -o /dev/null -w '%{http_code}' https://control.orisfy.com/ 2>/dev/null || true)"
-[ "$PUBLIC_ROOT_STATUS" = "200" ] || fail_now "public_root_unhealthy"
+if [ "$PUBLIC_ROOT_STATUS" != "200" ]; then restore_config || true; fail_now "public_root_unhealthy"; fi
 
 PRODUCT_HEAD_AFTER="$(git -C "$PRODUCT_REPO" rev-parse HEAD 2>/dev/null || true)"
 PRODUCT_REMOTE_AFTER="$(git -C "$PRODUCT_REPO" ls-remote --heads origin refs/heads/main 2>/dev/null | awk '{print $1}')"
 PRODUCT_STATUS_AFTER="$(git -C "$PRODUCT_REPO" status --porcelain=v1 --untracked-files=all 2>/dev/null || true)"
 README_HASH_AFTER="$(sha256sum "$PRODUCT_REPO/README.md" 2>/dev/null | awk '{print $1}')"
-if [ "$PRODUCT_HEAD_AFTER" = "$PRODUCT_HEAD_BEFORE" ] && [ "$PRODUCT_REMOTE_AFTER" = "$PRODUCT_REMOTE_BEFORE" ] && [ "$PRODUCT_STATUS_AFTER" = "$PRODUCT_STATUS_BEFORE" ] && [ "$README_HASH_AFTER" = "$README_HASH_BEFORE" ]; then PRODUCT_BASELINE_PRESERVED="YES"; else fail_now "product_baseline_changed"; fi
+if [ "$PRODUCT_HEAD_AFTER" = "$PRODUCT_HEAD_BEFORE" ] && [ "$PRODUCT_REMOTE_AFTER" = "$PRODUCT_REMOTE_BEFORE" ] && [ "$PRODUCT_STATUS_AFTER" = "$PRODUCT_STATUS_BEFORE" ] && [ "$README_HASH_AFTER" = "$README_HASH_BEFORE" ]; then
+  PRODUCT_BASELINE_PRESERVED="YES"
+else
+  restore_config || true
+  fail_now "product_baseline_changed"
+fi
 
+RESULT="CHANGED"
 {
   echo "checked_at=$(date -Is)"
   echo "task_id=$TASK_ID"
+  echo "result=$RESULT"
   echo "auth_mode=$AUTH_MODE"
   echo "device_pairing_bypass=$DEVICE_PAIRING_BYPASS"
   echo "auth_secret_unchanged=YES"
+  echo "config_mode=0600"
   echo "service_state=$SERVICE_STATE"
   echo "direct_root_status=$DIRECT_ROOT_STATUS"
   echo "public_root_status=$PUBLIC_ROOT_STATUS"
   echo "product_baseline_preserved=$PRODUCT_BASELINE_PRESERVED"
+  echo "backup_file=$BACKUP"
   echo "secret_values_recorded=NO"
-} >> "$LOG_FILE"
+} >> "$RUN_LOG"
 
-git -C "$ORIS_REPO" add -- "$LOG_FILE" || fail_now "evidence_git_add_failed"
-git -C "$ORIS_REPO" diff --cached --check >/dev/null 2>&1 || fail_now "evidence_diff_check_failed"
-git -C "$ORIS_REPO" commit -m "chore(dev-employee): record Control UI pairing bypass $STAMP" >/dev/null 2>&1 || fail_now "evidence_commit_failed"
-git -C "$ORIS_REPO" pull --rebase origin main >/dev/null 2>&1 || fail_now "evidence_rebase_failed"
-git -C "$ORIS_REPO" push origin main >/dev/null 2>&1 || fail_now "evidence_push_failed"
+if ! git -C "$ORIS_REPO" fetch origin main >> "$RUN_LOG" 2>&1; then fail_now "oris_fetch_failed"; fi
+if ! git -C "$ORIS_REPO" worktree add --detach "$WORKTREE" origin/main >> "$RUN_LOG" 2>&1; then fail_now "evidence_worktree_create_failed"; fi
+mkdir -p "$WORKTREE/$(dirname "$EVIDENCE_REL")" || fail_now "evidence_directory_create_failed"
+python3 - "$RUN_LOG" "$WORKTREE/$EVIDENCE_REL" <<'PY_NORMALIZE'
+import sys
+from pathlib import Path
+src=Path(sys.argv[1]); dst=Path(sys.argv[2])
+dst.write_text("\n".join(line.rstrip(" \t\r") for line in src.read_text(encoding="utf-8",errors="replace").splitlines())+"\n",encoding="utf-8")
+PY_NORMALIZE
+git -C "$WORKTREE" add -- "$EVIDENCE_REL" || fail_now "evidence_git_add_failed"
+git -C "$WORKTREE" diff --cached --check >/dev/null 2>&1 || fail_now "evidence_diff_check_failed"
+git -C "$WORKTREE" commit -m "chore(dev-employee): record Control UI pairing bypass $STAMP" >/dev/null 2>&1 || fail_now "evidence_commit_failed"
+git -C "$WORKTREE" fetch origin main >/dev/null 2>&1 || fail_now "evidence_refetch_failed"
+if [ "$(git -C "$WORKTREE" merge-base HEAD origin/main 2>/dev/null)" != "$(git -C "$WORKTREE" rev-parse origin/main 2>/dev/null)" ]; then
+  git -C "$WORKTREE" rebase origin/main >/dev/null 2>&1 || fail_now "evidence_rebase_failed"
+fi
+EVIDENCE_COMMIT="$(git -C "$WORKTREE" rev-parse HEAD 2>/dev/null || true)"
+git -C "$WORKTREE" push origin HEAD:main >/dev/null 2>&1 || fail_now "evidence_push_failed"
+REMOTE_MAIN="$(git -C "$WORKTREE" ls-remote --heads origin refs/heads/main 2>/dev/null | awk '{print $1}')"
+if [ "$REMOTE_MAIN" = "$EVIDENCE_COMMIT" ] && [ -n "$EVIDENCE_COMMIT" ]; then EVIDENCE_REMOTE_VERIFIED="YES"; else fail_now "evidence_remote_sha_mismatch"; fi
 
-RESULT="CHANGED"
 summary
 exit 0
