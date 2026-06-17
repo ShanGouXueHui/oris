@@ -1,0 +1,40 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T210741Z",
+  "result": "MIGRATED_V2",
+  "failure_code": "",
+  "migration": {
+    "applied": true,
+    "rollback_performed": false,
+    "legacy_duplicate_removed": "YES",
+    "nginx_test": "PASS",
+    "nginx_reload": "PASS",
+    "conflict_warning_count": 0,
+    "backup_dir": "/etc/nginx/oris-backups/native-openclaw-v2-20260617T210741Z"
+  },
+  "public": {
+    "root_status": "200",
+    "root_matches_openclaw": true,
+    "admin_without_credentials": "401",
+    "rollback_without_credentials": "401",
+    "bootstrap_without_credentials": "401",
+    "session_without_credentials": "401",
+    "messages_without_credentials": "401"
+  },
+  "safety": {
+    "intake_loopback_only": true,
+    "private_token_artifact_valid": true,
+    "product_baseline_preserved": true,
+    "openclaw_config_mutated": false,
+    "openclaw_service_restarted": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "OPEN_PRIVATE_DASHBOARD_URL_ENTER_PRIVATE_TOKEN_AND_RUN_BROWSER_ACCEPTANCE_V2",
+  "evidence": {
+    "log_path": "logs/dev_employee/native_openclaw_ui_migration/native-openclaw-ui-migration-v2-20260617T210741Z.log",
+    "json_path": "logs/dev_employee/native_openclaw_ui_migration/native-openclaw-ui-migration-v2-20260617T210741Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
