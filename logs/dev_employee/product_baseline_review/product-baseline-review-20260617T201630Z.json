@@ -1,0 +1,45 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "",
+  "mode": "read_only_product_baseline_review",
+  "safety": {
+    "product_mutated": false,
+    "index_mutated": false,
+    "task_submitted": false,
+    "diff_content_committed": false
+  },
+  "repository": {
+    "path": "/home/admin/projects/oris-final-acceptance-api",
+    "head": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "branch": "main",
+    "remote": "git@github.com:ShanGouXueHui/oris-final-acceptance-api.git",
+    "remote_main": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "head_matches_expected": true,
+    "remote_matches_expected": true,
+    "status_entry_count": 1,
+    "status_entries": [
+      {
+        "code": " M",
+        "path": "README.md",
+        "original_path": null,
+        "staged": false,
+        "unstaged": true,
+        "untracked": false,
+        "working_tree_sha256": "d31250492632708254ea3fb1d653765031f1fe5fcdada4bdce6089847cb69ea7"
+      }
+    ]
+  },
+  "readme_review": {
+    "only_readme_dirty": true,
+    "staged": false,
+    "unstaged": true,
+    "capabilities_endpoint_added": true,
+    "api_list_context_detected": false,
+    "added_line_count": 1,
+    "removed_line_count": 0,
+    "staged_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "unstaged_diff_sha256": "97b6d3902856df6edfc4a9f55c485f32d287aea0f2dc922bbf5641e3e6e062fc",
+    "classification": "known_readme_gap_candidate"
+  },
+  "expected_head": "927f1968cc86bfd5213670f4eaa171fc1a3be620"
+}

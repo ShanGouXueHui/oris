@@ -1,0 +1,22 @@
+CHECKED_AT=2026-06-18T04:16:30+08:00
+TASK_ID=commercial-native-openclaw-ui-20260617
+MODE=READ_ONLY_PRODUCT_BASELINE_REVIEW
+PRODUCT_REPO=/home/admin/projects/oris-final-acceptance-api
+PRODUCT_MUTATED=NO
+PRODUCT_HEAD=927f1968cc86bfd5213670f4eaa171fc1a3be620
+PRODUCT_REMOTE_MAIN=927f1968cc86bfd5213670f4eaa171fc1a3be620
+PRODUCT_BRANCH=main
+PRODUCT_STATUS_ENTRY_COUNT=1
+PRODUCT_STATUS code= M path=README.md staged=False unstaged=True untracked=False sha256=d31250492632708254ea3fb1d653765031f1fe5fcdada4bdce6089847cb69ea7
+ONLY_README_DIRTY=YES
+README_STAGED=NO
+README_UNSTAGED=YES
+README_CAPABILITIES_ADDED=YES
+README_API_LIST_CONTEXT=NO
+README_ADDED_LINE_COUNT=1
+README_REMOVED_LINE_COUNT=0
+README_PATCH_CLASSIFICATION=known_readme_gap_candidate
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD cc95dec)
+HEAD is now at cc95dec ops(dev-employee): add product baseline read-only review
