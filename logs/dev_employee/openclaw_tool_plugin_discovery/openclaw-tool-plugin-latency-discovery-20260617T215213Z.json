@@ -1,0 +1,1197 @@
+{
+  "task_id": "commercial-openclaw-tool-plugin-discovery-20260617",
+  "previous_task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T215213Z",
+  "result": "DIAGNOSED",
+  "failure_code": null,
+  "openclaw": {
+    "version": "OpenClaw 2026.5.19 (a185ca2)",
+    "node_version": "v22.22.2",
+    "service_state": "active",
+    "direct_status": "200",
+    "public_status": "200",
+    "public_matches_direct": true,
+    "plugin_cli_supported": true,
+    "plugin_list_rc": 0,
+    "plugin_inspect_cold_rc": 0,
+    "plugin_inspect_runtime_rc": 0,
+    "plugin_doctor_rc": 0,
+    "gateway_deep_status_rc": 0
+  },
+  "sdk": {
+    "tool_plugin_supported": true,
+    "plugin_entry_supported": true,
+    "authoring_cli_supported": true,
+    "agent_end_hook_supported": true,
+    "model_call_hooks_supported": true,
+    "after_tool_call_hook_supported": true,
+    "package": {
+      "found": true,
+      "root": "/home/admin/.npm-global/lib/node_modules/openclaw",
+      "version": "2026.5.19",
+      "tool_plugin_export": true,
+      "plugin_entry_export": true,
+      "package_exports_count": 315,
+      "secret_values_recorded": false
+    }
+  },
+  "plugins": {
+    "plugin_total_count": 90,
+    "plugin_enabled_count": 65,
+    "plugin_error_count": 0,
+    "plugin_ids": [
+      "active-memory",
+      "admin-http-rpc",
+      "alibaba",
+      "anthropic",
+      "arcee",
+      "azure-speech",
+      "bonjour",
+      "browser",
+      "byteplus",
+      "canvas",
+      "cerebras",
+      "chutes",
+      "clickclack",
+      "cloudflare-ai-gateway",
+      "comfy",
+      "copilot-proxy",
+      "deepgram",
+      "deepinfra",
+      "deepseek",
+      "device-pair",
+      "document-extract",
+      "duckduckgo",
+      "elevenlabs",
+      "exa",
+      "fal",
+      "file-transfer",
+      "firecrawl",
+      "fireworks",
+      "github-copilot",
+      "google",
+      "gradium",
+      "groq",
+      "huggingface",
+      "imessage",
+      "inworld",
+      "irc",
+      "kilocode",
+      "kimi",
+      "litellm",
+      "llm-task",
+      "lmstudio",
+      "mattermost",
+      "memory-core",
+      "memory-wiki",
+      "microsoft",
+      "microsoft-foundry",
+      "migrate-claude",
+      "migrate-hermes",
+      "minimax",
+      "mistral",
+      "moonshot",
+      "nvidia",
+      "oc-path",
+      "ollama",
+      "open-prose",
+      "openai",
+      "opencode",
+      "opencode-go",
+      "openrouter",
+      "perplexity",
+      "phone-control",
+      "qianfan",
+      "qwen",
+      "runway",
+      "searxng",
+      "senseaudio",
+      "sglang",
+      "signal",
+      "skill-workshop",
+      "stepfun",
+      "synthetic",
+      "talk-voice",
+      "tavily",
+      "telegram",
+      "tencent",
+      "thread-ownership",
+      "together",
+      "tokenjuice",
+      "tts-local-cli",
+      "venice",
+      "vercel-ai-gateway",
+      "vllm",
+      "volcengine",
+      "voyage",
+      "vydra",
+      "web-readability",
+      "webhooks",
+      "xai",
+      "xiaomi",
+      "zai"
+    ],
+    "existing_oris_plugin_ids": [],
+    "registered_tools": [
+      "browser",
+      "canvas",
+      "code_execution",
+      "dir_fetch",
+      "dir_list",
+      "file_fetch",
+      "file_write",
+      "firecrawl_scrape",
+      "firecrawl_search",
+      "llm-task",
+      "memory_get",
+      "memory_search",
+      "skill_workshop",
+      "tavily_extract",
+      "tavily_search",
+      "wiki_apply",
+      "wiki_get",
+      "wiki_lint",
+      "wiki_search",
+      "wiki_status",
+      "x_search"
+    ],
+    "registered_hooks": [],
+    "registered_services": [
+      "browser-control",
+      "canvas-host",
+      "device-pair-notifier",
+      "phone-control-expiry"
+    ],
+    "registered_gateway_methods": [
+      "browser.request"
+    ],
+    "runtime_json_available": true,
+    "secret_values_recorded": false
+  },
+  "policy": {
+    "plugins_enabled": true,
+    "plugins_allow": [],
+    "plugins_deny": [],
+    "plugin_load_path_count": 0,
+    "plugin_load_path_hashes": [],
+    "plugin_entries": [
+      {
+        "id": "duckduckgo",
+        "enabled": true,
+        "config_keys": [],
+        "hook_config_keys": []
+      },
+      {
+        "id": "feishu",
+        "enabled": true,
+        "config_keys": [],
+        "hook_config_keys": []
+      }
+    ],
+    "plugin_slots": [],
+    "tools_allow": [],
+    "tools_deny": [],
+    "tools_profile": "coding",
+    "secret_values_recorded": false
+  },
+  "services": {
+    "services": [
+      {
+        "unit": "openclaw-gateway.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "OpenClaw Gateway (managed by ORIS)"
+      },
+      {
+        "unit": "oris-dev-employee-bridge.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Dev Employee Supervised Bridge"
+      },
+      {
+        "unit": "oris-dev-employee-enqueue.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Dev Employee Local Enqueue API"
+      },
+      {
+        "unit": "oris-dev-employee-intake.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Dev Employee Intake API"
+      },
+      {
+        "unit": "oris-dev-employee-web-console.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Dev Employee Web Console"
+      },
+      {
+        "unit": "oris-feishu-callback.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Feishu Callback Server"
+      },
+      {
+        "unit": "oris-free-mesh-api.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Free Mesh API"
+      },
+      {
+        "unit": "oris-http-api.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS HTTP API"
+      },
+      {
+        "unit": "oris-report-download.service",
+        "load": "loaded",
+        "active": "active",
+        "sub": "running",
+        "description": "ORIS Report Download Server"
+      }
+    ],
+    "matching_count": 9,
+    "active_count": 9,
+    "secret_values_recorded": false
+  },
+  "oris_integration": {
+    "integration_files": [
+      {
+        "path": "HEARTBEAT.md",
+        "sha256": "5f78d3c31e9982213a07af195e21f778bc706d3936fc460619d0da0fcace2a74"
+      },
+      {
+        "path": "MEMORY.md",
+        "sha256": "e0802efccfdd8d91a158c2c84b89da6b1adda6113ee038a275aac820188bdd1c"
+      },
+      {
+        "path": "acceptance_scenarios/api_info_goal_driven.json",
+        "sha256": "20bc1fcd0961dfb0f5ce5c675fda9bc9d636ab815e23fda4c63bc6f222a5d344"
+      },
+      {
+        "path": "acceptance_scenarios/healthz_repair_seed.json",
+        "sha256": "653f83cc41a6a8f6c1dd5a5dafc8e4b484800fdde8856d334b3164f85ee9dad8"
+      },
+      {
+        "path": "acceptance_scenarios/readyz_goal_driven_clean_check.json",
+        "sha256": "2bdecbd19be8af6989e4c46da4dc2faed46af3a0cc4051416614f31b4ff0d7d1"
+      },
+      {
+        "path": "acceptance_scenarios/version_goal_driven_clean_check.json",
+        "sha256": "e394299090eef299886270d8f2a23f4fd827fd56e2d7b9338fef4fea3998ae9b"
+      },
+      {
+        "path": "acceptance_scenarios/web_adapter_livez_goal.json",
+        "sha256": "913b272a7ddd2f184eade15b533962f2a582ce6d4b01e92ceb0afb35b84adf4d"
+      },
+      {
+        "path": "acceptance_scenarios/web_adapter_ping_goal.json",
+        "sha256": "d068d58fd17ecaf1e1f8648f0d3ee8c0e026958c22ea04a748d3c3a8b331c9d1"
+      },
+      {
+        "path": "acceptance_scenarios/web_console_consolez_goal.json",
+        "sha256": "2f7cfdf4778c9791fce69b4005eb0d412af702f8e45b329ed1b2ef69f7dbed34"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/answer_policy.json",
+        "sha256": "beaa1fc4cb3ddd1809d831c55d0e3eb62cf69f0de34a40c644ba24b2481543e7"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/bridge_runtime.json",
+        "sha256": "c31a73f5783f4108c390171c036898322615e5cd393e4744f1f11267337a194c"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/insight_compiler_runtime.json",
+        "sha256": "611d9af2f97e4146d848c330719a2a4bd5618f50c969eb75e30b085749df765a"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/insight_delivery_config.json",
+        "sha256": "e07b205e1c3b1f429f6baeb02e529d9f18147f62a8e721dde31b1ea3e58ad4df"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/insight_delivery_policy.json",
+        "sha256": "3bc70227a870dd7e8fa074bdb4d353a63e55cd7803e2db7ddb0ddf7824bea16e"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/insight_skill_runtime.json",
+        "sha256": "4ecd056f8615e929821e8b77e33015dc22397a52b05adf5c8e85f630b14faaad"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/config/insight_storage.json",
+        "sha256": "2c382e8d342cdf20c347e2b09af19fb555a00b517e094f79f87e45169c42852b"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/ANSWER_PROTOCOL.md",
+        "sha256": "f4ead3fc647f20b165984d45dc55e860a6281cd6a84b539b0cf2c6a1039c095e"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/BRIDGE_FEISHU.md",
+        "sha256": "1fa9a505059ec82f7c55b6fb7e78108374a0919f9b569df8f2581dba8706bcc9"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/BRIDGE_OPENCLAW.md",
+        "sha256": "2ec0340d103b7ff826a269cdbf2bcebb171acc2ccb062c8268c3ace1b6b64058"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/CHANGELOG_AGENT.md",
+        "sha256": "87b393a2a33c1093dbecd8375e46aae3b597cb2fae1e2763c82703f3445781b8"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/CONFIG_GOVERNANCE.md",
+        "sha256": "5b029c666c0089426020acf6cf42c526abb8115f2bca5a2168349eed27a36db1"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-03-feishu-byte-string-blocker.md",
+        "sha256": "ca0d5077fe2d389b770c4acad4e9729286e64038d96efec1bdad170660876037"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-03-openclaw-admin-baseline-success.md",
+        "sha256": "b2206ea4ca0688254f1bdd7d5cce751bfdc0d3d11d227dd92e74e054b438e347"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-03-openclaw-runtime-mode.md",
+        "sha256": "e1af5d36ce2935889912f017e26be8990f4a070253981f45ef1f1459fffa142b"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-03-reset-baseline.md",
+        "sha256": "765baab4ddbf301a83da7806aa4a68e6878f1a725fa89e2742d8927b7eec5e71"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-03-v1-baseline.md",
+        "sha256": "bc2ce520070771dc25a8f12da69c4ef801b44fde3e2c1050f4542afecdeb0904"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-config-first-bridge-runtime.md",
+        "sha256": "388a37f08a409b76f92b9ceffb5d99632876f9c599727ba9ed3b8206012ab073"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-config-governance-and-openclaw-cutover.md",
+        "sha256": "d02bb234b50e5e58f4401106861e4806141389857f10c0fd3ab8cf0b7997bdf8"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-direct-script-import-fix.md",
+        "sha256": "4d335222bf4f53d118a3e25d049095c707a71b33332ebf0db786e1f49d269fed"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-external-integration-standard.md",
+        "sha256": "0453a26a4a60053a5b826ea0d02dbfbf3b34d49b612b870c00e5fadc3cd0e20a"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-failure-memory-and-block-aware-execution.md",
+        "sha256": "2b57f4761c30ec132fbb66f89b29f0bb77d60173508c8d321e855360a3584e93"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-bridge-core.md",
+        "sha256": "f0c59dc6d9e7188d2087d37af88952e8a1fa717173ddc43362206eec3046a5d9"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-delivery-executor-live.md",
+        "sha256": "3d61145e223aebbee597e5fe06da7036084afc061d327c3ccae5bc7e14a99bae"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-event-ingress-skeleton.md",
+        "sha256": "e930916e876b370a9151a09fb0eb16533eba43163a09c9fd50443e70b29a0088"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-final-webhook-cutover.md",
+        "sha256": "fee2a002f3bde6117049c0a1b3e4504bd1b2d90b9cf42f919ecadf9c72d30491"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-response-governance.md",
+        "sha256": "5444464e99a01e740c37791527fc30642ad4de8e178ea58b3410564cca94fb0f"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-send-executor-skeleton.md",
+        "sha256": "668f5c018efe9affdcd252cf8cb2851588d5ef42a8f545d6188b719d2549b49a"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-single-source-of-truth.md",
+        "sha256": "e1f28d7a172e18d62ef2d7e58acc2a3772a3b21e4d4af1aa07a6ea545f200127"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-transport-skeleton.md",
+        "sha256": "eb269f507b2444bafbad1b9df4328c29dce0e9d1d4e9980c9ff13e4929b0c71a"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-feishu-working-qbot-pending.md",
+        "sha256": "f04709631cd515db9c7182d12af1da65dc64dfc3b038baf470e92afac81e21e3"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-http-api-layer.md",
+        "sha256": "a924346e4fedcc4595c67e5ec2e2b77fa5f6deede8c585935861c6e5bc931ba2"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-https-commercial-entrypoint.md",
+        "sha256": "ace17fb390f716122e07b457133340e29f879ed85a4ebc16ec852dea3d17d0be"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-insight-memory-postgres-and-skill-roadmap.md",
+        "sha256": "945e86c132e5a445b53de63d77f984c9299ee7b165bb6633bddb2293c747d2bb"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-openclaw-dashboard-and-feishu-working.md",
+        "sha256": "e1c2efe64dbe82205cc3da0df163f2defe4835399b030f36b484840864a05821"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-openclaw-first-production-path.md",
+        "sha256": "71bb0bf72f0040fcd78c21e7c75f3eca6c1f39efd77dd4d3e5d702f15f266ac9"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-postgres-insight-bootstrap.md",
+        "sha256": "cbb25c5f539d43adbb87401cfcce68791343f3ed05b9530a827566543ca7224e"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-provider-scoreboard-layer.md",
+        "sha256": "3373083a4d65116db359af7ba89cd8e5a946be41dc8b52e2dd2622218b3374e1"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-retry-and-failover-principle.md",
+        "sha256": "13f0c5c2f33733287f145517b0b65194f7d1e960324161555965ebf432cb3173"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-runtime-executor-layer.md",
+        "sha256": "8c00b96207411769e958e359d8e1e476495d70ddaa942d8edb86a8e2e52604ba"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-runtime-plan-layer.md",
+        "sha256": "461243d8e9e90b9ddbc513ead916e285c7cae9656b04cab20c041cbc41413bf3"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-unified-inference-entrypoint.md",
+        "sha256": "50938c9911f4ab7f5e61d83b79d078e6afe7e8e6185c0cd4e8d9d6ec1fd4dade"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/DECISIONS/2026-04-06-versioned-api-contract-and-bearer-auth.md",
+        "sha256": "02eebecdd96bf469be1efc35d31d1363aa51833520fbf6eb2bbdda8d8912d5f6"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/FEISHU_FINAL_CUTOVER.md",
+        "sha256": "ddbc8bea9657123fa3cd0a88694e481003d52d93520adea4b0223bfb54c907f3"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/INSIGHT_DATA_MODEL.md",
+        "sha256": "2d6e1c56777ddd0351ff92b52314eeff89cbbf6749a50cd503054afd5ea37174"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/INSIGHT_PLATFORM_ARCHITECTURE.md",
+        "sha256": "b76a6da066b89a04bbe291c3e8a77ff5d0c897c0ae4b209209b3de603df3724f"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/INSIGHT_SKILL_ROADMAP.md",
+        "sha256": "328c48655c9a18eb754fac368086fd5642d4596e09d4a1e7c900d253b7ae364f"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/INTEGRATION_CONTRACT.md",
+        "sha256": "39719b35dec8180a396b4b4092f8e4348bf9750028a3070a5d2a34bc83144f79"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/OPENCLAW_PRODUCTION_CUTOVER.md",
+        "sha256": "df51fa3989adbac72d28640acbcda28ddf861b4a18311d2f92ac9e671d6e7e09"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/PROJECT_STATE.md",
+        "sha256": "ad83560a629fd8bf11d6128ea11142cde00c4c1aa595767337877229132372c7"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/PROVIDER_ORCHESTRATION.md",
+        "sha256": "93928054fa4ac48431c7c2d1fdbc1739538598086bc14f54b207701a0c1676c2"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/RUNBOOKS/INSIGHT_POSTGRES_BOOTSTRAP.md",
+        "sha256": "f7cb29e6f513d0601db7a5288abe774a393faa13c97bbe78f73145351ebcd8f8"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/RUNBOOKS/OPENCLAW_RUNTIME.md",
+        "sha256": "33fdfa1ce11f5f59168ced745a88de8bff4cd25ed0985485da6a3e0c438d0a30"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/RUNTIME_AUTOMATION.md",
+        "sha256": "f990986f1520cf73c6a54106cf6f4cd6054d37c62e7c6e923e6f17193a06c0e2"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/docs/SESSION_WRAPUP_2026-04-06.md",
+        "sha256": "3b4299ae832758f6f4f9772dca6c1890d98a490419f2384a3032833d832645ae"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/memory/HANDOFF.md",
+        "sha256": "74414730969754d6f33d51b30eef9ae77b182e0d6fcacca93331874f7ddc2d18"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/orchestration/runtime_plan.json",
+        "sha256": "898838270eb9e984a244749d3ea7c900910b4859f1c57445b6efa43cc063729d"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/orchestration/runtime_policy.yaml",
+        "sha256": "0077f77a1d0daedaafb1f60e62fa0739995ab953410c7205f3b1376054fc5322"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/backfill_citation_links_from_ingest.py",
+        "sha256": "083b46a7f977a76329b03c3bfad39d6fa9ff42e29fb7e4239fbe1d7d287aa14a"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/bridge_feishu_to_oris.py",
+        "sha256": "e5d96047cd37e7c549b043fea1b9bc8846787d7107afa0cebecb50a008542152"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/delivery_executor.py",
+        "sha256": "4db17bf1967e0de6a77f86ad14cddfa26c6eb13a243da53938db37f6b4c8396c"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/evals/run_eval_report.py",
+        "sha256": "5f2337a20f75507e954f309345507ce1b3402f4b87e5200cad88fefd13fcaa53"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/feishu_callback_server.py",
+        "sha256": "821190936b3fcd84eebcc70a30e4c45f8fa64a7a6ac42dd4221c8b6d0c86559b"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/feishu_event_ingress_skeleton.py",
+        "sha256": "c040cd597637346949798ade270ec4faf0e37deba9a1805cdbb88dd692637479"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/feishu_send_executor_skeleton.py",
+        "sha256": "38c548c2e234485c56d72ba813d5685f531561a9ea51caae95e22cffc0f76cde"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/insight_queue_worker.py",
+        "sha256": "9792627d7b3f6b9206901d9e1767d4edbec4a2f9d4390132839adec68af468f3"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/lib/compiler_compare_engine.py",
+        "sha256": "711b77da3f40d46b2f093c2627b4bbcd7df051dc8b1a2ba82b2d3dbb83e6f8a0"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/lib/insight_db.py",
+        "sha256": "7524ce379a1c2de6351c398f54d38ce3d869e0a14150ebfd145078a997432a17"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/lib/oris_llm_client.py",
+        "sha256": "22c1b82003557c13516c1ac530958d0d4032b50fce11cb281a730f759382e7b1"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/lib/report_delivery_runtime.py",
+        "sha256": "51da54c430a5f373c3b7dc66ca740d0702e87a06f2b6b5f8441c9a34ae151f77"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/lib/runtime_config.py",
+        "sha256": "9e2d1cc6d06905a27fbd2c325e443400076321717777b37654f05768d3b4fedc"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/materialize_report_delivery_links.py",
+        "sha256": "f91b07c3aa982c33ac5c904434c0eadf29895bc789769ba8d21377004505f1f0"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/openclaw_bridge_to_oris.py",
+        "sha256": "604b903c41c7a2fb8b19c7451220f4f75d5b2097ea703bfaaba8c545d46a27c1"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/oris_http_api.py",
+        "sha256": "603fdd6d8472bcaa6514bbb6ae4fd67697db07540a903c878d56c927f7648fc8"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/provider_probe_alibaba_bailian.py",
+        "sha256": "81c8a7bb52783df066a7ddaf5ceec445831b0be2b1fd2efe0639b9c3b2082174"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/provider_probe_gemini.py",
+        "sha256": "580271a180800366520965cce9e0aa546ea3097503c2027ff3055eed84c2a335"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/provider_probe_tencent_hunyuan.py",
+        "sha256": "f0c154d6fea0c31123d572aa899d8d642303994c7a38fe3e713d9041d258704c"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/provider_probe_zhipu.py",
+        "sha256": "b2cac00941d90898b4c5169798b3ae5b5f6b04a7c28d4b9c90cd2467143ef753"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/quota_probe.py",
+        "sha256": "1bc8ef99c16127d7e3601660c71cc1cc1bb066f343be219a7b4d25f0ba66d7d2"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/refactor_bridge_config.py",
+        "sha256": "9e4315bdcf690ee59f0c6e0b3cba1aa787f32f58f322529dd2f8eb20dbd2ece9"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/render_chat_md_from_bundle.py",
+        "sha256": "596e33e6ba127ec8bc1caf1938d13a2018743905ef14aa1048563b8bd464a411"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/render_mobile_insight.py",
+        "sha256": "3d93dc6184cd85ff15731bc4e1d509e4c4e9c73c4c8a5099fcd354b3e9fb734f"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/runtime_execute.py",
+        "sha256": "a8255db52729b777ba1858fbe7a1ae60b005f6d30c197f3e0b63d79d4359f750"
+      },
+      {
+        "path": "backups/recover_provider_20260408_152819/scripts/runtime_plan.py",
+        "sha256": "9ccd348f5cce8243dad91baf296ae9dd11babc4ea3964e923938f3cb18554b6b"
+      },
+      {
+        "path": "config/answer_policy.json",
+        "sha256": "beaa1fc4cb3ddd1809d831c55d0e3eb62cf69f0de34a40c644ba24b2481543e7"
+      },
+      {
+        "path": "config/bridge_runtime.json",
+        "sha256": "c31a73f5783f4108c390171c036898322615e5cd393e4744f1f11267337a194c"
+      },
+      {
+        "path": "config/company_profile_quality.json",
+        "sha256": "65bbed1d6a7cde662a096f4859fa5aba040cb6d6ec69ff884242fddfc8639639"
+      },
+      {
+        "path": "config/dev_employee_commercial_readiness.json",
+        "sha256": "4d25b8a9802d8acd366b22b8e7b203388afeaf4a58ba2bcba63f7103f9e7e9c2"
+      },
+      {
+        "path": "config/dev_employee_task_intake.json",
+        "sha256": "2f1989ebea7284c4a8e913d41aa227e71d5af1b00184b627d3bbcf4edbcbc9b2"
+      },
+      {
+        "path": "config/dev_employee_task_status.json",
+        "sha256": "106ef73f220a747b70aca9deaa611ce7df5c882663a4daea7bf6352755b8ae15"
+      },
+      {
+        "path": "config/dev_employee_web_intake.json",
+        "sha256": "0fd39604d8714d28065332565236b878013e761b5e21d0d7ddc3617d9f014965"
+      },
+      {
+        "path": "config/insight_compiler_runtime.json",
+        "sha256": "611d9af2f97e4146d848c330719a2a4bd5618f50c969eb75e30b085749df765a"
+      },
+      {
+        "path": "config/insight_delivery_config.json",
+        "sha256": "a486ebe74f5f474f6853e48b75f8cd9956d30826a1778e8925b31e0088382bc0"
+      },
+      {
+        "path": "config/insight_delivery_policy.json",
+        "sha256": "3bc70227a870dd7e8fa074bdb4d353a63e55cd7803e2db7ddb0ddf7824bea16e"
+      },
+      {
+        "path": "config/insight_skill_runtime.json",
+        "sha256": "4ecd056f8615e929821e8b77e33015dc22397a52b05adf5c8e85f630b14faaad"
+      },
+      {
+        "path": "config/insight_storage.json",
+        "sha256": "2c382e8d342cdf20c347e2b09af19fb555a00b517e094f79f87e45169c42852b"
+      },
+      {
+        "path": "config/oris_free_mesh_api.json",
+        "sha256": "a2bb5eb50a18533a1612af1fc8c308ccec6a9bfd48858ea72adb6108210d39b7"
+      },
+      {
+        "path": "config/polish_render_config.json",
+        "sha256": "0f6e89b3bbca711beb7aa109f7eabc62bf85afe292defeb67c2ccd825056c31d"
+      },
+      {
+        "path": "docs/ANSWER_PROTOCOL.md",
+        "sha256": "f4ead3fc647f20b165984d45dc55e860a6281cd6a84b539b0cf2c6a1039c095e"
+      },
+      {
+        "path": "docs/BRIDGE_FEISHU.md",
+        "sha256": "1fa9a505059ec82f7c55b6fb7e78108374a0919f9b569df8f2581dba8706bcc9"
+      },
+      {
+        "path": "docs/BRIDGE_OPENCLAW.md",
+        "sha256": "2ec0340d103b7ff826a269cdbf2bcebb171acc2ccb062c8268c3ace1b6b64058"
+      },
+      {
+        "path": "docs/CHANGELOG_AGENT.md",
+        "sha256": "87b393a2a33c1093dbecd8375e46aae3b597cb2fae1e2763c82703f3445781b8"
+      },
+      {
+        "path": "docs/CONFIG_GOVERNANCE.md",
+        "sha256": "dfaef6a2f5b2be79a4bd6026e0d6edb9474ff18ff8e47eb2447d6cce1f34f22e"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-03-feishu-byte-string-blocker.md",
+        "sha256": "ca0d5077fe2d389b770c4acad4e9729286e64038d96efec1bdad170660876037"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-03-openclaw-admin-baseline-success.md",
+        "sha256": "b2206ea4ca0688254f1bdd7d5cce751bfdc0d3d11d227dd92e74e054b438e347"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-03-openclaw-runtime-mode.md",
+        "sha256": "e1af5d36ce2935889912f017e26be8990f4a070253981f45ef1f1459fffa142b"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-03-reset-baseline.md",
+        "sha256": "765baab4ddbf301a83da7806aa4a68e6878f1a725fa89e2742d8927b7eec5e71"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-03-v1-baseline.md",
+        "sha256": "bc2ce520070771dc25a8f12da69c4ef801b44fde3e2c1050f4542afecdeb0904"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-config-first-bridge-runtime.md",
+        "sha256": "388a37f08a409b76f92b9ceffb5d99632876f9c599727ba9ed3b8206012ab073"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-config-governance-and-openclaw-cutover.md",
+        "sha256": "d02bb234b50e5e58f4401106861e4806141389857f10c0fd3ab8cf0b7997bdf8"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-direct-script-import-fix.md",
+        "sha256": "4d335222bf4f53d118a3e25d049095c707a71b33332ebf0db786e1f49d269fed"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-external-integration-standard.md",
+        "sha256": "0453a26a4a60053a5b826ea0d02dbfbf3b34d49b612b870c00e5fadc3cd0e20a"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-failure-memory-and-block-aware-execution.md",
+        "sha256": "2b57f4761c30ec132fbb66f89b29f0bb77d60173508c8d321e855360a3584e93"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-bridge-core.md",
+        "sha256": "f0c59dc6d9e7188d2087d37af88952e8a1fa717173ddc43362206eec3046a5d9"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-delivery-executor-live.md",
+        "sha256": "3d61145e223aebbee597e5fe06da7036084afc061d327c3ccae5bc7e14a99bae"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-event-ingress-skeleton.md",
+        "sha256": "e930916e876b370a9151a09fb0eb16533eba43163a09c9fd50443e70b29a0088"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-final-webhook-cutover.md",
+        "sha256": "fee2a002f3bde6117049c0a1b3e4504bd1b2d90b9cf42f919ecadf9c72d30491"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-response-governance.md",
+        "sha256": "5444464e99a01e740c37791527fc30642ad4de8e178ea58b3410564cca94fb0f"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-send-executor-skeleton.md",
+        "sha256": "668f5c018efe9affdcd252cf8cb2851588d5ef42a8f545d6188b719d2549b49a"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-single-source-of-truth.md",
+        "sha256": "e1f28d7a172e18d62ef2d7e58acc2a3772a3b21e4d4af1aa07a6ea545f200127"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-transport-skeleton.md",
+        "sha256": "eb269f507b2444bafbad1b9df4328c29dce0e9d1d4e9980c9ff13e4929b0c71a"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-feishu-working-qbot-pending.md",
+        "sha256": "f04709631cd515db9c7182d12af1da65dc64dfc3b038baf470e92afac81e21e3"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-http-api-layer.md",
+        "sha256": "a924346e4fedcc4595c67e5ec2e2b77fa5f6deede8c585935861c6e5bc931ba2"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-https-commercial-entrypoint.md",
+        "sha256": "ace17fb390f716122e07b457133340e29f879ed85a4ebc16ec852dea3d17d0be"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-insight-memory-postgres-and-skill-roadmap.md",
+        "sha256": "945e86c132e5a445b53de63d77f984c9299ee7b165bb6633bddb2293c747d2bb"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-openclaw-dashboard-and-feishu-working.md",
+        "sha256": "e1c2efe64dbe82205cc3da0df163f2defe4835399b030f36b484840864a05821"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-openclaw-first-production-path.md",
+        "sha256": "71bb0bf72f0040fcd78c21e7c75f3eca6c1f39efd77dd4d3e5d702f15f266ac9"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-postgres-insight-bootstrap.md",
+        "sha256": "cbb25c5f539d43adbb87401cfcce68791343f3ed05b9530a827566543ca7224e"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-provider-scoreboard-layer.md",
+        "sha256": "3373083a4d65116db359af7ba89cd8e5a946be41dc8b52e2dd2622218b3374e1"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-retry-and-failover-principle.md",
+        "sha256": "13f0c5c2f33733287f145517b0b65194f7d1e960324161555965ebf432cb3173"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-runtime-executor-layer.md",
+        "sha256": "8c00b96207411769e958e359d8e1e476495d70ddaa942d8edb86a8e2e52604ba"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-runtime-plan-layer.md",
+        "sha256": "461243d8e9e90b9ddbc513ead916e285c7cae9656b04cab20c041cbc41413bf3"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-unified-inference-entrypoint.md",
+        "sha256": "50938c9911f4ab7f5e61d83b79d078e6afe7e8e6185c0cd4e8d9d6ec1fd4dade"
+      },
+      {
+        "path": "docs/DECISIONS/2026-04-06-versioned-api-contract-and-bearer-auth.md",
+        "sha256": "02eebecdd96bf469be1efc35d31d1363aa51833520fbf6eb2bbdda8d8912d5f6"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_AUTONOMOUS_CAPABILITY_TARGET_2026-05-26.md",
+        "sha256": "bf4ea6d6b13b9a98ad4c2dc2fe9a4f724af7bd4bc156b58160589b2787496062"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_AUTONOMOUS_DECISION_DOCTRINE_2026-05-26.md",
+        "sha256": "1af693f9dd803c70eb15b154ede97f3e2466133415618f00f074e33ac7af9798"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md",
+        "sha256": "7b433c0a47ab4a1d6051233702e834cb9afed49d99a6dc467605fa35e9a281ad"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY_ADDENDUM_2026-06-16.md",
+        "sha256": "c81af759edc38e37f7933a09200d5a18ab67ce76bfd404ea6dce7f67562e9c99"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_BOOTSTRAP_PROMPT.md",
+        "sha256": "2c9990b106b7f25c1c39fccec20a57ba39168b0e12c310d2125ada9b1b4c98e1"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_BRIDGE_FORMAL_TEST_OBSERVATION_2026-05-25.md",
+        "sha256": "6b42e08214f2f793460403ca0e1f3fb6a70e5e6fa91e7fac64d25fe8f68fd94c"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_COMMERCIAL_ARCHITECTURE_2026-06-16.md",
+        "sha256": "d3159e7d8d9e5eef9fae0b9e738eafe739ecaa5351b30fb410da55a09ffc447e"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_CONVERSATIONAL_WEB_EXPERIENCE_2026-06-16.md",
+        "sha256": "64ad96edc04ff2a8ca23560e41c4fd3e9cd7118842533238337c92df1585abf6"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md",
+        "sha256": "4df149fc77c3478bdc62130a8bd1d0d0c4db6edcf7171b8531075a7cef67eaf2"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md",
+        "sha256": "039ea658fb3219d09281bfa324301ec6cc70799b6e630f453e4c02b6ff13c245"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_ENQUEUE_CLIENT_SPEC_2026-05-26.md",
+        "sha256": "23e2fca55235b017e2d4bd99097346027d7ea59b7b565ffba84cee21c64ab7c5"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_ENVIRONMENT_ADDENDUM_2026-06-17.md",
+        "sha256": "eac7ab4501795baa92de55289ffed3d65f8c8e3c178cf0cc8332926514bc46be"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_2026-06-16.md",
+        "sha256": "92e2cbffe332f373f0d1a2f0baf12aab6510bdfcdeee2ef8c38530b0f007f1e0"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_FAILURE_EVIDENCE_PLAN_2026-05-26.md",
+        "sha256": "1474ce983979eb18a37c765724337af33652c52bcc89c5e3541eb8969009076e"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_FINAL_ACCEPTANCE_RETROSPECTIVE_2026-05-24.md",
+        "sha256": "6964339329349a144f4885d9fc6403a1cbed004b8e50ec838ac6690255edd3b1"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_INTAKE_STATUS_API_2026-05-29.md",
+        "sha256": "da9be44f6bfeb0cad5babf71be62c3fdde52b74fff2f1153a16a8675948aee4b"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_DECISION_2026-06-17.md",
+        "sha256": "a3e9916fb821987709c0c4e53e99e6c24dbbc94f86581a9e188085bdff7b9ec7"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_NATIVE_OPENCLAW_UI_MIGRATION_PLAN_2026-06-17.md",
+        "sha256": "c27ee7b5ef40b359320f5019f081cd20cb2358d52630366897f57440da4fe7d8"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_PHASE2_SCAFFOLD.md",
+        "sha256": "21d235b0f400b963bb2a9f7973f5eec991e96023c81ba62d76d6dfdc64513c88"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
+        "sha256": "4cc4de72346ac41bcaaac6f2d212d8a981e0cd49a8f27598a027aacbc6113c49"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_SUPERVISED_BRIDGE_V2_1_RETROSPECTIVE_2026-05-25.md",
+        "sha256": "dcc595d72eabafb37f7bbf9afd1d2cfbd38bb062a7cf1d4a203249eeb424438b"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_SUPERVISED_BRIDGE_V2_2026-05-25.md",
+        "sha256": "a15dfb77c682a36c3d4466ec215e1b0ef91faecc1f0af6e04a9ea368aef210d0"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_WEB_CONSOLE_ACCESS_POLICY_2026-05-29.md",
+        "sha256": "05e0f095aadb3f0951747f5c14caed4d12bbdc2c880a4ef155615d6856abfdeb"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_WEB_INTAKE_ADAPTER_2026-05-29.md",
+        "sha256": "273a0e2d3d5d3e7a779d8f010412a855993e1b60f7b81a4e2705976374dc7bc7"
+      },
+      {
+        "path": "docs/DEV_EMPLOYEE_WEB_TO_CODEX_EXECUTION_GAP_2026-05-24.md",
+        "sha256": "2d98a73c797a5e88957f85afd95a9a99765ca8b806fcdd9523bb70753be284b0"
+      },
+      {
+        "path": "docs/FEISHU_FINAL_CUTOVER.md",
+        "sha256": "ddbc8bea9657123fa3cd0a88694e481003d52d93520adea4b0223bfb54c907f3"
+      },
+      {
+        "path": "docs/FREE_MODEL_ROUTING_ARCHITECTURE_2026-04-09.md",
+        "sha256": "9fa89f7465b4085b3749ee2bbcd7eb643b68aa740ba943d98aba3013c117d10b"
+      },
+      {
+        "path": "docs/INSIGHT_DATA_MODEL.md",
+        "sha256": "2d6e1c56777ddd0351ff92b52314eeff89cbbf6749a50cd503054afd5ea37174"
+      },
+      {
+        "path": "docs/INSIGHT_DELIVERY_POLICY.md",
+        "sha256": "01f6df211356b927b2007becbac8ea587903dd18da831f2eaf7841f02342b72d"
+      },
+      {
+        "path": "docs/INSIGHT_PLATFORM_ARCHITECTURE.md",
+        "sha256": "b76a6da066b89a04bbe291c3e8a77ff5d0c897c0ae4b209209b3de603df3724f"
+      },
+      {
+        "path": "docs/INSIGHT_SKILL_ROADMAP.md",
+        "sha256": "328c48655c9a18eb754fac368086fd5642d4596e09d4a1e7c900d253b7ae364f"
+      },
+      {
+        "path": "docs/INTEGRATION_CONTRACT.md",
+        "sha256": "39719b35dec8180a396b4b4092f8e4348bf9750028a3070a5d2a34bc83144f79"
+      },
+      {
+        "path": "docs/OPENCLAW_PRODUCTION_CUTOVER.md",
+        "sha256": "df51fa3989adbac72d28640acbcda28ddf861b4a18311d2f92ac9e671d6e7e09"
+      },
+      {
+        "path": "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+        "sha256": "c8c9b6731a70163660e3d0c9147cebb9acbd35f49dac5aba11dadf64f0201e18"
+      },
+      {
+        "path": "docs/ORIS_SKILL_ADOPTION_PLAN_2026-04-09.md",
+        "sha256": "9d6ee6b3a8785450551c31a0916086812b4d5180cd8c3a103872fad11589635b"
+      },
+      {
+        "path": "docs/ORIS_VNEXT_ARCHITECTURE_2026-05-11.md",
+        "sha256": "a44a604cb0d2a7877b313fdc8059aeb76700268919589004379f71ccce491378"
+      },
+      {
+        "path": "docs/PROJECT_STATE.md",
+        "sha256": "768627d8148d3777bf4f4eb1bb63b755d4d81b425428a07adaf4286b0f97b5ac"
+      },
+      {
+        "path": "docs/PROJECT_STATE_VNEXT_2026-05-11.md",
+        "sha256": "5700c30e70a4c2cf4e7f54a44ba5542ce1bcc0c6586eb35b0aa03ccd39cde47e"
+      },
+      {
+        "path": "docs/PROVIDER_ORCHESTRATION.md",
+        "sha256": "c8b28ef6b8af852e9532162e797c6775d0d7efe6547937051eb936090fe21dff"
+      },
+      {
+        "path": "docs/ROUTING_POLICY.md",
+        "sha256": "f829e68cfb212bc3318953c7b89de71a3d7981df487eeccd053c8a3710d694ea"
+      },
+      {
+        "path": "docs/RUNBOOKS/DEV_EMPLOYEE_BRIDGE_SERVICE.md",
+        "sha256": "70b7c45739ae2500f82e4e9f5958e38a8b31a3069a3fea5e693a69dfc383a08d"
+      },
+      {
+        "path": "docs/RUNBOOKS/DEV_EMPLOYEE_ENQUEUE_API.md",
+        "sha256": "14b2f5b036151103193bec9e978e06a44f3ba227c5bcddbf7487b0c7181366d1"
+      },
+      {
+        "path": "docs/RUNBOOKS/INSIGHT_POSTGRES_BOOTSTRAP.md",
+        "sha256": "f7cb29e6f513d0601db7a5288abe774a393faa13c97bbe78f73145351ebcd8f8"
+      },
+      {
+        "path": "docs/RUNBOOKS/OPENCLAW_RUNTIME.md",
+        "sha256": "33fdfa1ce11f5f59168ced745a88de8bff4cd25ed0985485da6a3e0c438d0a30"
+      },
+      {
+        "path": "docs/RUNBOOK_FREE_MODEL_ROUTING_2026-04-09.md",
+        "sha256": "01f7e755c18fe7005702e572932ce38f330a5d07562f7ced67e6d640cfe99dd0"
+      },
+      {
+        "path": "docs/RUNTIME_AUTOMATION.md",
+        "sha256": "f990986f1520cf73c6a54106cf6f4cd6054d37c62e7c6e923e6f17193a06c0e2"
+      },
+      {
+        "path": "docs/RUNTIME_STATE_GIT_BOUNDARY_2026-06-17.md",
+        "sha256": "acd255b636f3157dfd0ef2efde8fd80a5068e957a08f0a0c34e882457bd81196"
+      },
+      {
+        "path": "docs/SESSION_WRAPUP_2026-04-06.md",
+        "sha256": "3b4299ae832758f6f4f9772dca6c1890d98a490419f2384a3032833d832645ae"
+      },
+      {
+        "path": "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "sha256": "39086c151ef98769c7248c4a7c405202915c3590351dc3eb09a3966a2dddbaed"
+      },
+      {
+        "path": "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md",
+        "sha256": "315efffcf25d4eb16293fcb3f9de97bba954b80d462db4d893708c262c2b3376"
+      },
+      {
+        "path": "docs/SKILL_RESOLVER_ENFORCEMENT_TEST_PLAN_2026-05-26.md",
+        "sha256": "8c4eba9f9a1d5fb1f05b681dede4df44689a63ab362f521b6d820a57c91e6971"
+      },
+      {
+        "path": "docs/SKILL_RESOLVER_INTEGRATION_2026-05-26.md",
+        "sha256": "2ee69a1bee2f583cbfe8ec7cbd3ebf86b455f59dfd658402e86cc6d420dea1f1"
+      },
+      {
+        "path": "docs/STRICT_AUTONOMOUS_SCHEMA_TEST_PLAN_2026-05-26.md",
+        "sha256": "80fac0becf68f166a4a08fa461a2cf9d85a096b1e60261d9ddeacfb49f30262c"
+      },
+      {
+        "path": "docs/UPDATED_DEV_EMPLOYEE_PROMPT_2026-05-11.md",
+        "sha256": "3cf494cba519c3be2def41ebb060dc34633e9d54cf982097fa1431901f7eaf06"
+      },
+      {
+        "path": "inputs/generated_cases/account_strategy-03b8feaad4/20260407_214807/company_profile_output.json",
+        "sha256": "80368632925fc8d6c758de5d480cb6d8808e9ed195faa9fb0b31a8a4ce5e1b08"
+      },
+      {
+        "path": "inputs/generated_cases/account_strategy-34a558ad15/20260407_212558/company_profile_output.json",
+        "sha256": "49a8c4c4e98c5404d15fd6d6e33fb63009c107b597155f17fc5a74e6f01b37e5"
+      },
+      {
+        "path": "inputs/generated_cases/account_strategy-34a558ad15/20260407_213839/company_profile_output.json",
+        "sha256": "bf35ade46cd3122dc4305dd867ec6fa689c5605243f7e1818c7fa8117dd5ca16"
+      }
+    ],
+    "integration_file_count": 1530,
+    "candidate_routes": [
+      "/api/v1/packages/%40openclaw%2Fopenviking/repair-name",
+      "/api/v1/packages/%40openclaw%2Fzalo",
+      "/api/v1/packages/%40openclaw%2Fzalo/trusted-publisher",
+      "/api/v1/packages/%40openclaw%2Fzalo/undelete",
+      "/api/v1/packages/%40opik%2Fopik-openclaw/repair-name",
+      "/api/v1/packages/%40opik%2Fopik-openclaw/transfer",
+      "/api/v1/packages/%40scope%2Fdemo/moderation",
+      "/api/v1/packages/%40scope%2Fdemo/readiness",
+      "/api/v1/packages/%40scope%2Fdemo/report",
+      "/api/v1/packages/%40scope%2Fdemo/versions/1.2.3/artifact",
+      "/api/v1/packages/%40scope%2Fdemo/versions/1.2.3/moderation",
+      "/api/v1/packages/backfill/artifacts",
+      "/api/v1/packages/migrations",
+      "/api/v1/packages/reports/packageReports%3A1/triage",
+      "/api/v1/publish/token/mint",
+      "/api/v1/skills",
+      "/api/v1/skills/-/reports/skillReports%3A1/triage",
+      "/api/v1/skills/demo/report",
+      "/api/v1/skills/demo/transfer",
+      "/api/v1/skills/demo/transfer/accept",
+      "/api/v1/skills/demo/transfer/cancel",
+      "/api/v1/skills/demo/transfer/reject",
+      "/api/v1/transfers/incoming",
+      "/api/v1/transfers/outgoing",
+      "/auth",
+      "/forbidden",
+      "/latest",
+      "/missing",
+      "/publish",
+      "/queue",
+      "/task/",
+      "/upload",
+      "/v1/ping",
+      "/v1/readme",
+      "/x"
+    ],
+    "candidate_route_count": 35,
+    "referenced_ports": [
+      18789,
+      18791,
+      18801,
+      18891,
+      18892,
+      18893
+    ],
+    "capability_terms": [
+      "cancel",
+      "evidence",
+      "heartbeat",
+      "lease",
+      "projects",
+      "queue",
+      "retry",
+      "status",
+      "submit"
+    ],
+    "secret_values_recorded": false
+  },
+  "latency": {
+    "session_metadata": {
+      "sample_count": 0,
+      "median_ms": null,
+      "max_ms": null,
+      "secret_values_recorded": false
+    },
+    "recent_gateway_journal": {
+      "agent_end_event_count": 0,
+      "model_call_ended_event_count": 0,
+      "tool_duration_event_count": 0,
+      "agent_duration": {
+        "sample_count": 0,
+        "median_ms": null,
+        "max_ms": null
+      },
+      "model_duration": {
+        "sample_count": 0,
+        "median_ms": null,
+        "max_ms": null
+      },
+      "tool_duration": {
+        "sample_count": 0,
+        "median_ms": null,
+        "max_ms": null
+      },
+      "raw_line_count": 134,
+      "raw_content_recorded": false,
+      "secret_values_recorded": false
+    },
+    "http_transport": {
+      "public": {
+        "sample_count": 5,
+        "median_connect_ms": 2.741,
+        "median_ttfb_ms": 12.584,
+        "median_total_ms": 13.072000000000001
+      },
+      "direct": {
+        "sample_count": 5,
+        "median_connect_ms": 0.06999999999999999,
+        "median_ttfb_ms": 1.285,
+        "median_total_ms": 1.3290000000000002
+      },
+      "scope": "HTTP root transport only; not model TTFT or total assistant response latency.",
+      "secret_values_recorded": false
+    },
+    "observability_path": "PLUGIN_HOOKS_AGENT_END_MODEL_CALL_ENDED_AFTER_TOOL_CALL",
+    "recommended_plugin_shape": "MIXED_NATIVE_PLUGIN_DEFINE_PLUGIN_ENTRY_REGISTER_TOOLS_AND_HOOKS",
+    "model_latency_measured": false,
+    "ttft_measured": false
+  },
+  "safety": {
+    "active_queue_count": 0,
+    "intake_loopback_only": true,
+    "product_baseline_preserved": true,
+    "config_or_service_changed": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "DESIGN_MINIMAL_ORIS_NATIVE_PLUGIN_WITH_OPTIONAL_TYPED_TOOLS_POLICY_HOOKS_AND_LATENCY_TELEMETRY",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_tool_plugin_discovery/openclaw-tool-plugin-latency-discovery-20260617T215213Z.log",
+    "json_path": "logs/dev_employee/openclaw_tool_plugin_discovery/openclaw-tool-plugin-latency-discovery-20260617T215213Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
