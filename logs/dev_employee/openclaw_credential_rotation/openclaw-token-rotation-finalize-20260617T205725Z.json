@@ -1,0 +1,50 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T205725Z",
+  "result": "FINALIZED",
+  "failure_code": "",
+  "rotation_confirmation": {
+    "rotation_confirmed": true,
+    "current_fingerprint": "d170f640a6cf7fe91733e15632ac57a4a527c52bcf60a671730b7d6e60785e02",
+    "backup_fingerprint": "102fe80d390aec5268e850f29be6b6e1a3d25341cb984179f9b72a5213e3e627",
+    "config_mode": "0o600",
+    "backup_mode": "0o600",
+    "secret_values_recorded": false
+  },
+  "gateway": {
+    "service_state": "active",
+    "direct_root_status": "200"
+  },
+  "public": {
+    "root_status": "401",
+    "root_is_openclaw": false
+  },
+  "dashboard": {
+    "url_candidate_count": 1,
+    "selected_path": "/",
+    "selected_query_keys": [],
+    "selected_fragment_keys": [],
+    "token_embedded_in_selected_url": false,
+    "token_present_anywhere_in_dashboard_output": false,
+    "dashboard_url_file": "/home/admin/.openclaw/private/control-orisfy-dashboard-url-current.txt",
+    "token_file": "/home/admin/.openclaw/private/control-orisfy-gateway-token-current.txt",
+    "dashboard_url_file_mode": "0o600",
+    "token_file_mode": "0o600",
+    "secret_values_recorded": false
+  },
+  "safety": {
+    "product_baseline_preserved": true,
+    "openclaw_config_mutated": false,
+    "openclaw_service_restarted": false,
+    "nginx_changed": false,
+    "product_task_submitted": false,
+    "product_repository_mutated": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "BUILD_AND_RUN_NATIVE_OPENCLAW_NGINX_MIGRATION_V2",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_credential_rotation/openclaw-token-rotation-finalize-20260617T205725Z.log",
+    "json_path": "logs/dev_employee/openclaw_credential_rotation/openclaw-token-rotation-finalize-20260617T205725Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
