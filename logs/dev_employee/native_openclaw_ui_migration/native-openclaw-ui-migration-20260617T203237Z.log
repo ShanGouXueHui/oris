@@ -1,0 +1,28 @@
+CHECKED_AT=2026-06-18T04:32:37+08:00
+TASK_ID=commercial-native-openclaw-ui-20260617
+MODE=REVERSIBLE_NATIVE_OPENCLAW_NGINX_MIGRATION
+EFFECTIVE_CONF=/etc/nginx/conf.d/oris-dev-employee-web-console.readonly.conf
+PRODUCT_MUTATION_ALLOWED=NO
+ACTIVE_QUEUE_COUNT=0
+PRODUCT_HEAD=927f1968cc86bfd5213670f4eaa171fc1a3be620
+PRODUCT_REMOTE_MAIN=927f1968cc86bfd5213670f4eaa171fc1a3be620
+PRODUCT_STATUS= M README.md
+README_HASH_BEFORE=d31250492632708254ea3fb1d653765031f1fe5fcdada4bdce6089847cb69ea7
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+OPENCLAW_DIRECT_STATUS=200
+CONSOLE_DIRECT_STATUS=200
+INTAKE_LISTENER=127.0.0.1:18892
+INTAKE_LOOPBACK_ONLY=YES
+BACKUP_FILE=/etc/nginx/oris-backups/oris-dev-employee-web-console.readonly.conf.20260617T203237Z.bak
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:443, ignored
+nginx: [warn] conflicting server name "control.orisfy.com" on 0.0.0.0:80, ignored
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+PUBLIC_ROOT_STATUS=200
+PUBLIC_ADMIN_STATUS=401
+PUBLIC_ROLLBACK_STATUS=401
+PUBLIC_ROOT_BODY_SHA256=8e9c40d11dc3b667ec663efdfec125cc49113dc89cc27fa6f17686e8d9783132
+DIRECT_OPENCLAW_BODY_SHA256=8e9c40d11dc3b667ec663efdfec125cc49113dc89cc27fa6f17686e8d9783132
+Preparing worktree (detached HEAD 71b250e)
+HEAD is now at 71b250e ops(dev-employee): add native OpenClaw nginx rollback

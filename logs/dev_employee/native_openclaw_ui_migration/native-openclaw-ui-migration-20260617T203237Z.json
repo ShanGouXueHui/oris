@@ -1,0 +1,29 @@
+{
+  "task_id": "commercial-native-openclaw-ui-20260617",
+  "checked_at": "20260617T203237Z",
+  "result": "MIGRATED",
+  "failure_code": "",
+  "migration_applied": true,
+  "rollback_performed": false,
+  "nginx_test": "PASS",
+  "nginx_reload": "PASS",
+  "public": {
+    "root_status": "200",
+    "admin_status_without_credentials": "401",
+    "rollback_status_without_credentials": "401",
+    "root_matches_direct_openclaw": true
+  },
+  "routing": {
+    "root_upstream": "http://127.0.0.1:18789",
+    "admin_upstream": "http://127.0.0.1:18893",
+    "rollback_upstream": "http://127.0.0.1:18893",
+    "intake_publicly_exposed": false
+  },
+  "safety": {
+    "backup_file": "/etc/nginx/oris-backups/oris-dev-employee-web-console.readonly.conf.20260617T203237Z.bak",
+    "product_readme_preserved": true,
+    "product_task_submitted": false,
+    "openclaw_reinstalled_or_upgraded": false
+  },
+  "next_action": "BROWSER_ACCEPT_NATIVE_OPENCLAW_NEW_HISTORY_SWITCH_CLEAR_AND_ADMIN"
+}
