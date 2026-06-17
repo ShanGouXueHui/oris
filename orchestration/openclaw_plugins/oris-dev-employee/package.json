@@ -1,0 +1,40 @@
+{
+  "name": "@shan-gou-xue-hui/openclaw-oris-dev-employee",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Read-only ORIS Dev Employee tools and latency telemetry for native OpenClaw.",
+  "files": [
+    "dist",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test dist/index.test.js",
+    "plugin:validate": "openclaw plugins validate --root . --entry ./dist/index.js"
+  },
+  "dependencies": {
+    "typebox": "^1.1.38"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "openclaw": "2026.5.19"
+  },
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.5.19",
+      "minGatewayVersion": ">=2026.5.19"
+    },
+    "build": {
+      "openclawVersion": "2026.5.19",
+      "pluginSdkVersion": "2026.5.19"
+    }
+  }
+}
