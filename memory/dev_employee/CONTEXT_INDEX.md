@@ -10,6 +10,16 @@ Do not reconstruct the project from chat history when these GitHub files are ava
 
 ## Mandatory read order
 
+Superseding completion files — read these first:
+
+- `memory/dev_employee/CURRENT_STATE_2026-06-17_NATIVE_UI_COMPLETED.md`
+- `memory/dev_employee/current_task.json`
+- `memory/dev_employee/current_task.md`
+- `memory/dev_employee/COMMERCIAL_NATIVE_OPENCLAW_UI_COMPLETION_2026-06-17.md`
+- `memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-17_NATIVE_UI_COMPLETED.md`
+
+Then use the historical numbered order for background:
+
 1. `memory/dev_employee/CURRENT_STATE_2026-06-17.md`
 2. `memory/dev_employee/SESSION_ARCHIVE_2026-06-17.md`
 3. `memory/dev_employee/current_task.json`
@@ -109,14 +119,14 @@ Task ID:
 
 Status:
 
-`native_openclaw_ui_switch_pending`
+`completed`
 
 Immediate action:
 
-- read-only discover native OpenClaw UI, WebSocket, auth/pairing, session/history capabilities and effective Nginx routing;
-- commit sanitized discovery evidence;
-- then build a reversible root-route migration;
-- do not submit another product task before browser acceptance.
+- native OpenClaw root migration and browser acceptance are complete;
+- the missing product README update is committed and remote-verified;
+- next discover stable OpenClaw tools/actions/plugins and establish latency observability;
+- do not rerun completed acceptance tasks without regression evidence.
 
 ## Controlled product task with open gap
 
@@ -128,7 +138,7 @@ Product commit:
 
 `927f1968cc86bfd5213670f4eaa171fc1a3be620`
 
-Implemented `/capabilities` and tests, but omitted the explicitly requested README API-list update. Treat as partially delivered until repaired and fully re-verified.
+Implemented `/capabilities` and tests. The README API-list gap has now been repaired, tested, committed, pushed and remote-SHA verified. Treat this controlled product task as fully complete.
 
 ## Historical documents
 

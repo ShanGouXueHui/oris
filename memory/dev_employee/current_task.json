@@ -1,11 +1,11 @@
 {
   "task_id": "commercial-native-openclaw-ui-20260617",
-  "status": "native_openclaw_ui_switch_pending",
+  "status": "completed",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "read_only_discovery_before_native_openclaw_root_switch",
+  "current_step": "native_openclaw_ui_and_product_readme_completion_verified",
   "objective": "Use the existing native OpenClaw UI as the primary commercial conversation experience. Keep Agent Harness and ORIS behind it as tool, policy, lifecycle and evidence layers, and keep Codex as the code executor. Retire the custom ORIS chat shell from the primary user path instead of rebuilding standard conversation features.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -20,30 +20,25 @@
     "do_not_replace_oris_control_plane": true
   },
   "diagnosis": {
-    "current_root_ui_is_native_openclaw": false,
-    "current_root_ui": "custom ORIS Web Console v5 developed in the ORIS repository",
+    "current_root_ui_is_native_openclaw": true,
+    "current_root_ui": "native OpenClaw Gateway UI",
     "openclaw_usage_in_current_ui": "provider/inference backend only",
-    "missing_standard_features": [
-      "new conversation",
-      "conversation history sidebar",
-      "switch conversation",
-      "clear or archive history",
-      "native OpenClaw session behavior"
-    ],
+    "missing_standard_features": [],
     "prompt_problem": "custom intent router and deterministic command parser altered normal conversational semantics and caused requests to depend on ORIS-specific rules",
-    "decision": "do not continue rebuilding these standard UI features in the custom shell"
+    "decision": "native OpenClaw UI accepted as primary; custom ORIS shell retained only on restricted diagnostic/rollback routes"
   },
   "completed_real_task": {
     "task_id": "chat-oris-final-acceptance-api-20260617-051313-c802347ff17c",
     "ui_status": "completed",
-    "product_commit": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+    "product_commit": "bcb93e17ea88704548101f5e4a5c460e15a80ec7",
     "implemented": [
       "GET /capabilities",
       "service, storage and features response contract",
       "pytest coverage for status code and fields"
     ],
-    "acceptance_gap": "README API list was requested but was not changed in the product commit",
-    "final_acceptance": "partial; must repair README and verify evidence before calling the task fully compliant"
+    "acceptance_gap": "repaired: README API list now documents GET /capabilities",
+    "final_acceptance": "complete; implementation, tests, README, product commit/push, remote SHA and ORIS evidence verified",
+    "product_remote_main": "bcb93e17ea88704548101f5e4a5c460e15a80ec7"
   },
   "migration_requirements": [
     "discover the active native OpenClaw UI and session/history behavior without reinstalling or upgrading",
@@ -67,9 +62,9 @@
     "agent_harness": "active_v1_backend_only_target",
     "active_product_task": false
   },
-  "next_action": "Create and run a GitHub-hosted read-only discovery script for native OpenClaw UI routes, WebSocket, authentication/pairing, history/session support, effective Nginx load order, service health, active queue and product baselines. Commit sanitized evidence. Only then prepare a reversible root-route switch. Do not submit another product task before browser acceptance.",
-  "last_error": "custom_chat_shell_rejected_for_commercial_use",
-  "blocked_reason": "default public UI is a custom shell missing standard conversation lifecycle features and using non-native prompt routing",
+  "next_action": "Discover and implement the stable OpenClaw tools/actions/plugin contract for ORIS, and establish response-latency observability before broader commercial rollout. Do not reopen the completed acceptance task without regression evidence.",
+  "last_error": "",
+  "blocked_reason": "",
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-17.md",
@@ -85,5 +80,19 @@
     "docs/DEV_EMPLOYEE_QUEUE_LIFECYCLE_HARDENING_2026-06-16.md",
     "orchestration/project_registry.json"
   ],
-  "updated_at": "2026-06-17"
+  "updated_at": "2026-06-17T21:46:02Z",
+  "completion": {
+    "native_openclaw_ui_acceptance": "PASS",
+    "session_delete_verified": true,
+    "first_session_preserved": true,
+    "public_root": "native OpenClaw Gateway UI",
+    "admin_route": "restricted ORIS Web Console",
+    "rollback_route": "restricted custom ORIS chat shell",
+    "authentication_mode": "token",
+    "control_ui_device_pairing_bypass": true,
+    "product_final_commit": "bcb93e17ea88704548101f5e4a5c460e15a80ec7",
+    "product_remote_main": "bcb93e17ea88704548101f5e4a5c460e15a80ec7",
+    "completion_evidence_json": "logs/dev_employee/commercial_native_openclaw_completion/native-openclaw-product-completion-20260617T214602Z.json",
+    "latency_observation": "exact runtimeMs unavailable in current session CLI output; establish a dedicated response-latency baseline next"
+  }
 }
