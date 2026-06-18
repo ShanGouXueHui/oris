@@ -1,0 +1,56 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-validation-20260618",
+  "checked_at": "20260618T094640Z",
+  "result": "DIAGNOSED",
+  "failure_code": "plugin_typescript_build_failed",
+  "source": {
+    "ref": "origin/main",
+    "commit": "c784f26d68358594c7384046fa3092a6da24f253"
+  },
+  "runtime": {
+    "openclaw_version": "OpenClaw 2026.5.19 (a185ca2)",
+    "node_version": "v22.22.2",
+    "npm_version": "10.9.7"
+  },
+  "typescript": {
+    "npm_install": "PASS",
+    "rc": "2",
+    "error_count": 6,
+    "error_codes": [
+      "TS18046",
+      "TS2322"
+    ],
+    "error_files": [
+      "src/index.ts"
+    ],
+    "diagnostics": [
+      "src/index.ts(313,3): error TS2322: Type 'TObject<{ baseUrl: TOptional<TString>; requestTimeoutMs: TOptional<TInteger>; telemetryEnabled: TOptional<TBoolean>; telemetryPath: TOptional<...>; telemetryMaxBytes: TOptional<...>; }>' is not assignable to type 'OpenClawPluginConfigSchema | (() => OpenClawPluginConfigSchema) | undefined'.",
+      "src/index.ts(324,15): error TS2322: Type '(this: void) => Promise<{ content: { type: \"text\"; text: string; }[]; }>' is not assignable to type '(this: void, toolCallId: string, params: unknown, signal?: AbortSignal | undefined, onUpdate?: AgentToolUpdateCallback<unknown> | undefined) => Promise<...>'.",
+      "  Type 'Promise<{ content: { type: \"text\"; text: string; }[]; }>' is not assignable to type 'Promise<AgentToolResult<unknown>>'.",
+      "    Property 'details' is missing in type '{ content: { type: \"text\"; text: string; }[]; }' but required in type 'AgentToolResult<unknown>'.",
+      "src/index.ts(346,15): error TS2322: Type '(this: void, _toolCallId: string, params: unknown) => Promise<{ content: { type: \"text\"; text: string; }[]; }>' is not assignable to type '(this: void, toolCallId: string, params: unknown, signal?: AbortSignal | undefined, onUpdate?: AgentToolUpdateCallback<unknown> | undefined) => Promise<...>'.",
+      "  Type 'Promise<{ content: { type: \"text\"; text: string; }[]; }>' is not assignable to type 'Promise<AgentToolResult<unknown>>'.",
+      "    Property 'details' is missing in type '{ content: { type: \"text\"; text: string; }[]; }' but required in type 'AgentToolResult<unknown>'.",
+      "src/index.ts(347,32): error TS18046: 'params' is of type 'unknown'.",
+      "src/index.ts(351,69): error TS18046: 'params' is of type 'unknown'.",
+      "src/index.ts(364,15): error TS2322: Type '(this: void) => Promise<{ content: { type: \"text\"; text: string; }[]; }>' is not assignable to type '(this: void, toolCallId: string, params: unknown, signal?: AbortSignal | undefined, onUpdate?: AgentToolUpdateCallback<unknown> | undefined) => Promise<...>'.",
+      "  Type 'Promise<{ content: { type: \"text\"; text: string; }[]; }>' is not assignable to type 'Promise<AgentToolResult<unknown>>'.",
+      "    Property 'details' is missing in type '{ content: { type: \"text\"; text: string; }[]; }' but required in type 'AgentToolResult<unknown>'."
+    ]
+  },
+  "safety": {
+    "worktree_preserved": true,
+    "openclaw_config_changed": false,
+    "service_pid_changed": false,
+    "queue_changed": false,
+    "plugin_installed_or_enabled": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "READ_TYPESCRIPT_DIAGNOSTIC_EVIDENCE_AND_PATCH_PLUGIN_SOURCE",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-ts-diagnostic-20260618T094640Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-ts-diagnostic-20260618T094640Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}

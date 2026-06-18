@@ -1,0 +1,29 @@
+checked_at=2026-06-18T17:46:50+08:00
+task_id=commercial-openclaw-native-plugin-validation-20260618
+source_commit=c784f26d68358594c7384046fa3092a6da24f253
+openclaw_version=OpenClaw 2026.5.19 (a185ca2)
+node_version=v22.22.2
+npm_version=10.9.7
+npm_install=PASS
+tsc_rc=2
+tsc_error_count=6
+tsc_error_codes=TS18046,TS2322
+tsc_error_files=src/index.ts
+worktree_preserved=YES
+openclaw_config_changed=NO
+service_pid_changed=NO
+queue_changed=NO
+secret_values_recorded=NO
+--- sanitized TypeScript diagnostics ---
+src/index.ts(313,3): error TS2322: Type 'TObject<{ baseUrl: TOptional<TString>; requestTimeoutMs: TOptional<TInteger>; telemetryEnabled: TOptional<TBoolean>; telemetryPath: TOptional<...>; telemetryMaxBytes: TOptional<...>; }>' is not assignable to type 'OpenClawPluginConfigSchema | (() => OpenClawPluginConfigSchema) | undefined'.
+src/index.ts(324,15): error TS2322: Type '(this: void) => Promise<{ content: { type: "text"; text: string; }[]; }>' is not assignable to type '(this: void, toolCallId: string, params: unknown, signal?: AbortSignal | undefined, onUpdate?: AgentToolUpdateCallback<unknown> | undefined) => Promise<...>'.
+  Type 'Promise<{ content: { type: "text"; text: string; }[]; }>' is not assignable to type 'Promise<AgentToolResult<unknown>>'.
+    Property 'details' is missing in type '{ content: { type: "text"; text: string; }[]; }' but required in type 'AgentToolResult<unknown>'.
+src/index.ts(346,15): error TS2322: Type '(this: void, _toolCallId: string, params: unknown) => Promise<{ content: { type: "text"; text: string; }[]; }>' is not assignable to type '(this: void, toolCallId: string, params: unknown, signal?: AbortSignal | undefined, onUpdate?: AgentToolUpdateCallback<unknown> | undefined) => Promise<...>'.
+  Type 'Promise<{ content: { type: "text"; text: string; }[]; }>' is not assignable to type 'Promise<AgentToolResult<unknown>>'.
+    Property 'details' is missing in type '{ content: { type: "text"; text: string; }[]; }' but required in type 'AgentToolResult<unknown>'.
+src/index.ts(347,32): error TS18046: 'params' is of type 'unknown'.
+src/index.ts(351,69): error TS18046: 'params' is of type 'unknown'.
+src/index.ts(364,15): error TS2322: Type '(this: void) => Promise<{ content: { type: "text"; text: string; }[]; }>' is not assignable to type '(this: void, toolCallId: string, params: unknown, signal?: AbortSignal | undefined, onUpdate?: AgentToolUpdateCallback<unknown> | undefined) => Promise<...>'.
+  Type 'Promise<{ content: { type: "text"; text: string; }[]; }>' is not assignable to type 'Promise<AgentToolResult<unknown>>'.
+    Property 'details' is missing in type '{ content: { type: "text"; text: string; }[]; }' but required in type 'AgentToolResult<unknown>'.
