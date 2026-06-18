@@ -1,0 +1,62 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-install-20260618",
+  "checked_at": "20260618T205656Z",
+  "result": "INSTALLED_TOOLS_DENIED",
+  "failure_code": null,
+  "source": {
+    "commit": "8f174b49196aac90b505846200ce260f75355b41",
+    "validated_plugin_tree_match": true,
+    "artifact_sha256": "976377c2e5ffbf6932d5e43bed17c4d07cfcb16fefb7383b5ab593d4ed1eecda"
+  },
+  "build": {
+    "npm_install": "PASS",
+    "typescript_build": "PASS",
+    "unit_tests": "PASS",
+    "mixed_plugin_validate": "PASS",
+    "npm_pack": "PASS"
+  },
+  "config": {
+    "backup_created": true,
+    "backup_file": "/home/admin/.openclaw/backups/native-plugin-install-20260618T205656Z/openclaw.json.before.bak",
+    "tools_deny_applied": true,
+    "conversation_access_policy": true,
+    "tools_allow_unchanged": true,
+    "auth_mode": "token",
+    "auth_secret_unchanged": true
+  },
+  "runtime": {
+    "plugin_install_rc": "0",
+    "plugin_enable_rc": "0",
+    "gateway_restart": "PASS",
+    "gateway_state": "active",
+    "direct_root_status": "200",
+    "public_root_status": "200",
+    "public_matches_direct": true,
+    "plugin_enabled": true,
+    "plugin_error_count": 0,
+    "runtime_tool_count": 3,
+    "runtime_hook_count": 3,
+    "runtime_tools_match": true,
+    "runtime_hooks_match": true,
+    "write_tools_absent": true,
+    "tools_effectively_denied": true
+  },
+  "safety": {
+    "enqueue_loopback_only": true,
+    "intake_loopback_only": true,
+    "queue_state_unchanged": true,
+    "oris_worktree_preserved": true,
+    "product_baseline_preserved": true,
+    "marker_written": true,
+    "rollback_performed": "NO",
+    "product_task_submitted": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "RUN_CONTROLLED_READ_ONLY_TOOL_ENABLE_AND_BROWSER_SMOKE",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-install-tools-disabled-20260618T205656Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-install-tools-disabled-20260618T205656Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
