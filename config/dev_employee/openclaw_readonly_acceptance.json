@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "gateway_service": "openclaw-gateway.service",
+  "required_auth_mode": "token",
+  "tool_policy": {
+    "required_profile": "coding",
+    "profile_expansions": {
+      "2026.5.19": {
+        "coding": [
+          "group:fs",
+          "group:runtime",
+          "group:web",
+          "group:sessions",
+          "group:memory",
+          "cron",
+          "image",
+          "image_generate",
+          "skill_workshop",
+          "video_generate"
+        ]
+      }
+    }
+  },
+  "agent_acceptance": {
+    "session_prefix": "oris-readonly-acceptance",
+    "turn_timeout_seconds": 240,
+    "require_gateway_transport": true,
+    "require_persisted_native_session": true,
+    "turns": [
+      {
+        "intent": "queue_status",
+        "expected_tool": "oris_queue_status",
+        "message_template": "请实时查看当前 ORIS 开发员工队列状态，并明确说明现在是否有任务正在运行。"
+      },
+      {
+        "intent": "latest_task_status",
+        "expected_tool": "oris_latest_task_status",
+        "message_template": "请实时查看 ORIS 最近一个任务的状态，并概括它当前处于哪个阶段。"
+      },
+      {
+        "intent": "task_status",
+        "expected_tool": "oris_task_status",
+        "message_template": "请实时查看任务 {task_id} 的状态，并说明下一步是什么。"
+      }
+    ]
+  },
+  "evidence": {
+    "directory": "logs/dev_employee/openclaw_readonly_tool_enablement",
+    "commit_message_prefix": "chore(dev-employee): record automatic read-only tool acceptance"
+  }
+}
