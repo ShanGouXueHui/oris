@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "node --test dist/index.test.js",
-    "plugin:validate": "node dist/validate-plugin.js"
+    "plugin:validate": "node validate-plugin.mjs"
   },
   "dependencies": {
     "typebox": "^1.1.38"
