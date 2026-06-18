@@ -1,0 +1,71 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-install-20260618",
+  "checked_at": "20260618T202619Z",
+  "result": "DIAGNOSED",
+  "failure_code": null,
+  "classification": "INTERRUPTED_AFTER_MUTATION",
+  "marker": {
+    "exists": true,
+    "mode": "600",
+    "valid": true,
+    "state": "installing",
+    "plugin_id_match": true,
+    "version": "0.1.0",
+    "source_commit": "33e529286460fee4e7cd331b559542a0232408a8",
+    "artifact_sha_valid": true,
+    "denied_tools_match": true,
+    "secret_keys_absent": true
+  },
+  "backup": {
+    "file": "/home/admin/.openclaw/backups/native-plugin-install-20260618T155738Z/openclaw.json.before.bak",
+    "exists": true,
+    "mode": "600",
+    "valid_json": true,
+    "current_config_equals_backup": "NO",
+    "auth_mode_matches": "YES",
+    "auth_secret_matches": "YES",
+    "tools_allow_matches": "YES",
+    "backup_expected_tools_denied": "NO"
+  },
+  "current_config": {
+    "expected_tools_denied": true,
+    "plugin_entry_present": true,
+    "plugin_allow_present": false,
+    "plugin_deny_present": false
+  },
+  "plugin_runtime": {
+    "present_cold": true,
+    "enabled_cold": true,
+    "error_count": "0",
+    "runtime_inspect_rc": "0",
+    "tool_count": 3,
+    "hook_count": 0,
+    "tools_match": true,
+    "hooks_match": false,
+    "write_tools_absent": true
+  },
+  "gateway": {
+    "state": "active",
+    "direct_root_status": "200",
+    "public_root_status": "200",
+    "public_matches_direct": true
+  },
+  "safety": {
+    "enqueue_loopback_only": true,
+    "intake_loopback_only": true,
+    "active_queue_count": "0",
+    "queue_state_unchanged": true,
+    "oris_worktree_preserved": true,
+    "product_baseline_preserved": true,
+    "config_unchanged": true,
+    "service_pid_unchanged": true,
+    "product_task_submitted": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "RUN_EXISTING_REVERSIBLE_PLUGIN_ROLLBACK",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-marker-diagnostic-20260618T202619Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-marker-diagnostic-20260618T202619Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}

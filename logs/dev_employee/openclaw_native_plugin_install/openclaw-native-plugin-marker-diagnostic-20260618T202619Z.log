@@ -1,0 +1,38 @@
+CHECKED_AT=2026-06-19T04:26:19+08:00
+TASK_ID=commercial-openclaw-native-plugin-install-20260618
+MODE=READ_ONLY_EXISTING_PLUGIN_INSTALL_MARKER_DIAGNOSTIC
+CONFIG_OR_SERVICE_CHANGED=NO
+PRODUCT_TASK_SUBMITTED=NO
+SECRET_VALUES_RECORDED=NO
+checked_at=2026-06-19T04:26:29+08:00
+task_id=commercial-openclaw-native-plugin-install-20260618
+result=DIAGNOSED
+failure_code=
+classification=INTERRUPTED_AFTER_MUTATION
+marker_exists=YES
+marker_mode=600
+marker_valid=YES
+marker_state=installing
+backup_exists=YES
+backup_mode=600
+current_config_equals_backup=NO
+current_expected_tools_denied=YES
+plugin_present_cold=YES
+plugin_enabled_cold=YES
+plugin_error_count=0
+runtime_tools_match=YES
+runtime_hooks_match=NO
+write_tools_absent=YES
+service_state=active
+direct_root_status=200
+public_root_status=200
+public_matches_direct=YES
+queue_state_unchanged=YES
+config_unchanged=YES
+service_pid_unchanged=YES
+product_task_submitted=NO
+secret_values_recorded=NO
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD 832b43f)
+HEAD is now at 832b43f ops(dev-employee): diagnose existing native plugin install marker
