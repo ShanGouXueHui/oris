@@ -1,82 +1,124 @@
 # Current AI Dev Employee Task
 
-Status: completed
+Status: `plugin_installed_tools_denied_pending_controlled_enable`
 
-Task id: `commercial-native-openclaw-ui-20260617`
+Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Completion time: `2026-06-17T21:46:02Z`
+Current step: `read_only_readiness_before_readonly_tool_enable`
 
-## Final result
+## Objective
 
-The native OpenClaw Gateway UI is now the primary commercial conversation interface at `https://control.orisfy.com`.
+Enable only the three approved read-only ORIS tools through the installed native OpenClaw plugin, verify natural-language use and latency telemetry in the native UI, and preserve automatic rollback to the tools-denied state.
 
-Accepted chain:
+This task does not authorize any submit, cancel, retry or product-mutation tool.
 
-`human → native OpenClaw UI → Agent Harness tool/policy adapter → ORIS control plane → Codex executor → product/evidence back to OpenClaw`
+## Completed prerequisite
 
-Final browser acceptance: `PASS`.
+The native plugin installation task is complete:
 
-Verified native behaviors:
+- previous task: `commercial-openclaw-native-plugin-install-20260618`
+- result: `INSTALLED_TOOLS_DENIED`
+- plugin id: `oris-dev-employee`
+- version: `0.1.0`
+- source commit: `8f174b49196aac90b505846200ce260f75355b41`
+- artifact SHA-256: `976377c2e5ffbf6932d5e43bed17c4d07cfcb16fefb7383b5ab593d4ed1eecda`
+- evidence commit: `b831470063bc640e498d2061fdaeb2bf8bc9639c`
 
-- token-authenticated connection;
-- new conversation;
-- multiple independent conversations;
-- history visibility and switching;
-- refresh persistence;
-- session-level deletion with the first conversation preserved;
-- restricted `/admin` loading;
-- restricted `/_oris-chat-shell` rollback/diagnostic route loading.
+Authoritative evidence:
 
-The earlier acceptance record that incorrectly marked session deletion as tested is superseded by:
+`logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-install-tools-disabled-20260618T205656Z.json`
 
-`logs/dev_employee/native_openclaw_ui_acceptance/native-openclaw-ui-supplemental-acceptance-20260617T213905Z.json`
+## Current runtime contract
 
-Evidence commit: `b479436a51bb1731e79fcfe98b2ec3d8b4683abd`.
+Installed and enabled tools:
 
-## Runtime and security state
+- `oris_queue_status`
+- `oris_task_status`
+- `oris_latest_task_status`
 
-- OpenClaw Gateway remains the existing installation on `127.0.0.1:18789`;
-- OpenClaw was not reinstalled or upgraded;
-- Nginx root routes to native OpenClaw;
-- `/admin` routes to the ORIS Web Console and remains restricted;
-- `/_oris-chat-shell` remains a restricted rollback route;
-- intake on `127.0.0.1:18892` is not publicly exposed;
-- Gateway auth mode is token;
-- Control UI device pairing is intentionally bypassed for all clients holding a valid Gateway credential through `gateway.controlUi.dangerouslyDisableDeviceAuth=true`;
-- this pairing bypass is a conscious commercial-security exception and does not disable token authentication.
+Installed typed hooks:
 
-## Controlled product task completion
-
-Task: `chat-oris-final-acceptance-api-20260617-051313-c802347ff17c`
-
-Product repository: `ShanGouXueHui/oris-final-acceptance-api`
-
-Base implementation commit: `927f1968cc86bfd5213670f4eaa171fc1a3be620`
-
-Final product commit: `bcb93e17ea88704548101f5e4a5c460e15a80ec7`
-
-Remote main: `bcb93e17ea88704548101f5e4a5c460e15a80ec7`
+- `model_call_ended`
+- `after_tool_call`
+- `agent_end`
 
 Verified:
 
-- `GET /capabilities` implementation remains unchanged;
-- existing pytest coverage passes;
-- `README.md` API list now includes `GET /capabilities`;
-- the completion commit changes only `README.md`;
-- local HEAD and remote main match;
-- product worktree is clean.
+- plugin errors: `0`;
+- exactly 3 tools and 3 hooks;
+- write tools absent;
+- all three tools remain explicitly denied;
+- `tools.allow` unchanged at installation;
+- scoped `allowConversationAccess=true` enabled for `oris-dev-employee`;
+- Gateway authentication mode and credential unchanged at installation;
+- queue and product baseline unchanged;
+- no product task submitted;
+- 18891 and 18892 remain loopback-only.
 
-## Open item that does not block acceptance
+## Safety state
 
-The current `openclaw sessions --json` output did not expose usable `runtimeMs` samples for the browser conversations. Exact response latency therefore remains unmeasured. Functional acceptance is complete, but commercial rollout requires dedicated time-to-first-token and total-response latency observability.
+Private marker:
 
-## Next action
+`~/.openclaw/private/oris-dev-employee-plugin-install-current.json`
 
-Do not submit or rerun the completed acceptance task.
+Pre-install backup:
 
-Proceed with:
+`/home/admin/.openclaw/backups/native-plugin-install-20260618T205656Z/openclaw.json.before.bak`
 
-1. discovery of the stable OpenClaw tools/actions/plugin interface supported by the installed version;
-2. generic ORIS action exposure through that interface, without broad prompt-keyword matching;
-3. response-latency baseline and observability;
-4. regression checks for native UI, authentication, Nginx routing and restricted diagnostic routes.
+Approved rollback wrapper:
+
+`scripts/dev_employee_rollback_openclaw_native_plugin_v2_20260618.sh`
+
+Do not use the old rollback script and do not reinstall the plugin.
+
+## First required action
+
+Create a GitHub-hosted read-only readiness script. It must not modify configuration, restart services, enable tools, invoke a write action or submit a product task.
+
+It must verify:
+
+1. marker and backup validity, ownership and mode without printing secret values;
+2. plugin cold/runtime inventory and exact tools/hooks;
+3. current `tools.deny` entries and effective `tools.allow`/profile/agent policy;
+4. scoped conversation-access policy;
+5. Gateway, public root, `/admin`, rollback route and loopback listeners;
+6. telemetry file location, permissions and sanitized record schema;
+7. active queue count and queue fingerprint;
+8. product HEAD, remote SHA and clean worktree;
+9. absence of write tools and product task submission.
+
+Detailed output goes to `logs/dev_employee/` and sanitized evidence is committed through a detached worktree. The script ends with `===== SUMMARY =====`.
+
+## Controlled enablement after readiness evidence
+
+After reviewing the evidence, build a reversible enablement script that:
+
+- changes only the effective policy entries required to expose the three approved tools;
+- keeps write tools absent;
+- validates configuration before restarting the existing Gateway;
+- directly tests all three read-only tools;
+- performs native browser acceptance using natural language;
+- confirms no queue mutation and no product task submission;
+- confirms telemetry contains model, tool and agent timing records without content leakage;
+- records TTFT and total duration where supported;
+- automatically restores the tools-denied state on failure.
+
+## Do not do
+
+- do not reinstall or upgrade OpenClaw;
+- do not reinstall the plugin;
+- do not manually edit `openclaw.json`;
+- do not run the old v1/v2 installation scripts;
+- do not enable write tools;
+- do not touch the production host `8.136.28.6`;
+- do not reopen the completed final acceptance product task without regression evidence;
+- do not print tokens, passwords, keys or private marker contents.
+
+## Commercial sequence after this task
+
+1. accept read-only tools and latency telemetry;
+2. design explicit write actions with approval, project authorization, idempotency and audit;
+3. add generic project onboarding and capability discovery;
+4. move routine provider/policy management into Admin UI;
+5. complete monitoring, privacy/retention and disaster-recovery gates;
+6. add multi-tenant quotas and commercial packaging.
