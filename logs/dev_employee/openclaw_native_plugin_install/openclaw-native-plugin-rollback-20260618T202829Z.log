@@ -1,0 +1,48 @@
+CHECKED_AT=2026-06-19T04:28:29+08:00
+TASK_ID=commercial-openclaw-native-plugin-install-20260618
+MODE=REVERSIBLE_NATIVE_PLUGIN_ROLLBACK
+PLUGIN_ID=oris-dev-employee
+BACKUP_FILE=/home/admin/.openclaw/backups/native-plugin-install-20260618T155738Z/openclaw.json.before.bak
+PRODUCT_TASK_SUBMITTED=NO
+OPENCLAW_REINSTALLED_OR_UPGRADED=NO
+SECRET_VALUES_RECORDED=NO
+│
+◇  Config warnings ──────────────────────────────────────────────────────╮
+│                                                                        │
+│  - plugins.entries.feishu: plugin not installed: feishu — install the  │
+│    official external plugin with: openclaw plugins install             │
+│    @openclaw/feishu                                                    │
+│                                                                        │
+├────────────────────────────────────────────────────────────────────────╯
+Plugin: ORIS Dev Employee (oris-dev-employee)
+Will remove: config entry, install record, directory: ~/.openclaw/npm/node_modules/@shan-gou-xue-hui/openclaw-oris-dev-employee
+Uninstall plugin "oris-dev-employee"? [y/N] Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+Config warnings:
+- plugins.entries.feishu: plugin not installed: feishu — install the official external plugin with: openclaw plugins install @openclaw/feishu
+Uninstalled plugin "oris-dev-employee". Removed: config entry, install record, directory.
+Restart the gateway to apply changes.
+checked_at=2026-06-19T04:43:36+08:00
+task_id=commercial-openclaw-native-plugin-install-20260618
+result=ROLLED_BACK
+plugin_id=oris-dev-employee
+plugin_present_before=YES
+plugin_present_after=NO
+uninstall_rc=0
+config_restored=YES
+service_restart=PASS
+service_state=active
+direct_root_status=200
+public_root_status=200
+public_root_matches_direct=YES
+enqueue_loopback_only=YES
+intake_loopback_only=YES
+queue_state_unchanged=YES
+oris_worktree_preserved=YES
+product_baseline_preserved=YES
+marker_archived=YES
+secret_values_recorded=NO
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD 6fe9586)
+HEAD is now at 6fe9586 chore(dev-employee): diagnose existing native plugin install marker 20260618T202619Z

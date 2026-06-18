@@ -1,0 +1,40 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-install-20260618",
+  "checked_at": "20260618T202829Z",
+  "result": "ROLLED_BACK",
+  "failure_code": null,
+  "plugin": {
+    "id": "oris-dev-employee",
+    "present_before": "YES",
+    "present_after": "NO",
+    "uninstall_rc": "0"
+  },
+  "config": {
+    "restored": true,
+    "backup_file": "/home/admin/.openclaw/backups/native-plugin-install-20260618T155738Z/openclaw.json.before.bak"
+  },
+  "gateway": {
+    "restart": "PASS",
+    "state": "active",
+    "direct_root_status": "200",
+    "public_root_status": "200",
+    "public_matches_direct": true
+  },
+  "safety": {
+    "enqueue_loopback_only": true,
+    "intake_loopback_only": true,
+    "queue_state_unchanged": true,
+    "oris_worktree_preserved": true,
+    "product_baseline_preserved": true,
+    "marker_archived": true,
+    "product_task_submitted": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "REVIEW_ROLLBACK_EVIDENCE_BEFORE_ANY_REINSTALL",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-rollback-20260618T202829Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-rollback-20260618T202829Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
