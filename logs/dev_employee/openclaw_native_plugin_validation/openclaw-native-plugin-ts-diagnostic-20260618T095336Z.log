@@ -1,0 +1,26 @@
+checked_at=2026-06-18T17:53:45+08:00
+task_id=commercial-openclaw-native-plugin-validation-20260618
+source_commit=585e651fc9cc7e6354932a4fed9acc557e974856
+openclaw_version=OpenClaw 2026.5.19 (a185ca2)
+node_version=v22.22.2
+npm_version=10.9.7
+npm_install=PASS
+tsc_rc=2
+tsc_error_count=3
+tsc_error_codes=TS2345
+tsc_error_files=src/index.ts
+worktree_preserved=YES
+openclaw_config_changed=NO
+service_pid_changed=NO
+queue_changed=NO
+secret_values_recorded=NO
+--- sanitized TypeScript diagnostics ---
+src/index.ts(348,7): error TS2345: Argument of type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: "text"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to parameter of type 'AnyAgentTool | OpenClawPluginToolFactory'.
+  Type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: "text"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to type 'AnyAgentTool'.
+    Property 'label' is missing in type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: "text"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' but required in type 'Omit<AgentTool<TSchema, unknown>, "execute">'.
+src/index.ts(361,7): error TS2345: Argument of type '{ name: string; description: string; parameters: TObject<{ task_id: TString; }>; execute(this: void, _toolCallId: string, params: unknown): Promise<{ content: { type: "text"; text: string; }[]; details: { ...; }; }>; }' is not assignable to parameter of type 'AnyAgentTool | OpenClawPluginToolFactory'.
+  Type '{ name: string; description: string; parameters: TObject<{ task_id: TString; }>; execute(this: void, _toolCallId: string, params: unknown): Promise<{ content: { type: "text"; text: string; }[]; details: { ...; }; }>; }' is not assignable to type 'AnyAgentTool'.
+    Property 'label' is missing in type '{ name: string; description: string; parameters: TObject<{ task_id: TString; }>; execute(this: void, _toolCallId: string, params: unknown): Promise<{ content: { type: "text"; text: string; }[]; details: { ...; }; }>; }' but required in type 'Omit<AgentTool<TSchema, unknown>, "execute">'.
+src/index.ts(390,7): error TS2345: Argument of type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: "text"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to parameter of type 'AnyAgentTool | OpenClawPluginToolFactory'.
+  Type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: "text"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to type 'AnyAgentTool'.
+    Property 'label' is missing in type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: "text"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' but required in type 'Omit<AgentTool<TSchema, unknown>, "execute">'.

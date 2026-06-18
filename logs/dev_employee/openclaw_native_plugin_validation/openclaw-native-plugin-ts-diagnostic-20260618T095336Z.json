@@ -1,0 +1,52 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-validation-20260618",
+  "checked_at": "20260618T095336Z",
+  "result": "DIAGNOSED",
+  "failure_code": "plugin_typescript_build_failed",
+  "source": {
+    "ref": "origin/main",
+    "commit": "585e651fc9cc7e6354932a4fed9acc557e974856"
+  },
+  "runtime": {
+    "openclaw_version": "OpenClaw 2026.5.19 (a185ca2)",
+    "node_version": "v22.22.2",
+    "npm_version": "10.9.7"
+  },
+  "typescript": {
+    "npm_install": "PASS",
+    "rc": "2",
+    "error_count": 3,
+    "error_codes": [
+      "TS2345"
+    ],
+    "error_files": [
+      "src/index.ts"
+    ],
+    "diagnostics": [
+      "src/index.ts(348,7): error TS2345: Argument of type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: \"text\"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to parameter of type 'AnyAgentTool | OpenClawPluginToolFactory'.",
+      "  Type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: \"text\"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to type 'AnyAgentTool'.",
+      "    Property 'label' is missing in type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: \"text\"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' but required in type 'Omit<AgentTool<TSchema, unknown>, \"execute\">'.",
+      "src/index.ts(361,7): error TS2345: Argument of type '{ name: string; description: string; parameters: TObject<{ task_id: TString; }>; execute(this: void, _toolCallId: string, params: unknown): Promise<{ content: { type: \"text\"; text: string; }[]; details: { ...; }; }>; }' is not assignable to parameter of type 'AnyAgentTool | OpenClawPluginToolFactory'.",
+      "  Type '{ name: string; description: string; parameters: TObject<{ task_id: TString; }>; execute(this: void, _toolCallId: string, params: unknown): Promise<{ content: { type: \"text\"; text: string; }[]; details: { ...; }; }>; }' is not assignable to type 'AnyAgentTool'.",
+      "    Property 'label' is missing in type '{ name: string; description: string; parameters: TObject<{ task_id: TString; }>; execute(this: void, _toolCallId: string, params: unknown): Promise<{ content: { type: \"text\"; text: string; }[]; details: { ...; }; }>; }' but required in type 'Omit<AgentTool<TSchema, unknown>, \"execute\">'.",
+      "src/index.ts(390,7): error TS2345: Argument of type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: \"text\"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to parameter of type 'AnyAgentTool | OpenClawPluginToolFactory'.",
+      "  Type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: \"text\"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' is not assignable to type 'AnyAgentTool'.",
+      "    Property 'label' is missing in type '{ name: string; description: string; parameters: TObject<{}>; execute(this: void): Promise<{ content: { type: \"text\"; text: string; }[]; details: { source: string; readOnly: boolean; sanitized: boolean; }; }>; }' but required in type 'Omit<AgentTool<TSchema, unknown>, \"execute\">'."
+    ]
+  },
+  "safety": {
+    "worktree_preserved": true,
+    "openclaw_config_changed": false,
+    "service_pid_changed": false,
+    "queue_changed": false,
+    "plugin_installed_or_enabled": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "READ_TYPESCRIPT_DIAGNOSTIC_EVIDENCE_AND_PATCH_PLUGIN_SOURCE",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-ts-diagnostic-20260618T095336Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-ts-diagnostic-20260618T095336Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
