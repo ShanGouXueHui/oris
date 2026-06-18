@@ -1,0 +1,89 @@
+{
+  "browser_acceptance_pass": false,
+  "check_summary": {
+    "fail": 0,
+    "pass": 10,
+    "total": 10
+  },
+  "checked_at": "20260618T215444Z",
+  "checks": [
+    {
+      "detail": "ready_evidence_commit_verified",
+      "name": "authoritative_readiness",
+      "status": "PASS"
+    },
+    {
+      "detail": "coding_profile_exact_three_deny_no_allow",
+      "name": "current_tools_denied_policy",
+      "status": "PASS"
+    },
+    {
+      "detail": "active_root_200",
+      "name": "gateway_pre_enablement_health",
+      "status": "PASS"
+    },
+    {
+      "detail": "18891_and_18892_loopback_only",
+      "name": "private_status_and_intake_listeners",
+      "status": "PASS"
+    },
+    {
+      "detail": "head_remote_main_exact_and_clean",
+      "name": "product_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "private_config_and_marker_backup_created",
+      "name": "enablement_backup",
+      "status": "PASS"
+    },
+    {
+      "detail": "baseline_tool_accessible_before_enablement",
+      "name": "safe_builtin_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "materialized_existing_coding_profile_plus_exact_three_tools",
+      "name": "controlled_policy_enablement",
+      "status": "PASS"
+    },
+    {
+      "detail": "queue_task_latest_and_baseline_tool_passed_gateway_invoke",
+      "name": "direct_readonly_tool_calls",
+      "status": "PASS"
+    },
+    {
+      "detail": "fingerprint_unchanged_zero_active",
+      "name": "queue_after_direct_calls",
+      "status": "PASS"
+    }
+  ],
+  "config_scope_valid": true,
+  "details": {},
+  "direct_tool_calls_pass": true,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-tool-enablement-20260618T215444Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-tool-enablement-20260618T215444Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "browser_natural_language_acceptance_timeout_or_failed",
+  "next_action": "RERUN_ENABLEMENT_AND_COMPLETE_THREE_BROWSER_PROMPTS",
+  "product_unchanged": false,
+  "queue_unchanged": false,
+  "result": "FAILED",
+  "rollback": {
+    "count": 2,
+    "healthy": "YES"
+  },
+  "safety": {
+    "conversation_content_committed": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "materialized-coding-plus-approved",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": false,
+  "write_tools_absent": true
+}
