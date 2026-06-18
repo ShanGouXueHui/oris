@@ -44,7 +44,9 @@ function asRecord(value: unknown): Record<string, unknown> {
 }
 
 assert.equal(plugin.id, "oris-dev-employee");
-assert.equal(typeof plugin.register, "function");
+
+const registerPlugin = plugin.register;
+assert.ok(registerPlugin, "mixed plugin register handler must be present");
 
 const pluginConfigSchema = plugin.configSchema;
 assert.ok(pluginConfigSchema, "mixed plugin config schema must be present");
@@ -72,7 +74,7 @@ const mockApi = {
   },
 };
 
-await plugin.register(mockApi as never);
+await registerPlugin(mockApi as never);
 
 assert.deepEqual(
   tools.map(({ tool }) => tool.name),
