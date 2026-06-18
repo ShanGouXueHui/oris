@@ -1,0 +1,38 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-validation-20260618",
+  "checked_at": "20260618T152919Z",
+  "result": "REFRESHED",
+  "failure_code": null,
+  "service": {
+    "name": "oris-dev-employee-enqueue.service",
+    "state_before": "active",
+    "state_after": "active",
+    "main_pid_before": "124125",
+    "main_pid_after": "506773",
+    "process_uses_authority_script": true,
+    "server_matches_origin_main": true,
+    "restarted": true,
+    "listener_loopback_only": true
+  },
+  "routes": {
+    "latest_before": "404",
+    "latest_after": "200",
+    "health_after": "200",
+    "queue_after": "200"
+  },
+  "safety": {
+    "queue_state_unchanged": true,
+    "oris_worktree_preserved": true,
+    "product_baseline_preserved": true,
+    "openclaw_pid_unchanged": true,
+    "config_changed": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "RERUN_NATIVE_PLUGIN_VALIDATION_V3",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_validation/enqueue-status-service-refresh-20260618T152919Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_validation/enqueue-status-service-refresh-20260618T152919Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
