@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "scan_roots": ["scripts", "orchestration", "config"],
+  "excluded_directory_names": [
+    ".git",
+    ".venv",
+    "venv",
+    "node_modules",
+    "dist",
+    "build",
+    "__pycache__",
+    "logs",
+    "memory",
+    "vendor"
+  ],
+  "source_extensions": [
+    ".py",
+    ".sh",
+    ".ts",
+    ".tsx",
+    ".js",
+    ".mjs",
+    ".cjs",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml"
+  ],
+  "authoritative_literal_files": [
+    "orchestration/project_registry.json",
+    "orchestration/openclaw_plugins/oris-dev-employee/openclaw.plugin.json",
+    "config/dev_employee/openclaw_readonly_acceptance.json",
+    "config/dev_employee/repository_quality_policy.json"
+  ],
+  "detectors": [
+    "duplicate_symbol",
+    "duplicate_constant",
+    "duplicate_json_key",
+    "absolute_host_path",
+    "environment_loopback_port",
+    "public_oris_domain",
+    "embedded_commit_sha",
+    "embedded_commercial_task_id",
+    "acceptance_project_name",
+    "forbidden_set_e",
+    "large_file"
+  ],
+  "environment_ports": [18789, 18891, 18892, 18893],
+  "public_domains": ["control.orisfy.com"],
+  "acceptance_project_names": ["oris-final-acceptance-api"],
+  "large_file_line_limits": {
+    ".py": 300,
+    ".sh": 220,
+    ".ts": 350,
+    ".tsx": 350,
+    ".js": 300,
+    ".mjs": 300,
+    ".cjs": 300,
+    ".json": 500,
+    ".yaml": 500,
+    ".yml": 500,
+    ".toml": 500
+  },
+  "duplicate_constant_min_occurrences": 2,
+  "evidence_directory": "logs/dev_employee/repository_quality_scan"
+}
