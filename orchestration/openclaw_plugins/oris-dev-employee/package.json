@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "node --test dist/index.test.js",
-    "plugin:validate": "openclaw plugins validate --root . --entry ./dist/index.js"
+    "plugin:validate": "node dist/validate-plugin.js"
   },
   "dependencies": {
     "typebox": "^1.1.38"
