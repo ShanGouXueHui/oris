@@ -1,0 +1,59 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-validation-20260618",
+  "checked_at": "20260618T153153Z",
+  "result": "VALIDATED_NOT_INSTALLED",
+  "failure_code": null,
+  "runtime": {
+    "openclaw_version": "OpenClaw 2026.5.19 (a185ca2)",
+    "node_version": "v22.22.2",
+    "npm_version": "10.9.7",
+    "existing_openclaw_package_root": "/home/admin/.npm-global/lib/node_modules/openclaw"
+  },
+  "validation": {
+    "npm_install": "PASS",
+    "typescript_build": "PASS",
+    "unit_tests": "PASS",
+    "openclaw_plugin_validate": "PASS",
+    "manifest_contract": "PASS",
+    "runtime_import": "PASS",
+    "static_safety_gate": "PASS",
+    "manifest_sha256": "453ecd434f8c35d1d528c2ad421f3e4c21241961390e83ccb70bf9637fcfce18",
+    "package_sha256": "4ebb2e86df0cfd20d8891a4137a6196dc1df6e6fa7743a8ef7cf2d70f52f16d5",
+    "plugin_id": "oris-dev-employee",
+    "tool_contract": [
+      "oris_queue_status",
+      "oris_task_status",
+      "oris_latest_task_status"
+    ],
+    "optional_tools": [
+      "oris_latest_task_status",
+      "oris_queue_status",
+      "oris_task_status"
+    ],
+    "package_version": "0.1.0"
+  },
+  "loopback_api": {
+    "health_ok": true,
+    "queue_status": "200",
+    "latest_status": "200"
+  },
+  "safety": {
+    "plugin_present_before": "NO",
+    "plugin_present_after": "NO",
+    "queue_state_unchanged": true,
+    "openclaw_config_unchanged": true,
+    "openclaw_service_pid_unchanged": true,
+    "product_baseline_preserved": true,
+    "oris_main_worktree_unchanged": true,
+    "product_task_submitted": false,
+    "plugin_installed_or_enabled": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "DESIGN_REVERSIBLE_PLUGIN_INSTALL_WITH_TOOLS_DISABLED_THEN_RUNTIME_INSPECT",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-validation-20260618T153153Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-validation-20260618T153153Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}

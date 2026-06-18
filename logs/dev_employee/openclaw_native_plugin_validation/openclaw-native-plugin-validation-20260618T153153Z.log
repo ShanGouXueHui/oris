@@ -1,0 +1,78 @@
+CHECKED_AT=2026-06-18T23:31:53+08:00
+TASK_ID=commercial-openclaw-native-plugin-validation-20260618
+MODE=ISOLATED_BUILD_TEST_VALIDATE_ONLY
+PLUGIN_SOURCE=orchestration/openclaw_plugins/oris-dev-employee
+PLUGIN_INSTALLED_OR_ENABLED=NO
+PRODUCT_TASK_SUBMITTED=NO
+OPENCLAW_CONFIG_MUTATED=NO
+OPENCLAW_SERVICE_RESTARTED=NO
+PRODUCT_REPOSITORY_MUTATED=NO
+SECRET_VALUES_RECORDED=NO
+OPENCLAW_PACKAGE_ROOT=/home/admin/.npm-global/lib/node_modules/openclaw
+ORIS_MAIN_WORKTREE_DIRTY_BEFORE=YES
+
+added 4 packages in 2s
+
+> @shan-gou-xue-hui/openclaw-oris-dev-employee@0.1.0 build
+> tsc -p tsconfig.json
+
+
+> @shan-gou-xue-hui/openclaw-oris-dev-employee@0.1.0 test
+> node --test dist/index.test.js
+
+TAP version 13
+# Subtest: resolvePluginConfig applies safe defaults
+ok 1 - resolvePluginConfig applies safe defaults
+  ---
+  duration_ms: 1.097078
+  type: 'test'
+  ...
+# Subtest: resolvePluginConfig rejects non-loopback and credential-bearing URLs
+ok 2 - resolvePluginConfig rejects non-loopback and credential-bearing URLs
+  ---
+  duration_ms: 0.524287
+  type: 'test'
+  ...
+# Subtest: sanitizePayload removes secret and host-path fields
+ok 3 - sanitizePayload removes secret and host-path fields
+  ---
+  duration_ms: 0.974851
+  type: 'test'
+  ...
+# Subtest: createTelemetryRecord hashes identifiers and excludes content
+ok 4 - createTelemetryRecord hashes identifiers and excludes content
+  ---
+  duration_ms: 0.956041
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 268.108061
+
+> @shan-gou-xue-hui/openclaw-oris-dev-employee@0.1.0 plugin:validate
+> node validate-plugin.mjs
+
+{"result":"PASS","validationMode":"mixed_plugin_runtime_contract","pluginId":"oris-dev-employee","tools":["oris_queue_status","oris_task_status","oris_latest_task_status"],"hooks":["model_call_ended","after_tool_call","agent_end"],"optionalTools":true,"sideEffectToolsPresent":false}
+OPENCLAW_VERSION=OpenClaw 2026.5.19 (a185ca2)
+NODE_VERSION=v22.22.2
+NPM_VERSION=10.9.7
+NPM_INSTALL=PASS
+TSC_BUILD=PASS
+UNIT_TESTS=PASS
+PLUGIN_VALIDATE=PASS
+MANIFEST_CONTRACT=PASS
+RUNTIME_IMPORT=PASS
+STATIC_SAFETY_GATE=PASS
+PLUGIN_INSTALLED_OR_ENABLED=NO
+PRODUCT_TASK_SUBMITTED=NO
+SECRET_VALUES_RECORDED=NO
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD 7337614)
+HEAD is now at 7337614 chore(dev-employee): record enqueue status service refresh 20260618T152919Z
