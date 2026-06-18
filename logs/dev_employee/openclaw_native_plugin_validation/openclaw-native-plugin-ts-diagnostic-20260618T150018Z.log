@@ -1,0 +1,18 @@
+checked_at=2026-06-18T23:00:28+08:00
+task_id=commercial-openclaw-native-plugin-validation-20260618
+source_commit=3b97952e236e85746bdbf9d35cdf31a41c8955bf
+openclaw_version=OpenClaw 2026.5.19 (a185ca2)
+node_version=v22.22.2
+npm_version=10.9.7
+npm_install=PASS
+tsc_rc=2
+tsc_error_count=1
+tsc_error_codes=TS2722
+tsc_error_files=src/validate-plugin.ts
+worktree_preserved=YES
+openclaw_config_changed=NO
+service_pid_changed=NO
+queue_changed=NO
+secret_values_recorded=NO
+--- sanitized TypeScript diagnostics ---
+src/validate-plugin.ts(50,22): error TS2722: Cannot invoke an object which is possibly 'undefined'.

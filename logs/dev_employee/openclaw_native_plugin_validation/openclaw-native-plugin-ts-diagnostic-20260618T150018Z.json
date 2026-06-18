@@ -1,0 +1,44 @@
+{
+  "task_id": "commercial-openclaw-native-plugin-validation-20260618",
+  "checked_at": "20260618T150018Z",
+  "result": "DIAGNOSED",
+  "failure_code": "plugin_typescript_build_failed",
+  "source": {
+    "ref": "origin/main",
+    "commit": "3b97952e236e85746bdbf9d35cdf31a41c8955bf"
+  },
+  "runtime": {
+    "openclaw_version": "OpenClaw 2026.5.19 (a185ca2)",
+    "node_version": "v22.22.2",
+    "npm_version": "10.9.7"
+  },
+  "typescript": {
+    "npm_install": "PASS",
+    "rc": "2",
+    "error_count": 1,
+    "error_codes": [
+      "TS2722"
+    ],
+    "error_files": [
+      "src/validate-plugin.ts"
+    ],
+    "diagnostics": [
+      "src/validate-plugin.ts(50,22): error TS2722: Cannot invoke an object which is possibly 'undefined'."
+    ]
+  },
+  "safety": {
+    "worktree_preserved": true,
+    "openclaw_config_changed": false,
+    "service_pid_changed": false,
+    "queue_changed": false,
+    "plugin_installed_or_enabled": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false
+  },
+  "next_action": "READ_TYPESCRIPT_DIAGNOSTIC_EVIDENCE_AND_PATCH_PLUGIN_SOURCE",
+  "evidence": {
+    "log_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-ts-diagnostic-20260618T150018Z.log",
+    "json_path": "logs/dev_employee/openclaw_native_plugin_validation/openclaw-native-plugin-ts-diagnostic-20260618T150018Z.json",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  }
+}
