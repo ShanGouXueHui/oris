@@ -4,7 +4,10 @@ import { homedir } from "node:os";
 import { dirname, resolve } from "node:path";
 
 import { Type } from "typebox";
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+import {
+  buildJsonPluginConfigSchema,
+  definePluginEntry,
+} from "openclaw/plugin-sdk/plugin-entry";
 
 const DEFAULT_BASE_URL = "http://127.0.0.1:18891";
 const DEFAULT_TIMEOUT_MS = 5_000;
@@ -39,17 +42,38 @@ type TelemetryRecord = {
   sessionHash?: string;
 };
 
-const configSchema = Type.Object(
+const configSchema = buildJsonPluginConfigSchema(
   {
-    baseUrl: Type.Optional(Type.String()),
-    requestTimeoutMs: Type.Optional(Type.Integer({ minimum: 500, maximum: 30_000 })),
-    telemetryEnabled: Type.Optional(Type.Boolean()),
-    telemetryPath: Type.Optional(Type.String()),
-    telemetryMaxBytes: Type.Optional(
-      Type.Integer({ minimum: 65_536, maximum: 52_428_800 }),
-    ),
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      baseUrl: {
+        type: "string",
+        default: DEFAULT_BASE_URL,
+      },
+      requestTimeoutMs: {
+        type: "integer",
+        minimum: 500,
+        maximum: 30_000,
+        default: DEFAULT_TIMEOUT_MS,
+      },
+      telemetryEnabled: {
+        type: "boolean",
+        default: true,
+      },
+      telemetryPath: {
+        type: "string",
+        default: DEFAULT_TELEMETRY_PATH,
+      },
+      telemetryMaxBytes: {
+        type: "integer",
+        minimum: 65_536,
+        maximum: 52_428_800,
+        default: DEFAULT_TELEMETRY_MAX_BYTES,
+      },
+    },
   },
-  { additionalProperties: false },
+  { cacheKey: "oris-dev-employee:config:v1" },
 );
 
 function asObject(value: unknown): JsonObject {
@@ -229,6 +253,11 @@ async function fetchOrisJson(
 function toolResult(value: unknown) {
   return {
     content: [{ type: "text" as const, text: boundedToolText(value) }],
+    details: {
+      source: "oris-dev-employee",
+      readOnly: true,
+      sanitized: true,
+    },
   };
 }
 
@@ -344,11 +373,13 @@ export default definePluginEntry({
           { additionalProperties: false },
         ),
         async execute(_toolCallId, params) {
-          if (!TASK_ID_RE.test(params.task_id)) {
+          const taskIdValue = asObject(params).task_id;
+          const taskId = typeof taskIdValue === "string" ? taskIdValue : "";
+          if (!TASK_ID_RE.test(taskId)) {
             throw new Error("invalid ORIS task id");
           }
           return toolResult(
-            await fetchOrisJson(config, `/task/${encodeURIComponent(params.task_id)}`),
+            await fetchOrisJson(config, `/task/${encodeURIComponent(taskId)}`),
           );
         },
       },
