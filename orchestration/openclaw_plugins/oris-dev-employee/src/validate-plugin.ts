@@ -45,10 +45,11 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 assert.equal(plugin.id, "oris-dev-employee");
 assert.equal(typeof plugin.register, "function");
-assert.ok(plugin.configSchema);
 
-const configResult = plugin.configSchema?.safeParse({});
-assert.equal(configResult?.success, true, "default plugin configuration must validate");
+const pluginConfigSchema = plugin.configSchema;
+assert.ok(pluginConfigSchema, "mixed plugin config schema must be present");
+const configResult = pluginConfigSchema.safeParse({});
+assert.equal(configResult.success, true, "default plugin configuration must validate");
 
 const tools: ToolRegistration[] = [];
 const hooks: HookRegistration[] = [];
