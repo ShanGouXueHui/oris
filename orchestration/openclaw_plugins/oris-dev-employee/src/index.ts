@@ -347,6 +347,7 @@ export default definePluginEntry({
     api.registerTool(
       {
         name: "oris_queue_status",
+        label: "ORIS Queue Status",
         description:
           "Read the current ORIS Dev Employee queue. This tool is read-only and does not submit or modify tasks.",
         parameters: Type.Object({}, { additionalProperties: false }),
@@ -360,6 +361,7 @@ export default definePluginEntry({
     api.registerTool(
       {
         name: "oris_task_status",
+        label: "ORIS Task Status",
         description:
           "Read status and sanitized evidence metadata for one known ORIS Dev Employee task id.",
         parameters: Type.Object(
@@ -389,6 +391,7 @@ export default definePluginEntry({
     api.registerTool(
       {
         name: "oris_latest_task_status",
+        label: "ORIS Latest Task Status",
         description:
           "Read the latest sanitized ORIS Dev Employee progress snapshot. This tool is read-only.",
         parameters: Type.Object({}, { additionalProperties: false }),
