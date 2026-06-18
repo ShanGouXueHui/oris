@@ -1,0 +1,302 @@
+{
+  "check_summary": {
+    "fail": 0,
+    "pass": 26,
+    "review": 0,
+    "total": 26
+  },
+  "checked_at": "20260618T212757Z",
+  "checks": [
+    {
+      "detail": "marker_and_backup_contract_match",
+      "name": "install_marker_and_backup",
+      "status": "PASS"
+    },
+    {
+      "detail": "owner_admin_mode_0600",
+      "name": "openclaw_config_permissions",
+      "status": "PASS"
+    },
+    {
+      "detail": "token_mode_credential_key_present_value_not_read",
+      "name": "gateway_auth_policy",
+      "status": "PASS"
+    },
+    {
+      "detail": "all_three_names_in_global_deny",
+      "name": "approved_tools_currently_denied",
+      "status": "PASS"
+    },
+    {
+      "detail": "scoped_only_to_oris_plugin",
+      "name": "conversation_access_scope",
+      "status": "PASS"
+    },
+    {
+      "detail": "plugin_entry_enabled",
+      "name": "plugin_config_enabled",
+      "status": "PASS"
+    },
+    {
+      "detail": "expected_loopback_status_api",
+      "name": "plugin_loopback_base_url",
+      "status": "PASS"
+    },
+    {
+      "detail": "policy_shape_captured_no_partial_or_agent_deny",
+      "name": "allow_profile_agent_policy_discovery",
+      "status": "PASS"
+    },
+    {
+      "detail": "expected_installed_version",
+      "name": "openclaw_version",
+      "status": "PASS"
+    },
+    {
+      "detail": "cold_and_runtime_inventory_collected",
+      "name": "plugin_inventory_commands",
+      "status": "PASS"
+    },
+    {
+      "detail": "exact_three_tools_three_hooks_zero_errors",
+      "name": "plugin_runtime_contract",
+      "status": "PASS"
+    },
+    {
+      "detail": "no_mutation_tool_registered",
+      "name": "write_tools_absent",
+      "status": "PASS"
+    },
+    {
+      "detail": "active_direct_public_200_bodies_match",
+      "name": "gateway_and_public_root",
+      "status": "PASS"
+    },
+    {
+      "detail": "unauthenticated_status_401",
+      "name": "restricted_admin_route",
+      "status": "PASS"
+    },
+    {
+      "detail": "unauthenticated_status_401",
+      "name": "restricted_rollback_shell_route",
+      "status": "PASS"
+    },
+    {
+      "detail": "loopback_only_18891",
+      "name": "enqueue_listener_private",
+      "status": "PASS"
+    },
+    {
+      "detail": "loopback_only_18892",
+      "name": "intake_listener_private",
+      "status": "PASS"
+    },
+    {
+      "detail": "loopback_only_18893",
+      "name": "web_console_listener_private",
+      "status": "PASS"
+    },
+    {
+      "detail": "private_rotation_schema_contract_no_samples_yet",
+      "name": "telemetry_safety",
+      "status": "PASS"
+    },
+    {
+      "detail": "zero_active_tasks",
+      "name": "active_queue_count",
+      "status": "PASS"
+    },
+    {
+      "detail": "head_remote_main_exact_and_clean",
+      "name": "product_repository_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "sha256_unchanged",
+      "name": "openclaw_config_unchanged",
+      "status": "PASS"
+    },
+    {
+      "detail": "same_main_pid_no_restart",
+      "name": "gateway_pid_unchanged",
+      "status": "PASS"
+    },
+    {
+      "detail": "fingerprint_and_active_count_unchanged",
+      "name": "queue_unchanged",
+      "status": "PASS"
+    },
+    {
+      "detail": "head_remote_status_tree_unchanged",
+      "name": "product_repository_unchanged",
+      "status": "PASS"
+    },
+    {
+      "detail": "head_and_status_unchanged_before_evidence_commit",
+      "name": "oris_primary_worktree_unchanged",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_readiness/openclaw-readonly-tool-readiness-20260618T212757Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_readiness/openclaw-readonly-tool-readiness-20260618T212757Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": null,
+  "marker_and_backup": {
+    "backup_exists": true,
+    "backup_json_ok": true,
+    "backup_mode_ok": true,
+    "backup_owner_ok": true,
+    "marker_artifact_ok": true,
+    "marker_backup_reference_ok": true,
+    "marker_exists": true,
+    "marker_json_ok": true,
+    "marker_mode_ok": true,
+    "marker_owner_ok": true,
+    "marker_plugin_ok": true,
+    "marker_source_commit_ok": true,
+    "marker_state_ok": true,
+    "marker_tools_ok": true,
+    "marker_version_ok": true,
+    "secret_values_recorded": false
+  },
+  "mode": "read_only_readiness_no_config_mutation",
+  "network": {
+    "admin_unauthenticated_status": "401",
+    "direct_root_status": "200",
+    "enqueue_loopback_only": true,
+    "intake_loopback_only": true,
+    "public_root_status": "200",
+    "rollback_shell_unauthenticated_status": "401",
+    "web_console_loopback_only": true
+  },
+  "next_action": "CREATE_REVERSIBLE_READ_ONLY_ENABLEMENT_SCRIPT_FROM_EVIDENCE",
+  "plugin_runtime": {
+    "parse_ok": true,
+    "plugin_enabled": true,
+    "plugin_error_count": 0,
+    "plugin_found": true,
+    "plugin_version_ok": true,
+    "runtime_hooks": [
+      "after_tool_call",
+      "agent_end",
+      "model_call_ended"
+    ],
+    "runtime_hooks_exact": true,
+    "runtime_tools": [
+      "oris_latest_task_status",
+      "oris_queue_status",
+      "oris_task_status"
+    ],
+    "runtime_tools_exact": true,
+    "secret_values_recorded": false,
+    "write_tools": [],
+    "write_tools_absent": true
+  },
+  "policy": {
+    "agent_policy_records": [
+      {
+        "agent_id_hash": null,
+        "allow_count": 0,
+        "allow_present": false,
+        "allow_sha256": null,
+        "approved_in_allow": [],
+        "approved_in_deny": [],
+        "deny_count": 0,
+        "deny_present": false,
+        "profile": null,
+        "scope": "defaults"
+      }
+    ],
+    "approved_in_global_allow": [],
+    "approved_in_global_deny": [
+      "oris_latest_task_status",
+      "oris_queue_status",
+      "oris_task_status"
+    ],
+    "auth_credential_key_present": true,
+    "auth_mode": "token",
+    "base_url": "http://127.0.0.1:18891",
+    "config_mode_ok": true,
+    "config_owner_ok": true,
+    "conversation_access_plugins": [
+      "oris-dev-employee"
+    ],
+    "conversation_access_scoped_exactly": true,
+    "global_allow_count": 0,
+    "global_allow_present": false,
+    "global_allow_sha256": null,
+    "global_deny_count": 3,
+    "global_deny_present": true,
+    "global_profile": "coding",
+    "plugin_entry_enabled": true,
+    "request_timeout_ms": 5000,
+    "secret_values_recorded": false,
+    "telemetry_enabled": true,
+    "telemetry_max_bytes": 5242880,
+    "telemetry_path": "~/.local/state/oris/openclaw-plugin/latency.jsonl"
+  },
+  "queue": {
+    "active_count_after": 0,
+    "active_count_before": 0,
+    "fingerprint_value_omitted": true
+  },
+  "result": "READY",
+  "runtime_versions": {
+    "openclaw": "OpenClaw 2026.5.19 (a185ca2)"
+  },
+  "safety": {
+    "config_mutated": false,
+    "gateway_restarted_or_reloaded": false,
+    "marker_or_config_raw_content_recorded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "tools_enabled": false,
+    "write_tools_added": false
+  },
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry": {
+    "current": {
+      "exists": false,
+      "mode_ok": null,
+      "owner_ok": null,
+      "size": 0
+    },
+    "current_scan": {
+      "content_safe": true,
+      "events": [],
+      "json_ok": true,
+      "records": 0,
+      "schema_ok": true
+    },
+    "max_bytes": 5242880,
+    "max_bytes_valid": true,
+    "parent": {
+      "exists": false,
+      "mode_ok": null,
+      "owner_ok": null,
+      "size": 0
+    },
+    "path_suffix_ok": true,
+    "path_within_home": true,
+    "rotated": {
+      "exists": false,
+      "mode_ok": null,
+      "owner_ok": null,
+      "size": 0
+    },
+    "rotated_scan": {
+      "content_safe": true,
+      "events": [],
+      "json_ok": true,
+      "records": 0,
+      "schema_ok": true
+    },
+    "rotation_contract_static": true,
+    "secret_values_recorded": false,
+    "source_exists": true,
+    "telemetry_enabled": true
+  }
+}

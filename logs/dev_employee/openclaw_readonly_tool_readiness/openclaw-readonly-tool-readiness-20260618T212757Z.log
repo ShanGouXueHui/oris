@@ -1,0 +1,51 @@
+checked_at=2026-06-19T05:27:57+08:00
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+mode=READ_ONLY_READINESS_NO_CONFIG_MUTATION
+config_mutated=NO
+gateway_restarted_or_reloaded=NO
+tools_enabled=NO
+product_task_submitted=NO
+secret_values_recorded=NO
+CHECK|install_marker_and_backup|PASS|marker_and_backup_contract_match
+CHECK|openclaw_config_permissions|PASS|owner_admin_mode_0600
+CHECK|gateway_auth_policy|PASS|token_mode_credential_key_present_value_not_read
+CHECK|approved_tools_currently_denied|PASS|all_three_names_in_global_deny
+CHECK|conversation_access_scope|PASS|scoped_only_to_oris_plugin
+CHECK|plugin_config_enabled|PASS|plugin_entry_enabled
+CHECK|plugin_loopback_base_url|PASS|expected_loopback_status_api
+CHECK|allow_profile_agent_policy_discovery|PASS|policy_shape_captured_no_partial_or_agent_deny
+CHECK|openclaw_version|PASS|expected_installed_version
+CHECK|plugin_inventory_commands|PASS|cold_and_runtime_inventory_collected
+CHECK|plugin_runtime_contract|PASS|exact_three_tools_three_hooks_zero_errors
+CHECK|write_tools_absent|PASS|no_mutation_tool_registered
+CHECK|gateway_and_public_root|PASS|active_direct_public_200_bodies_match
+CHECK|restricted_admin_route|PASS|unauthenticated_status_401
+CHECK|restricted_rollback_shell_route|PASS|unauthenticated_status_401
+CHECK|enqueue_listener_private|PASS|loopback_only_18891
+CHECK|intake_listener_private|PASS|loopback_only_18892
+CHECK|web_console_listener_private|PASS|loopback_only_18893
+CHECK|telemetry_safety|PASS|private_rotation_schema_contract_no_samples_yet
+CHECK|active_queue_count|PASS|zero_active_tasks
+CHECK|product_repository_baseline|PASS|head_remote_main_exact_and_clean
+CHECK|openclaw_config_unchanged|PASS|sha256_unchanged
+CHECK|gateway_pid_unchanged|PASS|same_main_pid_no_restart
+CHECK|queue_unchanged|PASS|fingerprint_and_active_count_unchanged
+CHECK|product_repository_unchanged|PASS|head_remote_status_tree_unchanged
+CHECK|oris_primary_worktree_unchanged|PASS|head_and_status_unchanged_before_evidence_commit
+result=READY
+failure_code=
+checks_total=26
+checks_pass=26
+checks_review=0
+checks_fail=0
+active_queue_count_before=0
+active_queue_count_after=0
+config_mutated=NO
+gateway_restarted_or_reloaded=NO
+tools_enabled=NO
+product_task_submitted=NO
+secret_values_recorded=NO
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD b402ddc)
+HEAD is now at b402ddc fix(dev-employee): require exact private telemetry path
