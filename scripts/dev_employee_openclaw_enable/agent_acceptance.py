@@ -66,12 +66,28 @@ def discover_agent_cli() -> dict[str, Any]:
     }
 
 
+def _failed_result(reason: str, cli: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "accepted": False,
+        "reason": reason,
+        "cli": cli,
+        "turns": [],
+        "gateway_transport_mode": "unverified",
+        "local_flag_used": False,
+        "session_key_recorded": False,
+        "conversation_content_recorded": False,
+        "secret_values_recorded": False,
+    }
+
+
 def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, Any]:
     cli = discover_agent_cli()
+    if context.require_gateway_transport and not cli["local_flag_available"]:
+        return _failed_result("gateway_transport_contract_unverifiable", cli)
+
     session_key = f"{context.session_prefix}-{stamp.lower()}"
     started_at = datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
     turns: list[dict[str, Any]] = []
-
     for turn in context.acceptance_turns:
         message = str(turn["message_template"]).format(task_id=context.task_id)
         command = [
@@ -105,15 +121,9 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
             }
         )
         if result.returncode != 0 or not output_valid:
-            return {
-                "accepted": False,
-                "reason": "native_agent_turn_failed",
-                "cli": cli,
-                "turns": turns,
-                "session_key_recorded": False,
-                "conversation_content_recorded": False,
-                "secret_values_recorded": False,
-            }
+            failed = _failed_result("native_agent_turn_failed", cli)
+            failed["turns"] = turns
+            return failed
 
     deadline = time.monotonic() + context.telemetry_wait_seconds
     telemetry: dict[str, Any] = {}
@@ -122,15 +132,24 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
         if telemetry.get("accepted") is True:
             break
         time.sleep(3)
-    accepted = len(turns) == len(context.acceptance_turns) and telemetry.get("accepted") is True
+    session_ok = bool(telemetry.get("persisted_session"))
+    if not context.require_persisted_native_session:
+        session_ok = True
+    accepted = (
+        len(turns) == len(context.acceptance_turns)
+        and telemetry.get("accepted") is True
+        and session_ok
+    )
     return {
         "accepted": accepted,
         "reason": None if accepted else "native_agent_telemetry_acceptance_failed",
         "cli": cli,
         "turns": turns,
         "telemetry": telemetry,
+        "gateway_transport_mode": "gateway_default_without_local_flag",
         "gateway_transport_proven_by_plugin_telemetry": bool(telemetry.get("accepted")),
         "persisted_native_session": bool(telemetry.get("persisted_session")),
+        "local_flag_used": False,
         "session_key_recorded": False,
         "conversation_content_recorded": False,
         "secret_values_recorded": False,
