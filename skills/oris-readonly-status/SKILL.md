@@ -2,7 +2,7 @@
 name: oris-readonly-status
 description: Mandatory live routing for ORIS queue and task status requests. Always use the approved ORIS typed read-only tool and never answer from memory, exec, or write actions.
 user-invocable: false
-metadata: {"openclaw":{"os":"linux"}}
+metadata: {"openclaw":{"os":"linux","always":true}}
 ---
 
 # ORIS read-only status routing
