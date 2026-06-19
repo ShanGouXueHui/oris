@@ -6,23 +6,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from scripts.lib.secret_refs import resolve_json_secret, set_json_secret
+from scripts.lib.insight_db_config import CONFIG_PATH, load_json, resolve_db_cfg
+from scripts.lib.secret_refs import set_json_secret
 
 
-CONFIG_RELATIVE_PATH = Path("config/insight_storage.json")
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict):
-        raise ValueError("insight storage config must contain a JSON object")
-    return value
-
-
-def _connection_parameters(config: dict[str, Any], password: str) -> dict[str, Any]:
-    db = config.get("db")
-    if not isinstance(db, dict):
-        raise ValueError("insight storage config has no db object")
+def _connection_parameters(db: dict[str, Any], password: str) -> dict[str, Any]:
     required = ("host", "port", "dbname", "user")
     if any(key not in db for key in required):
         raise ValueError("insight database config is incomplete")
@@ -33,7 +21,7 @@ def _connection_parameters(config: dict[str, Any], password: str) -> dict[str, A
         "user": db["user"],
         "password": password,
         "connect_timeout": 10,
-        "sslmode": config.get("sslmode", "disable"),
+        "sslmode": db.get("sslmode", "disable"),
     }
 
 
@@ -60,8 +48,8 @@ def _alter_role_password(connection, driver: str, role: str, password: str) -> N
         )
 
 
-def _verify_connection(config: dict[str, Any], password: str) -> None:
-    connection, _ = _connect(_connection_parameters(config, password))
+def _verify_connection(db: dict[str, Any], password: str) -> None:
+    connection, _ = _connect(_connection_parameters(db, password))
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
@@ -73,21 +61,21 @@ def _verify_connection(config: dict[str, Any], password: str) -> None:
 
 
 def rotate(repo_root: Path) -> dict[str, Any]:
-    config_path = repo_root / CONFIG_RELATIVE_PATH
-    config = _load_json(config_path)
-    db = config.get("db")
-    if not isinstance(db, dict):
+    config = load_json(CONFIG_PATH)
+    tracked_db = config.get("db")
+    if not isinstance(tracked_db, dict):
         raise ValueError("insight storage db config is missing")
-    if "password" in config or "password" in db:
+    if "password" in config or "password" in tracked_db:
         raise RuntimeError("plaintext database password remains in tracked config")
-    reference = db.get("password_secret_ref") or config.get("password_secret_ref")
+    reference = tracked_db.get("password_secret_ref") or config.get("password_secret_ref")
     if not isinstance(reference, str) or not reference:
         raise RuntimeError("database password secret reference is missing")
 
-    old_password = resolve_json_secret(reference)
+    runtime_db = resolve_db_cfg()
+    old_password = str(runtime_db["password"])
     new_password = secrets.token_urlsafe(48)
-    role = str(db["user"])
-    connection, driver = _connect(_connection_parameters(config, old_password))
+    role = str(runtime_db["user"])
+    connection, driver = _connect(_connection_parameters(runtime_db, old_password))
     secret_file_updated = False
     try:
         _alter_role_password(connection, driver, role, new_password)
@@ -95,7 +83,7 @@ def rotate(repo_root: Path) -> dict[str, Any]:
         secret_file_updated = True
         connection.commit()
         try:
-            _verify_connection(config, new_password)
+            _verify_connection(runtime_db, new_password)
         except Exception:
             _alter_role_password(connection, driver, role, old_password)
             connection.commit()
@@ -116,9 +104,13 @@ def rotate(repo_root: Path) -> dict[str, Any]:
     finally:
         connection.close()
 
+    try:
+        config_path = CONFIG_PATH.relative_to(repo_root).as_posix()
+    except ValueError:
+        config_path = CONFIG_PATH.name
     return {
         "result": "ROTATED_AND_VERIFIED",
-        "config_path": CONFIG_RELATIVE_PATH.as_posix(),
+        "config_path": config_path,
         "plaintext_password_present": False,
         "secret_reference_used": True,
         "database_connection_verified": True,
