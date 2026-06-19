@@ -1,0 +1,27 @@
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+checked_at=20260619T213958Z
+result=DIAGNOSTIC_FAILED
+failure_code=RuntimeError
+selected_policy_mode=NONE
+routing_skill_installed=NO
+CHECK|diagnostic_selftests|PASS|diagnostic selftests passed
+CHECK|source_authority_and_hardcoding_scan|FAIL|duplicate authority or forbidden hardcoding detected
+CHECK|tools_denied_baseline|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|gateway_baseline_health|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|private_candidate_build|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|candidate_policy_compatibility|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|installed_runtime_candidate_validation|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|active_candidate_activation|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|runtime_plugin_inventory|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|direct_tool_calls|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|native_agent_acceptance|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|telemetry_acceptance|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|rollback|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|final_gateway_health|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|queue_invariant|NOT_CHECKED|blocked by an earlier diagnostic failure
+CHECK|product_invariant|NOT_CHECKED|blocked by an earlier diagnostic failure
+product_task_submitted=NO
+write_tools_added=NO
+openclaw_reinstalled_or_upgraded=NO
+secret_values_recorded=NO
+conversation_content_recorded=NO

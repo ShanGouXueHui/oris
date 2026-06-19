@@ -1,0 +1,149 @@
+{
+  "check_summary": {
+    "fail": 1,
+    "pass": 1,
+    "total": 16
+  },
+  "checked_at": "20260619T213958Z",
+  "checks": [
+    {
+      "detail": "diagnostic selftests passed",
+      "name": "diagnostic_selftests",
+      "status": "PASS"
+    },
+    {
+      "detail": "duplicate authority or forbidden hardcoding detected",
+      "name": "source_authority_and_hardcoding_scan",
+      "status": "FAIL"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "tools_denied_baseline",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "gateway_baseline_health",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "private_candidate_build",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "candidate_policy_compatibility",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "installed_runtime_candidate_validation",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "active_candidate_activation",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "runtime_plugin_inventory",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "direct_tool_calls",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "native_agent_acceptance",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "telemetry_acceptance",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "rollback",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "final_gateway_health",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "queue_invariant",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "blocked by an earlier diagnostic failure",
+      "name": "product_invariant",
+      "status": "NOT_CHECKED"
+    }
+  ],
+  "config_scope_valid": null,
+  "details": {
+    "diagnostic_check_summary": {
+      "fail": 1,
+      "not_checked": 14,
+      "pass": 1,
+      "total": 16
+    },
+    "diagnostic_stage_status": {
+      "config_scope": "NOT_CHECKED",
+      "direct_tool_calls": "NOT_CHECKED",
+      "native_agent_acceptance": "NOT_CHECKED",
+      "product_unchanged": "NOT_CHECKED",
+      "queue_unchanged": "NOT_CHECKED",
+      "telemetry_privacy": "NOT_CHECKED",
+      "write_tools_absent": "NOT_CHECKED"
+    },
+    "engineering_scan": {
+      "duplicate_authorities": {},
+      "files_scanned": 42,
+      "forbidden_hardcoding": [],
+      "ok": false,
+      "oversized_modules": [
+        {
+          "file": "scripts/dev_employee_openclaw_enable/skill.py",
+          "line_count": 261
+        }
+      ],
+      "oversized_modules_require_layered_remediation": true
+    }
+  },
+  "direct_tool_calls_pass": null,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T213958Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T213958Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "RuntimeError",
+  "native_agent_acceptance_pass": null,
+  "next_action": "READ_GITHUB_DIAGNOSTIC_EVIDENCE_BEFORE_ANY_RETRY",
+  "product_unchanged": null,
+  "queue_unchanged": null,
+  "result": "DIAGNOSTIC_FAILED",
+  "rollback": {
+    "count": 0,
+    "healthy": "NOT_REQUIRED"
+  },
+  "routing_skill_installed": false,
+  "safety": {
+    "conversation_content_recorded": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "NONE",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": null,
+  "write_tools_absent": null
+}
