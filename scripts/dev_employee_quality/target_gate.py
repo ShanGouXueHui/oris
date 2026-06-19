@@ -19,6 +19,7 @@ TARGET_FILES = {
     "scripts/dev_employee_remediate_and_enable_openclaw_readonly.sh",
     "config/insight_storage.json",
     "config/dev_employee/openclaw_readonly_acceptance.json",
+    "config/dev_employee/repository_quality_policy.json",
 }
 
 
