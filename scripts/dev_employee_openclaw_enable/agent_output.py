@@ -5,21 +5,31 @@ import json
 from typing import Any
 
 
-def parse_json_output(value: str) -> dict[str, Any] | None:
+def parse_json_value(value: str) -> Any | None:
     stripped = value.strip()
     if not stripped:
         return None
     try:
-        parsed = json.loads(stripped)
+        return json.loads(stripped)
     except json.JSONDecodeError:
-        start = stripped.find("{")
-        end = stripped.rfind("}")
-        if start < 0 or end <= start:
-            return None
-        try:
-            parsed = json.loads(stripped[start : end + 1])
-        except json.JSONDecodeError:
-            return None
+        decoder = json.JSONDecoder()
+        starts = sorted(
+            index
+            for marker in ("{", "[")
+            for index in [stripped.find(marker)]
+            if index >= 0
+        )
+        for start in starts:
+            try:
+                parsed, _ = decoder.raw_decode(stripped[start:])
+                return parsed
+            except json.JSONDecodeError:
+                continue
+    return None
+
+
+def parse_json_output(value: str) -> dict[str, Any] | None:
+    parsed = parse_json_value(value)
     return parsed if isinstance(parsed, dict) else None
 
 
@@ -55,7 +65,11 @@ def session_identifier_hashes(value: Any) -> set[str]:
     if isinstance(value, dict):
         for key, child in value.items():
             normalized = str(key).replace("_", "").lower()
-            if normalized in {"sessionid", "sessionkey"} and isinstance(child, str) and child:
+            if (
+                normalized in {"sessionid", "sessionkey"}
+                and isinstance(child, str)
+                and child
+            ):
                 hashes.add(_hash_identifier(child))
             else:
                 hashes.update(session_identifier_hashes(child))
