@@ -1,12 +1,12 @@
 {
-  "version": 1,
+  "version": 2,
   "driver": "postgresql",
   "database": "oris_insight",
   "schema": "insight",
   "host": "127.0.0.1",
   "port": 5432,
   "user": "oris_app",
-  "password_secret_ref": "secrets_json:/home/admin/.openclaw/secrets.json::postgres.oris_insight.password",
+  "password_secret_ref": "secrets_json:~/.openclaw/secrets.json::postgres.oris_insight.password",
   "sslmode": "disable",
   "artifact_storage_root": "outputs/artifacts",
   "word_enabled": true,
@@ -19,15 +19,16 @@
   "governance": {
     "config_first": true,
     "db_first_for_variable_rules": true,
-    "no_business_constants_in_scripts": true
+    "no_business_constants_in_scripts": true,
+    "plaintext_secrets_forbidden": true
   },
   "db": {
     "host": "127.0.0.1",
     "port": 5432,
     "dbname": "oris_insight",
     "user": "oris_app",
-    "password": "vTsIx0FP8JLvmLM9eSRz15gaJaKJlEFO"
+    "password_secret_ref": "secrets_json:~/.openclaw/secrets.json::postgres.oris_insight.password"
   },
   "storage_engine": "postgres",
-  "config_version": 2
+  "config_version": 3
 }
