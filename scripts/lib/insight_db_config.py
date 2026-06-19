@@ -18,7 +18,7 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
-def resolve_db_cfg() -> dict[str, Any]:
+def load_db_cfg() -> tuple[dict[str, Any], str]:
     raw = load_json(CONFIG_PATH)
     selected = (
         raw.get("db")
@@ -34,11 +34,16 @@ def resolve_db_cfg() -> dict[str, Any]:
     db = dict(selected)
     if isinstance(db.get("password"), str) and db["password"].strip():
         raise RuntimeError("plaintext database password is forbidden")
-    reference = db.get("password_secret_ref") or raw.get("password_secret_ref")
+    reference = db.pop("password_secret_ref", None) or raw.get("password_secret_ref")
     if not isinstance(reference, str) or not reference.strip():
         raise RuntimeError("database password secret reference is missing")
-    db["password"] = resolve_json_secret(reference)
     db.setdefault("sslmode", raw.get("sslmode", "disable"))
+    return db, reference
+
+
+def resolve_db_cfg() -> dict[str, Any]:
+    db, reference = load_db_cfg()
+    db["password"] = resolve_json_secret(reference)
     return db
 
 
