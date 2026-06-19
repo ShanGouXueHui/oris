@@ -7,6 +7,7 @@ TMP_ROOT="$(mktemp -d /tmp/oris-remediate-enable-${STAMP}-XXXXXX)"
 QUALITY_OUT="$TMP_ROOT/quality.out"
 TARGET_GATE_JSON="$TMP_ROOT/target-gate.json"
 PREFLIGHT_JSON="$TMP_ROOT/preflight.json"
+PREFLIGHT_EVIDENCE_JSON="$TMP_ROOT/preflight-evidence.json"
 ROTATION_OUT="$TMP_ROOT/rotation.out"
 ENABLEMENT_OUT="$TMP_ROOT/enablement.out"
 RESULT="FAILED"
@@ -53,21 +54,11 @@ summary() {
   echo "OPENCLAW_PREFLIGHT=$(json_value "$PREFLIGHT_JSON" result NOT_RUN)"
   echo "PREFLIGHT_FAILURE_STAGE=$(json_value "$PREFLIGHT_JSON" failure_stage '')"
   echo "PREFLIGHT_FAILURE_TYPE=$(json_value "$PREFLIGHT_JSON" failure_type '')"
-  echo "PREFLIGHT_CONTEXT_LOADED=$(json_value "$PREFLIGHT_JSON" context_loaded NOT_RUN)"
-  echo "PREFLIGHT_PYTHON_COMPILED=$(json_value "$PREFLIGHT_JSON" python_compiled NOT_RUN)"
-  echo "PREFLIGHT_READINESS_READY=$(json_value "$PREFLIGHT_JSON" readiness_evidence_ready NOT_RUN)"
-  echo "PREFLIGHT_TOOLS_DENIED=$(json_value "$PREFLIGHT_JSON" tools_denied_baseline NOT_RUN)"
-  echo "PREFLIGHT_AGENT_CLI=$(json_value "$PREFLIGHT_JSON" agent_cli_supported NOT_RUN)"
-  echo "PREFLIGHT_GATEWAY_TRANSPORT=$(json_value "$PREFLIGHT_JSON" gateway_transport_supported NOT_RUN)"
-  echo "PREFLIGHT_SKILL_TARGET=$(json_value "$PREFLIGHT_JSON" skill_install_target_ready NOT_RUN)"
-  echo "PREFLIGHT_PLUGIN_RUNTIME=$(json_value "$PREFLIGHT_JSON" plugin_runtime_ok NOT_RUN)"
-  echo "PREFLIGHT_PUBLIC_ROUTES=$(json_value "$PREFLIGHT_JSON" public_routes_ok NOT_RUN)"
-  echo "PREFLIGHT_PRIVATE_LISTENERS=$(json_value "$PREFLIGHT_JSON" internal_listeners_private NOT_RUN)"
-  echo "PREFLIGHT_SOURCE_WORKTREE=$(json_value "$PREFLIGHT_JSON" source_worktree_ready NOT_RUN)"
   echo "PREFLIGHT_SOURCE_HEAD_SYNCED=$(json_value "$PREFLIGHT_JSON" source_worktree_head_synced NOT_RUN)"
   echo "PREFLIGHT_SOURCE_DIRTY_COUNT=$(json_value "$PREFLIGHT_JSON" source_worktree_dirty_count NOT_RUN)"
-  echo "PREFLIGHT_SOURCE_DIRTY_PATHS=$(json_value "$PREFLIGHT_JSON" source_worktree_dirty_paths '[]')"
-  echo "PREFLIGHT_SOURCE_DIRTY_PATHS_TRUNCATED=$(json_value "$PREFLIGHT_JSON" source_worktree_dirty_paths_truncated NOT_RUN)"
+  echo "PREFLIGHT_EVIDENCE_PATH=$(json_value "$PREFLIGHT_EVIDENCE_JSON" evidence_path '')"
+  echo "PREFLIGHT_EVIDENCE_COMMIT=$(json_value "$PREFLIGHT_EVIDENCE_JSON" evidence_commit '')"
+  echo "PREFLIGHT_EVIDENCE_REMOTE_VERIFIED=$(json_value "$PREFLIGHT_EVIDENCE_JSON" evidence_remote_verified False)"
   echo "DATABASE_ROTATION_RESULT=$(summary_value "$ROTATION_OUT" RESULT NOT_RUN)"
   echo "DATABASE_CREDENTIAL_ROTATED=$(summary_value "$ROTATION_OUT" DATABASE_CREDENTIAL_ROTATED NO)"
   echo "DATABASE_ROTATION_EVIDENCE_COMMIT=$(summary_value "$ROTATION_OUT" EVIDENCE_COMMIT '')"
@@ -83,7 +74,7 @@ summary() {
   echo "PRODUCT_TASK_SUBMITTED=NO"
   echo "WRITE_TOOLS_ADDED=NO"
   echo "SECRET_VALUES_PRINTED=NO"
-  echo "NEXT_ACTION=$([ "$RESULT" = "COMPLETED" ] && echo PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN || echo INSPECT_FAILED_STAGE_EVIDENCE)"
+  echo "NEXT_ACTION=$([ "$RESULT" = "COMPLETED" ] && echo PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN || echo INSPECT_GITHUB_EVIDENCE)"
   echo "SEND_TO_CHAT=THIS_SUMMARY_ONLY"
   echo "===== END SUMMARY ====="
 }
@@ -92,6 +83,11 @@ fail() {
   FAILURE_CODE="$1"
   summary
   exit 1
+}
+
+record_preflight_evidence() {
+  PYTHONPATH="$REPO_ROOT" python3 -m scripts.dev_employee_openclaw_enable.preflight_evidence \
+    "$PREFLIGHT_JSON" "$PREFLIGHT_EVIDENCE_JSON" >/dev/null 2>&1 || true
 }
 
 [ -n "$REPO_ROOT" ] || fail "repository_root_unresolved"
@@ -112,7 +108,11 @@ PYTHONPATH="$REPO_ROOT" python3 -m scripts.dev_employee_quality.target_gate \
 
 PYTHONPATH="$REPO_ROOT" python3 -m scripts.dev_employee_openclaw_enable.preflight \
   "$PREFLIGHT_JSON" >/dev/null 2>&1
-[ "$?" = "0" ] || fail "automatic_openclaw_preflight_failed"
+PREFLIGHT_RC="$?"
+if [ "$PREFLIGHT_RC" != "0" ]; then
+  record_preflight_evidence
+  fail "automatic_openclaw_preflight_failed"
+fi
 
 bash "$REPO_ROOT/scripts/dev_employee_rotate_insight_db_credential.sh" > "$ROTATION_OUT" 2>&1
 [ "$?" = "0" ] || fail "database_credential_rotation_workflow_failed"
