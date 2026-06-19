@@ -30,12 +30,16 @@ def run_preflight(result_path: Path) -> bool:
     listeners_private = all(
         listener_is_loopback_only(port) for port in context.internal_ports
     )
+    agent_cli_supported = bool(cli.get("session_flag") and cli.get("message_flag"))
+    gateway_transport_supported = bool(
+        not context.require_gateway_transport or cli.get("local_flag_available")
+    )
     ok = bool(
         compiled
         and readiness.get("result") == "READY"
         and len(denied.get("approved_denied") or []) == len(context.approved_tools)
-        and cli.get("session_flag")
-        and cli.get("message_flag")
+        and agent_cli_supported
+        and gateway_transport_supported
         and runtime.get("ok")
         and routes.get("ok")
         and listeners_private
@@ -45,7 +49,8 @@ def run_preflight(result_path: Path) -> bool:
         "python_compiled": compiled,
         "readiness_evidence_ready": readiness.get("result") == "READY",
         "tools_denied_baseline": len(denied.get("approved_denied") or []) == len(context.approved_tools),
-        "agent_cli_supported": bool(cli.get("session_flag") and cli.get("message_flag")),
+        "agent_cli_supported": agent_cli_supported,
+        "gateway_transport_supported": gateway_transport_supported,
         "agent_cli": cli,
         "plugin_runtime_ok": bool(runtime.get("ok")),
         "public_routes_ok": bool(routes.get("ok")),
