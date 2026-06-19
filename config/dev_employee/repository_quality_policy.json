@@ -33,6 +33,9 @@
     "orchestration/dev_employee_retry_requests",
     "orchestration/dev_employee_status"
   ],
+  "worktree_runtime_path_prefixes": [
+    "logs"
+  ],
   "excluded_file_names": [
     "generic_insight_enqueue_state.json",
     "provider_health_snapshot.json",
