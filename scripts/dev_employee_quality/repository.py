@@ -65,25 +65,20 @@ def scan_large_file(source: SourceFile, policy: ScanPolicy) -> list[Finding]:
     ]
 
 
-def _scan_definitions(source: SourceFile) -> list[Finding]:
+def scan_definitions(source: SourceFile, policy: ScanPolicy) -> list[Finding]:
     if source.suffix == ".py":
         return scan_python(source)
     if source.suffix in {".sh", ".ts", ".tsx", ".js", ".mjs", ".cjs"}:
         return scan_text_symbols(source)
     if source.suffix == ".json":
         findings = scan_json(source)
-        if "plaintext_secret" in source_policy_detectors:
+        if "plaintext_secret" in policy.detectors:
             findings.extend(scan_json_secrets(source))
         return findings
     return []
 
 
-source_policy_detectors: frozenset[str] = frozenset()
-
-
 def scan_repository(repo_root: Path, policy: ScanPolicy) -> tuple[list[Finding], int]:
-    global source_policy_detectors
-    source_policy_detectors = policy.detectors
     findings: list[Finding] = []
     file_count = 0
     for source in iter_source_files(repo_root, policy):
@@ -91,6 +86,6 @@ def scan_repository(repo_root: Path, policy: ScanPolicy) -> tuple[list[Finding],
         if source.suffix in policy.code_extensions:
             findings.extend(hardcoding.scan(source, policy))
         findings.extend(scan_large_file(source, policy))
-        findings.extend(_scan_definitions(source))
+        findings.extend(scan_definitions(source, policy))
     findings.sort(key=lambda item: (item.path, item.line, item.rule_id, item.message))
     return findings, file_count
