@@ -52,6 +52,7 @@ def _summary_payload(
         "result": state.result,
         "failure_code": state.failure_code or None,
         "selected_policy_mode": state.selected_policy_mode,
+        "routing_skill_installed": state.routing_skill_installed,
         "checks": checks.checks,
         "check_summary": {
             "total": len(checks.checks),
@@ -93,6 +94,7 @@ def _write_log(path: Path, payload: dict[str, Any]) -> None:
         f"result={payload['result']}",
         f"failure_code={payload['failure_code'] or ''}",
         f"selected_policy_mode={payload['selected_policy_mode']}",
+        f"routing_skill_installed={'YES' if payload['routing_skill_installed'] else 'NO'}",
     ]
     for check in payload["checks"]:
         lines.append(
