@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import tempfile
@@ -12,13 +11,12 @@ from .context import load_context
 from .evidence import write_and_commit_evidence
 from .gateway import (
     direct_readonly_probe,
-    gateway_pid,
     restart_gateway,
     select_safe_baseline_tool,
     verify_plugin_runtime,
     verify_public_routes,
 )
-from .models import CheckRecorder, RunState, RuntimeContext
+from .models import CheckRecorder, RepoSnapshot, RunState, RuntimeContext
 from .policy import (
     PolicyBackup,
     apply_readonly_policy,
@@ -41,6 +39,7 @@ from .state import (
 
 
 REQUIRED_COMMANDS = ("git", "openclaw", "systemctl", "ss")
+SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
 
 
 def _stamp() -> str:
@@ -105,7 +104,7 @@ def _summary(
 def _preflight(
     context: RuntimeContext,
     checks: CheckRecorder,
-) -> tuple[str, str, object, object, str, int]:
+) -> tuple[str, str, RepoSnapshot, RepoSnapshot]:
     _require_commands()
     _require_private_file(context.openclaw_config)
     _require_private_file(context.marker_file)
@@ -116,7 +115,7 @@ def _preflight(
         raise RuntimeError("authoritative readiness evidence is not READY")
     checks.pass_check("authoritative_readiness", "latest READY evidence verified")
 
-    denied = validate_denied_baseline(context)
+    validate_denied_baseline(context)
     checks.pass_check("tools_denied_baseline", "approved tools remain denied before mutation")
     if not _gateway_active(context):
         raise RuntimeError("existing OpenClaw Gateway is not active")
@@ -130,8 +129,7 @@ def _preflight(
     checks.pass_check("private_internal_listeners", "required ORIS listeners are loopback-only")
 
     queue_before = queue_fingerprint(context.repo_root)
-    active_before = active_queue_count(context.repo_root)
-    if active_before != 0:
+    if active_queue_count(context.repo_root) != 0:
         raise RuntimeError("active ORIS product task exists")
     checks.pass_check("queue_baseline", "zero active tasks and queue fingerprint captured")
 
@@ -149,29 +147,59 @@ def _preflight(
         raise RuntimeError("ORIS primary worktree is not clean")
     baseline_tool = select_safe_baseline_tool(context)
     checks.pass_check("safe_builtin_baseline", "safe built-in tool is accessible before mutation")
-    return queue_before, baseline_tool, product_before, oris_before, gateway_pid(context), active_before
+    return queue_before, baseline_tool, product_before, oris_before
 
 
-def _run(context: RuntimeContext, state: RunState, checks: CheckRecorder, stamp: str) -> tuple[str, str]:
+def _record_failure(state: RunState, checks: CheckRecorder, exc: Exception) -> None:
+    state.result = "FAILED"
+    state.failure_code = type(exc).__name__ + ":" + str(exc)
+    state.next_action = "FIX_AUTOMATIC_ENABLEMENT_FAILURE_WITH_TOOLS_DENIED"
+    checks.fail_check("automatic_enablement", type(exc).__name__)
+
+
+def _commit_evidence(
+    context: RuntimeContext,
+    state: RunState,
+    checks: CheckRecorder,
+    stamp: str,
+    temp_root: Path,
+) -> tuple[str, str]:
+    commit, evidence_log, evidence_json = write_and_commit_evidence(
+        context,
+        state,
+        checks,
+        stamp,
+        temp_root,
+    )
+    state.evidence_commit = commit
+    state.evidence_remote_verified = True
+    return evidence_log, evidence_json
+
+
+def _run(
+    context: RuntimeContext,
+    state: RunState,
+    checks: CheckRecorder,
+    stamp: str,
+) -> tuple[str, str]:
     backup: PolicyBackup | None = None
     evidence_log = ""
     evidence_json = ""
-    queue_before = ""
-    product_before = None
-    oris_before = None
     try:
-        queue_before, baseline_tool, product_before, oris_before, _, _ = _preflight(context, checks)
+        queue_before, baseline_tool, product_before, oris_before = _preflight(
+            context,
+            checks,
+        )
         backup = create_backup(context, stamp)
         checks.pass_check("private_backup", "tools-denied config and marker backup created")
 
-        state.selected_policy_mode = apply_readonly_policy(context, backup)
         state.mutation_started = True
+        state.selected_policy_mode = apply_readonly_policy(context, backup)
         state.config_scope_valid = True
         restart_gateway(context)
         checks.pass_check("controlled_policy_enablement", "minimal approved read-only policy applied")
 
-        routes = verify_public_routes(context)
-        if not routes["ok"]:
+        if not verify_public_routes(context)["ok"]:
             raise RuntimeError("public routes failed after Gateway restart")
         runtime = verify_plugin_runtime(context)
         if not runtime.get("ok"):
@@ -197,20 +225,21 @@ def _run(context: RuntimeContext, state: RunState, checks: CheckRecorder, stamp:
         state.native_agent_acceptance_pass = True
         telemetry = automatic.get("telemetry") or {}
         state.telemetry_privacy_pass = bool(
-            telemetry.get("schema_ok") and telemetry.get("content_safe")
+            telemetry.get("schema_ok")
+            and telemetry.get("content_safe")
+            and telemetry.get("only_approved_tools_used")
         )
         if not state.telemetry_privacy_pass:
-            raise RuntimeError("telemetry privacy or schema validation failed")
+            raise RuntimeError("telemetry privacy, schema, or approved-tool validation failed")
         checks.pass_check("automatic_native_agent_acceptance", "three natural-language turns completed automatically")
-        checks.pass_check("telemetry_privacy", "typed hook telemetry is private and schema-safe")
+        checks.pass_check("telemetry_privacy", "typed hook telemetry is private, schema-safe, and read-only")
 
         if queue_fingerprint(context.repo_root) != queue_before or active_queue_count(context.repo_root) != 0:
             raise RuntimeError("queue changed during native agent acceptance")
         state.queue_unchanged = True
         checks.pass_check("final_queue_invariant", "queue fingerprint and active count are unchanged")
 
-        product_after = repository_snapshot(context.product_repo)
-        if not repository_unchanged(product_before, product_after):
+        if not repository_unchanged(product_before, repository_snapshot(context.product_repo)):
             raise RuntimeError("product repository changed during read-only acceptance")
         state.product_unchanged = True
         checks.pass_check("final_product_invariant", "product repository is unchanged")
@@ -229,25 +258,21 @@ def _run(context: RuntimeContext, state: RunState, checks: CheckRecorder, stamp:
 
         finalize_marker(context, backup, state.selected_policy_mode, stamp)
         checks.pass_check("private_marker", "automatic read-only acceptance recorded privately")
-        state.result = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
+        state.result = SUCCESS_RESULT
         state.failure_code = ""
         state.next_action = "PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN"
         state.rollback_healthy = "NOT_REQUIRED"
-        commit, evidence_log, evidence_json = write_and_commit_evidence(
+        evidence_log, evidence_json = _commit_evidence(
             context,
             state,
             checks,
             stamp,
             Path(tempfile.gettempdir()) / f"oris-enable-evidence-{stamp}",
         )
-        state.evidence_commit = commit
-        state.evidence_remote_verified = True
         state.mutation_started = False
         return evidence_log, evidence_json
     except Exception as exc:
-        state.failure_code = type(exc).__name__ + ":" + str(exc)
-        state.next_action = "FIX_AUTOMATIC_ENABLEMENT_FAILURE_WITH_TOOLS_DENIED"
-        checks.fail_check("automatic_enablement", type(exc).__name__)
+        _record_failure(state, checks, exc)
         if state.mutation_started and backup is not None:
             try:
                 restore_denied_policy(context, backup)
@@ -258,14 +283,16 @@ def _run(context: RuntimeContext, state: RunState, checks: CheckRecorder, stamp:
             except Exception:
                 state.rollback_healthy = "NO"
         try:
-            temp_root = Path(tempfile.mkdtemp(prefix=f"oris-enable-evidence-{stamp}-"))
-            commit, evidence_log, evidence_json = write_and_commit_evidence(
-                context, state, checks, stamp, temp_root
+            evidence_log, evidence_json = _commit_evidence(
+                context,
+                state,
+                checks,
+                stamp,
+                Path(tempfile.mkdtemp(prefix=f"oris-enable-evidence-{stamp}-")),
             )
-            state.evidence_commit = commit
-            state.evidence_remote_verified = True
         except Exception:
-            pass
+            state.evidence_commit = ""
+            state.evidence_remote_verified = False
         return evidence_log, evidence_json
 
 
@@ -279,10 +306,11 @@ def main() -> int:
         context = load_context()
         evidence_log, evidence_json = _run(context, state, checks, _stamp())
     except Exception as exc:
+        state.result = "FAILED"
         state.failure_code = type(exc).__name__ + ":" + str(exc)
         checks.fail_check("context_or_bootstrap", type(exc).__name__)
     _summary(context, state, checks, evidence_log, evidence_json)
-    return 0 if state.result == "ENABLED_READONLY_AUTOMATIC_ACCEPTED" else 1
+    return 0 if state.result == SUCCESS_RESULT else 1
 
 
 if __name__ == "__main__":
