@@ -10,7 +10,6 @@ from .models import RuntimeContext
 TASK_PATH = Path("memory/dev_employee/current_task.json")
 REGISTRY_PATH = Path("orchestration/project_registry.json")
 ACCEPTANCE_PATH = Path("config/dev_employee/openclaw_readonly_acceptance.json")
-READINESS_GLOB = "logs/dev_employee/openclaw_readonly_tool_readiness/*.json"
 
 
 def _load_json(path: Path) -> dict:
@@ -24,8 +23,8 @@ def discover_repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def _latest_ready_evidence(repo_root: Path) -> Path:
-    candidates = sorted(repo_root.glob(READINESS_GLOB), reverse=True)
+def _latest_ready_evidence(evidence_directory: Path) -> Path:
+    candidates = sorted(evidence_directory.glob("*.json"), reverse=True)
     for path in candidates:
         try:
             payload = _load_json(path)
@@ -87,19 +86,25 @@ def load_context() -> RuntimeContext:
     turns = acceptance["agent_acceptance"]["turns"]
     if not isinstance(turns, list) or len(turns) != len(approved_tools):
         raise RuntimeError("automatic acceptance turns do not match approved tool count")
-    expected_turn_tools = {str(item.get("expected_tool")) for item in turns if isinstance(item, dict)}
+    expected_turn_tools = {
+        str(item.get("expected_tool"))
+        for item in turns
+        if isinstance(item, dict)
+    }
     if expected_turn_tools != set(approved_tools):
         raise RuntimeError("automatic acceptance tool names do not match current task")
 
     telemetry_path = Path(
-        str(
-            plugin.get("telemetry_path")
-            or acceptance["telemetry"]["default_path"]
-        )
+        str(plugin.get("telemetry_path") or acceptance["telemetry"]["default_path"])
     ).expanduser()
     marker_file = Path(str(plugin["private_marker"])).expanduser()
     openclaw_config = Path(str(acceptance["openclaw_config_path"])).expanduser()
+    backup_root = Path(str(acceptance["backup_root"])).expanduser()
     evidence_directory = repo_root / str(acceptance["evidence"]["directory"])
+    readiness_directory = repo_root / str(acceptance["readiness_evidence_directory"])
+    public_routes = acceptance["public_routes"]
+    tool_policy = acceptance["tool_policy"]
+    agent_acceptance = acceptance["agent_acceptance"]
 
     return RuntimeContext(
         repo_root=repo_root,
@@ -107,23 +112,28 @@ def load_context() -> RuntimeContext:
         product_repo=Path(str(product["local_path"])).expanduser(),
         expected_product_commit=str(platform["product_baseline_commit"]),
         openclaw_config=openclaw_config,
+        backup_root=backup_root,
         gateway_service=str(acceptance["gateway_service"]),
         gateway_url=gateway_url,
         public_url=str(architecture["primary_public_entry"]).rstrip("/"),
+        public_root_route=str(public_routes["root"]),
+        restricted_routes=tuple(str(item) for item in public_routes["restricted"]),
         plugin_id=str(plugin["plugin_id"]),
         plugin_version=str(plugin["version"]),
         approved_tools=approved_tools,
         required_hooks=required_hooks,
         marker_file=marker_file,
         internal_ports=(int(platform["enqueue_status_port"]), int(platform["intake_port"])),
-        required_profile=str(acceptance["tool_policy"]["required_profile"]),
+        required_profile=str(tool_policy["required_profile"]),
         profile_expansion=_resolve_profile_expansion(acceptance, task),
-        safe_probe_candidates=tuple(acceptance["tool_policy"]["safe_builtin_probe_candidates"]),
+        safe_probe_candidates=tuple(tool_policy["safe_builtin_probe_candidates"]),
+        direct_probe_session_key=str(tool_policy["direct_probe_session_key"]),
+        session_prefix=str(agent_acceptance["session_prefix"]),
         acceptance_turns=tuple(dict(item) for item in turns),
-        turn_timeout_seconds=int(acceptance["agent_acceptance"]["turn_timeout_seconds"]),
-        telemetry_wait_seconds=int(acceptance["agent_acceptance"]["telemetry_wait_seconds"]),
+        turn_timeout_seconds=int(agent_acceptance["turn_timeout_seconds"]),
+        telemetry_wait_seconds=int(agent_acceptance["telemetry_wait_seconds"]),
         telemetry_path=telemetry_path,
         evidence_directory=evidence_directory,
         evidence_commit_prefix=str(acceptance["evidence"]["commit_message_prefix"]),
-        readiness_evidence=_latest_ready_evidence(repo_root),
+        readiness_evidence=_latest_ready_evidence(readiness_directory),
     )
