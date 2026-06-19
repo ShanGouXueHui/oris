@@ -20,6 +20,7 @@ GENERATED_NAME_PARTS = {
     "dev_employee_status",
 }
 TIMESTAMPED_JSON = re.compile(r"(?:^|[-_])20\d{6,12}(?:[-_.]|$)")
+LEGACY_OPERATIONAL_SCRIPT = re.compile(r"(?:^|_)20\d{6,8}(?:_|\.|$)")
 SOURCE_SUFFIXES = {".py", ".sh", ".ts", ".tsx", ".js", ".mjs", ".cjs"}
 CONFIG_SUFFIXES = {".json", ".yaml", ".yml", ".toml"}
 
@@ -30,6 +31,8 @@ def classify_path(path_value: str) -> str:
         return "generated_runtime_artifact"
     if path.suffix.lower() == ".json" and TIMESTAMPED_JSON.search(path.name):
         return "generated_runtime_artifact"
+    if path.suffix.lower() in SOURCE_SUFFIXES and LEGACY_OPERATIONAL_SCRIPT.search(path.name):
+        return "legacy_operational_script"
     if path.suffix.lower() in SOURCE_SUFFIXES:
         return "source_code"
     if path.suffix.lower() in CONFIG_SUFFIXES:
@@ -59,6 +62,7 @@ def build_triage(report: dict[str, Any]) -> dict[str, Any]:
     rule_by_class: dict[str, Counter[str]] = defaultdict(Counter)
     actionable: list[dict[str, Any]] = []
     generated_count = 0
+    legacy_count = 0
 
     seen: set[tuple[Any, ...]] = set()
     for raw in findings:
@@ -79,6 +83,9 @@ def build_triage(report: dict[str, Any]) -> dict[str, Any]:
         if category == "generated_runtime_artifact":
             generated_count += 1
             continue
+        if category == "legacy_operational_script":
+            legacy_count += 1
+            continue
         actionable.append(sanitize_finding(raw))
 
     actionable_by_rule: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -86,28 +93,30 @@ def build_triage(report: dict[str, Any]) -> dict[str, Any]:
         actionable_by_rule[str(item.get("rule_id"))].append(item)
 
     priority_order = {
-        "duplicate_symbol": 0,
-        "duplicate_json_key": 1,
-        "python_syntax": 2,
-        "json_syntax": 3,
-        "forbidden_set_e": 4,
-        "large_file": 5,
-        "absolute_host_path": 6,
-        "environment_loopback_port": 7,
-        "public_oris_domain": 8,
-        "embedded_commit_sha": 9,
-        "embedded_commercial_task_id": 10,
-        "acceptance_project_name": 11,
-        "duplicate_constant": 12,
+        "plaintext_secret": 0,
+        "python_syntax": 1,
+        "json_syntax": 2,
+        "duplicate_json_key": 3,
+        "duplicate_symbol": 4,
+        "forbidden_set_e": 5,
+        "large_file": 6,
+        "absolute_host_path": 7,
+        "environment_loopback_port": 8,
+        "public_oris_domain": 9,
+        "embedded_commit_sha": 10,
+        "embedded_commercial_task_id": 11,
+        "acceptance_project_name": 12,
     }
-    actionable.sort(key=lambda item: (
-        priority_order.get(str(item.get("rule_id")), 99),
-        str(item.get("path")),
-        int(item.get("line") or 0),
-    ))
+    actionable.sort(
+        key=lambda item: (
+            priority_order.get(str(item.get("rule_id")), 99),
+            str(item.get("path")),
+            int(item.get("line") or 0),
+        )
+    )
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "source_report": {
             "checked_at": report.get("checked_at"),
             "files_scanned": report.get("files_scanned"),
@@ -115,6 +124,7 @@ def build_triage(report: dict[str, Any]) -> dict[str, Any]:
         },
         "deduplicated_findings": len(seen),
         "generated_runtime_artifact_findings": generated_count,
+        "legacy_operational_script_findings": legacy_count,
         "actionable_engineering_findings": len(actionable),
         "counts_by_rule": dict(sorted(rule_counts.items())),
         "counts_by_class": dict(sorted(class_counts.items())),
@@ -130,6 +140,7 @@ def build_triage(report: dict[str, Any]) -> dict[str, Any]:
         "actionable_sample": actionable[:300],
         "triage_policy": {
             "generated_runtime_artifacts_are_not_source_code": True,
+            "legacy_operational_scripts_are_a_separate_remediation_backlog": True,
             "no_source_files_modified": True,
             "full_actionable_list_truncated_to": 300,
         },
