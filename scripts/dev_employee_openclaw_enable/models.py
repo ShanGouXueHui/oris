@@ -12,9 +12,12 @@ class RuntimeContext:
     product_repo: Path
     expected_product_commit: str
     openclaw_config: Path
+    backup_root: Path
     gateway_service: str
     gateway_url: str
     public_url: str
+    public_root_route: str
+    restricted_routes: tuple[str, ...]
     plugin_id: str
     plugin_version: str
     approved_tools: tuple[str, ...]
@@ -24,6 +27,8 @@ class RuntimeContext:
     required_profile: str
     profile_expansion: tuple[str, ...]
     safe_probe_candidates: tuple[str, ...]
+    direct_probe_session_key: str
+    session_prefix: str
     acceptance_turns: tuple[dict[str, str], ...]
     turn_timeout_seconds: int
     telemetry_wait_seconds: int
