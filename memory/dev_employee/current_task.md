@@ -1,10 +1,10 @@
 # Current AI Dev Employee Task
 
-Status: `blocked_after_dual_stage_policy_gateway_health_failure_rollback_complete`
+Status: `diagnostic_remediation_published_pending_runtime_execution`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `diagnose_gateway_rejection_of_dual_stage_readonly_policy_before_retry`
+Current step: `execute_github_hosted_pre_activation_policy_diagnostic`
 
 ## Objective
 
@@ -14,17 +14,24 @@ Enable only these three read-only ORIS typed tools through the installed native 
 - `oris_task_status`
 - `oris_latest_task_status`
 
-Then prove:
-
-- native natural-language use;
-- no ORIS-specific command syntax;
-- no task submission or queue mutation;
-- no write tool;
-- privacy-safe `model_call_ended`, `after_tool_call` and `agent_end` telemetry;
-- real model/tool/agent latency baseline;
-- automatic rollback to tools-denied state on any failure.
+Then prove native natural-language tool use, no task or product mutation, no write tool, privacy-safe typed-hook telemetry, a real model/tool/agent latency baseline and automatic rollback to the tools-denied state on failure.
 
 This task does not authorize submit, cancel, retry or product-mutation actions.
+
+## Fixed commercial architecture
+
+```text
+user
+  -> native OpenClaw UI and native sessions
+  -> native ORIS plugin / Agent Harness
+  -> ORIS task governance and evidence
+  -> Codex real code execution
+  -> product commit, tests and ORIS evidence returned through OpenClaw
+```
+
+Native OpenClaw is the commercial primary UI. The custom ORIS Web Console remains restricted diagnostics and rollback only.
+
+Do not reinstall or upgrade OpenClaw. Do not reinstall the plugin. Keep the internal ORIS listeners loopback-only. Keep product code in product repositories. `main` is the only mainstream branch.
 
 ## Completed prerequisites
 
@@ -43,136 +50,121 @@ The installed baseline verified exactly three read-only tools, exactly three typ
 - result: `READY`
 - checks: `26/26 PASS`
 - evidence commit: `a63dd823ac4d5b3fa0fa867771f94904d0b4ceee`
-- evidence JSON: `logs/dev_employee/openclaw_readonly_tool_readiness/openclaw-readonly-tool-readiness-20260618T212757Z.json`
 
 Readiness did not modify config, restart Gateway, enable tools or submit a product task.
 
-### Quality target
+## Previously proved
 
-- repository scan: `FINDINGS`, 865 total repository findings
-- active remediation target gate: `PASS`
-- active target findings: `0`
+- all three ORIS tools passed direct contract-valid read-only calls;
+- managed Skill `oris-readonly-status` was runtime-visible to Agent `main`;
+- native Agent turns completed through the existing Gateway with a persisted session;
+- earlier telemetry contained `model_call_ended=3`, `agent_end=3`, `after_tool_call=0`.
 
-The repository-wide count still includes legacy debt. It is not considered fully resolved.
+Therefore direct invocation success and Skill visibility did not prove model tool materialization or invocation.
 
-## What has been proved
-
-### Direct tools
-
-All three ORIS tools passed direct contract-valid read-only calls in earlier controlled attempts.
-
-### Skill routing
-
-The managed `oris-readonly-status` skill was runtime-visible to Agent `main` in earlier attempts. It requires the matching typed tool and prohibits exec, shell, filesystem, browser, HTTP and write-action fallback.
-
-### Native Agent transport
-
-OpenClaw native Agent turns completed through the existing Gateway with a persisted session and without embedded fallback.
-
-### Missing model tool invocation
-
-Earlier evidence showed:
-
-- `model_call_ended=3`
-- `agent_end=3`
-- `after_tool_call=0`
-
-Therefore direct tool success and skill visibility did not prove model tool availability.
-
-## Current source implementation
-
-A reversible dual-stage tool-policy implementation now exists:
-
-1. optional-tool materialization through `tools.allow`;
-2. profile extension through `tools.alsoAllow`;
-3. removal of only the approved three names from `tools.deny`;
-4. exact config-scope validation;
-5. automatic restoration of the prior tools-denied config.
-
-Relevant source commits:
-
-- `741f24687c751ebfa405d8ea74c8a45a53a09161`
-- `0182858e58fefdb267f7cb3cf8b76bf6a8064323`
-- `c48a8741645cfd57ba24530a6dc4da767612568a`
-- `d650a0f9e4686df4b46157ace680e9bb08e396ff`
-
-## Latest attempt
-
-Latest evidence:
+## Latest failed attempt
 
 - result: `FAILED`
 - failure: `RuntimeError:existing OpenClaw Gateway did not become healthy`
 - selected policy: `materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted`
-- candidate `tools.allow` count: 13
-- candidate `tools.alsoAllow` count: 3
+- candidate `tools.allow`: 13 entries
+- candidate `tools.alsoAllow`: 3 entries
 - rollback: healthy
 - product task submitted: no
 - write tools added: no
 - secrets printed: no
 - evidence commit: `c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
-- evidence JSON: `logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T200933Z.json`
 
-The failure happened after candidate policy activation and before runtime inventory, direct calls, Agent acceptance and telemetry acceptance.
+The failure happened after candidate activation and Gateway restart, before runtime plugin inventory, direct calls, native Agent acceptance and telemetry acceptance.
 
-Rollback restored the tools-denied baseline.
+False values for those unreached stages in the historical evidence mean `NOT_CHECKED`, not an observed regression.
 
-## Evidence interpretation correction
+## Diagnostic remediation now published
 
-In the latest early-abort JSON, false values for direct calls, write-tool absence, queue unchanged and product unchanged mean those checks were not reached. They do not prove a write tool appeared or a repository changed.
+Implementation ancestor commit:
 
-Future evidence must use `PASS`, `FAIL` and `NOT_CHECKED` semantics.
+`090e815d7649a92054d5cc5cbe6036b8ad3fd2c7`
+
+Entrypoint:
+
+`scripts/dev_employee_diagnose_openclaw_readonly_policy.sh`
+
+Implementation document:
+
+`docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md`
+
+The implementation now provides:
+
+1. source authority, duplicate-definition and hardcoding scan;
+2. layered candidate, runtime validation, service control, plugin inventory, acceptance and evidence modules;
+3. a mode-0700 private temporary candidate directory;
+4. sensitive-value redaction before candidate validation;
+5. reuse of the existing authoritative tool-profile and Skill policy transforms;
+6. static validation of `tools.profile`, `tools.allow`, `tools.alsoAllow`, `tools.deny`, group selectors, optional tools and Skill visibility;
+7. safe discovery of installed OpenClaw validators that explicitly accept an alternate candidate path;
+8. pre-diagnostic Gateway PID presence and health capture;
+9. exact active-config hash, queue and product invariants;
+10. `PASS`, `FAIL` and `NOT_CHECKED` semantics;
+11. detached-worktree evidence publication;
+12. bounded, sanitized `systemctl` and `journalctl` capture before rollback when a future controlled activation fails;
+13. exact tools-denied rollback health verification through the shared service controller.
+
+## Diagnostic-only safety boundary
+
+The next run does not activate the candidate and does not restart Gateway.
+
+It must not:
+
+- run the enablement entrypoint;
+- invoke an ORIS tool;
+- submit a product task;
+- add a write tool;
+- replace active OpenClaw configuration;
+- touch the production host.
+
+Activation, runtime inventory, direct calls, native Agent acceptance, telemetry acceptance and rollback will be reported as `NOT_CHECKED` during this diagnostic-only run.
 
 ## Current blocker
 
-The exact reason the installed OpenClaw Gateway rejects or fails under the candidate dual-stage policy is not yet captured.
+Source remediation is complete and published. The remaining blocker is installed-runtime evidence:
 
-The current evidence contains the health timeout and rollback result, but not the runtime config-validator error or bounded service journal reason.
+- whether the installed OpenClaw CLI exposes a safe alternate-config validator;
+- whether that validator accepts or rejects the candidate policy shape;
+- which exact policy field or selector is rejected if validation fails.
+
+No enablement retry is authorized until the GitHub evidence from the diagnostic run is read.
 
 ## Next required action
 
-Do not rerun the same enablement script blindly.
+Run once on the ORIS development/control/execution host:
 
-First update the GitHub-hosted workflow to:
+```bash
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_readonly_policy.sh
+```
 
-1. scan the target source for duplicate definitions, existing helpers and hardcoded values;
-2. build the candidate config in a private temporary path;
-3. run installed OpenClaw config/schema validation where supported;
-4. test whether `tools.profile`, `tools.allow`, `tools.alsoAllow`, group selectors and optional tools may coexist in OpenClaw `2026.5.19`;
-5. capture pre-mutation Gateway PID and health;
-6. capture bounded sanitized `systemctl` and `journalctl` diagnostics on failure before rollback;
-7. represent unreached checks as `NOT_CHECKED`;
-8. restore the exact tools-denied config and prove Gateway health;
-9. commit sanitized evidence through a detached worktree;
-10. only then choose and rerun the minimal runtime-accepted enablement policy.
-
-Authoritative diagnostic plan:
-
-`docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md`
+Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
 
 ## Engineering rules
 
-- scan for duplicate definitions before every edit;
-- no hardcoded environment/project/provider/model/acceptance behavior in shared code;
-- reuse one authoritative implementation;
-- split large files by responsibility;
-- long scripts and documents go directly to GitHub;
-- user receives one short pull-and-run command;
+- no broad prompt-keyword task creation;
+- no hardcoded provider or model in shared code;
+- one rule has one authoritative implementation;
+- scripts and modules remain layered by responsibility;
 - no long heredoc;
-- user-facing shell scripts do not use `set -e`;
-- every run ends with one `===== SUMMARY =====`;
-- detailed evidence is inspected from GitHub;
-- never print or commit secrets;
-- `main` is the only mainstream branch;
-- backups allowed, competing long-lived branches prohibited;
-- do not touch production host `8.136.28.6` without an explicit task;
-- do not reinstall/upgrade OpenClaw or reinstall the plugin;
+- user-facing Linux scripts do not use `set -e`;
+- every execution prints one final summary;
+- never print or commit credentials, raw config or private marker content;
+- evidence is committed once through a detached worktree;
+- no competing long-lived branch;
+- do not touch production host `8.136.28.6`;
 - do not add write tools.
 
 ## Commercial sequence after P0
 
-1. complete read-only tool and telemetry acceptance;
-2. design explicit typed write actions with approval, project authorization, idempotency and audit;
-3. add generic project onboarding and capability discovery;
-4. move routine provider/policy management to controlled Admin UI;
-5. add monitoring, privacy/retention, backup/restore and disaster recovery;
-6. add multi-tenant identity, quotas, metering and commercial packaging.
+1. complete native read-only tool and telemetry acceptance;
+2. establish real privacy-safe model/tool/agent latency baselines;
+3. design typed write actions with approval, RBAC, project authorization, idempotency and audit;
+4. add generic project onboarding and capability discovery;
+5. move routine Provider, Model and Policy management to controlled Admin UI;
+6. add monitoring, privacy/retention, backup/restore and disaster recovery;
+7. add multi-tenant identity, quotas, metering and commercial packaging.
