@@ -59,8 +59,7 @@ def load_context() -> RuntimeContext:
     projects = registry.get("projects")
     if not isinstance(projects, dict):
         raise RuntimeError("project registry has no projects map")
-    product_key = acceptance.get("baseline_project_key")
-    product = projects.get(product_key)
+    product = projects.get(acceptance.get("baseline_project_key"))
     if not isinstance(product, dict):
         raise RuntimeError("baseline project is missing from project registry")
 
@@ -95,12 +94,22 @@ def load_context() -> RuntimeContext:
     if expected_turn_tools != set(approved_tools):
         raise RuntimeError("automatic acceptance tool names do not match current task")
 
+    routing_skill = acceptance["routing_skill"]
+    if routing_skill.get("install_scope") != "global":
+        raise RuntimeError("only managed global routing skill installation is supported")
+    routing_skill_source = (repo_root / str(routing_skill["source_directory"])).resolve()
+    if repo_root not in routing_skill_source.parents:
+        raise RuntimeError("routing skill source escapes the ORIS repository")
+    if not (routing_skill_source / "SKILL.md").is_file():
+        raise RuntimeError("routing skill source is missing SKILL.md")
+
     telemetry_path = Path(
         str(plugin.get("telemetry_path") or acceptance["telemetry"]["default_path"])
     ).expanduser()
     marker_file = Path(str(plugin["private_marker"])).expanduser()
     openclaw_config = Path(str(acceptance["openclaw_config_path"])).expanduser()
     backup_root = Path(str(acceptance["backup_root"])).expanduser()
+    managed_skills_root = Path(str(acceptance["managed_skills_root"])).expanduser()
     evidence_directory = repo_root / str(acceptance["evidence"]["directory"])
     readiness_directory = repo_root / str(acceptance["readiness_evidence_directory"])
     public_routes = acceptance["public_routes"]
@@ -113,6 +122,10 @@ def load_context() -> RuntimeContext:
         expected_product_commit=str(platform["product_baseline_commit"]),
         openclaw_config=openclaw_config,
         backup_root=backup_root,
+        managed_skills_root=managed_skills_root,
+        routing_skill_name=str(routing_skill["name"]),
+        routing_skill_source=routing_skill_source,
+        routing_skill_force_replace=bool(routing_skill["force_replace"]),
         gateway_service=str(acceptance["gateway_service"]),
         gateway_url=gateway_url,
         public_url=str(architecture["primary_public_entry"]).rstrip("/"),
