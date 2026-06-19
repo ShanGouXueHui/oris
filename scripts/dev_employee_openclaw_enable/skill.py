@@ -35,13 +35,19 @@ def _managed_target(context: RuntimeContext) -> Path:
 
 
 def validate_skill_cli() -> bool:
-    for arguments in (
+    install_help = run(
         ["openclaw", "skills", "install", "--help"],
+        timeout=30,
+    )
+    info_help = run(
         ["openclaw", "skills", "info", "--help"],
-    ):
-        if run(arguments, timeout=30).returncode != 0:
-            return False
-    return True
+        timeout=30,
+    )
+    if install_help.returncode != 0 or info_help.returncode != 0:
+        return False
+    install_text = install_help.stdout + "\n" + install_help.stderr
+    info_text = info_help.stdout + "\n" + info_help.stderr
+    return all(flag in install_text for flag in ("--as", "--global", "--force")) and "--json" in info_text
 
 
 def backup_routing_skill(
