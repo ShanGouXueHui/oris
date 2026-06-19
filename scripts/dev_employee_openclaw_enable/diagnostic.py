@@ -84,7 +84,7 @@ def _run_pre_activation_checks(
     if not source_scan.get("ok"):
         checks.fail_check(
             "source_authority_and_hardcoding_scan",
-            "duplicate authority or forbidden hardcoding detected",
+            "duplicate authority, forbidden hardcoding, or oversized module detected",
         )
         raise RuntimeError("engineering_source_scan_failed")
     checks.pass_check(
@@ -201,7 +201,7 @@ def run_policy_diagnostic(
     except Exception as exc:
         if not state.failure_code:
             state.result = "DIAGNOSTIC_FAILED"
-            state.failure_code = type(exc).__name__
+            state.failure_code = str(exc) or type(exc).__name__
             state.next_action = "READ_GITHUB_DIAGNOSTIC_EVIDENCE_BEFORE_ANY_RETRY"
         _mark_remaining_not_checked(
             checks,
