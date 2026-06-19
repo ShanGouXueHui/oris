@@ -158,6 +158,8 @@ def finalize_marker(context: RuntimeContext, backup: PolicyBackup, mode: str, st
     marker["readonly_enablement"] = {
         "policy_mode": mode,
         "tools_denied_backup": str(backup.config_file),
+        "routing_skill": context.routing_skill_name,
+        "routing_skill_scope": "managed_global",
         "enabled_at": stamp,
         "write_tools_present": False,
         "automatic_native_agent_acceptance": True,
