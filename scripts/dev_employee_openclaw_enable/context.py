@@ -83,7 +83,8 @@ def load_context() -> RuntimeContext:
     if len(approved_tools) != 3 or len(required_hooks) != 3:
         raise RuntimeError("current task does not define the exact approved tool and hook sets")
 
-    turns = acceptance["agent_acceptance"]["turns"]
+    agent_acceptance = acceptance["agent_acceptance"]
+    turns = agent_acceptance["turns"]
     if not isinstance(turns, list) or len(turns) != len(approved_tools):
         raise RuntimeError("automatic acceptance turns do not match approved tool count")
     expected_turn_tools = {
@@ -104,7 +105,6 @@ def load_context() -> RuntimeContext:
     readiness_directory = repo_root / str(acceptance["readiness_evidence_directory"])
     public_routes = acceptance["public_routes"]
     tool_policy = acceptance["tool_policy"]
-    agent_acceptance = acceptance["agent_acceptance"]
 
     return RuntimeContext(
         repo_root=repo_root,
@@ -129,6 +129,8 @@ def load_context() -> RuntimeContext:
         safe_probe_candidates=tuple(tool_policy["safe_builtin_probe_candidates"]),
         direct_probe_session_key=str(tool_policy["direct_probe_session_key"]),
         session_prefix=str(agent_acceptance["session_prefix"]),
+        require_gateway_transport=bool(agent_acceptance["require_gateway_transport"]),
+        require_persisted_native_session=bool(agent_acceptance["require_persisted_native_session"]),
         acceptance_turns=tuple(dict(item) for item in turns),
         turn_timeout_seconds=int(agent_acceptance["turn_timeout_seconds"]),
         telemetry_wait_seconds=int(agent_acceptance["telemetry_wait_seconds"]),
