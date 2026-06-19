@@ -63,6 +63,7 @@ summary() {
   echo "PREFLIGHT_PLUGIN_RUNTIME=$(json_value "$PREFLIGHT_JSON" plugin_runtime_ok NOT_RUN)"
   echo "PREFLIGHT_PUBLIC_ROUTES=$(json_value "$PREFLIGHT_JSON" public_routes_ok NOT_RUN)"
   echo "PREFLIGHT_PRIVATE_LISTENERS=$(json_value "$PREFLIGHT_JSON" internal_listeners_private NOT_RUN)"
+  echo "PREFLIGHT_SOURCE_WORKTREE=$(json_value "$PREFLIGHT_JSON" source_worktree_ready NOT_RUN)"
   echo "DATABASE_ROTATION_RESULT=$(summary_value "$ROTATION_OUT" RESULT NOT_RUN)"
   echo "DATABASE_CREDENTIAL_ROTATED=$(summary_value "$ROTATION_OUT" DATABASE_CREDENTIAL_ROTATED NO)"
   echo "DATABASE_ROTATION_EVIDENCE_COMMIT=$(summary_value "$ROTATION_OUT" EVIDENCE_COMMIT '')"
