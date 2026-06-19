@@ -9,6 +9,11 @@ from .agent_skill_policy import (
     skill_is_visible,
     strip_authorized_skill_addition,
 )
+from .profile_tool_policy import (
+    approved_tools_are_profile_visible,
+    enable_profile_tools,
+    strip_authorized_tool_change,
+)
 from .telemetry_correlation import correlate_records
 
 
@@ -17,6 +22,7 @@ TOOLS = {"sample_queue_tool", "sample_task_tool", "sample_latest_tool"}
 MISSING_TOOL = "sample_task_tool"
 UNEXPECTED_TOOL = "sample_unapproved_tool"
 SAMPLE_SKILL = "sample-routing-skill"
+PROFILE = "coding"
 
 
 def _records(session_hash: str | None = None) -> list[dict]:
@@ -159,8 +165,59 @@ def _test_agent_skill_policy() -> None:
         raise AssertionError("duplicate skill allowlist entries must be rejected")
 
 
+def _test_profile_tool_policy() -> None:
+    approved = tuple(sorted(TOOLS))
+    created = {
+        "tools": {
+            "profile": PROFILE,
+            "deny": [*approved, "write"],
+        }
+    }
+    created_before = copy.deepcopy(created)
+    created_change = enable_profile_tools(created["tools"], approved, PROFILE)
+    assert created_change.mode == "created-profile-also-allow"
+    assert created["tools"].get("allow") is None
+    assert approved_tools_are_profile_visible(created["tools"], approved, PROFILE)
+    assert strip_authorized_tool_change(created, created_change) == {
+        "tools": {
+            "profile": PROFILE,
+        }
+    }
+    created_before["tools"].pop("deny")
+    assert strip_authorized_tool_change(created, created_change) == created_before
+
+    existing = {
+        "tools": {
+            "profile": PROFILE,
+            "allow": ["group:runtime"],
+            "alsoAllow": ["existing-tool", approved[0]],
+            "deny": [*approved, "write"],
+        }
+    }
+    existing_before = copy.deepcopy(existing)
+    existing_change = enable_profile_tools(existing["tools"], approved, PROFILE)
+    assert existing_change.mode == "extended-profile-also-allow"
+    assert existing["tools"]["allow"] == ["group:runtime"]
+    assert approved_tools_are_profile_visible(existing["tools"], approved, PROFILE)
+    existing_before["tools"].pop("deny")
+    assert strip_authorized_tool_change(existing, existing_change) == existing_before
+
+    invalid = {
+        "profile": PROFILE,
+        "deny": list(approved),
+        "alsoAllow": ["duplicate", "duplicate"],
+    }
+    try:
+        enable_profile_tools(invalid, approved, PROFILE)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("duplicate tools.alsoAllow entries must be rejected")
+
+
 def run_selftests() -> bool:
     _test_telemetry_correlation()
     _test_output_metadata()
     _test_agent_skill_policy()
+    _test_profile_tool_policy()
     return True
