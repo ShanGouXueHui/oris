@@ -124,6 +124,18 @@ def _duration_values(
     return values
 
 
+def _bounded_string_values(
+    records: list[dict[str, Any]],
+    key: str,
+) -> list[str]:
+    values: set[str] = set()
+    for item in records:
+        value = item.get(key)
+        if isinstance(value, str) and value and len(value) <= 160:
+            values.add(value)
+    return sorted(values)
+
+
 def inspect_telemetry(
     context: RuntimeContext,
     started_at: str,
@@ -172,6 +184,8 @@ def inspect_telemetry(
         "event_counts": correlation["event_counts"],
         "all_event_counts": correlation["all_event_counts"],
         "all_tools_seen": sorted(correlation["all_tools_seen"]),
+        "providers_seen": _bounded_string_values(relevant_records, "provider"),
+        "models_seen": _bounded_string_values(relevant_records, "model"),
         "persisted_session": bool(correlation["persisted_session"]),
         "session_hash_matched": bool(correlation["matched_session_records"]),
         "correlation_mode": correlation["correlation_mode"],
