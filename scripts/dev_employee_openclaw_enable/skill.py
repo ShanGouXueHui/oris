@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .agent_output import parse_json_output
+from .agent_output import parse_json_value
 from .models import RuntimeContext
 from .process import run
 from .state import load_json
@@ -229,7 +229,7 @@ def verify_routing_skill_runtime(
         attempted += 1
         if result.returncode != 0:
             continue
-        payload = parse_json_output(result.stdout)
+        payload = parse_json_value(result.stdout)
         if payload is None:
             continue
         record = _skill_record(payload, context.routing_skill_name)
