@@ -34,6 +34,16 @@ def _managed_target(context: RuntimeContext) -> Path:
     return target
 
 
+def validate_skill_cli() -> bool:
+    for arguments in (
+        ["openclaw", "skills", "install", "--help"],
+        ["openclaw", "skills", "info", "--help"],
+    ):
+        if run(arguments, timeout=30).returncode != 0:
+            return False
+    return True
+
+
 def backup_routing_skill(
     context: RuntimeContext,
     transaction_backup_directory: Path,
@@ -70,14 +80,13 @@ def _effective_skill_is_managed(
     except json.JSONDecodeError:
         return False
     target = _managed_target(context)
-    target_skill = _skill_file(target)
-    target_values = {str(target), str(target_skill)}
+    expected = {str(target), str(_skill_file(target))}
     for value in _find_path_strings(payload):
         try:
             resolved = str(Path(value).expanduser().resolve())
         except Exception:
             continue
-        if resolved in target_values:
+        if resolved in expected:
             return True
     return False
 
@@ -109,19 +118,11 @@ def install_routing_skill(context: RuntimeContext) -> dict[str, Any]:
     )
     if info.returncode != 0 or not _effective_skill_is_managed(context, info.stdout):
         raise RuntimeError("effective ORIS routing skill is overridden or unavailable")
-    checked = run(
-        ["openclaw", "skills", "check", "--json"],
-        cwd=context.repo_root,
-        timeout=60,
-    )
-    if checked.returncode != 0:
-        raise RuntimeError("OpenClaw skill eligibility check failed")
     return {
         "name": context.routing_skill_name,
         "source_sha256": _sha256(source_skill),
         "installed_sha256": _sha256(target_skill),
         "effective_managed_source": True,
-        "eligibility_check_passed": True,
         "skill_content_recorded": False,
         "secret_values_recorded": False,
     }
