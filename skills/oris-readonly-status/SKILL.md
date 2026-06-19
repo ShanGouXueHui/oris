@@ -15,6 +15,12 @@ Use this skill whenever the user asks about the current ORIS Dev Employee queue,
 - A named task ID or one specific task: call `oris_task_status` with that task ID.
 - The latest, most recent, or current task snapshot: call `oris_latest_task_status`.
 
+Canonical typed tool identifiers:
+
+- `oris_queue_status`
+- `oris_task_status`
+- `oris_latest_task_status`
+
 ## Safety boundary
 
 - These requests are read-only.
