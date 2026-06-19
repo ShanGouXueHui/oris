@@ -3,38 +3,18 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-from .agent_acceptance import run_automatic_acceptance
+from .enablement_acceptance import (
+    finalize_enablement,
+    run_native_acceptance,
+    verify_final_invariants,
+)
+from .enablement_activation import activate_candidate, verify_runtime_and_direct_calls
 from .evidence import write_and_commit_evidence
-from .gateway import (
-    direct_readonly_probe,
-    restart_gateway,
-    verify_plugin_runtime,
-    verify_public_routes,
-)
 from .models import CheckRecorder, RunState, RuntimeContext
-from .policy import (
-    PolicyApplication,
-    PolicyBackup,
-    apply_readonly_policy,
-    create_backup,
-    finalize_marker,
-    restore_denied_policy,
-)
+from .policy import PolicyApplication, PolicyBackup, create_backup, restore_denied_policy
 from .preflight_checks import run_transaction_preflight
-from .runtime_boundaries import verify_runtime_boundaries
-from .skill import (
-    SkillBackup,
-    backup_routing_skill,
-    install_routing_skill,
-    restore_routing_skill,
-    verify_routing_skill_runtime,
-)
-from .state import (
-    active_queue_count,
-    queue_fingerprint,
-    repository_snapshot,
-    repository_unchanged,
-)
+from .service_control import GatewayServiceError, restart_service_and_wait
+from .skill import SkillBackup, backup_routing_skill, restore_routing_skill
 
 
 SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
@@ -42,8 +22,14 @@ SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
 
 def _record_failure(state: RunState, checks: CheckRecorder, exc: Exception) -> None:
     state.result = "FAILED"
-    state.failure_code = type(exc).__name__ + ":" + str(exc)
+    state.failure_code = (
+        f"GatewayServiceError:{exc.code}"
+        if isinstance(exc, GatewayServiceError)
+        else type(exc).__name__
+    )
     state.next_action = "FIX_AUTOMATIC_ENABLEMENT_FAILURE_WITH_TOOLS_DENIED"
+    if isinstance(exc, GatewayServiceError):
+        state.details["gateway_failure_diagnostics"] = exc.safe_evidence
     checks.fail_check("automatic_enablement", type(exc).__name__)
 
 
@@ -79,11 +65,14 @@ def _rollback(
             restore_denied_policy(context, policy_backup)
         if skill_backup is not None:
             restore_routing_skill(skill_backup)
-        restart_gateway(context)
+        state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
         state.rollback_count += 1
         state.rollback_healthy = "YES"
         state.mutation_started = False
         state.routing_skill_installed = False
+    except GatewayServiceError as exc:
+        state.details["rollback_gateway_failure_diagnostics"] = exc.safe_evidence
+        state.rollback_healthy = "NO"
     except Exception:
         state.rollback_healthy = "NO"
 
@@ -95,153 +84,51 @@ def run_enablement(
     stamp: str,
 ) -> tuple[str, str]:
     policy_backup: PolicyBackup | None = None
-    policy_application: PolicyApplication | None = None
+    application: PolicyApplication | None = None
     skill_backup: SkillBackup | None = None
     evidence_log = ""
     evidence_json = ""
     try:
-        baseline = run_transaction_preflight(context, checks)
-        queue_before, baseline_tool, product_before, oris_before = baseline
+        queue_before, baseline_tool, product_before, oris_before = (
+            run_transaction_preflight(context, checks)
+        )
         policy_backup = create_backup(context, stamp)
         skill_backup = backup_routing_skill(context, policy_backup.directory)
         checks.pass_check(
             "private_backup",
             "tools-denied config, marker, and routing skill backup captured",
         )
-
-        state.mutation_started = True
-        skill_details = install_routing_skill(context, skill_backup)
-        state.routing_skill_installed = True
-        state.details["routing_skill"] = skill_details
-        checks.pass_check(
-            "routing_skill",
-            "managed ORIS read-only routing skill installed",
-        )
-
-        policy_application = apply_readonly_policy(context, policy_backup)
-        state.selected_policy_mode = policy_application.mode
-        state.details["policy_application"] = policy_application.evidence()
-        state.config_scope_valid = True
-        restart_gateway(context)
-        checks.pass_check(
-            "controlled_policy_enablement",
-            "minimal approved tool and agent-skill policy applied",
-        )
-
-        skill_runtime = verify_routing_skill_runtime(
-            context,
-            policy_application.skill_policy.agent_id,
-        )
-        state.details["routing_skill_runtime"] = skill_runtime
-        if not skill_runtime.get("visible"):
-            raise RuntimeError("routing skill is not visible to the selected agent")
-        checks.pass_check(
-            "routing_skill_runtime",
-            "routing skill is eligible and visible to the selected agent",
-        )
-
-        if not verify_public_routes(context)["ok"]:
-            raise RuntimeError("public routes failed after Gateway restart")
-        runtime = verify_plugin_runtime(context)
-        if not runtime.get("ok"):
-            raise RuntimeError("plugin runtime contract failed after enablement")
-        state.write_tools_absent = not runtime.get("write_tools")
-        checks.pass_check(
-            "plugin_runtime",
-            "exact read-only tools and typed hooks verified",
-        )
-
-        direct = direct_readonly_probe(context, baseline_tool)
-        state.details["direct_invocation"] = direct
-        if not direct["ok"]:
-            raise RuntimeError("direct approved read-only tool invocation failed")
-        state.direct_tool_calls_pass = True
-        checks.pass_check(
-            "direct_tool_calls",
-            "three ORIS tools and safe baseline tool passed",
-        )
-
-        if (
-            queue_fingerprint(context.repo_root) != queue_before
-            or active_queue_count(context.repo_root) != 0
-        ):
-            raise RuntimeError("queue changed during direct read-only tool calls")
-        checks.pass_check("queue_after_direct_calls", "queue fingerprint is unchanged")
-
-        automatic = run_automatic_acceptance(context, stamp)
-        state.details["native_agent_acceptance"] = automatic
-        if not automatic.get("accepted"):
-            raise RuntimeError(
-                str(
-                    automatic.get("reason")
-                    or "automatic native agent acceptance failed"
-                )
-            )
-        state.native_agent_acceptance_pass = True
-        telemetry = automatic.get("telemetry") or {}
-        state.telemetry_privacy_pass = bool(
-            telemetry.get("schema_ok")
-            and telemetry.get("content_safe")
-            and telemetry.get("only_approved_tools_used")
-        )
-        if not state.telemetry_privacy_pass:
-            raise RuntimeError(
-                "telemetry privacy, schema, or approved-tool validation failed"
-            )
-        checks.pass_check(
-            "automatic_native_agent_acceptance",
-            "three natural-language turns completed automatically",
-        )
-        checks.pass_check(
-            "telemetry_privacy",
-            "typed hook telemetry is private, schema-safe, and read-only",
-        )
-
-        if (
-            queue_fingerprint(context.repo_root) != queue_before
-            or active_queue_count(context.repo_root) != 0
-        ):
-            raise RuntimeError("queue changed during native agent acceptance")
-        state.queue_unchanged = True
-        checks.pass_check(
-            "final_queue_invariant",
-            "queue fingerprint and active count are unchanged",
-        )
-
-        if not repository_unchanged(
-            product_before,
-            repository_snapshot(context.product_repo),
-        ):
-            raise RuntimeError(
-                "product repository changed during read-only acceptance"
-            )
-        state.product_unchanged = True
-        checks.pass_check(
-            "final_product_invariant",
-            "product repository is unchanged",
-        )
-
-        verify_runtime_boundaries(
+        application = activate_candidate(
             context,
             state,
+            checks,
             policy_backup,
-            policy_application,
-            oris_before,
+            skill_backup,
         )
-        checks.pass_check(
-            "final_runtime_and_route_invariants",
-            "runtime, routes, listeners, and source worktree verified",
-        )
-
-        finalize_marker(
+        verify_runtime_and_direct_calls(
             context,
-            policy_backup,
-            policy_application,
-            stamp,
+            state,
+            checks,
+            baseline_tool,
+            queue_before,
         )
-        checks.pass_check(
-            "private_marker",
-            "automatic read-only acceptance recorded privately",
+        run_native_acceptance(context, state, checks, stamp, queue_before)
+        verify_final_invariants(
+            context,
+            state,
+            checks,
+            product_before,
+            oris_before,
+            policy_backup,
+            application,
+        )
+        finalize_enablement(
+            context,
+            state,
+            checks,
+            policy_backup,
+            application,
+            stamp,
         )
         state.result = SUCCESS_RESULT
         state.failure_code = ""
