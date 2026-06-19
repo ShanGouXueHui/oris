@@ -2,6 +2,7 @@
   "schema_version": 2,
   "openclaw_config_path": "~/.openclaw/openclaw.json",
   "backup_root": "~/.openclaw/backups",
+  "managed_skills_root": "~/.openclaw/skills",
   "readiness_evidence_directory": "logs/dev_employee/openclaw_readonly_tool_readiness",
   "gateway_service": "openclaw-gateway.service",
   "required_auth_mode": "token",
@@ -12,6 +13,12 @@
       "/admin",
       "/_oris-chat-shell"
     ]
+  },
+  "routing_skill": {
+    "name": "oris-readonly-status",
+    "source_directory": "skills/oris-readonly-status",
+    "install_scope": "global",
+    "force_replace": true
   },
   "tool_policy": {
     "required_profile": "coding",
