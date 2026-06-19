@@ -1,10 +1,10 @@
 # Current AI Dev Employee Task
 
-Status: `diagnostic_remediation_published_pending_runtime_execution`
+Status: `diagnostic_source_gate_remediated_pending_safe_rerun`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `execute_github_hosted_pre_activation_policy_diagnostic`
+Current step: `rerun_github_hosted_pre_activation_policy_diagnostic_after_skill_module_split`
 
 ## Objective
 
@@ -29,135 +29,125 @@ user
   -> product commit, tests and ORIS evidence returned through OpenClaw
 ```
 
-Native OpenClaw is the commercial primary UI. The custom ORIS Web Console remains restricted diagnostics and rollback only.
-
-Do not reinstall or upgrade OpenClaw. Do not reinstall the plugin. Keep the internal ORIS listeners loopback-only. Keep product code in product repositories. `main` is the only mainstream branch.
+Native OpenClaw remains the commercial primary UI. The custom ORIS Web Console remains restricted diagnostics and rollback only. Do not reinstall or upgrade OpenClaw, reinstall the plugin, expose internal listeners, add write tools or touch the production host.
 
 ## Completed prerequisites
 
-### Native plugin installation
-
 - plugin: `oris-dev-employee` `0.1.0`
-- result: `INSTALLED_TOOLS_DENIED`
-- source commit: `8f174b49196aac90b505846200ce260f75355b41`
-- artifact SHA-256: `976377c2e5ffbf6932d5e43bed17c4d07cfcb16fefb7383b5ab593d4ed1eecda`
+- installation result: `INSTALLED_TOOLS_DENIED`
+- installed source: `8f174b49196aac90b505846200ce260f75355b41`
 - installation evidence: `b831470063bc640e498d2061fdaeb2bf8bc9639c`
+- read-only readiness: `26/26 PASS`
+- readiness evidence: `a63dd823ac4d5b3fa0fa867771f94904d0b4ceee`
 
-The installed baseline verified exactly three read-only tools, exactly three typed hooks, zero plugin errors, no write tools and scoped conversation access only for the ORIS plugin.
+Previously proved:
 
-### Read-only readiness
+- all three tools pass direct read-only calls;
+- Skill `oris-readonly-status` was visible to Agent `main`;
+- native Gateway transport and persisted sessions work;
+- prior telemetry contained `model_call_ended=3`, `agent_end=3`, `after_tool_call=0`.
 
-- result: `READY`
-- checks: `26/26 PASS`
-- evidence commit: `a63dd823ac4d5b3fa0fa867771f94904d0b4ceee`
+Direct invocation and Skill visibility still do not prove model tool materialization or invocation.
 
-Readiness did not modify config, restart Gateway, enable tools or submit a product task.
+## Latest enablement failure
 
-## Previously proved
+Evidence commit:
 
-- all three ORIS tools passed direct contract-valid read-only calls;
-- managed Skill `oris-readonly-status` was runtime-visible to Agent `main`;
-- native Agent turns completed through the existing Gateway with a persisted session;
-- earlier telemetry contained `model_call_ended=3`, `agent_end=3`, `after_tool_call=0`.
+`c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
 
-Therefore direct invocation success and Skill visibility did not prove model tool materialization or invocation.
+The candidate policy was activated, the existing Gateway failed its health gate, and rollback restored the tools-denied baseline. Runtime inventory, direct calls, native Agent acceptance and telemetry acceptance were not reached.
 
-## Latest failed attempt
+## First diagnostic run
 
-- result: `FAILED`
-- failure: `RuntimeError:existing OpenClaw Gateway did not become healthy`
-- selected policy: `materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted`
-- candidate `tools.allow`: 13 entries
-- candidate `tools.alsoAllow`: 3 entries
-- rollback: healthy
-- product task submitted: no
-- write tools added: no
-- secrets printed: no
-- evidence commit: `c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
+Evidence commit:
 
-The failure happened after candidate activation and Gateway restart, before runtime plugin inventory, direct calls, native Agent acceptance and telemetry acceptance.
+`df9d21839974e4adcc6bde9b62db0fe468b3cc76`
 
-False values for those unreached stages in the historical evidence mean `NOT_CHECKED`, not an observed regression.
+Result:
 
-## Diagnostic remediation now published
+`DIAGNOSTIC_FAILED`
 
-Implementation ancestor commit:
+Executed stages:
 
-`090e815d7649a92054d5cc5cbe6036b8ad3fd2c7`
+- diagnostic selftests: `PASS`;
+- source authority and hardcoding scan: `FAIL`;
+- all later stages: `NOT_CHECKED`.
 
-Entrypoint:
+Exact finding:
 
-`scripts/dev_employee_diagnose_openclaw_readonly_policy.sh`
+- duplicate authority definitions: `0`;
+- forbidden hardcoding findings: `0`;
+- oversized modules: `1`;
+- file: `scripts/dev_employee_openclaw_enable/skill.py`;
+- observed line count: `261`;
+- permitted layered-module maximum: `240`.
 
-Implementation document:
+This was an engineering source-gate failure, not an OpenClaw policy or Gateway runtime failure.
 
-`docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md`
+Safety result:
 
-The implementation now provides:
+- active config mutated: no;
+- Gateway restarted: no;
+- ORIS tool invoked: no;
+- product task submitted: no;
+- write tool added: no;
+- rollback required: no;
+- evidence remotely verified: yes.
 
-1. source authority, duplicate-definition and hardcoding scan;
-2. layered candidate, runtime validation, service control, plugin inventory, acceptance and evidence modules;
-3. a mode-0700 private temporary candidate directory;
-4. sensitive-value redaction before candidate validation;
-5. reuse of the existing authoritative tool-profile and Skill policy transforms;
-6. static validation of `tools.profile`, `tools.allow`, `tools.alsoAllow`, `tools.deny`, group selectors, optional tools and Skill visibility;
-7. safe discovery of installed OpenClaw validators that explicitly accept an alternate candidate path;
-8. pre-diagnostic Gateway PID presence and health capture;
-9. exact active-config hash, queue and product invariants;
-10. `PASS`, `FAIL` and `NOT_CHECKED` semantics;
-11. detached-worktree evidence publication;
-12. bounded, sanitized `systemctl` and `journalctl` capture before rollback when a future controlled activation fails;
-13. exact tools-denied rollback health verification through the shared service controller.
+## Source-gate remediation
 
-## Diagnostic-only safety boundary
+The Skill implementation has been split without changing its public API:
 
-The next run does not activate the candidate and does not restart Gateway.
+- compatibility facade: `scripts/dev_employee_openclaw_enable/skill.py` — 22 lines;
+- installation, backup and restore authority: `scripts/dev_employee_openclaw_enable/skill_installation.py` — 181 lines;
+- runtime inventory authority: `scripts/dev_employee_openclaw_enable/skill_runtime.py` — 85 lines.
 
-It must not:
+The existing callers may continue importing from `.skill`.
 
-- run the enablement entrypoint;
-- invoke an ORIS tool;
-- submit a product task;
-- add a write tool;
-- replace active OpenClaw configuration;
-- touch the production host.
+A diagnostic selftest now proves that every public type and function exported by the facade is the same object as the corresponding split-module authority.
 
-Activation, runtime inventory, direct calls, native Agent acceptance, telemetry acceptance and rollback will be reported as `NOT_CHECKED` during this diagnostic-only run.
+Relevant remediation commits include:
+
+- `b3e7518c5afdfdc150e81c6c6d0cd0a844aa0d2e`
+- `079e009a4d9b0ac99194ddd5a31abd25058d1090`
+- `6b6fbfa7ea585e8de27e002d23dd573341480a98`
+- `a4c1c04befeccc45c48ce55c901c87e9b0df1a70`
+
+Additional evidence improvements:
+
+- top-level `check_summary` now includes `not_checked`;
+- diagnostic failures now preserve the stable internal reason code instead of only `RuntimeError`.
 
 ## Current blocker
 
-Source remediation is complete and published. The remaining blocker is installed-runtime evidence:
+The source-gate finding has been remediated, but the diagnostic must run again on the installed environment before reaching the actual OpenClaw validator question.
 
-- whether the installed OpenClaw CLI exposes a safe alternate-config validator;
-- whether that validator accepts or rejects the candidate policy shape;
-- which exact policy field or selector is rejected if validation fails.
+The remaining runtime questions are:
 
-No enablement retry is authorized until the GitHub evidence from the diagnostic run is read.
+1. whether OpenClaw `2026.5.19` exposes a safe alternate-config validator;
+2. whether that validator accepts the private candidate;
+3. which policy field is rejected if validation fails.
+
+Do not execute enablement before reading the next diagnostic evidence.
 
 ## Next required action
 
-Run once on the ORIS development/control/execution host:
+Run exactly once on the ORIS development/control/execution host:
 
 ```bash
 cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_readonly_policy.sh
 ```
 
-Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
+The run must remain diagnostic-only:
 
-## Engineering rules
-
-- no broad prompt-keyword task creation;
-- no hardcoded provider or model in shared code;
-- one rule has one authoritative implementation;
-- scripts and modules remain layered by responsibility;
-- no long heredoc;
-- user-facing Linux scripts do not use `set -e`;
-- every execution prints one final summary;
-- never print or commit credentials, raw config or private marker content;
-- evidence is committed once through a detached worktree;
-- no competing long-lived branch;
-- do not touch production host `8.136.28.6`;
+- do not execute the enablement entrypoint;
+- do not replace active config;
+- do not restart Gateway;
+- do not invoke ORIS tools;
+- do not submit a product task;
 - do not add write tools.
+
+Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
 
 ## Commercial sequence after P0
 
