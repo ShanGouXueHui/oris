@@ -50,19 +50,26 @@ for command_name in git python3 date mktemp; do
 done
 
 if [ -z "$FAILURE_CODE" ]; then
-  PYTHONPATH="$REPO_ROOT" python3 -m compileall -q \
+  PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" python3 - \
     "$REPO_ROOT/scripts/lib/secret_refs.py" \
-    "$REPO_ROOT/scripts/security/rotate_insight_db_credential.py" >/dev/null 2>&1
+    "$REPO_ROOT/scripts/security/rotate_insight_db_credential.py" <<'PY' >/dev/null 2>&1
+import sys
+from pathlib import Path
+for value in sys.argv[1:]:
+ path=Path(value)
+ compile(path.read_text(encoding='utf-8'),str(path),'exec')
+PY
   [ "$?" = "0" ] || fail "security_module_compile_failed"
 fi
 
 if [ -z "$FAILURE_CODE" ]; then
-  PYTHONPATH="$REPO_ROOT" python3 -m scripts.security.rotate_insight_db_credential "$ROTATION_JSON" >/dev/null 2>&1
+  PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" \
+    python3 -m scripts.security.rotate_insight_db_credential "$ROTATION_JSON" >/dev/null 2>&1
   [ "$?" = "0" ] || fail "database_credential_rotation_failed"
 fi
 
 if [ -z "$FAILURE_CODE" ]; then
-  PYTHONPATH="$REPO_ROOT" python3 - "$SMOKE_JSON" <<'PY'
+  PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" python3 - "$SMOKE_JSON" <<'PY'
 import json,sys
 from pathlib import Path
 from scripts.lib.insight_db import db_connect
@@ -84,7 +91,9 @@ PY
   [ "$?" = "0" ] || fail "post_rotation_database_smoke_failed"
 fi
 
-PYTHONPATH="$REPO_ROOT" python3 - "$REPO_ROOT" "$ROTATION_JSON" "$SMOKE_JSON" "$EVIDENCE_JSON" "$RESULT" "$FAILURE_CODE" <<'PY'
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" python3 - \
+  "$REPO_ROOT" "$ROTATION_JSON" "$SMOKE_JSON" "$EVIDENCE_JSON" \
+  "$RESULT" "$FAILURE_CODE" <<'PY'
 import json,sys
 from pathlib import Path
 from scripts.dev_employee_quality.models import SourceFile
