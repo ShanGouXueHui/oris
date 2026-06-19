@@ -23,6 +23,7 @@ MISSING_TOOL = "sample_task_tool"
 UNEXPECTED_TOOL = "sample_unapproved_tool"
 SAMPLE_SKILL = "sample-routing-skill"
 PROFILE = "coding"
+PROFILE_EXPANSION = ("group:fs", "group:runtime", "group:web")
 
 
 def _records(session_hash: str | None = None) -> list[dict]:
@@ -174,15 +175,17 @@ def _test_profile_tool_policy() -> None:
         }
     }
     created_before = copy.deepcopy(created)
-    created_change = enable_profile_tools(created["tools"], approved, PROFILE)
-    assert created_change.mode == "created-profile-also-allow"
-    assert created["tools"].get("allow") is None
+    created_change = enable_profile_tools(
+        created["tools"],
+        approved,
+        PROFILE_EXPANSION,
+        PROFILE,
+    )
+    assert created_change.allow_mode == "materialized-profile-plus-approved"
+    assert created_change.also_allow_mode == "created-profile-also-allow"
+    assert created["tools"]["allow"] == [*PROFILE_EXPANSION, *approved]
+    assert created["tools"]["alsoAllow"] == list(approved)
     assert approved_tools_are_profile_visible(created["tools"], approved, PROFILE)
-    assert strip_authorized_tool_change(created, created_change) == {
-        "tools": {
-            "profile": PROFILE,
-        }
-    }
     created_before["tools"].pop("deny")
     assert strip_authorized_tool_change(created, created_change) == created_before
 
@@ -195,12 +198,41 @@ def _test_profile_tool_policy() -> None:
         }
     }
     existing_before = copy.deepcopy(existing)
-    existing_change = enable_profile_tools(existing["tools"], approved, PROFILE)
-    assert existing_change.mode == "extended-profile-also-allow"
-    assert existing["tools"]["allow"] == ["group:runtime"]
+    existing_change = enable_profile_tools(
+        existing["tools"],
+        approved,
+        PROFILE_EXPANSION,
+        PROFILE,
+    )
+    assert existing_change.allow_mode == "preserved-allow-plus-approved"
+    assert existing_change.also_allow_mode == "extended-profile-also-allow"
+    assert existing["tools"]["allow"] == ["group:runtime", *approved]
+    assert existing["tools"]["alsoAllow"] == ["existing-tool", *approved]
     assert approved_tools_are_profile_visible(existing["tools"], approved, PROFILE)
     existing_before["tools"].pop("deny")
     assert strip_authorized_tool_change(existing, existing_change) == existing_before
+
+    already_complete = {
+        "tools": {
+            "profile": PROFILE,
+            "allow": [*PROFILE_EXPANSION, *approved],
+            "alsoAllow": list(approved),
+            "deny": [*approved],
+        }
+    }
+    complete_change = enable_profile_tools(
+        already_complete["tools"],
+        approved,
+        PROFILE_EXPANSION,
+        PROFILE,
+    )
+    assert complete_change.added_to_allow == ()
+    assert complete_change.added_to_also_allow == ()
+    assert approved_tools_are_profile_visible(
+        already_complete["tools"],
+        approved,
+        PROFILE,
+    )
 
     invalid = {
         "profile": PROFILE,
@@ -208,7 +240,7 @@ def _test_profile_tool_policy() -> None:
         "alsoAllow": ["duplicate", "duplicate"],
     }
     try:
-        enable_profile_tools(invalid, approved, PROFILE)
+        enable_profile_tools(invalid, approved, PROFILE_EXPANSION, PROFILE)
     except RuntimeError:
         pass
     else:
