@@ -1,0 +1,26 @@
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+checked_at=20260619T184416Z
+result=FAILED
+failure_code=RuntimeError:native_agent_telemetry_acceptance_failed
+selected_policy_mode=materialized-profile-plus-approved
+routing_skill_installed=NO
+CHECK|authoritative_readiness|PASS|latest READY evidence verified
+CHECK|tools_denied_baseline|PASS|approved tools remain denied before mutation
+CHECK|gateway_and_routes|PASS|existing Gateway and native public root are healthy
+CHECK|private_internal_listeners|PASS|required ORIS listeners are loopback-only
+CHECK|queue_baseline|PASS|zero active tasks and queue fingerprint captured
+CHECK|product_baseline|PASS|product HEAD, remote main, and clean worktree verified
+CHECK|oris_source_baseline|PASS|ORIS source worktree clean; configured runtime artifacts excluded
+CHECK|safe_builtin_baseline|PASS|safe built-in tool is accessible before mutation
+CHECK|private_backup|PASS|tools-denied config, marker, and routing skill backup captured
+CHECK|routing_skill|PASS|managed ORIS read-only routing skill installed and effective
+CHECK|controlled_policy_enablement|PASS|minimal approved read-only policy applied
+CHECK|plugin_runtime|PASS|exact read-only tools and typed hooks verified
+CHECK|direct_tool_calls|PASS|three ORIS tools and safe baseline tool passed
+CHECK|queue_after_direct_calls|PASS|queue fingerprint is unchanged
+CHECK|automatic_enablement|FAIL|RuntimeError
+product_task_submitted=NO
+write_tools_added=NO
+openclaw_reinstalled_or_upgraded=NO
+secret_values_recorded=NO
+conversation_content_recorded=NO

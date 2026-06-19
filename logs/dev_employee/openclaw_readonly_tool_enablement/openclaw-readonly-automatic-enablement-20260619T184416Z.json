@@ -1,0 +1,293 @@
+{
+  "check_summary": {
+    "fail": 1,
+    "pass": 14,
+    "total": 15
+  },
+  "checked_at": "20260619T184416Z",
+  "checks": [
+    {
+      "detail": "latest READY evidence verified",
+      "name": "authoritative_readiness",
+      "status": "PASS"
+    },
+    {
+      "detail": "approved tools remain denied before mutation",
+      "name": "tools_denied_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "existing Gateway and native public root are healthy",
+      "name": "gateway_and_routes",
+      "status": "PASS"
+    },
+    {
+      "detail": "required ORIS listeners are loopback-only",
+      "name": "private_internal_listeners",
+      "status": "PASS"
+    },
+    {
+      "detail": "zero active tasks and queue fingerprint captured",
+      "name": "queue_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "product HEAD, remote main, and clean worktree verified",
+      "name": "product_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "ORIS source worktree clean; configured runtime artifacts excluded",
+      "name": "oris_source_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "safe built-in tool is accessible before mutation",
+      "name": "safe_builtin_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "tools-denied config, marker, and routing skill backup captured",
+      "name": "private_backup",
+      "status": "PASS"
+    },
+    {
+      "detail": "managed ORIS read-only routing skill installed and effective",
+      "name": "routing_skill",
+      "status": "PASS"
+    },
+    {
+      "detail": "minimal approved read-only policy applied",
+      "name": "controlled_policy_enablement",
+      "status": "PASS"
+    },
+    {
+      "detail": "exact read-only tools and typed hooks verified",
+      "name": "plugin_runtime",
+      "status": "PASS"
+    },
+    {
+      "detail": "three ORIS tools and safe baseline tool passed",
+      "name": "direct_tool_calls",
+      "status": "PASS"
+    },
+    {
+      "detail": "queue fingerprint is unchanged",
+      "name": "queue_after_direct_calls",
+      "status": "PASS"
+    },
+    {
+      "detail": "RuntimeError",
+      "name": "automatic_enablement",
+      "status": "FAIL"
+    }
+  ],
+  "config_scope_valid": true,
+  "details": {
+    "direct_invocation": {
+      "calls": [
+        {
+          "contract_ok": true,
+          "duration_ms": 6045.617,
+          "status": 200,
+          "tool": "session_status"
+        },
+        {
+          "contract_ok": true,
+          "duration_ms": 164.115,
+          "status": 200,
+          "tool": "oris_queue_status"
+        },
+        {
+          "contract_ok": true,
+          "duration_ms": 61.057,
+          "status": 200,
+          "tool": "oris_task_status"
+        },
+        {
+          "contract_ok": true,
+          "duration_ms": 58.116,
+          "status": 200,
+          "tool": "oris_latest_task_status"
+        }
+      ],
+      "ok": true,
+      "secret_values_recorded": false,
+      "tool_results_recorded": false
+    },
+    "native_agent_acceptance": {
+      "accepted": false,
+      "cli": {
+        "json_flag": "--json",
+        "local_flag_available": true,
+        "message_flag": "--message",
+        "session_flag": "--session-id",
+        "telemetry_selftests_passed": true
+      },
+      "conversation_content_recorded": false,
+      "gateway_transport_mode": "gateway_default_without_local_flag",
+      "gateway_transport_proven": true,
+      "gateway_transport_proven_by_plugin_telemetry": false,
+      "local_flag_used": false,
+      "output_session_hash_count": 2,
+      "persisted_native_session": true,
+      "reason": "native_agent_telemetry_acceptance_failed",
+      "same_cli_session_requested": true,
+      "secret_values_recorded": false,
+      "session_key_recorded": false,
+      "telemetry": {
+        "accepted": false,
+        "all_event_counts": {
+          "after_tool_call": 0,
+          "agent_end": 3,
+          "model_call_ended": 3
+        },
+        "all_tools_seen": [],
+        "content_safe": true,
+        "conversation_content_recorded": false,
+        "correlated_records": 6,
+        "correlation_mode": "session_hash+isolated_window_tools",
+        "event_counts": {
+          "after_tool_call": 0,
+          "agent_end": 3,
+          "model_call_ended": 3
+        },
+        "exact_agent_turn_boundary": true,
+        "expected_tools_seen": [],
+        "file_permissions_ok": true,
+        "isolated_window_fallback_used": false,
+        "metrics": {
+          "model_duration": {
+            "available": true,
+            "count": 3,
+            "max_ms": 50908.0,
+            "min_ms": 4985.0,
+            "p50_ms": 5517.0
+          },
+          "tool_duration": {
+            "oris_latest_task_status": {
+              "available": false,
+              "count": 0
+            },
+            "oris_queue_status": {
+              "available": false,
+              "count": 0
+            },
+            "oris_task_status": {
+              "available": false,
+              "count": 0
+            }
+          },
+          "total_agent_duration": {
+            "available": true,
+            "count": 3,
+            "max_ms": 50996.0,
+            "min_ms": 5035.0,
+            "p50_ms": 5568.0
+          },
+          "ttft": {
+            "available": false,
+            "reason": "approved typed hooks do not expose a first-token timestamp"
+          }
+        },
+        "observed_session_hash_count": 1,
+        "only_approved_tools_used": true,
+        "parent_permissions_ok": true,
+        "persisted_session": true,
+        "records_after_start": 6,
+        "run_hash_correlation_used": true,
+        "same_cli_session_requested": true,
+        "schema_ok": true,
+        "secret_values_recorded": false,
+        "session_hash_matched": true,
+        "session_records": 3,
+        "unexpected_tools_seen": []
+      },
+      "turns": [
+        {
+          "duration_ms": 59244.279,
+          "expected_tool": "oris_queue_status",
+          "fallback_from_gateway": false,
+          "gateway_transport_ok": true,
+          "intent": "queue_status",
+          "output_present": true,
+          "reported_tool_names": [],
+          "reported_transport": "gateway_default_unmarked",
+          "returncode": 0,
+          "session_identifier_hash_count": 2,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10788,
+          "structured_output_valid": true
+        },
+        {
+          "duration_ms": 15512.442,
+          "expected_tool": "oris_latest_task_status",
+          "fallback_from_gateway": false,
+          "gateway_transport_ok": true,
+          "intent": "latest_task_status",
+          "output_present": true,
+          "reported_tool_names": [],
+          "reported_transport": "gateway_default_unmarked",
+          "returncode": 0,
+          "session_identifier_hash_count": 2,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10527,
+          "structured_output_valid": true
+        },
+        {
+          "duration_ms": 14943.251,
+          "expected_tool": "oris_task_status",
+          "fallback_from_gateway": false,
+          "gateway_transport_ok": true,
+          "intent": "task_status",
+          "output_present": true,
+          "reported_tool_names": [],
+          "reported_transport": "gateway_default_unmarked",
+          "returncode": 0,
+          "session_identifier_hash_count": 2,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10944,
+          "structured_output_valid": true
+        }
+      ]
+    },
+    "routing_skill": {
+      "effective_source_approved": true,
+      "installation_method": "managed_atomic_directory_copy",
+      "installed_sha256": "72b0586fdc96d49fc6be4e0dadd8e8bde9b20b1d8226e0029b7dbd4d377040fa",
+      "name": "oris-readonly-status",
+      "removed_shadow_count": 0,
+      "secret_values_recorded": false,
+      "skill_content_recorded": false,
+      "source_sha256": "72b0586fdc96d49fc6be4e0dadd8e8bde9b20b1d8226e0029b7dbd4d377040fa"
+    }
+  },
+  "direct_tool_calls_pass": true,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T184416Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T184416Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "RuntimeError:native_agent_telemetry_acceptance_failed",
+  "native_agent_acceptance_pass": false,
+  "next_action": "FIX_AUTOMATIC_ENABLEMENT_FAILURE_WITH_TOOLS_DENIED",
+  "product_unchanged": false,
+  "queue_unchanged": false,
+  "result": "FAILED",
+  "rollback": {
+    "count": 1,
+    "healthy": "YES"
+  },
+  "routing_skill_installed": false,
+  "safety": {
+    "conversation_content_recorded": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "materialized-profile-plus-approved",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": false,
+  "write_tools_absent": true
+}
