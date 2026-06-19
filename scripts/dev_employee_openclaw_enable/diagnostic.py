@@ -16,11 +16,12 @@ from .diagnostic_candidate import (
     candidate_evidence,
     inspect_private_candidate,
 )
+from .diagnostic_core_selftest import run_core_diagnostic_selftests
 from .diagnostic_evidence import publish_diagnostic_evidence
-from .diagnostic_selftest import run_diagnostic_selftests
 from .engineering_scan import scan_engineering_sources
 from .models import CheckRecorder, RunState, RuntimeContext
 from .policy import validate_denied_baseline
+from .state import sha256_file
 
 
 SUCCESS_RESULT = "DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW"
@@ -75,7 +76,7 @@ def _run_pre_activation_checks(
     checks: CheckRecorder,
     temp_root: Path,
 ) -> DiagnosticBaseline:
-    if not run_diagnostic_selftests():
+    if not run_core_diagnostic_selftests():
         checks.fail_check("diagnostic_selftests", "diagnostic selftests failed")
         raise RuntimeError("diagnostic_selftests_failed")
     checks.pass_check("diagnostic_selftests", "diagnostic selftests passed")
@@ -115,14 +116,13 @@ def _run_pre_activation_checks(
     candidate_path, application = build_private_candidate(context, temp_root)
     state.selected_policy_mode = str(application["mode"])
     state.details["policy_application"] = application
-    candidate = candidate_evidence(candidate_path)
-    state.details["candidate"] = candidate
-    if candidate["sha256"] == baseline.active_config_sha256:
+    state.details["candidate"] = candidate_evidence(candidate_path)
+    if sha256_file(context.openclaw_config) != baseline.active_config_sha256:
         checks.fail_check(
             "private_candidate_build",
-            "candidate did not differ from denied baseline",
+            "active OpenClaw configuration changed during candidate build",
         )
-        raise RuntimeError("candidate_policy_not_materialized")
+        raise RuntimeError("active_config_changed_during_candidate_build")
     checks.pass_check(
         "private_candidate_build",
         "candidate built in a private temporary path without active mutation",
@@ -137,12 +137,12 @@ def _run_pre_activation_checks(
     if not state.config_scope_valid:
         checks.fail_check(
             "candidate_policy_compatibility",
-            "candidate profile, allow, alsoAllow, deny, or group checks failed",
+            "candidate profile, allow, alsoAllow, deny, group, or Skill checks failed",
         )
         raise RuntimeError("candidate_policy_compatibility_failed")
     checks.pass_check(
         "candidate_policy_compatibility",
-        "candidate profile and dual-stage optional-tool policy are internally consistent",
+        "candidate optional-tool and Skill policy are internally consistent",
     )
 
     state.details["installed_runtime_validation"] = runtime_validation
