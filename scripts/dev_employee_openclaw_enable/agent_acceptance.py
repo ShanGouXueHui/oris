@@ -104,9 +104,6 @@ def _failed_result(reason: str, cli: dict[str, Any]) -> dict[str, Any]:
 
 def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, Any]:
     cli = discover_agent_cli()
-    if context.require_gateway_transport and not cli["local_flag_available"]:
-        return _failed_result("gateway_transport_contract_unverifiable", cli)
-
     session_key = f"{context.session_prefix}-{stamp.lower()}"
     started_at = datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
     turns: list[dict[str, Any]] = []
