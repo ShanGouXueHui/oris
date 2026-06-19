@@ -5,7 +5,9 @@ from .telemetry_correlation import correlate_records
 
 
 EVENTS = {"model_call_ended", "after_tool_call", "agent_end"}
-TOOLS = {"oris_queue_status", "oris_task_status", "oris_latest_task_status"}
+TOOLS = {"sample_queue_tool", "sample_task_tool", "sample_latest_tool"}
+MISSING_TOOL = "sample_task_tool"
+UNEXPECTED_TOOL = "sample_unapproved_tool"
 
 
 def _records(session_hash: str | None = None) -> list[dict]:
@@ -52,7 +54,7 @@ def run_selftests() -> bool:
     missing_tool_records = [
         item
         for item in _records()
-        if item.get("toolName") != "oris_task_status"
+        if item.get("toolName") != MISSING_TOOL
     ]
     missing = correlate_records(
         records=missing_tool_records,
@@ -66,7 +68,7 @@ def run_selftests() -> bool:
 
     unexpected_records = _records()
     unexpected_records.append(
-        {"event": "after_tool_call", "toolName": "exec"}
+        {"event": "after_tool_call", "toolName": UNEXPECTED_TOOL}
     )
     unexpected = correlate_records(
         records=unexpected_records,
@@ -77,14 +79,15 @@ def run_selftests() -> bool:
         same_cli_session_requested=True,
     )
     assert unexpected["accepted"] is False
-    assert "exec" in unexpected["unexpected_tools"]
+    assert UNEXPECTED_TOOL in unexpected["unexpected_tools"]
 
+    sample_tool = sorted(TOOLS)[0]
     payload = {
         "meta": {"sessionId": "private-session-id"},
-        "events": [{"type": "tool_call", "toolName": "oris_queue_status"}],
+        "events": [{"type": "tool_call", "toolName": sample_tool}],
     }
     hashes = session_identifier_hashes(payload)
     assert len(hashes) == 1
     assert "private-session-id" not in next(iter(hashes))
-    assert reported_tool_names(payload, TOOLS) == {"oris_queue_status"}
+    assert reported_tool_names(payload, TOOLS) == {sample_tool}
     return True
