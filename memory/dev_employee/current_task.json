@@ -1,11 +1,11 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "blocked_after_dual_stage_policy_gateway_health_failure_rollback_complete",
+  "status": "diagnostic_remediation_published_pending_runtime_execution",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "diagnose_gateway_rejection_of_dual_stage_readonly_policy_before_retry",
+  "current_step": "execute_github_hosted_pre_activation_policy_diagnostic",
   "objective": "Enable only the three approved read-only ORIS tools through the existing native OpenClaw plugin, verify natural-language typed-tool use and privacy-safe latency telemetry, and preserve automatic rollback to the tools-denied state. Do not add write actions in this task.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -87,6 +87,23 @@
     "active_target_findings": 0,
     "interpretation": "Repository-wide legacy quality debt remains, while the active OpenClaw remediation target passed its quality gate. Generated/runtime artifacts are excluded from active source findings."
   },
+  "diagnostic_implementation": {
+    "published": true,
+    "published_main_ancestor_commit": "090e815d7649a92054d5cc5cbe6036b8ad3fd2c7",
+    "entrypoint": "scripts/dev_employee_diagnose_openclaw_readonly_policy.sh",
+    "implementation_document": "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md",
+    "source_authority_scan": true,
+    "candidate_private_temporary_path": true,
+    "candidate_sensitive_values_redacted": true,
+    "installed_validator_discovery": true,
+    "candidate_active_config_mutation": false,
+    "candidate_gateway_restart": false,
+    "controlled_activation_failure_capture_ready": true,
+    "tri_state_evidence": true,
+    "detached_worktree_evidence": true,
+    "runtime_execution_completed": false,
+    "runtime_evidence_commit": null
+  },
   "enablement_progress": {
     "direct_tool_calls_passed_in_prior_attempts": true,
     "routing_skill_runtime_visible_in_prior_attempts": true,
@@ -122,20 +139,18 @@
     "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T200933Z.json",
     "evidence_semantics_note": "False values for post-failure checks in this early-abort evidence mean not checked, not observed regression. Explicit safety and rollback fields are authoritative."
   },
-  "blocked_reason": "The candidate dual-stage OpenClaw tool policy caused the existing Gateway to fail its post-restart health gate. Sanitized evidence does not yet contain the installed-runtime config-validation or bounded service-journal reason.",
-  "next_action": "Do not rerun enablement blindly. Add a GitHub-hosted diagnostic that builds and validates the candidate config privately, scans duplicate and unsupported policy entries, captures bounded sanitized OpenClaw/systemd failure evidence before rollback, uses tri-state evidence semantics, proves exact rollback health, commits evidence through a detached worktree, and only then selects the minimal runtime-accepted policy.",
+  "blocked_reason": "The source remediation and diagnostic-only workflow are now published. The remaining blocker is runtime evidence from the installed OpenClaw CLI and Gateway; enablement must not be retried until the GitHub-hosted diagnostic has run once and its evidence has been reviewed.",
+  "next_action": "Run the GitHub-hosted pre-activation diagnostic once on the ORIS development/control host. It must not activate the candidate or restart Gateway. Read the resulting GitHub evidence, then select the minimum runtime-accepted policy before any controlled enablement retry.",
   "next_action_requirements": [
-    "scan target files for duplicate definitions, existing helpers and hardcoded values before editing",
-    "reuse authoritative parsers, service adapters and tool-name/profile definitions",
-    "build candidate config in a private temporary path",
-    "discover and run installed OpenClaw config/schema validation commands where supported",
-    "verify whether tools.profile, tools.allow, tools.alsoAllow, group selectors and optional plugin tools may coexist in OpenClaw 2026.5.19",
-    "capture pre-mutation Gateway PID and health",
-    "capture bounded sanitized systemctl and journal diagnostics on controlled failure before rollback",
-    "represent unreached checks as NOT_CHECKED rather than false",
-    "restore the exact tools-denied config and prove Gateway health",
-    "do not invoke a write tool or submit a product task",
-    "publish sanitized evidence and remote SHA"
+    "pull the latest main branch on the ORIS development/control host",
+    "run scripts/dev_employee_diagnose_openclaw_readonly_policy.sh exactly once",
+    "do not run the enablement entrypoint in the same step",
+    "verify the active tools-denied config hash remains unchanged",
+    "verify the Gateway remains healthy without restart",
+    "record installed validator discovery as PASS, FAIL or NOT_CHECKED",
+    "publish sanitized evidence and remote SHA through a detached worktree",
+    "read GitHub evidence before choosing a candidate policy",
+    "do not invoke a write tool or submit a product task"
   ],
   "commercial_sequence_after_p0": [
     "explicit typed write actions with approval, project authorization, idempotency and audit",
@@ -151,11 +166,12 @@
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md",
+    "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md",
     "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-19.md",
-    "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-18.md",
+    "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-19.md",
     "docs/DEV_EMPLOYEE_COMMERCIALIZATION_PRIORITY_2026-06-18.md",
     "orchestration/project_registry.json",
     "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-19.md"
   ],
-  "updated_at": "2026-06-19T20:30:00Z"
+  "updated_at": "2026-06-19T21:29:34Z"
 }
