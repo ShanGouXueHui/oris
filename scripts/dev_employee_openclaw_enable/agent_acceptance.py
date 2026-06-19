@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from datetime import datetime, timezone
 from typing import Any
@@ -10,10 +11,18 @@ from .process import run
 from .telemetry import inspect_telemetry
 
 
-def _flag_from_help(help_text: str, candidates: tuple[str, ...]) -> str | None:
+def _long_flag_from_help(help_text: str, candidates: tuple[str, ...]) -> str | None:
     for candidate in candidates:
         if candidate in help_text:
             return candidate
+    return None
+
+
+def _message_flag_from_help(help_text: str) -> str | None:
+    if "--message" in help_text:
+        return "--message"
+    if re.search(r"(^|[\s,])-m(?:[\s,]|$)", help_text):
+        return "-m"
     return None
 
 
@@ -41,12 +50,12 @@ def discover_agent_cli() -> dict[str, Any]:
     help_text = result.stdout + "\n" + result.stderr
     if result.returncode != 0:
         raise RuntimeError("openclaw agent help failed")
-    session_flag = _flag_from_help(
+    session_flag = _long_flag_from_help(
         help_text,
         ("--session-key", "--session-id", "--session"),
     )
-    message_flag = _flag_from_help(help_text, ("--message", "-m"))
-    json_flag = _flag_from_help(help_text, ("--json",))
+    message_flag = _message_flag_from_help(help_text)
+    json_flag = _long_flag_from_help(help_text, ("--json",))
     if session_flag is None or message_flag is None:
         raise RuntimeError("OpenClaw agent CLI lacks a supported session or message flag")
     return {
