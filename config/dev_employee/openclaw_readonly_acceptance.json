@@ -54,17 +54,17 @@
       {
         "intent": "queue_status",
         "expected_tool": "oris_queue_status",
-        "message_template": "请实时查看当前 ORIS 开发员工队列状态，并明确说明现在是否有任务正在运行。"
+        "message_template": "请不要根据记忆或前文推断。请使用系统提供的 ORIS 只读队列状态工具实时查询当前开发员工队列，并明确说明现在是否有任务正在运行。"
       },
       {
         "intent": "latest_task_status",
         "expected_tool": "oris_latest_task_status",
-        "message_template": "请实时查看 ORIS 最近一个任务的状态，并概括它当前处于哪个阶段。"
+        "message_template": "请不要复用上一轮结果。请使用系统提供的 ORIS 只读最新任务状态工具实时查询最近一个任务，并概括它当前处于哪个阶段。"
       },
       {
         "intent": "task_status",
         "expected_tool": "oris_task_status",
-        "message_template": "请实时查看任务 {task_id} 的状态，并说明下一步是什么。"
+        "message_template": "请不要根据记忆回答。请使用系统提供的 ORIS 只读指定任务状态工具实时查询任务 {task_id}，并说明下一步是什么。"
       }
     ]
   },
