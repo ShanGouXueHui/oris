@@ -120,18 +120,27 @@ def run_enablement(
         queue_before, baseline_tool, product_before, oris_before = baseline
         policy_backup = create_backup(context, stamp)
         skill_backup = backup_routing_skill(context, policy_backup.directory)
-        checks.pass_check("private_backup", "tools-denied config, marker, and routing skill backup captured")
+        checks.pass_check(
+            "private_backup",
+            "tools-denied config, marker, and routing skill backup captured",
+        )
 
         state.mutation_started = True
-        skill_details = install_routing_skill(context)
+        skill_details = install_routing_skill(context, skill_backup)
         state.routing_skill_installed = True
         state.details["routing_skill"] = skill_details
-        checks.pass_check("routing_skill", "managed ORIS read-only routing skill installed and effective")
+        checks.pass_check(
+            "routing_skill",
+            "managed ORIS read-only routing skill installed and effective",
+        )
 
         state.selected_policy_mode = apply_readonly_policy(context, policy_backup)
         state.config_scope_valid = True
         restart_gateway(context)
-        checks.pass_check("controlled_policy_enablement", "minimal approved read-only policy applied")
+        checks.pass_check(
+            "controlled_policy_enablement",
+            "minimal approved read-only policy applied",
+        )
 
         if not verify_public_routes(context)["ok"]:
             raise RuntimeError("public routes failed after Gateway restart")
@@ -139,23 +148,37 @@ def run_enablement(
         if not runtime.get("ok"):
             raise RuntimeError("plugin runtime contract failed after enablement")
         state.write_tools_absent = not runtime.get("write_tools")
-        checks.pass_check("plugin_runtime", "exact read-only tools and typed hooks verified")
+        checks.pass_check(
+            "plugin_runtime",
+            "exact read-only tools and typed hooks verified",
+        )
 
         direct = direct_readonly_probe(context, baseline_tool)
         state.details["direct_invocation"] = direct
         if not direct["ok"]:
             raise RuntimeError("direct approved read-only tool invocation failed")
         state.direct_tool_calls_pass = True
-        checks.pass_check("direct_tool_calls", "three ORIS tools and safe baseline tool passed")
+        checks.pass_check(
+            "direct_tool_calls",
+            "three ORIS tools and safe baseline tool passed",
+        )
 
-        if queue_fingerprint(context.repo_root) != queue_before or active_queue_count(context.repo_root) != 0:
+        if (
+            queue_fingerprint(context.repo_root) != queue_before
+            or active_queue_count(context.repo_root) != 0
+        ):
             raise RuntimeError("queue changed during direct read-only tool calls")
         checks.pass_check("queue_after_direct_calls", "queue fingerprint is unchanged")
 
         automatic = run_automatic_acceptance(context, stamp)
         state.details["native_agent_acceptance"] = automatic
         if not automatic.get("accepted"):
-            raise RuntimeError(str(automatic.get("reason") or "automatic native agent acceptance failed"))
+            raise RuntimeError(
+                str(
+                    automatic.get("reason")
+                    or "automatic native agent acceptance failed"
+                )
+            )
         state.native_agent_acceptance_pass = True
         telemetry = automatic.get("telemetry") or {}
         state.telemetry_privacy_pass = bool(
@@ -164,28 +187,58 @@ def run_enablement(
             and telemetry.get("only_approved_tools_used")
         )
         if not state.telemetry_privacy_pass:
-            raise RuntimeError("telemetry privacy, schema, or approved-tool validation failed")
-        checks.pass_check("automatic_native_agent_acceptance", "three natural-language turns completed automatically")
-        checks.pass_check("telemetry_privacy", "typed hook telemetry is private, schema-safe, and read-only")
+            raise RuntimeError(
+                "telemetry privacy, schema, or approved-tool validation failed"
+            )
+        checks.pass_check(
+            "automatic_native_agent_acceptance",
+            "three natural-language turns completed automatically",
+        )
+        checks.pass_check(
+            "telemetry_privacy",
+            "typed hook telemetry is private, schema-safe, and read-only",
+        )
 
-        if queue_fingerprint(context.repo_root) != queue_before or active_queue_count(context.repo_root) != 0:
+        if (
+            queue_fingerprint(context.repo_root) != queue_before
+            or active_queue_count(context.repo_root) != 0
+        ):
             raise RuntimeError("queue changed during native agent acceptance")
         state.queue_unchanged = True
-        checks.pass_check("final_queue_invariant", "queue fingerprint and active count are unchanged")
+        checks.pass_check(
+            "final_queue_invariant",
+            "queue fingerprint and active count are unchanged",
+        )
 
-        if not repository_unchanged(product_before, repository_snapshot(context.product_repo)):
-            raise RuntimeError("product repository changed during read-only acceptance")
+        if not repository_unchanged(
+            product_before,
+            repository_snapshot(context.product_repo),
+        ):
+            raise RuntimeError(
+                "product repository changed during read-only acceptance"
+            )
         state.product_unchanged = True
-        checks.pass_check("final_product_invariant", "product repository is unchanged")
+        checks.pass_check(
+            "final_product_invariant",
+            "product repository is unchanged",
+        )
 
         _verify_runtime_boundaries(context, state, policy_backup, oris_before)
-        checks.pass_check("final_runtime_and_route_invariants", "runtime, routes, listeners, and worktree verified")
+        checks.pass_check(
+            "final_runtime_and_route_invariants",
+            "runtime, routes, listeners, and worktree verified",
+        )
 
         finalize_marker(context, policy_backup, state.selected_policy_mode, stamp)
-        checks.pass_check("private_marker", "automatic read-only acceptance recorded privately")
+        checks.pass_check(
+            "private_marker",
+            "automatic read-only acceptance recorded privately",
+        )
         state.result = SUCCESS_RESULT
         state.failure_code = ""
-        state.next_action = "PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN"
+        state.next_action = (
+            "PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN"
+        )
         state.rollback_healthy = "NOT_REQUIRED"
         evidence_log, evidence_json = _commit_evidence(
             context,
