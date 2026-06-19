@@ -21,6 +21,12 @@ from .policy import (
     validate_config_scope,
 )
 from .preflight_checks import run_transaction_preflight
+from .skill import (
+    SkillBackup,
+    backup_routing_skill,
+    install_routing_skill,
+    restore_routing_skill,
+)
 from .state import (
     active_queue_count,
     listener_is_loopback_only,
@@ -80,16 +86,21 @@ def _verify_runtime_boundaries(
 def _rollback(
     context: RuntimeContext,
     state: RunState,
-    backup: PolicyBackup | None,
+    policy_backup: PolicyBackup | None,
+    skill_backup: SkillBackup | None,
 ) -> None:
-    if not state.mutation_started or backup is None:
+    if not state.mutation_started:
         return
     try:
-        restore_denied_policy(context, backup)
+        if policy_backup is not None:
+            restore_denied_policy(context, policy_backup)
+        if skill_backup is not None:
+            restore_routing_skill(skill_backup)
         restart_gateway(context)
         state.rollback_count += 1
         state.rollback_healthy = "YES"
         state.mutation_started = False
+        state.routing_skill_installed = False
     except Exception:
         state.rollback_healthy = "NO"
 
@@ -100,17 +111,24 @@ def run_enablement(
     checks: CheckRecorder,
     stamp: str,
 ) -> tuple[str, str]:
-    backup: PolicyBackup | None = None
+    policy_backup: PolicyBackup | None = None
+    skill_backup: SkillBackup | None = None
     evidence_log = ""
     evidence_json = ""
     try:
         baseline = run_transaction_preflight(context, checks)
         queue_before, baseline_tool, product_before, oris_before = baseline
-        backup = create_backup(context, stamp)
-        checks.pass_check("private_backup", "tools-denied config and marker backup created")
+        policy_backup = create_backup(context, stamp)
+        skill_backup = backup_routing_skill(context, policy_backup.directory)
+        checks.pass_check("private_backup", "tools-denied config, marker, and routing skill backup captured")
 
         state.mutation_started = True
-        state.selected_policy_mode = apply_readonly_policy(context, backup)
+        skill_details = install_routing_skill(context)
+        state.routing_skill_installed = True
+        state.details["routing_skill"] = skill_details
+        checks.pass_check("routing_skill", "managed ORIS read-only routing skill installed and effective")
+
+        state.selected_policy_mode = apply_readonly_policy(context, policy_backup)
         state.config_scope_valid = True
         restart_gateway(context)
         checks.pass_check("controlled_policy_enablement", "minimal approved read-only policy applied")
@@ -160,10 +178,10 @@ def run_enablement(
         state.product_unchanged = True
         checks.pass_check("final_product_invariant", "product repository is unchanged")
 
-        _verify_runtime_boundaries(context, state, backup, oris_before)
+        _verify_runtime_boundaries(context, state, policy_backup, oris_before)
         checks.pass_check("final_runtime_and_route_invariants", "runtime, routes, listeners, and worktree verified")
 
-        finalize_marker(context, backup, state.selected_policy_mode, stamp)
+        finalize_marker(context, policy_backup, state.selected_policy_mode, stamp)
         checks.pass_check("private_marker", "automatic read-only acceptance recorded privately")
         state.result = SUCCESS_RESULT
         state.failure_code = ""
@@ -180,7 +198,7 @@ def run_enablement(
         return evidence_log, evidence_json
     except Exception as exc:
         _record_failure(state, checks, exc)
-        _rollback(context, state, backup)
+        _rollback(context, state, policy_backup, skill_backup)
         try:
             evidence_log, evidence_json = _commit_evidence(
                 context,
