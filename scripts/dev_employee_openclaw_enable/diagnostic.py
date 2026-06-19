@@ -22,8 +22,6 @@ from .engineering_scan import scan_engineering_sources
 from .models import CheckRecorder, RunState, RuntimeContext
 from .policy import validate_denied_baseline
 from .state import sha256_file
-
-
 SUCCESS_RESULT = "DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW"
 _STAGE_CHECKS = (
     "diagnostic_selftests",
