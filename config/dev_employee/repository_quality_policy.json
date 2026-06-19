@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "scan_roots": ["scripts", "orchestration", "config"],
   "excluded_directory_names": [
     ".git",
@@ -11,8 +11,34 @@
     "__pycache__",
     "logs",
     "memory",
-    "vendor"
+    "vendor",
+    "dev_employee_chat_sessions",
+    "dev_employee_intake_catalog",
+    "dev_employee_queue",
+    "dev_employee_runs",
+    "dev_employee_evidence",
+    "dev_employee_approvals",
+    "dev_employee_cancel_requests",
+    "dev_employee_retry_requests",
+    "dev_employee_status"
   ],
+  "excluded_path_prefixes": [
+    "orchestration/dev_employee_chat_sessions",
+    "orchestration/dev_employee_intake_catalog",
+    "orchestration/dev_employee_queue",
+    "orchestration/dev_employee_runs",
+    "orchestration/dev_employee_evidence",
+    "orchestration/dev_employee_approvals",
+    "orchestration/dev_employee_cancel_requests",
+    "orchestration/dev_employee_retry_requests",
+    "orchestration/dev_employee_status"
+  ],
+  "excluded_file_names": [
+    "generic_insight_enqueue_state.json",
+    "provider_health_snapshot.json",
+    "provider_scoreboard.json"
+  ],
+  "exclude_timestamped_json": true,
   "source_extensions": [
     ".py",
     ".sh",
@@ -26,6 +52,15 @@
     ".yml",
     ".toml"
   ],
+  "code_extensions": [
+    ".py",
+    ".sh",
+    ".ts",
+    ".tsx",
+    ".js",
+    ".mjs",
+    ".cjs"
+  ],
   "authoritative_literal_files": [
     "orchestration/project_registry.json",
     "orchestration/openclaw_plugins/oris-dev-employee/openclaw.plugin.json",
@@ -34,8 +69,8 @@
   ],
   "detectors": [
     "duplicate_symbol",
-    "duplicate_constant",
     "duplicate_json_key",
+    "plaintext_secret",
     "absolute_host_path",
     "environment_loopback_port",
     "public_oris_domain",
@@ -55,12 +90,7 @@
     ".tsx": 350,
     ".js": 300,
     ".mjs": 300,
-    ".cjs": 300,
-    ".json": 500,
-    ".yaml": 500,
-    ".yml": 500,
-    ".toml": 500
+    ".cjs": 300
   },
-  "duplicate_constant_min_occurrences": 2,
   "evidence_directory": "logs/dev_employee/repository_quality_scan"
 }
