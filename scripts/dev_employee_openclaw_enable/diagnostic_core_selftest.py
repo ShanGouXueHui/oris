@@ -5,11 +5,32 @@ import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
+from . import skill as skill_facade
 from .candidate_validation import candidate_policy_compatibility
 from .models import CheckRecorder, stage_status
+from .skill_installation import (
+    SkillBackup,
+    SkillPathBackup,
+    backup_routing_skill,
+    install_routing_skill,
+    restore_routing_skill,
+    validate_skill_install_target,
+)
+from .skill_runtime import verify_routing_skill_runtime
+
+
+def _assert_skill_facade() -> None:
+    assert skill_facade.SkillBackup is SkillBackup
+    assert skill_facade.SkillPathBackup is SkillPathBackup
+    assert skill_facade.backup_routing_skill is backup_routing_skill
+    assert skill_facade.install_routing_skill is install_routing_skill
+    assert skill_facade.restore_routing_skill is restore_routing_skill
+    assert skill_facade.validate_skill_install_target is validate_skill_install_target
+    assert skill_facade.verify_routing_skill_runtime is verify_routing_skill_runtime
 
 
 def run_core_diagnostic_selftests() -> bool:
+    _assert_skill_facade()
     recorder = CheckRecorder()
     recorder.pass_check("pass", "ok")
     recorder.fail_check("fail", "bad")
