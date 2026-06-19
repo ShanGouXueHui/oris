@@ -34,7 +34,8 @@
     "orchestration/dev_employee_status"
   ],
   "worktree_runtime_path_prefixes": [
-    "logs"
+    "logs",
+    "memory/dev_employee"
   ],
   "excluded_file_names": [
     "generic_insight_enqueue_state.json",
