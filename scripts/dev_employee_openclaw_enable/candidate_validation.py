@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .agent_skill_policy import resolve_default_agent_id, skill_is_visible
 from .models import RuntimeContext
 from .state import load_json
 
@@ -34,8 +35,14 @@ def candidate_policy_compatibility(
     group_selectors = [
         item for item in context.profile_expansion if item.lower().startswith("group")
     ]
+    agent_id = resolve_default_agent_id(candidate)
     checks = {
         "profile_matches": tools.get("profile") == context.required_profile,
+        "routing_skill_visible": skill_is_visible(
+            candidate,
+            context.routing_skill_name,
+            agent_id,
+        ),
         "allow_unique": len(allow) == len(set(allow)),
         "also_allow_unique": len(also_allow) == len(set(also_allow)),
         "deny_unique": len(deny) == len(set(deny)),
@@ -55,5 +62,6 @@ def candidate_policy_compatibility(
         "deny_count": len(deny),
         "group_selector_count": len(group_selectors),
         "approved_tool_count": len(approved),
+        "default_agent_id": agent_id,
         "candidate_config_recorded": False,
     }
