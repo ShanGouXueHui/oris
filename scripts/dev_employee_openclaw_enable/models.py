@@ -13,6 +13,10 @@ class RuntimeContext:
     expected_product_commit: str
     openclaw_config: Path
     backup_root: Path
+    managed_skills_root: Path
+    routing_skill_name: str
+    routing_skill_source: Path
+    routing_skill_force_replace: bool
     gateway_service: str
     gateway_url: str
     public_url: str
@@ -76,6 +80,7 @@ class RunState:
     mutation_started: bool = False
     rollback_count: int = 0
     rollback_healthy: str = "NOT_REQUIRED"
+    routing_skill_installed: bool = False
     direct_tool_calls_pass: bool = False
     native_agent_acceptance_pass: bool = False
     telemetry_privacy_pass: bool = False
