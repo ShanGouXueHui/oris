@@ -1,12 +1,7 @@
 {
-  "version": 2,
+  "version": 3,
   "driver": "postgresql",
-  "database": "oris_insight",
   "schema": "insight",
-  "host": "127.0.0.1",
-  "port": 5432,
-  "user": "oris_app",
-  "password_secret_ref": "secrets_json:~/.openclaw/secrets.json::postgres.oris_insight.password",
   "sslmode": "disable",
   "artifact_storage_root": "outputs/artifacts",
   "word_enabled": true,
@@ -20,7 +15,8 @@
     "config_first": true,
     "db_first_for_variable_rules": true,
     "no_business_constants_in_scripts": true,
-    "plaintext_secrets_forbidden": true
+    "plaintext_secrets_forbidden": true,
+    "single_authoritative_db_config": true
   },
   "db": {
     "host": "127.0.0.1",
@@ -30,5 +26,5 @@
     "password_secret_ref": "secrets_json:~/.openclaw/secrets.json::postgres.oris_insight.password"
   },
   "storage_engine": "postgres",
-  "config_version": 3
+  "config_version": 4
 }
