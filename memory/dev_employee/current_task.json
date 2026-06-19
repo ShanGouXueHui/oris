@@ -1,11 +1,11 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "diagnostic_remediation_published_pending_runtime_execution",
+  "status": "diagnostic_source_gate_remediated_pending_safe_rerun",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "execute_github_hosted_pre_activation_policy_diagnostic",
+  "current_step": "rerun_github_hosted_pre_activation_policy_diagnostic_after_skill_module_split",
   "objective": "Enable only the three approved read-only ORIS tools through the existing native OpenClaw plugin, verify natural-language typed-tool use and privacy-safe latency telemetry, and preserve automatic rollback to the tools-denied state. Do not add write actions in this task.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -89,7 +89,6 @@
   },
   "diagnostic_implementation": {
     "published": true,
-    "published_main_ancestor_commit": "090e815d7649a92054d5cc5cbe6036b8ad3fd2c7",
     "entrypoint": "scripts/dev_employee_diagnose_openclaw_readonly_policy.sh",
     "implementation_document": "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md",
     "source_authority_scan": true,
@@ -101,8 +100,27 @@
     "controlled_activation_failure_capture_ready": true,
     "tri_state_evidence": true,
     "detached_worktree_evidence": true,
-    "runtime_execution_completed": false,
-    "runtime_evidence_commit": null
+    "runtime_execution_completed": true,
+    "runtime_result": "DIAGNOSTIC_FAILED",
+    "runtime_evidence_commit": "df9d21839974e4adcc6bde9b62db0fe468b3cc76",
+    "runtime_failure_stage": "source_authority_and_hardcoding_scan",
+    "runtime_failure_reason": "scripts/dev_employee_openclaw_enable/skill.py exceeded the 240-line layered-module gate at 261 lines",
+    "duplicate_authorities_found": 0,
+    "forbidden_hardcoding_found": 0,
+    "oversized_modules_found": 1,
+    "source_gate_remediation": {
+      "completed": true,
+      "skill_facade": "scripts/dev_employee_openclaw_enable/skill.py",
+      "installation_module": "scripts/dev_employee_openclaw_enable/skill_installation.py",
+      "runtime_module": "scripts/dev_employee_openclaw_enable/skill_runtime.py",
+      "line_counts": {
+        "skill.py": 22,
+        "skill_installation.py": 181,
+        "skill_runtime.py": 85
+      },
+      "facade_compatibility_selftest_added": true,
+      "latest_remediation_commit": "a4c1c04befeccc45c48ce55c901c87e9b0df1a70"
+    }
   },
   "enablement_progress": {
     "direct_tool_calls_passed_in_prior_attempts": true,
@@ -118,7 +136,7 @@
       "d650a0f9e4686df4b46157ace680e9bb08e396ff"
     ]
   },
-  "latest_attempt": {
+  "latest_enablement_attempt": {
     "checked_at": "2026-06-19T20:09:33Z",
     "result": "FAILED",
     "failure_code": "RuntimeError:existing OpenClaw Gateway did not become healthy",
@@ -135,16 +153,34 @@
     "product_task_submitted": false,
     "write_tools_added": false,
     "secret_values_printed": false,
-    "evidence_commit": "c68e7d2f50a84f6e68199d2fada9a244f31e4f41",
-    "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T200933Z.json",
-    "evidence_semantics_note": "False values for post-failure checks in this early-abort evidence mean not checked, not observed regression. Explicit safety and rollback fields are authoritative."
+    "evidence_commit": "c68e7d2f50a84f6e68199d2fada9a244f31e4f41"
   },
-  "blocked_reason": "The source remediation and diagnostic-only workflow are now published. The remaining blocker is runtime evidence from the installed OpenClaw CLI and Gateway; enablement must not be retried until the GitHub-hosted diagnostic has run once and its evidence has been reviewed.",
-  "next_action": "Run the GitHub-hosted pre-activation diagnostic once on the ORIS development/control host. It must not activate the candidate or restart Gateway. Read the resulting GitHub evidence, then select the minimum runtime-accepted policy before any controlled enablement retry.",
+  "latest_diagnostic_attempt": {
+    "checked_at": "2026-06-19T21:39:58Z",
+    "result": "DIAGNOSTIC_FAILED",
+    "failure_code": "engineering_source_scan_failed",
+    "checks_pass": 1,
+    "checks_fail": 1,
+    "checks_not_checked": 14,
+    "failure_stage": "source_authority_and_hardcoding_scan",
+    "oversized_file": "scripts/dev_employee_openclaw_enable/skill.py",
+    "oversized_line_count": 261,
+    "active_config_mutated": false,
+    "gateway_restarted": false,
+    "rollback_required": false,
+    "product_task_submitted": false,
+    "write_tools_added": false,
+    "evidence_commit": "df9d21839974e4adcc6bde9b62db0fe468b3cc76",
+    "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T213958Z.json"
+  },
+  "blocked_reason": "The first diagnostic stopped safely at the engineering source gate because skill.py exceeded the 240-line module threshold. The module has now been split without changing the public Skill API. A second diagnostic-only run is required to verify the source gate and reach installed OpenClaw validator discovery.",
+  "next_action": "Pull the latest main and rerun only scripts/dev_employee_diagnose_openclaw_readonly_policy.sh once. Do not run enablement. Read the new GitHub evidence before selecting or activating any policy.",
   "next_action_requirements": [
     "pull the latest main branch on the ORIS development/control host",
     "run scripts/dev_employee_diagnose_openclaw_readonly_policy.sh exactly once",
     "do not run the enablement entrypoint in the same step",
+    "verify diagnostic selftests include Skill facade compatibility",
+    "verify source authority and hardcoding scan passes with no oversized modules",
     "verify the active tools-denied config hash remains unchanged",
     "verify the Gateway remains healthy without restart",
     "record installed validator discovery as PASS, FAIL or NOT_CHECKED",
@@ -173,5 +209,5 @@
     "orchestration/project_registry.json",
     "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-19.md"
   ],
-  "updated_at": "2026-06-19T21:29:34Z"
+  "updated_at": "2026-06-19T21:51:25Z"
 }
