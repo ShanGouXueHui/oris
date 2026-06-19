@@ -41,7 +41,8 @@
     "logs",
     "memory/dev_employee",
     "orchestration/dev_employee_events",
-    "orchestration/task_runs"
+    "orchestration/task_runs",
+    "vendor/skill_candidates"
   ],
   "excluded_file_names": [
     "generic_insight_enqueue_state.json",
