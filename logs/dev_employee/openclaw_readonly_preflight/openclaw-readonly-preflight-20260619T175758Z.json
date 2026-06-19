@@ -1,0 +1,42 @@
+{
+  "agent_cli_supported": true,
+  "config_mutated": false,
+  "context_loaded": true,
+  "failure_stage": "source_worktree_ready",
+  "failure_type": "CheckFailed",
+  "gateway_restarted": false,
+  "gateway_transport_supported": true,
+  "internal_listeners_private": true,
+  "plugin_runtime_ok": true,
+  "public_routes_ok": true,
+  "python_compiled": true,
+  "readiness_evidence_ready": true,
+  "recorded_at": "20260619T175758Z",
+  "result": "FAILED",
+  "routing_skill_source_valid": true,
+  "safety": {
+    "config_mutated_by_evidence_writer": false,
+    "conversation_content_recorded": false,
+    "gateway_restarted_by_evidence_writer": false,
+    "secret_values_recorded": false
+  },
+  "secret_values_recorded": false,
+  "skill_install_target_ready": true,
+  "source_files_modified": false,
+  "source_worktree_dirty_count": 8,
+  "source_worktree_dirty_paths": [
+    "vendor/skill_candidates/VoltAgent__awesome-openclaw-skills",
+    "vendor/skill_candidates/awesome-mcp-servers",
+    "vendor/skill_candidates/awesome-openclaw-skills",
+    "vendor/skill_candidates/clawdbot-ai__awesome-openclaw-skills-zh",
+    "vendor/skill_candidates/clawhub",
+    "vendor/skill_candidates/libukai__awesome-agent-skills",
+    "vendor/skill_candidates/openclaw__clawhub",
+    "vendor/skill_candidates/punkpeye__awesome-mcp-servers"
+  ],
+  "source_worktree_dirty_paths_truncated": false,
+  "source_worktree_dirty_sha256": "1427b8e0c3ed2f5434bbbed9dd4e78e4ab781aeedaa48ec6da02aad172149f3b",
+  "source_worktree_head_synced": true,
+  "source_worktree_ready": false,
+  "tools_denied_baseline": true
+}
