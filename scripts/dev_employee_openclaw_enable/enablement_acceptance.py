@@ -10,6 +10,7 @@ from .state import (
     repository_snapshot,
     repository_unchanged,
 )
+from .worktree import SourceWorktreeSnapshot
 
 
 def run_native_acceptance(
@@ -67,7 +68,7 @@ def verify_final_invariants(
     state: RunState,
     checks: CheckRecorder,
     product_before: RepoSnapshot,
-    oris_before: RepoSnapshot,
+    oris_before: SourceWorktreeSnapshot,
     policy_backup: PolicyBackup,
     application: PolicyApplication,
 ) -> None:
