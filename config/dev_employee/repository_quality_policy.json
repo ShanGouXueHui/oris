@@ -16,26 +16,32 @@
     "dev_employee_intake_catalog",
     "dev_employee_queue",
     "dev_employee_runs",
+    "dev_employee_events",
     "dev_employee_evidence",
     "dev_employee_approvals",
     "dev_employee_cancel_requests",
     "dev_employee_retry_requests",
-    "dev_employee_status"
+    "dev_employee_status",
+    "task_runs"
   ],
   "excluded_path_prefixes": [
     "orchestration/dev_employee_chat_sessions",
     "orchestration/dev_employee_intake_catalog",
     "orchestration/dev_employee_queue",
     "orchestration/dev_employee_runs",
+    "orchestration/dev_employee_events",
     "orchestration/dev_employee_evidence",
     "orchestration/dev_employee_approvals",
     "orchestration/dev_employee_cancel_requests",
     "orchestration/dev_employee_retry_requests",
-    "orchestration/dev_employee_status"
+    "orchestration/dev_employee_status",
+    "orchestration/task_runs"
   ],
   "worktree_runtime_path_prefixes": [
     "logs",
-    "memory/dev_employee"
+    "memory/dev_employee",
+    "orchestration/dev_employee_events",
+    "orchestration/task_runs"
   ],
   "excluded_file_names": [
     "generic_insight_enqueue_state.json",
