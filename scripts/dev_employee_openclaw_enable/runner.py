@@ -13,6 +13,7 @@ from .gateway import (
 )
 from .models import CheckRecorder, RunState, RuntimeContext
 from .policy import (
+    PolicyApplication,
     PolicyBackup,
     apply_readonly_policy,
     create_backup,
@@ -26,6 +27,7 @@ from .skill import (
     backup_routing_skill,
     install_routing_skill,
     restore_routing_skill,
+    verify_routing_skill_runtime,
 )
 from .state import (
     active_queue_count,
@@ -74,9 +76,10 @@ def _verify_runtime_boundaries(
     context: RuntimeContext,
     state: RunState,
     backup: PolicyBackup,
+    application: PolicyApplication,
     oris_snapshot: SourceWorktreeSnapshot,
 ) -> None:
-    validate_config_scope(context, backup, state.selected_policy_mode)
+    validate_config_scope(context, backup, application)
     runtime = verify_plugin_runtime(context)
     if not runtime.get("ok") or runtime.get("write_tools"):
         raise RuntimeError("final plugin runtime contract failed")
@@ -120,6 +123,7 @@ def run_enablement(
     stamp: str,
 ) -> tuple[str, str]:
     policy_backup: PolicyBackup | None = None
+    policy_application: PolicyApplication | None = None
     skill_backup: SkillBackup | None = None
     evidence_log = ""
     evidence_json = ""
@@ -139,15 +143,29 @@ def run_enablement(
         state.details["routing_skill"] = skill_details
         checks.pass_check(
             "routing_skill",
-            "managed ORIS read-only routing skill installed and effective",
+            "managed ORIS read-only routing skill installed",
         )
 
-        state.selected_policy_mode = apply_readonly_policy(context, policy_backup)
+        policy_application = apply_readonly_policy(context, policy_backup)
+        state.selected_policy_mode = policy_application.mode
+        state.details["policy_application"] = policy_application.evidence()
         state.config_scope_valid = True
         restart_gateway(context)
         checks.pass_check(
             "controlled_policy_enablement",
-            "minimal approved read-only policy applied",
+            "minimal approved tool and agent-skill policy applied",
+        )
+
+        skill_runtime = verify_routing_skill_runtime(
+            context,
+            policy_application.skill_policy.agent_id,
+        )
+        state.details["routing_skill_runtime"] = skill_runtime
+        if not skill_runtime.get("visible"):
+            raise RuntimeError("routing skill is not visible to the selected agent")
+        checks.pass_check(
+            "routing_skill_runtime",
+            "routing skill is eligible and visible to the selected agent",
         )
 
         if not verify_public_routes(context)["ok"]:
@@ -231,13 +249,24 @@ def run_enablement(
             "product repository is unchanged",
         )
 
-        _verify_runtime_boundaries(context, state, policy_backup, oris_before)
+        _verify_runtime_boundaries(
+            context,
+            state,
+            policy_backup,
+            policy_application,
+            oris_before,
+        )
         checks.pass_check(
             "final_runtime_and_route_invariants",
             "runtime, routes, listeners, and source worktree verified",
         )
 
-        finalize_marker(context, policy_backup, state.selected_policy_mode, stamp)
+        finalize_marker(
+            context,
+            policy_backup,
+            policy_application,
+            stamp,
+        )
         checks.pass_check(
             "private_marker",
             "automatic read-only acceptance recorded privately",
