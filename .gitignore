@@ -41,6 +41,9 @@ logs/dev_employee/agent_harness/*.jsonl
 # Generated task execution results
 orchestration/task_runs/
 
+# Local skill discovery cache
+vendor/skill_candidates/
+
 # Runtime telemetry
 logs/dev_employee/free_mesh_latency_events.jsonl
 
