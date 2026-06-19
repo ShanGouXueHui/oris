@@ -58,6 +58,7 @@ def _summary_payload(
             "total": len(checks.checks),
             "pass": checks.pass_count,
             "fail": checks.fail_count,
+            "not_checked": checks.not_checked_count,
         },
         "direct_tool_calls_pass": state.direct_tool_calls_pass,
         "native_agent_acceptance_pass": state.native_agent_acceptance_pass,
