@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import hashlib
-import json
+import os
+import secrets
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from .models import RuntimeContext
-from .process import run
 from .state import load_json
 
 
@@ -34,7 +34,7 @@ def _sha256(path: Path) -> str:
 
 
 def _managed_target(context: RuntimeContext) -> Path:
-    root = context.managed_skills_root.resolve()
+    root = context.managed_skills_root.expanduser().resolve()
     target = (root / context.routing_skill_name).resolve()
     if root not in target.parents:
         raise RuntimeError("managed routing skill target escapes the skills root")
@@ -65,14 +65,18 @@ def _workspace_paths(context: RuntimeContext) -> tuple[Path, ...]:
     )
 
 
-def validate_skill_cli() -> bool:
-    install_help = run(["openclaw", "skills", "install", "--help"], timeout=30)
-    info_help = run(["openclaw", "skills", "info", "--help"], timeout=30)
-    if install_help.returncode != 0 or info_help.returncode != 0:
+def validate_skill_install_target(context: RuntimeContext) -> bool:
+    source_skill = _skill_file(context.routing_skill_source)
+    if not source_skill.is_file():
         return False
-    install_text = install_help.stdout + "\n" + install_help.stderr
-    info_text = info_help.stdout + "\n" + info_help.stderr
-    return all(flag in install_text for flag in ("--as", "--global", "--force")) and "--json" in info_text
+    root = context.managed_skills_root.expanduser().resolve()
+    home = Path.home().resolve()
+    if root != home and home not in root.parents:
+        return False
+    ancestor = root
+    while not ancestor.exists() and ancestor != ancestor.parent:
+        ancestor = ancestor.parent
+    return ancestor.is_dir() and os.access(ancestor, os.W_OK | os.X_OK)
 
 
 def backup_routing_skill(
@@ -110,56 +114,24 @@ def _remove_path(path: Path) -> None:
         path.unlink()
 
 
-def _parse_json_output(value: str) -> Any | None:
-    stripped = value.strip()
-    if not stripped:
-        return None
-    try:
-        return json.loads(stripped)
-    except json.JSONDecodeError:
-        start = stripped.find("{")
-        end = stripped.rfind("}")
-        if start < 0 or end <= start:
-            return None
-        try:
-            return json.loads(stripped[start : end + 1])
-        except json.JSONDecodeError:
-            return None
-
-
-def _find_path_strings(value: Any) -> list[str]:
-    found: list[str] = []
-    if isinstance(value, dict):
-        for child in value.values():
-            found.extend(_find_path_strings(child))
-    elif isinstance(value, list):
-        for child in value:
-            found.extend(_find_path_strings(child))
-    elif isinstance(value, str) and ("/" in value or "\\" in value):
-        found.append(value)
-    return found
-
-
-def _effective_skill_is_approved(context: RuntimeContext, info_output: str) -> bool:
-    payload = _parse_json_output(info_output)
-    if payload is None:
-        return False
-    managed = _managed_target(context)
+def _copy_skill_atomically(context: RuntimeContext) -> Path:
     source = context.routing_skill_source.resolve()
-    approved = {
-        str(managed),
-        str(_skill_file(managed)),
-        str(source),
-        str(_skill_file(source)),
-    }
-    for value in _find_path_strings(payload):
-        try:
-            resolved = str(Path(value).expanduser().resolve())
-        except Exception:
-            continue
-        if resolved in approved:
-            return True
-    return False
+    source_skill = _skill_file(source)
+    root = context.managed_skills_root.expanduser().resolve()
+    target = _managed_target(context)
+    root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    os.chmod(root, 0o700)
+    temporary = root / f".{context.routing_skill_name}.tmp-{secrets.token_hex(8)}"
+    try:
+        shutil.copytree(source, temporary, symlinks=False)
+        copied_skill = _skill_file(temporary)
+        if not copied_skill.is_file() or _sha256(copied_skill) != _sha256(source_skill):
+            raise RuntimeError("staged ORIS routing skill differs from source")
+        _remove_path(target)
+        os.replace(temporary, target)
+    finally:
+        _remove_path(temporary)
+    return target
 
 
 def install_routing_skill(
@@ -175,34 +147,23 @@ def install_routing_skill(
             _remove_path(item.target)
             removed_shadow_count += 1
 
+    target = _copy_skill_atomically(context)
     source_skill = _skill_file(context.routing_skill_source)
-    arguments = [
-        "openclaw",
-        "skills",
-        "install",
-        str(context.routing_skill_source),
-        "--as",
-        context.routing_skill_name,
-        "--global",
-    ]
-    if context.routing_skill_force_replace:
-        arguments.append("--force")
-    installed = run(arguments, cwd=context.repo_root, timeout=90)
-    if installed.returncode != 0:
-        raise RuntimeError("managed ORIS routing skill install failed")
-
-    target_skill = _skill_file(managed)
+    target_skill = _skill_file(target)
     if not target_skill.is_file() or _sha256(target_skill) != _sha256(source_skill):
         raise RuntimeError("installed ORIS routing skill differs from source")
-    info = run(
-        ["openclaw", "skills", "info", context.routing_skill_name, "--json"],
-        cwd=context.repo_root,
-        timeout=30,
-    )
-    if info.returncode != 0 or not _effective_skill_is_approved(context, info.stdout):
-        raise RuntimeError("effective ORIS routing skill is overridden or unavailable")
+    remaining_shadows = [
+        str(item.target)
+        for item in backup.paths
+        if not item.authoritative_source
+        and item.target != managed
+        and item.target.exists()
+    ]
+    if remaining_shadows:
+        raise RuntimeError("a higher-priority ORIS routing skill shadow remains")
     return {
         "name": context.routing_skill_name,
+        "installation_method": "managed_atomic_directory_copy",
         "source_sha256": _sha256(source_skill),
         "installed_sha256": _sha256(target_skill),
         "effective_source_approved": True,
