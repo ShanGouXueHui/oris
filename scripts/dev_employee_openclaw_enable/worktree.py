@@ -18,6 +18,7 @@ class SourceWorktreeSnapshot:
     tree: str
     dirty_count: int
     dirty_sha256: str
+    dirty_paths: tuple[str, ...]
 
 
 def _load_policy(repo_root: Path) -> dict:
@@ -106,6 +107,7 @@ def source_worktree_snapshot(repo_root: Path) -> SourceWorktreeSnapshot:
         tree=_git_value(repo_root, ["rev-parse", "HEAD^{tree}"]),
         dirty_count=len(dirty_paths),
         dirty_sha256=hashlib.sha256(dirty_payload).hexdigest(),
+        dirty_paths=dirty_paths,
     )
 
 
