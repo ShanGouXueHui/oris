@@ -58,7 +58,7 @@ def validate_denied_baseline(context: RuntimeContext) -> dict[str, Any]:
 
 
 def create_backup(context: RuntimeContext, stamp: str) -> PolicyBackup:
-    directory = Path.home() / ".openclaw" / "backups" / f"readonly-tool-enable-{stamp}"
+    directory = context.backup_root / f"readonly-tool-enable-{stamp}"
     directory.mkdir(parents=True, exist_ok=False, mode=0o700)
     os.chmod(directory, 0o700)
     config_file = directory / "openclaw.json.tools-denied.bak"
