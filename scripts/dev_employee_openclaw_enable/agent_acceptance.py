@@ -11,9 +11,11 @@ from .agent_output import (
     reported_tool_names,
     session_identifier_hashes,
 )
+from .agent_skill_policy import resolve_default_agent_id
 from .models import RuntimeContext
 from .process import run
 from .selftest import run_selftests
+from .state import load_json
 from .telemetry import inspect_telemetry
 
 
@@ -53,6 +55,7 @@ def discover_agent_cli() -> dict[str, Any]:
         "session_flag": session_flag,
         "message_flag": message_flag,
         "json_flag": json_flag,
+        "agent_flag_available": "--agent" in help_text,
         "local_flag_available": "--local" in help_text,
         "telemetry_selftests_passed": True,
     }
@@ -72,8 +75,30 @@ def _failed_result(reason: str, cli: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _agent_command(
+    cli: dict[str, Any],
+    agent_id: str,
+    session_key: str,
+    message: str,
+) -> list[str]:
+    command = ["openclaw", "agent"]
+    if cli.get("agent_flag_available") is True:
+        command.extend(["--agent", agent_id])
+    command.extend(
+        [
+            str(cli["session_flag"]),
+            session_key,
+            str(cli["message_flag"]),
+            message,
+            str(cli["json_flag"]),
+        ]
+    )
+    return command
+
+
 def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, Any]:
     cli = discover_agent_cli()
+    agent_id = resolve_default_agent_id(load_json(context.openclaw_config))
     session_key = f"{context.session_prefix}-{stamp.lower()}"
     started_at = datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace(
         "+00:00",
@@ -84,15 +109,7 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
     output_session_hashes: set[str] = set()
     for turn in context.acceptance_turns:
         message = str(turn["message_template"]).format(task_id=context.task_id)
-        command = [
-            "openclaw",
-            "agent",
-            str(cli["session_flag"]),
-            session_key,
-            str(cli["message_flag"]),
-            message,
-            str(cli["json_flag"]),
-        ]
+        command = _agent_command(cli, agent_id, session_key, message)
         started = time.perf_counter()
         result = run(command, timeout=context.turn_timeout_seconds)
         duration_ms = round((time.perf_counter() - started) * 1000, 3)
@@ -132,6 +149,7 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
                 cli,
             )
             failed["turns"] = turns
+            failed["agent_id"] = agent_id
             return failed
 
     same_cli_session_requested = len(turns) == len(context.acceptance_turns)
@@ -162,6 +180,8 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
         "accepted": accepted,
         "reason": None if accepted else "native_agent_telemetry_acceptance_failed",
         "cli": cli,
+        "agent_id": agent_id,
+        "agent_targeted_explicitly": bool(cli.get("agent_flag_available")),
         "turns": turns,
         "telemetry": telemetry,
         "gateway_transport_mode": "gateway_default_without_local_flag",
