@@ -1,7 +1,16 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "openclaw_config_path": "~/.openclaw/openclaw.json",
   "gateway_service": "openclaw-gateway.service",
   "required_auth_mode": "token",
+  "baseline_project_key": "oris-final-acceptance-api",
+  "public_routes": {
+    "root": "/",
+    "restricted": [
+      "/admin",
+      "/_oris-chat-shell"
+    ]
+  },
   "tool_policy": {
     "required_profile": "coding",
     "profile_expansions": {
@@ -19,11 +28,16 @@
           "video_generate"
         ]
       }
-    }
+    },
+    "safe_builtin_probe_candidates": [
+      "session_status",
+      "sessions_list"
+    ]
   },
   "agent_acceptance": {
     "session_prefix": "oris-readonly-acceptance",
     "turn_timeout_seconds": 240,
+    "telemetry_wait_seconds": 90,
     "require_gateway_transport": true,
     "require_persisted_native_session": true,
     "turns": [
@@ -42,6 +56,14 @@
         "expected_tool": "oris_task_status",
         "message_template": "请实时查看任务 {task_id} 的状态，并说明下一步是什么。"
       }
+    ]
+  },
+  "telemetry": {
+    "default_path": "~/.local/state/oris/openclaw-plugin/latency.jsonl",
+    "required_events": [
+      "model_call_ended",
+      "after_tool_call",
+      "agent_end"
     ]
   },
   "evidence": {
