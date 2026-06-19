@@ -29,6 +29,8 @@ class RuntimeContext:
     safe_probe_candidates: tuple[str, ...]
     direct_probe_session_key: str
     session_prefix: str
+    require_gateway_transport: bool
+    require_persisted_native_session: bool
     acceptance_turns: tuple[dict[str, str], ...]
     turn_timeout_seconds: int
     telemetry_wait_seconds: int
