@@ -34,6 +34,11 @@ from .state import (
     repository_snapshot,
     repository_unchanged,
 )
+from .worktree import (
+    SourceWorktreeSnapshot,
+    source_worktree_snapshot,
+    source_worktree_unchanged,
+)
 
 
 SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
@@ -69,7 +74,7 @@ def _verify_runtime_boundaries(
     context: RuntimeContext,
     state: RunState,
     backup: PolicyBackup,
-    oris_snapshot,
+    oris_snapshot: SourceWorktreeSnapshot,
 ) -> None:
     validate_config_scope(context, backup, state.selected_policy_mode)
     runtime = verify_plugin_runtime(context)
@@ -79,8 +84,11 @@ def _verify_runtime_boundaries(
         raise RuntimeError("an internal listener exposure changed")
     if not verify_public_routes(context)["ok"]:
         raise RuntimeError("final public route contract failed")
-    if not repository_unchanged(oris_snapshot, repository_snapshot(context.repo_root)):
-        raise RuntimeError("ORIS primary worktree changed before evidence commit")
+    if not source_worktree_unchanged(
+        oris_snapshot,
+        source_worktree_snapshot(context.repo_root),
+    ):
+        raise RuntimeError("ORIS source worktree changed before evidence commit")
 
 
 def _rollback(
@@ -226,7 +234,7 @@ def run_enablement(
         _verify_runtime_boundaries(context, state, policy_backup, oris_before)
         checks.pass_check(
             "final_runtime_and_route_invariants",
-            "runtime, routes, listeners, and worktree verified",
+            "runtime, routes, listeners, and source worktree verified",
         )
 
         finalize_marker(context, policy_backup, state.selected_policy_mode, stamp)
