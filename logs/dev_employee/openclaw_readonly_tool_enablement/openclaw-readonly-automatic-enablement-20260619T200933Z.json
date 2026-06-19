@@ -1,0 +1,133 @@
+{
+  "check_summary": {
+    "fail": 1,
+    "pass": 10,
+    "total": 11
+  },
+  "checked_at": "20260619T200933Z",
+  "checks": [
+    {
+      "detail": "latest READY evidence verified",
+      "name": "authoritative_readiness",
+      "status": "PASS"
+    },
+    {
+      "detail": "approved tools remain denied before mutation",
+      "name": "tools_denied_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "existing Gateway and native public root are healthy",
+      "name": "gateway_and_routes",
+      "status": "PASS"
+    },
+    {
+      "detail": "required ORIS listeners are loopback-only",
+      "name": "private_internal_listeners",
+      "status": "PASS"
+    },
+    {
+      "detail": "zero active tasks and queue fingerprint captured",
+      "name": "queue_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "product HEAD, remote main, and clean worktree verified",
+      "name": "product_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "ORIS source worktree clean; configured runtime artifacts excluded",
+      "name": "oris_source_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "safe built-in tool is accessible before mutation",
+      "name": "safe_builtin_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "tools-denied config, marker, and routing skill backup captured",
+      "name": "private_backup",
+      "status": "PASS"
+    },
+    {
+      "detail": "managed ORIS read-only routing skill installed",
+      "name": "routing_skill",
+      "status": "PASS"
+    },
+    {
+      "detail": "RuntimeError",
+      "name": "automatic_enablement",
+      "status": "FAIL"
+    }
+  ],
+  "config_scope_valid": true,
+  "details": {
+    "policy_application": {
+      "mode": "materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted",
+      "secret_values_recorded": false,
+      "skill_policy": {
+        "after_count": 0,
+        "agent_id": "main",
+        "before_count": 0,
+        "changed": false,
+        "scope": "unrestricted",
+        "secret_values_recorded": false,
+        "unrestricted": true
+      },
+      "tool_policy": {
+        "allow_added_count": 13,
+        "allow_after_count": 13,
+        "allow_before_count": 0,
+        "allow_existed_before": false,
+        "allow_mode": "materialized-profile-plus-approved",
+        "also_allow_added_count": 3,
+        "also_allow_after_count": 3,
+        "also_allow_before_count": 0,
+        "also_allow_existed_before": false,
+        "also_allow_mode": "created-profile-also-allow",
+        "mode": "materialized-profile-plus-approved+created-profile-also-allow",
+        "secret_values_recorded": false
+      }
+    },
+    "routing_skill": {
+      "effective_source_approved": true,
+      "installation_method": "managed_atomic_directory_copy",
+      "installed_sha256": "de3b22b1f9d29fe7cdba371a27e56229fc981166ac5908f04a4746dcd2ec0d21",
+      "name": "oris-readonly-status",
+      "removed_shadow_count": 0,
+      "secret_values_recorded": false,
+      "skill_content_recorded": false,
+      "source_sha256": "de3b22b1f9d29fe7cdba371a27e56229fc981166ac5908f04a4746dcd2ec0d21"
+    }
+  },
+  "direct_tool_calls_pass": false,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T200933Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T200933Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "RuntimeError:existing OpenClaw Gateway did not become healthy",
+  "native_agent_acceptance_pass": false,
+  "next_action": "FIX_AUTOMATIC_ENABLEMENT_FAILURE_WITH_TOOLS_DENIED",
+  "product_unchanged": false,
+  "queue_unchanged": false,
+  "result": "FAILED",
+  "rollback": {
+    "count": 1,
+    "healthy": "YES"
+  },
+  "routing_skill_installed": false,
+  "safety": {
+    "conversation_content_recorded": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": false,
+  "write_tools_absent": false
+}
