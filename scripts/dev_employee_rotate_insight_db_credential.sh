@@ -5,6 +5,7 @@ REPO_ROOT="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel 2>/dev/null || true)
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 TMP_ROOT="$(mktemp -d /tmp/oris-insight-secret-rotation-${STAMP}-XXXXXX)"
 WORKTREE="$TMP_ROOT/worktree"
+SECURE_STATE_JSON="$TMP_ROOT/secure-state.json"
 ROTATION_JSON="$TMP_ROOT/rotation.json"
 SMOKE_JSON="$TMP_ROOT/smoke.json"
 EVIDENCE_JSON="$TMP_ROOT/evidence.json"
@@ -23,18 +24,47 @@ cleanup() {
 }
 trap cleanup EXIT
 
+json_value() {
+  local source_file="$1" key="$2" default_value="$3"
+  python3 - "$source_file" "$key" "$default_value" <<'PY'
+import json,sys
+from pathlib import Path
+try:
+ value=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+ for part in sys.argv[2].split('.'):
+  value=value[part]
+ if isinstance(value,bool):
+  print('YES' if value else 'NO')
+ else:
+  print(value)
+except Exception:
+ print(sys.argv[3])
+PY
+}
+
+successful_result() {
+  [ "$1" = "ROTATED_AND_VERIFIED" ] || [ "$1" = "ALREADY_SECURE_AND_VERIFIED" ]
+}
+
 summary() {
+  local connection_verified
+  connection_verified="NO"
+  successful_result "$RESULT" && connection_verified="YES"
   echo "===== SUMMARY ====="
   echo "RESULT=$RESULT"
   echo "FAILURE_CODE=$FAILURE_CODE"
   echo "PLAINTEXT_CONFIG_SECRET_REMOVED=YES"
-  echo "DATABASE_CREDENTIAL_ROTATED=$([ "$RESULT" = "ROTATED_AND_VERIFIED" ] && echo YES || echo NO)"
-  echo "DATABASE_CONNECTION_VERIFIED=$([ "$RESULT" = "ROTATED_AND_VERIFIED" ] && echo YES || echo NO)"
+  echo "DATABASE_CREDENTIAL_ROTATED=$(json_value "$ROTATION_JSON" credential_rotated_this_run NO)"
+  echo "DATABASE_CONNECTION_VERIFIED=$connection_verified"
   echo "SECRET_VALUES_PRINTED=NO"
   echo "EVIDENCE_JSON=$EVIDENCE_REL"
   echo "EVIDENCE_COMMIT=$EVIDENCE_COMMIT"
   echo "EVIDENCE_REMOTE_VERIFIED=$EVIDENCE_REMOTE_VERIFIED"
-  echo "NEXT_ACTION=$([ "$RESULT" = "ROTATED_AND_VERIFIED" ] && echo RUN_AUTOMATIC_OPENCLAW_READONLY_ENABLEMENT || echo INSPECT_PRIVATE_DATABASE_ROTATION_FAILURE)"
+  if successful_result "$RESULT"; then
+    echo "NEXT_ACTION=RUN_AUTOMATIC_OPENCLAW_READONLY_ENABLEMENT"
+  else
+    echo "NEXT_ACTION=INSPECT_PRIVATE_DATABASE_ROTATION_FAILURE"
+  fi
   echo "SEND_TO_CHAT=THIS_SUMMARY_ONLY"
   echo "===== END SUMMARY ====="
 }
@@ -52,7 +82,8 @@ done
 if [ -z "$FAILURE_CODE" ]; then
   PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" python3 - \
     "$REPO_ROOT/scripts/lib/secret_refs.py" \
-    "$REPO_ROOT/scripts/security/rotate_insight_db_credential.py" <<'PY' >/dev/null 2>&1
+    "$REPO_ROOT/scripts/security/rotate_insight_db_credential.py" \
+    "$REPO_ROOT/scripts/security/verify_insight_db_secure_state.py" <<'PY' >/dev/null 2>&1
 import sys
 from pathlib import Path
 for value in sys.argv[1:]:
@@ -64,8 +95,21 @@ fi
 
 if [ -z "$FAILURE_CODE" ]; then
   PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" \
-    python3 -m scripts.security.rotate_insight_db_credential "$ROTATION_JSON" >/dev/null 2>&1
-  [ "$?" = "0" ] || fail "database_credential_rotation_failed"
+    python3 -m scripts.security.verify_insight_db_secure_state \
+    "$SECURE_STATE_JSON" >/dev/null 2>&1
+  [ "$?" = "0" ] || fail "database_secure_state_verification_failed"
+fi
+
+if [ -z "$FAILURE_CODE" ]; then
+  SECURE_STATE_RESULT="$(json_value "$SECURE_STATE_JSON" result ROTATION_REQUIRED)"
+  if [ "$SECURE_STATE_RESULT" = "ALREADY_SECURE_AND_VERIFIED" ]; then
+    cp "$SECURE_STATE_JSON" "$ROTATION_JSON"
+  else
+    PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" \
+      python3 -m scripts.security.rotate_insight_db_credential \
+      "$ROTATION_JSON" >/dev/null 2>&1
+    [ "$?" = "0" ] || fail "database_credential_rotation_failed"
+  fi
 fi
 
 if [ -z "$FAILURE_CODE" ]; then
@@ -93,12 +137,12 @@ fi
 
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" python3 - \
   "$REPO_ROOT" "$ROTATION_JSON" "$SMOKE_JSON" "$EVIDENCE_JSON" \
-  "$RESULT" "$FAILURE_CODE" <<'PY'
+  "$FAILURE_CODE" <<'PY'
 import json,sys
 from pathlib import Path
 from scripts.dev_employee_quality.models import SourceFile
 from scripts.dev_employee_quality.secrets import scan_json_secrets
-repo=Path(sys.argv[1]); rotation_path=Path(sys.argv[2]); smoke_path=Path(sys.argv[3]); out=Path(sys.argv[4]); result=sys.argv[5]; failure=sys.argv[6]
+repo=Path(sys.argv[1]); rotation_path=Path(sys.argv[2]); smoke_path=Path(sys.argv[3]); out=Path(sys.argv[4]); failure=sys.argv[5]
 config_path=repo/'config/insight_storage.json'
 source=SourceFile(config_path,'config/insight_storage.json','.json',config_path.read_text(encoding='utf-8'))
 secret_findings=scan_json_secrets(source)
@@ -106,9 +150,11 @@ def read(path):
  try: return json.loads(path.read_text(encoding='utf-8'))
  except Exception: return {}
 rotation=read(rotation_path); smoke=read(smoke_path)
-ok=not failure and rotation.get('result')=='ROTATED_AND_VERIFIED' and smoke.get('database_connection_verified') is True and not secret_findings
+accepted={'ROTATED_AND_VERIFIED','ALREADY_SECURE_AND_VERIFIED'}
+rotation_result=rotation.get('result')
+ok=not failure and rotation_result in accepted and smoke.get('database_connection_verified') is True and not secret_findings
 payload={
- 'result':'ROTATED_AND_VERIFIED' if ok else 'FAILED',
+ 'result':rotation_result if ok else 'FAILED',
  'failure_code':failure or None,
  'rotation':rotation,
  'smoke':smoke,
@@ -120,7 +166,8 @@ PY
 [ "$?" = "0" ] || fail "security_evidence_build_failed"
 
 if [ -z "$FAILURE_CODE" ]; then
-  RESULT="ROTATED_AND_VERIFIED"
+  RESULT="$(json_value "$EVIDENCE_JSON" result FAILED)"
+  successful_result "$RESULT" || fail "security_evidence_result_invalid"
 fi
 
 if [ -n "$REPO_ROOT" ] && [ -f "$EVIDENCE_JSON" ]; then
@@ -133,7 +180,7 @@ if [ -n "$REPO_ROOT" ] && [ -f "$EVIDENCE_JSON" ]; then
       git -C "$WORKTREE" add -- "$EVIDENCE_REL" >/dev/null 2>&1
       git -C "$WORKTREE" diff --cached --check >/dev/null 2>&1
       if [ "$?" = "0" ]; then
-        git -C "$WORKTREE" commit -m "security(insight): record credential rotation $STAMP" >/dev/null 2>&1
+        git -C "$WORKTREE" commit -m "security(insight): record credential state $STAMP" >/dev/null 2>&1
         git -C "$WORKTREE" fetch origin main >/dev/null 2>&1
         if [ "$(git -C "$WORKTREE" merge-base HEAD origin/main 2>/dev/null)" != "$(git -C "$WORKTREE" rev-parse origin/main 2>/dev/null)" ]; then
           git -C "$WORKTREE" rebase origin/main >/dev/null 2>&1
@@ -155,5 +202,5 @@ if [ "$EVIDENCE_REMOTE_VERIFIED" != "YES" ]; then
 fi
 
 summary
-[ "$RESULT" = "ROTATED_AND_VERIFIED" ] && exit 0
+successful_result "$RESULT" && exit 0
 exit 1
