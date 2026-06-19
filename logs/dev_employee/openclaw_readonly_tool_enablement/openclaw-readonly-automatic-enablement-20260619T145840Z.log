@@ -1,0 +1,18 @@
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+checked_at=20260619T145840Z
+result=FAILED
+failure_code=RuntimeError:ORIS primary worktree is not clean
+selected_policy_mode=NONE
+routing_skill_installed=NO
+CHECK|authoritative_readiness|PASS|latest READY evidence verified
+CHECK|tools_denied_baseline|PASS|approved tools remain denied before mutation
+CHECK|gateway_and_routes|PASS|existing Gateway and native public root are healthy
+CHECK|private_internal_listeners|PASS|required ORIS listeners are loopback-only
+CHECK|queue_baseline|PASS|zero active tasks and queue fingerprint captured
+CHECK|product_baseline|PASS|product HEAD, remote main, and clean worktree verified
+CHECK|automatic_enablement|FAIL|RuntimeError
+product_task_submitted=NO
+write_tools_added=NO
+openclaw_reinstalled_or_upgraded=NO
+secret_values_recorded=NO
+conversation_content_recorded=NO

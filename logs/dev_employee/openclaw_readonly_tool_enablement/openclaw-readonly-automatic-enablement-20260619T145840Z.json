@@ -1,0 +1,75 @@
+{
+  "check_summary": {
+    "fail": 1,
+    "pass": 6,
+    "total": 7
+  },
+  "checked_at": "20260619T145840Z",
+  "checks": [
+    {
+      "detail": "latest READY evidence verified",
+      "name": "authoritative_readiness",
+      "status": "PASS"
+    },
+    {
+      "detail": "approved tools remain denied before mutation",
+      "name": "tools_denied_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "existing Gateway and native public root are healthy",
+      "name": "gateway_and_routes",
+      "status": "PASS"
+    },
+    {
+      "detail": "required ORIS listeners are loopback-only",
+      "name": "private_internal_listeners",
+      "status": "PASS"
+    },
+    {
+      "detail": "zero active tasks and queue fingerprint captured",
+      "name": "queue_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "product HEAD, remote main, and clean worktree verified",
+      "name": "product_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "RuntimeError",
+      "name": "automatic_enablement",
+      "status": "FAIL"
+    }
+  ],
+  "config_scope_valid": false,
+  "details": {},
+  "direct_tool_calls_pass": false,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T145840Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T145840Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "RuntimeError:ORIS primary worktree is not clean",
+  "native_agent_acceptance_pass": false,
+  "next_action": "FIX_AUTOMATIC_ENABLEMENT_FAILURE_WITH_TOOLS_DENIED",
+  "product_unchanged": false,
+  "queue_unchanged": false,
+  "result": "FAILED",
+  "rollback": {
+    "count": 0,
+    "healthy": "NOT_REQUIRED"
+  },
+  "routing_skill_installed": false,
+  "safety": {
+    "conversation_content_recorded": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "NONE",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": false,
+  "write_tools_absent": false
+}
