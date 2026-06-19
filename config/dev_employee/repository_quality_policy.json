@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "scan_roots": ["scripts", "orchestration", "config"],
+  "scan_roots": ["scripts", "orchestration", "config", "skills"],
   "excluded_directory_names": [
     ".git",
     ".venv",
@@ -50,7 +50,8 @@
     ".json",
     ".yaml",
     ".yml",
-    ".toml"
+    ".toml",
+    ".md"
   ],
   "code_extensions": [
     ".py",
