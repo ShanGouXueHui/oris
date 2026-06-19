@@ -71,13 +71,29 @@ def _find_path_strings(value: Any) -> list[str]:
     return found
 
 
+def _parse_json_output(value: str) -> Any | None:
+    stripped = value.strip()
+    if not stripped:
+        return None
+    try:
+        return json.loads(stripped)
+    except json.JSONDecodeError:
+        start = stripped.find("{")
+        end = stripped.rfind("}")
+        if start < 0 or end <= start:
+            return None
+        try:
+            return json.loads(stripped[start : end + 1])
+        except json.JSONDecodeError:
+            return None
+
+
 def _effective_skill_is_managed(
     context: RuntimeContext,
     info_output: str,
 ) -> bool:
-    try:
-        payload = json.loads(info_output)
-    except json.JSONDecodeError:
+    payload = _parse_json_output(info_output)
+    if payload is None:
         return False
     target = _managed_target(context)
     expected = {str(target), str(_skill_file(target))}
