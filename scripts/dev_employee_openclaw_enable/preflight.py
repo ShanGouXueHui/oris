@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import compileall
 import json
 import sys
 from pathlib import Path
@@ -12,10 +11,17 @@ from .policy import validate_denied_baseline
 from .state import listener_is_loopback_only, load_json
 
 
+def _compile_sources(package_root: Path) -> bool:
+    for path in sorted(package_root.rglob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        compile(source, str(path), "exec")
+    return True
+
+
 def run_preflight(result_path: Path) -> bool:
     context = load_context()
     package_root = Path(__file__).resolve().parent
-    compiled = compileall.compile_dir(package_root, quiet=1, force=True)
+    compiled = _compile_sources(package_root)
     readiness = load_json(context.readiness_evidence)
     denied = validate_denied_baseline(context)
     cli = discover_agent_cli()
@@ -44,6 +50,7 @@ def run_preflight(result_path: Path) -> bool:
         "plugin_runtime_ok": bool(runtime.get("ok")),
         "public_routes_ok": bool(routes.get("ok")),
         "internal_listeners_private": listeners_private,
+        "source_files_modified": False,
         "config_mutated": False,
         "gateway_restarted": False,
         "secret_values_recorded": False,
@@ -70,6 +77,7 @@ def main() -> int:
                 {
                     "result": "FAILED",
                     "failure_type": type(exc).__name__,
+                    "source_files_modified": False,
                     "config_mutated": False,
                     "gateway_restarted": False,
                     "secret_values_recorded": False,
