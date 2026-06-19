@@ -1,15 +1,17 @@
 ---
 name: oris-readonly-status
-description: Use ORIS typed read-only tools for queue and task status questions; never fall back to exec or write actions.
+description: Mandatory live routing for ORIS queue and task status requests. Always use the approved ORIS typed read-only tool and never answer from memory, exec, or write actions.
 user-invocable: false
 metadata: {"openclaw":{"os":"linux"}}
 ---
 
 # ORIS read-only status routing
 
-Use this skill whenever the user asks about the current ORIS Dev Employee queue, a specific ORIS task, the latest ORIS task, execution progress, or the next step of an existing task.
+Use this skill for every request about the current ORIS Dev Employee queue, a specific ORIS task, the latest ORIS task, execution progress, or the next step of an existing task.
 
-## Required tool routing
+## Mandatory live lookup
+
+A live status request must call exactly the corresponding approved typed tool before producing the answer. Never answer from memory, previous turns, cached status, repository files, or inference.
 
 - Current queue, running tasks, or whether anything is active: call `oris_queue_status`.
 - A named task ID or one specific task: call `oris_task_status` with that task ID.
@@ -20,6 +22,8 @@ Canonical typed tool identifiers:
 - `oris_queue_status`
 - `oris_task_status`
 - `oris_latest_task_status`
+
+When several status questions are asked in one message, call each required typed tool. Do not substitute one tool's result for another tool's scope.
 
 ## Safety boundary
 
