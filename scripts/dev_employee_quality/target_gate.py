@@ -10,6 +10,7 @@ TARGET_PREFIXES = (
     "scripts/dev_employee_openclaw_enable/",
     "scripts/security/",
     "scripts/lib/insight_db",
+    "skills/oris-readonly-status/",
 )
 TARGET_FILES = {
     "scripts/lib/secret_refs.py",
