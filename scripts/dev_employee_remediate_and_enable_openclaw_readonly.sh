@@ -12,6 +12,8 @@ ENABLEMENT_OUT="$TMP_ROOT/enablement.out"
 RESULT="FAILED"
 FAILURE_CODE=""
 
+export PYTHONDONTWRITEBYTECODE=1
+
 cleanup() {
   rm -rf "$TMP_ROOT"
 }
