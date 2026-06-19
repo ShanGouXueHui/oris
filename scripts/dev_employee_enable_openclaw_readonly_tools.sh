@@ -13,5 +13,6 @@ if [ -z "$REPO_ROOT" ]; then
   exit 1
 fi
 
-PYTHONPATH="$REPO_ROOT" python3 -m scripts.dev_employee_openclaw_enable.cli
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" \
+  python3 -m scripts.dev_employee_openclaw_enable.cli
 exit "$?"
