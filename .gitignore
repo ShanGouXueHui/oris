@@ -35,7 +35,11 @@ orchestration/active_routing.json
 
 # Conversational runtime data (may contain user content)
 orchestration/dev_employee_chat_sessions/
+orchestration/dev_employee_events/
 logs/dev_employee/agent_harness/*.jsonl
+
+# Generated task execution results
+orchestration/task_runs/
 
 # Runtime telemetry
 logs/dev_employee/free_mesh_latency_events.jsonl
