@@ -115,6 +115,7 @@ def apply_readonly_policy(
     tool_policy = enable_profile_tools(
         tools,
         context.approved_tools,
+        context.profile_expansion,
         context.required_profile,
     )
     skill_policy = ensure_skill_visible(config, context.routing_skill_name)
@@ -159,13 +160,14 @@ def validate_config_scope(
         context.required_profile,
     ):
         raise RuntimeError(
-            "approved tools are not visible through the active profile alsoAllow policy"
+            "approved tools are not granted at both materialization and profile stages"
         )
-    original_tools = backup.original_config.get("tools")
-    if not isinstance(original_tools, dict):
-        raise RuntimeError("backup OpenClaw tools policy is missing")
-    if original_tools.get("allow") != tools.get("allow"):
-        raise RuntimeError("OpenClaw tools.allow changed during profile widening")
+    if application.tool_policy.allow_mode == "materialized-profile-plus-approved":
+        allow = tools.get("allow")
+        if not isinstance(allow, list) or not set(context.profile_expansion).issubset(
+            set(allow)
+        ):
+            raise RuntimeError("materialized profile expansion is incomplete")
     if not skill_is_visible(
         after_raw,
         context.routing_skill_name,
@@ -193,7 +195,12 @@ def finalize_marker(
     marker["readonly_enablement"] = {
         "policy_mode": application.mode,
         "profile_tool_policy": application.tool_policy.mode,
-        "profile_tool_addition_count": len(
+        "materialization_allow_policy": application.tool_policy.allow_mode,
+        "profile_also_allow_policy": application.tool_policy.also_allow_mode,
+        "materialization_allow_addition_count": len(
+            application.tool_policy.added_to_allow
+        ),
+        "profile_also_allow_addition_count": len(
             application.tool_policy.added_to_also_allow
         ),
         "tools_denied_backup": str(backup.config_file),
