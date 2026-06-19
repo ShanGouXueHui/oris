@@ -25,9 +25,18 @@ def _compile_sources(package_root: Path) -> bool:
     return True
 
 
-def _source_worktree_ready(repo_root: Path) -> bool:
+def _source_worktree_details(repo_root: Path) -> dict[str, Any]:
     snapshot = source_worktree_snapshot(repo_root)
-    return source_worktree_is_clean(snapshot) and source_worktree_is_synced(snapshot)
+    head_synced = source_worktree_is_synced(snapshot)
+    clean = source_worktree_is_clean(snapshot)
+    return {
+        "ready": head_synced and clean,
+        "head_synced": head_synced,
+        "dirty_count": snapshot.dirty_count,
+        "dirty_sha256": snapshot.dirty_sha256,
+        "dirty_paths": list(snapshot.dirty_paths[:20]),
+        "dirty_paths_truncated": snapshot.dirty_count > 20,
+    }
 
 
 def _run_check(
@@ -72,6 +81,11 @@ def run_preflight(result_path: Path) -> bool:
         "public_routes_ok": False,
         "internal_listeners_private": False,
         "source_worktree_ready": False,
+        "source_worktree_head_synced": False,
+        "source_worktree_dirty_count": 0,
+        "source_worktree_dirty_sha256": "",
+        "source_worktree_dirty_paths": [],
+        "source_worktree_dirty_paths_truncated": False,
         "source_files_modified": False,
         "config_mutated": False,
         "gateway_restarted": False,
@@ -132,11 +146,30 @@ def run_preflight(result_path: Path) -> bool:
             listener_is_loopback_only(port) for port in context.internal_ports
         ),
     )
-    source_ready = _run_check(
+    source_details = _run_check(
         payload,
-        "source_worktree_ready",
-        lambda: _source_worktree_ready(context.repo_root),
+        "source_worktree_inspected",
+        lambda: _source_worktree_details(context.repo_root),
     )
+    source_ready = False
+    if isinstance(source_details, dict):
+        source_ready = bool(source_details.get("ready"))
+        payload["source_worktree_ready"] = source_ready
+        payload["source_worktree_head_synced"] = bool(
+            source_details.get("head_synced")
+        )
+        payload["source_worktree_dirty_count"] = int(
+            source_details.get("dirty_count") or 0
+        )
+        payload["source_worktree_dirty_sha256"] = str(
+            source_details.get("dirty_sha256") or ""
+        )
+        payload["source_worktree_dirty_paths"] = list(
+            source_details.get("dirty_paths") or []
+        )
+        payload["source_worktree_dirty_paths_truncated"] = bool(
+            source_details.get("dirty_paths_truncated")
+        )
 
     required = (
         payload["python_compiled"],
@@ -149,7 +182,7 @@ def run_preflight(result_path: Path) -> bool:
         bool(runtime),
         bool(routes),
         bool(listeners),
-        bool(source_ready),
+        source_ready,
     )
     ok = all(required)
     payload["result"] = "READY" if ok else "FAILED"
