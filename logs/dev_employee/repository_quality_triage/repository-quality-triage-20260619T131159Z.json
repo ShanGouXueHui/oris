@@ -1,0 +1,2016 @@
+{
+  "actionable_counts_by_rule": {
+    "absolute_host_path": 140,
+    "acceptance_project_name": 49,
+    "embedded_commercial_task_id": 1,
+    "embedded_commit_sha": 4,
+    "environment_loopback_port": 86,
+    "large_file": 30,
+    "plaintext_secret": 1,
+    "public_oris_domain": 55
+  },
+  "actionable_engineering_findings": 366,
+  "actionable_sample": [
+    {
+      "line": 1,
+      "message": "plaintext secret-like value must be replaced by a secret reference and rotated",
+      "path": "config/insight_storage.json",
+      "rule_id": "plaintext_secret"
+    },
+    {
+      "line": 1,
+      "message": "split this 429-line source file by responsibility; limit is 350",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.ts",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 368-line source file by responsibility; limit is 300",
+      "path": "scripts/backfill_business_metrics_from_evidence.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 635-line source file by responsibility; limit is 300",
+      "path": "scripts/company_entity_detector.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 468-line source file by responsibility; limit is 300",
+      "path": "scripts/delivery_executor.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 343-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_acceptance_harness.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 369-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_chat_orchestrator.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 241-line source file by responsibility; limit is 220",
+      "path": "scripts/dev_employee_cycle.sh",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 475-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_intake_api.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 510-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_intake_api_v2.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 542-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_openclaw_provider.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 476-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_queue_kernel.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 316-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_run_real_product_repair_e2e.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 699-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_supervised_bridge_v2.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 527-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_supervised_bridge_v3.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 441-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_web_console.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 407-line source file by responsibility; limit is 300",
+      "path": "scripts/dev_employee_web_console_v3.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 543-line source file by responsibility; limit is 300",
+      "path": "scripts/evals/run_eval_report.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 324-line source file by responsibility; limit is 300",
+      "path": "scripts/feishu_insight_trigger.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 452-line source file by responsibility; limit is 300",
+      "path": "scripts/free_research_upgrade.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 362-line source file by responsibility; limit is 300",
+      "path": "scripts/insight_queue_worker.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 355-line source file by responsibility; limit is 300",
+      "path": "scripts/lib/insight_db.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 496-line source file by responsibility; limit is 300",
+      "path": "scripts/polish_company_profile_bundle.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 471-line source file by responsibility; limit is 300",
+      "path": "scripts/prompt_to_case_compiler.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 352-line source file by responsibility; limit is 300",
+      "path": "scripts/quota_probe.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 348-line source file by responsibility; limit is 300",
+      "path": "scripts/register_report_build_delivery.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 365-line source file by responsibility; limit is 300",
+      "path": "scripts/register_report_delivery.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 662-line source file by responsibility; limit is 300",
+      "path": "scripts/run_company_profile_direct.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 395-line source file by responsibility; limit is 300",
+      "path": "scripts/run_generic_insight_pipeline.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 312-line source file by responsibility; limit is 300",
+      "path": "scripts/run_generic_insight_pipeline_plus.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 1,
+      "message": "split this 379-line source file by responsibility; limit is 300",
+      "path": "scripts/runtime_execute.py",
+      "rule_id": "large_file"
+    },
+    {
+      "line": 39,
+      "message": "derive host paths from registry or runtime context",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.test.ts",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 43,
+      "message": "derive host paths from registry or runtime context",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.test.ts",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 40,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/delivery_executor.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 23,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_acceptance_harness.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 80,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_acceptance_harness.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 81,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_acceptance_harness.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 46,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_agent_harness.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 19,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_autonomous_enqueue.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_chat_orchestrator.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 22,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_chat_store.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 23,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_chat_store.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_check_nginx_readonly_console_apply_readiness.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 212,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_codex_auth_preflight.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 213,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_codex_auth_preflight.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_deploy_verify_web_console_javascript.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 52,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_deploy_verify_web_console_javascript.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_deploy_verify_web_console_project_dropdown.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 132,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 133,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 138,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 139,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 140,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 141,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 142,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 143,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 19,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_consolez_submit.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 20,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_diagnose_consolez_submit.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 6,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_discover_native_openclaw_ui_readonly.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_server.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 22,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_server.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 26,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_server.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 72,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_server.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_task.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 19,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_task.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_task.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 64,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_enqueue_task.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 20,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_executor_bridge.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_executor_bridge.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 25,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_executor_bridge.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 68,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_executor_bridge.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 7,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_externalize_web_console_js.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 23,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_failure_triage.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 70,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 71,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 73,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 103,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 104,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 108,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 59,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 60,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 4,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_fix_web_console_javascript_escaping.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 14,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_install_intake_api_service.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_install_nginx_readonly_console.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 14,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_install_web_console_service.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 32,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_intake_api.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 129,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_intake_api.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 130,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_intake_api.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 16,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_nginx_readonly_console_from_env.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 463,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_openclaw_provider.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 19,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_bridge_no_post_commit_dirty.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 14,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_bridge_triage_integration.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 16,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_evidence_commit_index.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 19,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_real_product_repair_e2e_precheck.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 14,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_repair_target_guard.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 14,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_web_console_audit.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 41,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_web_console_audit.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 13,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_web_console_audit_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 38,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_web_console_audit_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 4,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_web_console_project_dropdown.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 16,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_patch_web_console_security.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 23,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_prepare_nginx_readonly_console_install.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 100,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_prepare_nginx_readonly_console_install.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 101,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_prepare_nginx_readonly_console_install.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 22,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_probe_openclaw_provider.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 12,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_project_venv_install.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 27,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_queue_kernel.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 24,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_recover_stale_tasks.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 15,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_render_nginx_readonly_console.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 58,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_render_nginx_readonly_console.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 59,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_render_nginx_readonly_console.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 25,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_repair_from_triage.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_rotate_console_token.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 26,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_host_checks_failed_test.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 27,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_host_checks_failed_test.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 186,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_host_checks_failed_test.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 26,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_real_product_repair_e2e.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 27,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_real_product_repair_e2e.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 24,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_skill_resolution_invalid_test.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 25,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_skill_resolution_invalid_test.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 165,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_run_skill_resolution_invalid_test.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_skill_resolver.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 38,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 39,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 45,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 189,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 580,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 41,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v3.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 42,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v3.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 347,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_supervised_bridge_v3.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 13,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_github_evidence_status.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_intake_api_service.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 30,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_intake_api_smoke.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 172,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_intake_api_smoke.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 41,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v2.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 20,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v3.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 51,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v3.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 26,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_real_target_repair_enqueue.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 34,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_real_target_repair_enqueue.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 21,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_real_target_repair_plan_guard.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 28,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_real_target_repair_plan_guard.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 19,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_repair_target_guard.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 20,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_web_console_audit.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 23,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_web_console_security.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_web_intake_adapter_smoke.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 99,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_validate_web_intake_adapter_smoke.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 26,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/dev_employee_web_console.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 62,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/inspect_openclaw_host_tool_runtime.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/install_dev_employee_bridge_service.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 3,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/install_dev_employee_enqueue_service.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 52,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/install_dev_employee_enqueue_service.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 54,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/install_dev_employee_enqueue_service.sh",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 11,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/lib/insight_db.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 11,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/materialize_report_delivery_links.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 14,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/materialize_report_delivery_links.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/openclaw_min_dev_toolchain.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 22,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/skill_candidate_audit.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 18,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/skill_intelligence_extract.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 16,
+      "message": "derive host paths from registry or runtime context",
+      "path": "scripts/skill_policy_report.py",
+      "rule_id": "absolute_host_path"
+    },
+    {
+      "line": 12,
+      "message": "derive endpoints from runtime configuration",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.test.ts",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 25,
+      "message": "derive endpoints from runtime configuration",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.test.ts",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 29,
+      "message": "derive endpoints from runtime configuration",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.test.ts",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 12,
+      "message": "derive endpoints from runtime configuration",
+      "path": "orchestration/openclaw_plugins/oris-dev-employee/src/index.ts",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 63,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 63,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 23,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_autonomous_enqueue.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 81,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_check_nginx_readonly_console_apply_readiness.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 82,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_check_nginx_readonly_console_apply_readiness.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 57,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 71,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 105,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 124,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 124,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 93,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_javascript.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 105,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_javascript.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 50,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_project_dropdown.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 61,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_project_dropdown.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 78,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_project_dropdown.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 86,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_project_dropdown.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 86,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_project_dropdown.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 72,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_diagnose_codex_failed_task.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 25,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_diagnose_consolez_submit.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 34,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 34,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 58,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 92,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 92,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 20,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_enqueue_client.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 42,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 43,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 47,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 47,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 51,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 33,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 57,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 57,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 81,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_install_intake_api_service.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 30,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_install_web_console_service.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 81,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_install_web_console_service.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 44,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_intake_api.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 146,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 217,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 227,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 236,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 240,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 244,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 98,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_web_console_security.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 99,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_patch_web_console_security.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 23,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 23,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 63,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 105,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 106,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 126,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_nginx_readonly_console_install.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 144,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_nginx_readonly_console_install.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 145,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_nginx_readonly_console_install.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 29,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 29,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 74,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 74,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 38,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_render_nginx_readonly_console.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 39,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_render_nginx_readonly_console.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 12,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_task_status.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 15,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_github_evidence_status.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 20,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_intake_api_service.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 118,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 119,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 64,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v2.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 65,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v2.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 80,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v3.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 81,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_nginx_readonly_console_offline_v3.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 24,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_web_console_audit.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 26,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_validate_web_console_security.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 25,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_web_console.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 29,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/dev_employee_web_intake_adapter.py",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 71,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/fix_openclaw_protocol_mismatch.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 72,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/install_dev_employee_enqueue_service.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 48,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/openclaw_safe_diag.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 52,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/openclaw_web_diag.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 60,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/openclaw_web_diag.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 76,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/openclaw_web_diag.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 25,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/patch_nginx_openclaw_auth_mode.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 79,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/patch_nginx_openclaw_auth_mode.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 80,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/patch_nginx_openclaw_auth_mode.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 67,
+      "message": "derive endpoints from runtime configuration",
+      "path": "scripts/upgrade_openclaw_stack.sh",
+      "rule_id": "environment_loopback_port"
+    },
+    {
+      "line": 9,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 32,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 33,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 41,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 42,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 71,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 76,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 81,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 121,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_deploy_verify_web_console_external_js.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 28,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_diagnose_nginx_patcher.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 25,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 110,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 114,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 147,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_enable_public_web_submit_persistent.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 93,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_finish_local_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 114,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 115,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 186,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_finish_public_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 9,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 64,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 69,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 74,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_htpasswd_permission.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 9,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 38,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 39,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 40,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 57,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 61,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 66,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 71,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 215,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 222,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 233,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_patch_nginx_chat_route.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 23,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_prepare_local_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 24,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 82,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 123,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/dev_employee_prepare_public_web_submit_e2e.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 53,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/disable_openclaw_auth_clean.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 96,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/enable_openclaw_gateway_token_only.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 74,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/fix_openclaw_protocol_mismatch.sh",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 124,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/lib/report_delivery_runtime.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 57,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/materialize_report_delivery_links.py",
+      "rule_id": "public_oris_domain"
+    },
+    {
+      "line": 49,
+      "message": "derive public domains from deployment configuration",
+      "path": "scripts/openclaw_safe_diag.sh",
+      "rule_id": "public_oris_domain"
+    }
+  ],
+  "counts_by_class": {
+    "configuration": 1,
+    "legacy_operational_script": 465,
+    "source_code": 365
+  },
+  "counts_by_rule": {
+    "absolute_host_path": 281,
+    "acceptance_project_name": 139,
+    "embedded_commercial_task_id": 45,
+    "embedded_commit_sha": 34,
+    "environment_loopback_port": 161,
+    "large_file": 72,
+    "plaintext_secret": 1,
+    "public_oris_domain": 98
+  },
+  "counts_by_rule_and_class": {
+    "configuration": {
+      "plaintext_secret": 1
+    },
+    "legacy_operational_script": {
+      "absolute_host_path": 141,
+      "acceptance_project_name": 90,
+      "embedded_commercial_task_id": 44,
+      "embedded_commit_sha": 30,
+      "environment_loopback_port": 75,
+      "large_file": 42,
+      "public_oris_domain": 43
+    },
+    "source_code": {
+      "absolute_host_path": 140,
+      "acceptance_project_name": 49,
+      "embedded_commercial_task_id": 1,
+      "embedded_commit_sha": 4,
+      "environment_loopback_port": 86,
+      "large_file": 30,
+      "public_oris_domain": 55
+    }
+  },
+  "deduplicated_findings": 831,
+  "generated_runtime_artifact_findings": 0,
+  "legacy_operational_script_findings": 465,
+  "schema_version": 2,
+  "source_report": {
+    "checked_at": "20260619T131146Z",
+    "files_scanned": 367,
+    "reported_findings": 831
+  },
+  "top_directories": [
+    {
+      "count": 797,
+      "name": "scripts"
+    },
+    {
+      "count": 24,
+      "name": "scripts/lib"
+    },
+    {
+      "count": 7,
+      "name": "orchestration/openclaw_plugins/oris-dev-employee/src"
+    },
+    {
+      "count": 1,
+      "name": "config"
+    },
+    {
+      "count": 1,
+      "name": "scripts/dev_employee_quality"
+    },
+    {
+      "count": 1,
+      "name": "scripts/evals"
+    }
+  ],
+  "top_files": [
+    {
+      "count": 28,
+      "name": "scripts/dev_employee_native_openclaw_nginx_migrate_v2_20260617.sh"
+    },
+    {
+      "count": 27,
+      "name": "scripts/update_final_acceptance_registry_20260524.py"
+    },
+    {
+      "count": 22,
+      "name": "scripts/dev_employee_native_openclaw_nginx_migrate_20260617.sh"
+    },
+    {
+      "count": 17,
+      "name": "scripts/dev_employee_complete_native_ui_and_product_readme_20260617.sh"
+    },
+    {
+      "count": 16,
+      "name": "scripts/dev_employee_diagnose_codex_failed_task.sh"
+    },
+    {
+      "count": 15,
+      "name": "scripts/dev_employee_resume_conversational_harness_web_20260616.sh"
+    },
+    {
+      "count": 14,
+      "name": "scripts/dev_employee_deploy_conversational_openclaw_web_20260616.sh"
+    },
+    {
+      "count": 14,
+      "name": "scripts/dev_employee_deploy_queue_lifecycle_hardening_v2_20260616.sh"
+    },
+    {
+      "count": 13,
+      "name": "scripts/dev_employee_enable_public_web_submit_persistent.sh"
+    },
+    {
+      "count": 12,
+      "name": "scripts/dev_employee_finish_public_web_submit_e2e.sh"
+    },
+    {
+      "count": 12,
+      "name": "scripts/dev_employee_fix_verify_orisfy_nginx_conflict.sh"
+    },
+    {
+      "count": 11,
+      "name": "scripts/dev_employee_apply_verify_orisfy_readonly_console.sh"
+    },
+    {
+      "count": 11,
+      "name": "scripts/dev_employee_native_openclaw_browser_acceptance_20260617.sh"
+    },
+    {
+      "count": 11,
+      "name": "scripts/dev_employee_native_openclaw_browser_acceptance_v2_20260617.sh"
+    },
+    {
+      "count": 10,
+      "name": "scripts/dev_employee_finish_local_web_submit_e2e.sh"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_native_openclaw_readonly_discovery_20260617.sh"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_native_openclaw_supplemental_acceptance_20260617.sh"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_openclaw_tool_plugin_latency_discovery_20260617.sh"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_patch_nginx_chat_route.py"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_prepare_public_web_submit_e2e.sh"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_run_public_readonly_e2e_final_20260616.py"
+    },
+    {
+      "count": 9,
+      "name": "scripts/dev_employee_validate_openclaw_native_plugin_20260618.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_deploy_verify_web_console_external_js.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_finalize_intent_boundary_repair_20260617.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_fix_conversational_intent_boundaries_20260617.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_fix_public_chat_post_403_20260617.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_install_openclaw_native_plugin_tools_disabled_20260618.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_openclaw_skip_control_ui_pairing_20260617.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_prepare_local_web_submit_e2e.sh"
+    },
+    {
+      "count": 8,
+      "name": "scripts/dev_employee_resume_intent_boundary_repair_20260617.sh"
+    }
+  ],
+  "triage_policy": {
+    "full_actionable_list_truncated_to": 300,
+    "generated_runtime_artifacts_are_not_source_code": true,
+    "legacy_operational_scripts_are_a_separate_remediation_backlog": true,
+    "no_source_files_modified": true
+  }
+}
