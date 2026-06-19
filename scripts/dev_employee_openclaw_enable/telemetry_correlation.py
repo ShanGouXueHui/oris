@@ -22,6 +22,17 @@ def _tool_names(records: list[dict[str, Any]]) -> set[str]:
     }
 
 
+def _append_unique(
+    target: list[dict[str, Any]],
+    additions: list[dict[str, Any]],
+) -> None:
+    identities = {id(item) for item in target}
+    for item in additions:
+        if id(item) not in identities:
+            target.append(item)
+            identities.add(id(item))
+
+
 def correlate_records(
     records: list[dict[str, Any]],
     expected_session_hashes: set[str],
@@ -30,6 +41,8 @@ def correlate_records(
     required_turns: int,
     same_cli_session_requested: bool,
 ) -> dict[str, Any]:
+    all_event_counts = _event_counts(records, expected_events)
+    all_tools_seen = _tool_names(records)
     matched_session_records = [
         item
         for item in records
@@ -69,6 +82,20 @@ def correlate_records(
         correlated = list(records)
         correlation_mode = "isolated_time_window"
 
+    initial_tools_seen = _tool_names(correlated)
+    missing_tools = expected_tools - initial_tools_seen
+    window_is_single_agent = (
+        same_cli_session_requested
+        and all_event_counts.get("agent_end", 0) == required_turns
+        and len(observed_session_hashes) <= 1
+    )
+    if correlated and missing_tools and window_is_single_agent:
+        window_tool_records = [
+            item for item in records if item.get("event") == "after_tool_call"
+        ]
+        _append_unique(correlated, window_tool_records)
+        correlation_mode += "+isolated_window_tools"
+
     event_counts = _event_counts(correlated, expected_events)
     tools_seen = _tool_names(correlated)
     unexpected_tools = tools_seen - expected_tools
@@ -83,28 +110,26 @@ def correlate_records(
         and tool_count >= required_turns
         and exact_agent_turn_boundary
     )
-    fallback_mode = correlation_mode in {
-        "isolated_unique_session_hash",
-        "isolated_time_window",
-    }
+    fallback_mode = (
+        correlation_mode.startswith("isolated_")
+        or "+isolated_window_tools" in correlation_mode
+    )
     fallback_safe = (
         fallback_mode
-        and same_cli_session_requested
+        and window_is_single_agent
         and hooks_complete
         and typed_tools_complete
     )
     persisted_session = (
         agent_end_count >= required_turns
         and (
-            correlation_mode == "session_hash"
-            or correlation_mode == "isolated_unique_session_hash"
+            correlation_mode.startswith("session_hash")
+            or correlation_mode.startswith("isolated_unique_session_hash")
             or fallback_safe
         )
     )
     accepted = hooks_complete and typed_tools_complete and persisted_session
 
-    all_event_counts = _event_counts(records, expected_events)
-    all_tools_seen = _tool_names(records)
     return {
         "accepted": accepted,
         "correlated_records": correlated,
