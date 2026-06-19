@@ -113,6 +113,7 @@ def write_and_commit_evidence(
     stamp: str,
     temp_root: Path,
 ) -> tuple[str, str, str]:
+    temp_root.mkdir(parents=True, exist_ok=True)
     filename = f"openclaw-readonly-automatic-enablement-{stamp}"
     evidence_log = (context.evidence_directory / f"{filename}.log").relative_to(context.repo_root).as_posix()
     evidence_json = (context.evidence_directory / f"{filename}.json").relative_to(context.repo_root).as_posix()
