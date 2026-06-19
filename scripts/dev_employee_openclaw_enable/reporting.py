@@ -18,6 +18,7 @@ def print_summary(
     print(f"CHECKS_TOTAL={len(checks.checks)}")
     print(f"CHECKS_PASS={checks.pass_count}")
     print(f"CHECKS_FAIL={checks.fail_count}")
+    print(f"ROUTING_SKILL_INSTALLED={'YES' if state.routing_skill_installed else 'NO'}")
     print(f"DIRECT_TOOL_CALLS_PASS={'YES' if state.direct_tool_calls_pass else 'NO'}")
     print(f"NATIVE_AGENT_ACCEPTANCE_PASS={'YES' if state.native_agent_acceptance_pass else 'NO'}")
     print(f"TELEMETRY_PRIVACY_PASS={'YES' if state.telemetry_privacy_pass else 'NO'}")
