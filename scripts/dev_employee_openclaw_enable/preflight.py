@@ -8,6 +8,7 @@ from .agent_acceptance import discover_agent_cli
 from .context import load_context
 from .gateway import verify_plugin_runtime, verify_public_routes
 from .policy import validate_denied_baseline
+from .skill import validate_skill_cli
 from .state import listener_is_loopback_only, load_json
 
 
@@ -25,12 +26,17 @@ def run_preflight(result_path: Path) -> bool:
     readiness = load_json(context.readiness_evidence)
     denied = validate_denied_baseline(context)
     cli = discover_agent_cli()
+    skill_cli_supported = validate_skill_cli()
     runtime = verify_plugin_runtime(context)
     routes = verify_public_routes(context)
     listeners_private = all(
         listener_is_loopback_only(port) for port in context.internal_ports
     )
-    agent_cli_supported = bool(cli.get("session_flag") and cli.get("message_flag"))
+    agent_cli_supported = bool(
+        cli.get("session_flag")
+        and cli.get("message_flag")
+        and cli.get("json_flag")
+    )
     gateway_transport_supported = bool(
         not context.require_gateway_transport or cli.get("local_flag_available")
     )
@@ -40,6 +46,7 @@ def run_preflight(result_path: Path) -> bool:
         and len(denied.get("approved_denied") or []) == len(context.approved_tools)
         and agent_cli_supported
         and gateway_transport_supported
+        and skill_cli_supported
         and runtime.get("ok")
         and routes.get("ok")
         and listeners_private
@@ -51,6 +58,8 @@ def run_preflight(result_path: Path) -> bool:
         "tools_denied_baseline": len(denied.get("approved_denied") or []) == len(context.approved_tools),
         "agent_cli_supported": agent_cli_supported,
         "gateway_transport_supported": gateway_transport_supported,
+        "skill_cli_supported": skill_cli_supported,
+        "routing_skill_source_valid": True,
         "agent_cli": cli,
         "plugin_runtime_ok": bool(runtime.get("ok")),
         "public_routes_ok": bool(routes.get("ok")),
