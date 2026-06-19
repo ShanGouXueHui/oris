@@ -24,8 +24,7 @@ def discover_repo_root() -> Path:
 
 
 def _latest_ready_evidence(evidence_directory: Path) -> Path:
-    candidates = sorted(evidence_directory.glob("*.json"), reverse=True)
-    for path in candidates:
+    for path in sorted(evidence_directory.glob("*.json"), reverse=True):
         try:
             payload = _load_json(path)
         except Exception:
@@ -38,14 +37,49 @@ def _latest_ready_evidence(evidence_directory: Path) -> Path:
 def _resolve_profile_expansion(acceptance: dict, task: dict) -> tuple[str, ...]:
     profile = str(acceptance["tool_policy"]["required_profile"])
     runtime_version = str(task["platform_state"]["openclaw_version"]).split()[0]
-    expansions = acceptance["tool_policy"]["profile_expansions"]
-    version_rules = expansions.get(runtime_version)
+    version_rules = acceptance["tool_policy"]["profile_expansions"].get(runtime_version)
     if not isinstance(version_rules, dict):
         raise RuntimeError(f"no tool profile expansion for OpenClaw {runtime_version}")
     values = version_rules.get(profile)
     if not isinstance(values, list) or not all(isinstance(item, str) for item in values):
         raise RuntimeError(f"invalid tool profile expansion for {profile}")
     return tuple(values)
+
+
+def _skill_frontmatter(skill_file: Path) -> tuple[dict[str, str], str]:
+    text = skill_file.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        raise RuntimeError("routing skill frontmatter is missing")
+    try:
+        closing = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
+    except StopIteration as exc:
+        raise RuntimeError("routing skill frontmatter is not closed") from exc
+    metadata: dict[str, str] = {}
+    for line in lines[1:closing]:
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        metadata[key.strip()] = value.strip().strip('"\'')
+    return metadata, "\n".join(lines[closing + 1 :])
+
+
+def _validate_routing_skill(
+    skill_file: Path,
+    configured_name: str,
+    approved_tools: tuple[str, ...],
+) -> None:
+    metadata, body = _skill_frontmatter(skill_file)
+    if metadata.get("name") != configured_name:
+        raise RuntimeError("routing skill name differs from acceptance configuration")
+    if not metadata.get("description"):
+        raise RuntimeError("routing skill description is missing")
+    if metadata.get("user-invocable", "").lower() != "false":
+        raise RuntimeError("routing skill must not expose a user command")
+    if not set(approved_tools).issubset(set(body.replace("`", "").split())):
+        raise RuntimeError("routing skill does not name every approved typed tool")
+    if "Never use `exec`" not in body:
+        raise RuntimeError("routing skill does not forbid exec fallback")
 
 
 def load_context() -> RuntimeContext:
@@ -71,10 +105,9 @@ def load_context() -> RuntimeContext:
 
     gateway_url = str(architecture["openclaw_local_gateway"]).rstrip("/")
     parsed_gateway = urlparse(gateway_url)
-    expected_gateway_port = int(platform["openclaw_gateway_port"])
     if parsed_gateway.hostname not in {"127.0.0.1", "localhost", "::1"}:
         raise RuntimeError("OpenClaw gateway is not loopback-scoped")
-    if parsed_gateway.port != expected_gateway_port:
+    if parsed_gateway.port != int(platform["openclaw_gateway_port"]):
         raise RuntimeError("OpenClaw gateway URL and platform port disagree")
 
     approved_tools = tuple(plugin.get("runtime_tools") or ())
@@ -87,9 +120,7 @@ def load_context() -> RuntimeContext:
     if not isinstance(turns, list) or len(turns) != len(approved_tools):
         raise RuntimeError("automatic acceptance turns do not match approved tool count")
     expected_turn_tools = {
-        str(item.get("expected_tool"))
-        for item in turns
-        if isinstance(item, dict)
+        str(item.get("expected_tool")) for item in turns if isinstance(item, dict)
     }
     if expected_turn_tools != set(approved_tools):
         raise RuntimeError("automatic acceptance tool names do not match current task")
@@ -100,8 +131,10 @@ def load_context() -> RuntimeContext:
     routing_skill_source = (repo_root / str(routing_skill["source_directory"])).resolve()
     if repo_root not in routing_skill_source.parents:
         raise RuntimeError("routing skill source escapes the ORIS repository")
-    if not (routing_skill_source / "SKILL.md").is_file():
+    skill_file = routing_skill_source / "SKILL.md"
+    if not skill_file.is_file():
         raise RuntimeError("routing skill source is missing SKILL.md")
+    _validate_routing_skill(skill_file, str(routing_skill["name"]), approved_tools)
 
     telemetry_path = Path(
         str(plugin.get("telemetry_path") or acceptance["telemetry"]["default_path"])
