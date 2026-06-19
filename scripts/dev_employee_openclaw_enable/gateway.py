@@ -5,7 +5,6 @@ import json
 import time
 import urllib.error
 import urllib.request
-from pathlib import Path
 from typing import Any
 
 from .models import RuntimeContext
@@ -24,6 +23,10 @@ def _gateway_token(context: RuntimeContext) -> str:
     return token
 
 
+def _join_url(base: str, route: str) -> str:
+    return base.rstrip("/") + "/" + route.lstrip("/")
+
+
 def restart_gateway(context: RuntimeContext, timeout_seconds: int = 45) -> None:
     restarted = run(["systemctl", "--user", "restart", context.gateway_service])
     if restarted.returncode != 0:
@@ -32,7 +35,7 @@ def restart_gateway(context: RuntimeContext, timeout_seconds: int = 45) -> None:
     while time.monotonic() < deadline:
         active = run(["systemctl", "--user", "is-active", context.gateway_service])
         if active.returncode == 0 and active.stdout.strip() == "active":
-            status, _ = _http_get(context.gateway_url + "/", timeout=5)
+            status, _ = _http_get(_join_url(context.gateway_url, context.public_root_route), timeout=5)
             if status == 200:
                 return
         time.sleep(1)
@@ -58,11 +61,13 @@ def _http_get(url: str, timeout: int = 10) -> tuple[int, bytes]:
 
 
 def verify_public_routes(context: RuntimeContext) -> dict[str, Any]:
-    direct_status, direct_body = _http_get(context.gateway_url + "/")
-    public_status, public_body = _http_get(context.public_url + "/")
+    direct_url = _join_url(context.gateway_url, context.public_root_route)
+    public_url = _join_url(context.public_url, context.public_root_route)
+    direct_status, direct_body = _http_get(direct_url)
+    public_status, public_body = _http_get(public_url)
     restricted_statuses: dict[str, int] = {}
-    for route in ("/admin", "/_oris-chat-shell"):
-        status, _ = _http_get(context.public_url + route)
+    for route in context.restricted_routes:
+        status, _ = _http_get(_join_url(context.public_url, route))
         restricted_statuses[route] = status
     direct_hash = hashlib.sha256(direct_body).hexdigest()
     public_hash = hashlib.sha256(public_body).hexdigest()
@@ -78,11 +83,15 @@ def verify_public_routes(context: RuntimeContext) -> dict[str, Any]:
 
 def invoke_tool(context: RuntimeContext, tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     body = json.dumps(
-        {"tool": tool_name, "args": arguments, "sessionKey": "main"},
+        {
+            "tool": tool_name,
+            "args": arguments,
+            "sessionKey": context.direct_probe_session_key,
+        },
         separators=(",", ":"),
     ).encode("utf-8")
     request = urllib.request.Request(
-        context.gateway_url + "/tools/invoke",
+        _join_url(context.gateway_url, "/tools/invoke"),
         data=body,
         method="POST",
         headers={
@@ -112,7 +121,7 @@ def invoke_tool(context: RuntimeContext, tool_name: str, arguments: dict[str, An
     }
 
 
-def _oris_contract_ok(result: dict[str, Any]) -> bool:
+def _oris_contract_ok(context: RuntimeContext, result: dict[str, Any]) -> bool:
     payload = result.get("payload")
     if not isinstance(payload, dict) or payload.get("ok") is not True:
         return False
@@ -124,7 +133,7 @@ def _oris_contract_ok(result: dict[str, Any]) -> bool:
     if not isinstance(details, dict) or not isinstance(content, list) or not content:
         return False
     if not (
-        details.get("source") == "oris-dev-employee"
+        details.get("source") == context.plugin_id
         and details.get("readOnly") is True
         and details.get("sanitized") is True
     ):
@@ -149,7 +158,11 @@ def direct_readonly_probe(context: RuntimeContext, baseline_tool: str) -> dict[s
     rows: list[dict[str, Any]] = []
     for tool_name, arguments in calls:
         result = invoke_tool(context, tool_name, arguments)
-        contract_ok = result["ok"] if tool_name == baseline_tool else _oris_contract_ok(result)
+        contract_ok = (
+            result["ok"]
+            if tool_name == baseline_tool
+            else _oris_contract_ok(context, result)
+        )
         rows.append(
             {
                 "tool": tool_name,
@@ -213,6 +226,7 @@ def verify_plugin_runtime(context: RuntimeContext) -> dict[str, Any]:
         return {"ok": False, "reason": "plugin_inventory_json_invalid"}
     plugin_found = False
     plugin_enabled = False
+    plugin_version_ok = False
     plugin_errors = 0
     for item in listed.get("plugins", []) if isinstance(listed, dict) else []:
         if not isinstance(item, dict):
@@ -222,6 +236,7 @@ def verify_plugin_runtime(context: RuntimeContext) -> dict[str, Any]:
             continue
         plugin_found = True
         plugin_enabled = item.get("enabled") is True
+        plugin_version_ok = str(item.get("version") or "") == context.plugin_version
         if item.get("status") == "error" or item.get("error"):
             plugin_errors += 1
     tools: set[str] = set()
@@ -230,11 +245,24 @@ def verify_plugin_runtime(context: RuntimeContext) -> dict[str, Any]:
     write_tools = {
         name
         for name in tools
-        if any(term in name.lower() for term in ("submit", "cancel", "retry", "create", "enqueue", "write", "delete", "update"))
+        if any(
+            term in name.lower()
+            for term in (
+                "submit",
+                "cancel",
+                "retry",
+                "create",
+                "enqueue",
+                "write",
+                "delete",
+                "update",
+            )
+        )
     }
     ok = (
         plugin_found
         and plugin_enabled
+        and plugin_version_ok
         and plugin_errors == 0
         and tools == set(context.approved_tools)
         and hooks == set(context.required_hooks)
@@ -244,6 +272,7 @@ def verify_plugin_runtime(context: RuntimeContext) -> dict[str, Any]:
         "ok": ok,
         "plugin_found": plugin_found,
         "plugin_enabled": plugin_enabled,
+        "plugin_version_ok": plugin_version_ok,
         "plugin_error_count": plugin_errors,
         "tools": sorted(tools),
         "hooks": sorted(hooks),
