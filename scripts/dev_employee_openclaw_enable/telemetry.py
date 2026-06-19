@@ -133,17 +133,17 @@ def _correlate_records(
     fallback_used = False
     if not expected_tools.issubset(tools_seen):
         missing = expected_tools - tools_seen
-        unscoped_matches = [
+        unscoped_tool_records = [
             item
             for item in records
             if item.get("event") == "after_tool_call"
-            and item.get("toolName") in missing
+            and isinstance(item.get("toolName"), str)
             and not item.get("sessionHash")
             and not item.get("runHash")
         ]
-        found = {str(item.get("toolName")) for item in unscoped_matches}
+        found = {str(item.get("toolName")) for item in unscoped_tool_records}
         if missing.issubset(found):
-            correlated.extend(unscoped_matches)
+            correlated.extend(unscoped_tool_records)
             fallback_used = True
     unique: list[dict[str, Any]] = []
     seen_ids: set[int] = set()
