@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import secrets
 import shutil
@@ -9,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .agent_output import parse_json_output
 from .models import RuntimeContext
 from .process import run
 from .state import load_json
@@ -175,16 +175,6 @@ def install_routing_skill(
     }
 
 
-def _parse_json(value: str) -> Any | None:
-    stripped = value.strip()
-    if not stripped:
-        return None
-    try:
-        return json.loads(stripped)
-    except json.JSONDecodeError:
-        return None
-
-
 def _skill_record(value: Any, skill_name: str) -> dict[str, Any] | None:
     if isinstance(value, dict):
         identity = value.get("name") or value.get("id") or value.get("slug")
@@ -239,7 +229,7 @@ def verify_routing_skill_runtime(
         attempted += 1
         if result.returncode != 0:
             continue
-        payload = _parse_json(result.stdout)
+        payload = parse_json_output(result.stdout)
         if payload is None:
             continue
         record = _skill_record(payload, context.routing_skill_name)
