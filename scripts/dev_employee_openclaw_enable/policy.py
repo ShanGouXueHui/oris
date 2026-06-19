@@ -15,6 +15,13 @@ from .agent_skill_policy import (
     strip_authorized_skill_addition,
 )
 from .models import RuntimeContext
+from .profile_tool_policy import (
+    ProfileToolPolicyChange,
+    approved_tools_are_profile_visible,
+    enable_profile_tools,
+    strip_authorized_tool_change,
+    validate_tool_policy_shape,
+)
 from .state import load_json
 
 
@@ -28,31 +35,20 @@ class PolicyBackup:
 
 @dataclass(frozen=True)
 class PolicyApplication:
-    tool_mode: str
+    tool_policy: ProfileToolPolicyChange
     skill_policy: AgentSkillPolicyChange
 
     @property
     def mode(self) -> str:
-        return f"{self.tool_mode}+{self.skill_policy.mode}"
+        return f"{self.tool_policy.mode}+{self.skill_policy.mode}"
 
     def evidence(self) -> dict[str, Any]:
         return {
             "mode": self.mode,
-            "tool_mode": self.tool_mode,
+            "tool_policy": self.tool_policy.evidence(),
             "skill_policy": self.skill_policy.evidence(),
             "secret_values_recorded": False,
         }
-
-
-def _deduplicate(values: list[str]) -> list[str]:
-    result: list[str] = []
-    seen: set[str] = set()
-    for value in values:
-        if value in seen:
-            continue
-        seen.add(value)
-        result.append(value)
-    return result
 
 
 def validate_denied_baseline(context: RuntimeContext) -> dict[str, Any]:
@@ -60,23 +56,19 @@ def validate_denied_baseline(context: RuntimeContext) -> dict[str, Any]:
     tools = config.get("tools")
     if not isinstance(tools, dict):
         raise RuntimeError("OpenClaw tools policy is missing")
-    deny = tools.get("deny")
-    if not isinstance(deny, list) or not all(isinstance(item, str) for item in deny):
-        raise RuntimeError("OpenClaw tools.deny is not a string list")
-    allow = tools.get("allow")
-    if allow is not None and not (
-        isinstance(allow, list) and all(isinstance(item, str) for item in allow)
-    ):
-        raise RuntimeError("OpenClaw tools.allow is not a string list")
+    validate_tool_policy_shape(tools, context.required_profile)
+    deny = tools["deny"]
     approved = set(context.approved_tools)
     if not approved.issubset(set(deny)):
         raise RuntimeError("approved tools are not all in the denied baseline")
-    if tools.get("profile") != context.required_profile:
-        raise RuntimeError("OpenClaw tool profile differs from the approved profile")
+    allow = tools.get("allow")
+    also_allow = tools.get("alsoAllow")
     return {
         "profile": tools.get("profile"),
         "allow_present": allow is not None,
         "allow_count": len(allow or []),
+        "also_allow_present": also_allow is not None,
+        "also_allow_count": len(also_allow or []),
         "deny_count": len(deny),
         "approved_denied": sorted(approved.intersection(deny)),
     }
@@ -112,51 +104,30 @@ def _atomic_write_json(path: Path, value: dict[str, Any]) -> None:
     os.chmod(path, 0o600)
 
 
-def _apply_tool_policy(
-    context: RuntimeContext,
-    config: dict[str, Any],
-) -> str:
-    tools = config.get("tools")
-    if not isinstance(tools, dict):
-        raise RuntimeError("OpenClaw tools policy is missing")
-    deny = tools.get("deny")
-    if not isinstance(deny, list):
-        raise RuntimeError("OpenClaw tools.deny is invalid")
-    approved = list(context.approved_tools)
-    existing_allow = tools.get("allow")
-    if existing_allow is None:
-        mode = "materialized-profile-plus-approved"
-        new_allow = _deduplicate([*context.profile_expansion, *approved])
-    elif isinstance(existing_allow, list) and all(
-        isinstance(item, str) for item in existing_allow
-    ):
-        mode = "preserved-allow-plus-approved"
-        new_allow = _deduplicate([*existing_allow, *approved])
-    else:
-        raise RuntimeError("OpenClaw tools.allow is invalid")
-    tools["allow"] = new_allow
-    tools["deny"] = [item for item in deny if item not in set(approved)]
-    return mode
-
-
 def apply_readonly_policy(
     context: RuntimeContext,
     backup: PolicyBackup,
 ) -> PolicyApplication:
     config = load_json(backup.config_file)
-    tool_mode = _apply_tool_policy(context, config)
+    tools = config.get("tools")
+    if not isinstance(tools, dict):
+        raise RuntimeError("OpenClaw tools policy is missing")
+    tool_policy = enable_profile_tools(
+        tools,
+        context.approved_tools,
+        context.required_profile,
+    )
     skill_policy = ensure_skill_visible(config, context.routing_skill_name)
-    application = PolicyApplication(tool_mode, skill_policy)
+    application = PolicyApplication(tool_policy, skill_policy)
     _atomic_write_json(context.openclaw_config, config)
     validate_config_scope(context, backup, application)
     return application
 
 
-def _without_tool_allow_deny(value: dict[str, Any]) -> dict[str, Any]:
+def _without_denied_tools(value: dict[str, Any]) -> dict[str, Any]:
     copied = copy.deepcopy(value)
     tools = copied.get("tools")
     if isinstance(tools, dict):
-        tools.pop("allow", None)
         tools.pop("deny", None)
     return copied
 
@@ -166,9 +137,9 @@ def validate_config_scope(
     backup: PolicyBackup,
     application: PolicyApplication,
 ) -> None:
-    before = _without_tool_allow_deny(backup.original_config)
+    before = _without_denied_tools(backup.original_config)
     after_raw = load_json(context.openclaw_config)
-    after = _without_tool_allow_deny(after_raw)
+    after = strip_authorized_tool_change(after_raw, application.tool_policy)
     after = strip_authorized_skill_addition(
         after,
         application.skill_policy,
@@ -182,17 +153,19 @@ def validate_config_scope(
     tools = after_raw.get("tools")
     if not isinstance(tools, dict):
         raise RuntimeError("OpenClaw tools policy disappeared")
-    if any(tool in set(tools.get("deny") or []) for tool in context.approved_tools):
-        raise RuntimeError("an approved tool remains denied")
-    allow = tools.get("allow")
-    if not isinstance(allow, list):
-        raise RuntimeError("OpenClaw tools.allow is missing after enablement")
-    if not set(context.approved_tools).issubset(set(allow)):
-        raise RuntimeError("an approved tool is absent from tools.allow")
-    if application.tool_mode == "materialized-profile-plus-approved" and not set(
-        context.profile_expansion
-    ).issubset(set(allow)):
-        raise RuntimeError("materialized profile expansion is incomplete")
+    if not approved_tools_are_profile_visible(
+        tools,
+        context.approved_tools,
+        context.required_profile,
+    ):
+        raise RuntimeError(
+            "approved tools are not visible through the active profile alsoAllow policy"
+        )
+    original_tools = backup.original_config.get("tools")
+    if not isinstance(original_tools, dict):
+        raise RuntimeError("backup OpenClaw tools policy is missing")
+    if original_tools.get("allow") != tools.get("allow"):
+        raise RuntimeError("OpenClaw tools.allow changed during profile widening")
     if not skill_is_visible(
         after_raw,
         context.routing_skill_name,
@@ -219,6 +192,10 @@ def finalize_marker(
     marker["state"] = "installed_readonly_tools_enabled"
     marker["readonly_enablement"] = {
         "policy_mode": application.mode,
+        "profile_tool_policy": application.tool_policy.mode,
+        "profile_tool_addition_count": len(
+            application.tool_policy.added_to_also_allow
+        ),
         "tools_denied_backup": str(backup.config_file),
         "routing_skill": context.routing_skill_name,
         "routing_skill_scope": "managed_global",
