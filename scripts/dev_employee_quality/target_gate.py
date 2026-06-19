@@ -17,6 +17,7 @@ TARGET_FILES = {
     "scripts/dev_employee_enable_openclaw_readonly_tools.sh",
     "scripts/dev_employee_rotate_insight_db_credential.sh",
     "scripts/dev_employee_remediate_and_enable_openclaw_readonly.sh",
+    "scripts/dev_employee_quality/target_gate.py",
     "config/insight_storage.json",
     "config/dev_employee/openclaw_readonly_acceptance.json",
     "config/dev_employee/repository_quality_policy.json",
