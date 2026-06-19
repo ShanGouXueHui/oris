@@ -16,11 +16,26 @@ SECRET_PATTERNS = (
     re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
     re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
     re.compile(r"Bearer\s+[A-Za-z0-9._~+/=-]{12,}", re.IGNORECASE),
-    re.compile(
-        r'"(?:token|password|secret|credential|authorization|cookie|prompt|messages?|content|toolArguments?|toolResults?)"\s*:',
-        re.IGNORECASE,
-    ),
 )
+SENSITIVE_KEYS = {
+    "token",
+    "password",
+    "secret",
+    "credential",
+    "credentials",
+    "authorization",
+    "cookie",
+    "prompt",
+    "message",
+    "messages",
+    "content",
+    "toolarguments",
+    "toolresults",
+    "old_password",
+    "new_password",
+    "private_key",
+    "api_key",
+}
 
 
 def _summary_payload(
@@ -99,11 +114,26 @@ def _write_log(path: Path, payload: dict[str, Any]) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _assert_safe(paths: tuple[Path, ...]) -> None:
-    for path in paths:
+def _assert_no_sensitive_keys(value: Any) -> None:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            normalized = str(key).replace("-", "_").lower()
+            compact = normalized.replace("_", "")
+            if normalized in SENSITIVE_KEYS or compact in SENSITIVE_KEYS:
+                raise RuntimeError("sanitized evidence contains a sensitive key")
+            _assert_no_sensitive_keys(child)
+    elif isinstance(value, list):
+        for child in value:
+            _assert_no_sensitive_keys(child)
+
+
+def _assert_safe(log_path: Path, json_path: Path) -> None:
+    for path in (log_path, json_path):
         text = path.read_text(encoding="utf-8", errors="replace")
         if any(pattern.search(text) for pattern in SECRET_PATTERNS):
-            raise RuntimeError("sanitized evidence secret/content scan failed")
+            raise RuntimeError("sanitized evidence secret pattern scan failed")
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    _assert_no_sensitive_keys(payload)
 
 
 def write_and_commit_evidence(
@@ -125,7 +155,7 @@ def write_and_commit_evidence(
         encoding="utf-8",
     )
     _write_log(local_log, payload)
-    _assert_safe((local_log, local_json))
+    _assert_safe(local_log, local_json)
 
     fetched = run(["git", "fetch", "origin", "main"], cwd=context.repo_root, timeout=90)
     if fetched.returncode != 0:
