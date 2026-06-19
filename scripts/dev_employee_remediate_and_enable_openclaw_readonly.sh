@@ -54,6 +54,7 @@ summary() {
   echo "DATABASE_ROTATION_RESULT=$(summary_value "$ROTATION_OUT" RESULT NOT_RUN)"
   echo "DATABASE_ROTATION_EVIDENCE_COMMIT=$(summary_value "$ROTATION_OUT" EVIDENCE_COMMIT '')"
   echo "ENABLEMENT_RESULT=$(summary_value "$ENABLEMENT_OUT" RESULT NOT_RUN)"
+  echo "ROUTING_SKILL_INSTALLED=$(summary_value "$ENABLEMENT_OUT" ROUTING_SKILL_INSTALLED NO)"
   echo "NATIVE_AGENT_ACCEPTANCE_PASS=$(summary_value "$ENABLEMENT_OUT" NATIVE_AGENT_ACCEPTANCE_PASS NO)"
   echo "TELEMETRY_PRIVACY_PASS=$(summary_value "$ENABLEMENT_OUT" TELEMETRY_PRIVACY_PASS NO)"
   echo "ENABLEMENT_EVIDENCE_COMMIT=$(summary_value "$ENABLEMENT_OUT" EVIDENCE_COMMIT '')"
@@ -102,6 +103,9 @@ bash "$REPO_ROOT/scripts/dev_employee_enable_openclaw_readonly_tools.sh" > "$ENA
 
 if [ "$(summary_value "$ENABLEMENT_OUT" RESULT UNKNOWN)" != "ENABLED_READONLY_AUTOMATIC_ACCEPTED" ]; then
   fail "automatic_openclaw_acceptance_result_invalid"
+fi
+if [ "$(summary_value "$ENABLEMENT_OUT" ROUTING_SKILL_INSTALLED NO)" != "YES" ]; then
+  fail "automatic_routing_skill_result_invalid"
 fi
 if [ "$(summary_value "$ENABLEMENT_OUT" EVIDENCE_REMOTE_VERIFIED NO)" != "YES" ]; then
   fail "automatic_openclaw_evidence_not_remote_verified"
