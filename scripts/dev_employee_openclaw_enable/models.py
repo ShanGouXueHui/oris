@@ -2,7 +2,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+
+CheckStatus = Literal["PASS", "FAIL", "NOT_CHECKED"]
+
+
+def stage_status(value: bool | None) -> str:
+    if value is True:
+        return "PASS"
+    if value is False:
+        return "FAIL"
+    return "NOT_CHECKED"
 
 
 @dataclass(frozen=True)
@@ -56,11 +67,17 @@ class RepoSnapshot:
 class CheckRecorder:
     checks: list[dict[str, str]] = field(default_factory=list)
 
+    def _record(self, name: str, status: CheckStatus, detail: str) -> None:
+        self.checks.append({"name": name, "status": status, "detail": detail})
+
     def pass_check(self, name: str, detail: str) -> None:
-        self.checks.append({"name": name, "status": "PASS", "detail": detail})
+        self._record(name, "PASS", detail)
 
     def fail_check(self, name: str, detail: str) -> None:
-        self.checks.append({"name": name, "status": "FAIL", "detail": detail})
+        self._record(name, "FAIL", detail)
+
+    def not_checked(self, name: str, detail: str) -> None:
+        self._record(name, "NOT_CHECKED", detail)
 
     @property
     def pass_count(self) -> int:
@@ -69,6 +86,10 @@ class CheckRecorder:
     @property
     def fail_count(self) -> int:
         return sum(item["status"] == "FAIL" for item in self.checks)
+
+    @property
+    def not_checked_count(self) -> int:
+        return sum(item["status"] == "NOT_CHECKED" for item in self.checks)
 
 
 @dataclass
@@ -81,13 +102,13 @@ class RunState:
     rollback_count: int = 0
     rollback_healthy: str = "NOT_REQUIRED"
     routing_skill_installed: bool = False
-    direct_tool_calls_pass: bool = False
-    native_agent_acceptance_pass: bool = False
-    telemetry_privacy_pass: bool = False
-    queue_unchanged: bool = False
-    product_unchanged: bool = False
-    config_scope_valid: bool = False
-    write_tools_absent: bool = False
+    direct_tool_calls_pass: bool | None = None
+    native_agent_acceptance_pass: bool | None = None
+    telemetry_privacy_pass: bool | None = None
+    queue_unchanged: bool | None = None
+    product_unchanged: bool | None = None
+    config_scope_valid: bool | None = None
+    write_tools_absent: bool | None = None
     evidence_commit: str = ""
     evidence_remote_verified: bool = False
     details: dict[str, Any] = field(default_factory=dict)
