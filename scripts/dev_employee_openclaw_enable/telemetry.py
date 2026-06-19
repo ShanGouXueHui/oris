@@ -65,6 +65,7 @@ def _read_records(
     content_safe = True
     current = context.telemetry_path
     rotated = Path(str(current) + ".1")
+    expected_events = set(context.required_hooks)
     for candidate in (rotated, current):
         if not candidate.exists():
             continue
@@ -87,7 +88,7 @@ def _read_records(
             keys = set(item)
             if not keys.issubset(ALLOWED_KEYS) or any(FORBIDDEN_KEY.search(key) for key in keys):
                 schema_ok = False
-            if item.get("event") not in set(context.required_hooks):
+            if item.get("event") not in expected_events:
                 schema_ok = False
             for key in ("runHash", "callHash", "sessionHash"):
                 if key in item and not re.fullmatch(r"[0-9a-f]{64}", str(item[key])):
@@ -174,6 +175,7 @@ def inspect_telemetry(
         for item in relevant_records
         if item.get("event") == "after_tool_call" and isinstance(item.get("toolName"), str)
     }
+    unexpected_tools = tools_seen - expected_tools
     event_counts = {
         event: sum(item.get("event") == event for item in relevant_records)
         for event in expected_events
@@ -204,15 +206,17 @@ def inspect_telemetry(
     rotated = Path(str(current) + ".1")
     parent_permissions_ok = _mode_owner_ok(current.parent, 0o700)
     file_permissions_ok = _mode_owner_ok(current, 0o600) and _mode_owner_ok(rotated, 0o600)
+    required_turns = len(context.acceptance_turns)
     session_agent_end_count = sum(
         item.get("event") == "agent_end" for item in session_records
     )
-    persisted_session = session_agent_end_count >= len(context.acceptance_turns)
+    persisted_session = session_agent_end_count >= required_turns
     accepted = (
         expected_tools.issubset(tools_seen)
-        and event_counts.get("model_call_ended", 0) >= len(context.acceptance_turns)
-        and event_counts.get("agent_end", 0) >= len(context.acceptance_turns)
-        and event_counts.get("after_tool_call", 0) >= len(context.acceptance_turns)
+        and not unexpected_tools
+        and event_counts.get("model_call_ended", 0) >= required_turns
+        and event_counts.get("agent_end", 0) >= required_turns
+        and event_counts.get("after_tool_call", 0) >= required_turns
         and persisted_session
         and schema_ok
         and content_safe
@@ -222,6 +226,8 @@ def inspect_telemetry(
     return {
         "accepted": accepted,
         "expected_tools_seen": sorted(expected_tools.intersection(tools_seen)),
+        "unexpected_tools_seen": sorted(unexpected_tools),
+        "only_approved_tools_used": not unexpected_tools,
         "event_counts": event_counts,
         "persisted_session": persisted_session,
         "session_hash_matched": bool(session_records),
