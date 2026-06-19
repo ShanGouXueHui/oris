@@ -1,6 +1,14 @@
 from __future__ import annotations
 
+import copy
+
 from .agent_output import reported_tool_names, session_identifier_hashes
+from .agent_skill_policy import (
+    ensure_skill_visible,
+    resolve_default_agent_id,
+    skill_is_visible,
+    strip_authorized_skill_addition,
+)
 from .telemetry_correlation import correlate_records
 
 
@@ -8,6 +16,7 @@ EVENTS = {"model_call_ended", "after_tool_call", "agent_end"}
 TOOLS = {"sample_queue_tool", "sample_task_tool", "sample_latest_tool"}
 MISSING_TOOL = "sample_task_tool"
 UNEXPECTED_TOOL = "sample_unapproved_tool"
+SAMPLE_SKILL = "sample-routing-skill"
 
 
 def _records(session_hash: str | None = None) -> list[dict]:
@@ -27,7 +36,7 @@ def _records(session_hash: str | None = None) -> list[dict]:
     return values
 
 
-def run_selftests() -> bool:
+def _test_telemetry_correlation() -> None:
     session_hash = "a" * 64
     direct = correlate_records(
         records=_records(session_hash),
@@ -81,6 +90,8 @@ def run_selftests() -> bool:
     assert unexpected["accepted"] is False
     assert UNEXPECTED_TOOL in unexpected["unexpected_tools"]
 
+
+def _test_output_metadata() -> None:
     sample_tool = sorted(TOOLS)[0]
     payload = {
         "meta": {"sessionId": "private-session-id"},
@@ -90,4 +101,66 @@ def run_selftests() -> bool:
     assert len(hashes) == 1
     assert "private-session-id" not in next(iter(hashes))
     assert reported_tool_names(payload, TOOLS) == {sample_tool}
+
+
+def _test_agent_skill_policy() -> None:
+    unrestricted: dict = {}
+    unrestricted_change = ensure_skill_visible(unrestricted, SAMPLE_SKILL)
+    assert unrestricted_change.unrestricted is True
+    assert unrestricted_change.changed is False
+    assert resolve_default_agent_id(unrestricted) == "main"
+    assert skill_is_visible(unrestricted, SAMPLE_SKILL, "main") is True
+
+    defaults = {"agents": {"defaults": {"skills": ["existing-skill"]}}}
+    defaults_before = copy.deepcopy(defaults)
+    defaults_change = ensure_skill_visible(defaults, SAMPLE_SKILL)
+    assert defaults_change.scope == "defaults"
+    assert defaults_change.changed is True
+    assert skill_is_visible(defaults, SAMPLE_SKILL, "main") is True
+    assert (
+        strip_authorized_skill_addition(
+            defaults,
+            defaults_change,
+            SAMPLE_SKILL,
+        )
+        == defaults_before
+    )
+
+    explicit = {
+        "agents": {
+            "defaults": {"skills": ["baseline-skill"]},
+            "list": [
+                {"id": "secondary", "skills": []},
+                {"id": "primary", "default": True, "skills": ["agent-skill"]},
+            ],
+        }
+    }
+    explicit_before = copy.deepcopy(explicit)
+    explicit_change = ensure_skill_visible(explicit, SAMPLE_SKILL)
+    assert explicit_change.agent_id == "primary"
+    assert explicit_change.scope == "agent"
+    assert explicit_change.changed is True
+    assert skill_is_visible(explicit, SAMPLE_SKILL, "primary") is True
+    assert (
+        strip_authorized_skill_addition(
+            explicit,
+            explicit_change,
+            SAMPLE_SKILL,
+        )
+        == explicit_before
+    )
+
+    duplicate = {"agents": {"defaults": {"skills": ["same", "same"]}}}
+    try:
+        ensure_skill_visible(duplicate, SAMPLE_SKILL)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("duplicate skill allowlist entries must be rejected")
+
+
+def run_selftests() -> bool:
+    _test_telemetry_correlation()
+    _test_output_metadata()
+    _test_agent_skill_policy()
     return True
