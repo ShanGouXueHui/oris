@@ -11,6 +11,11 @@ from .gateway import verify_plugin_runtime, verify_public_routes
 from .policy import validate_denied_baseline
 from .skill import validate_skill_install_target
 from .state import listener_is_loopback_only, load_json
+from .worktree import (
+    source_worktree_is_clean,
+    source_worktree_is_synced,
+    source_worktree_snapshot,
+)
 
 
 def _compile_sources(package_root: Path) -> bool:
@@ -18,6 +23,11 @@ def _compile_sources(package_root: Path) -> bool:
         source = path.read_text(encoding="utf-8")
         compile(source, str(path), "exec")
     return True
+
+
+def _source_worktree_ready(repo_root: Path) -> bool:
+    snapshot = source_worktree_snapshot(repo_root)
+    return source_worktree_is_clean(snapshot) and source_worktree_is_synced(snapshot)
 
 
 def _run_check(
@@ -61,6 +71,7 @@ def run_preflight(result_path: Path) -> bool:
         "plugin_runtime_ok": False,
         "public_routes_ok": False,
         "internal_listeners_private": False,
+        "source_worktree_ready": False,
         "source_files_modified": False,
         "config_mutated": False,
         "gateway_restarted": False,
@@ -121,6 +132,11 @@ def run_preflight(result_path: Path) -> bool:
             listener_is_loopback_only(port) for port in context.internal_ports
         ),
     )
+    source_ready = _run_check(
+        payload,
+        "source_worktree_ready",
+        lambda: _source_worktree_ready(context.repo_root),
+    )
 
     required = (
         payload["python_compiled"],
@@ -133,6 +149,7 @@ def run_preflight(result_path: Path) -> bool:
         bool(runtime),
         bool(routes),
         bool(listeners),
+        bool(source_ready),
     )
     ok = all(required)
     payload["result"] = "READY" if ok else "FAILED"
@@ -148,6 +165,7 @@ def run_preflight(result_path: Path) -> bool:
             "plugin_runtime_ok",
             "public_routes_ok",
             "internal_listeners_private",
+            "source_worktree_ready",
         ):
             if payload.get(key) is not True:
                 payload["failure_stage"] = key
