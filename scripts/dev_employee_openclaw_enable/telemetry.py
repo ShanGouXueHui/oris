@@ -56,20 +56,15 @@ def _duration_stats(values: list[float]) -> dict[str, Any]:
     }
 
 
-def inspect_telemetry(
+def _read_records(
     context: RuntimeContext,
     started_at: str,
-    session_key: str,
-) -> dict[str, Any]:
-    expected_events = set(context.required_hooks)
-    expected_tools = set(context.approved_tools)
-    session_hash = hashlib.sha256(session_key.encode("utf-8")).hexdigest()
+) -> tuple[list[dict[str, Any]], bool, bool]:
     records: list[dict[str, Any]] = []
     schema_ok = True
     content_safe = True
     current = context.telemetry_path
     rotated = Path(str(current) + ".1")
-
     for candidate in (rotated, current):
         if not candidate.exists():
             continue
@@ -92,7 +87,7 @@ def inspect_telemetry(
             keys = set(item)
             if not keys.issubset(ALLOWED_KEYS) or any(FORBIDDEN_KEY.search(key) for key in keys):
                 schema_ok = False
-            if item.get("event") not in expected_events:
+            if item.get("event") not in set(context.required_hooks):
                 schema_ok = False
             for key in ("runHash", "callHash", "sessionHash"):
                 if key in item and not re.fullmatch(r"[0-9a-f]{64}", str(item[key])):
@@ -105,9 +100,75 @@ def inspect_telemetry(
             if item.get("error") is True or item.get("success") is False:
                 schema_ok = False
             records.append(item)
+    return records, schema_ok, content_safe
 
+
+def _correlate_records(
+    records: list[dict[str, Any]],
+    session_hash: str,
+    expected_tools: set[str],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], bool]:
     session_records = [item for item in records if item.get("sessionHash") == session_hash]
-    relevant_records = session_records or records
+    run_hashes = {
+        str(item["runHash"])
+        for item in session_records
+        if isinstance(item.get("runHash"), str)
+    }
+    correlated = [
+        item
+        for item in records
+        if item.get("sessionHash") == session_hash
+        or (
+            isinstance(item.get("runHash"), str)
+            and item.get("runHash") in run_hashes
+        )
+    ]
+    tools_seen = {
+        str(item.get("toolName"))
+        for item in correlated
+        if item.get("event") == "after_tool_call"
+        and isinstance(item.get("toolName"), str)
+    }
+    fallback_used = False
+    if not expected_tools.issubset(tools_seen):
+        missing = expected_tools - tools_seen
+        unscoped_matches = [
+            item
+            for item in records
+            if item.get("event") == "after_tool_call"
+            and item.get("toolName") in missing
+            and not item.get("sessionHash")
+            and not item.get("runHash")
+        ]
+        found = {str(item.get("toolName")) for item in unscoped_matches}
+        if missing.issubset(found):
+            correlated.extend(unscoped_matches)
+            fallback_used = True
+    unique: list[dict[str, Any]] = []
+    seen_ids: set[int] = set()
+    for item in correlated:
+        identity = id(item)
+        if identity in seen_ids:
+            continue
+        seen_ids.add(identity)
+        unique.append(item)
+    return unique, session_records, fallback_used
+
+
+def inspect_telemetry(
+    context: RuntimeContext,
+    started_at: str,
+    session_key: str,
+) -> dict[str, Any]:
+    expected_events = set(context.required_hooks)
+    expected_tools = set(context.approved_tools)
+    session_hash = hashlib.sha256(session_key.encode("utf-8")).hexdigest()
+    records, schema_ok, content_safe = _read_records(context, started_at)
+    relevant_records, session_records, fallback_used = _correlate_records(
+        records,
+        session_hash,
+        expected_tools,
+    )
     tools_seen = {
         str(item.get("toolName"))
         for item in relevant_records
@@ -139,13 +200,19 @@ def inspect_telemetry(
         ]
         for tool in sorted(expected_tools)
     }
+    current = context.telemetry_path
+    rotated = Path(str(current) + ".1")
     parent_permissions_ok = _mode_owner_ok(current.parent, 0o700)
     file_permissions_ok = _mode_owner_ok(current, 0o600) and _mode_owner_ok(rotated, 0o600)
-    persisted_session = len(session_records) >= 3 and event_counts.get("agent_end", 0) >= 3
+    session_agent_end_count = sum(
+        item.get("event") == "agent_end" for item in session_records
+    )
+    persisted_session = session_agent_end_count >= len(context.acceptance_turns)
     accepted = (
         expected_tools.issubset(tools_seen)
-        and all(event_counts.get(event, 0) >= 3 for event in ("model_call_ended", "agent_end"))
-        and event_counts.get("after_tool_call", 0) >= 3
+        and event_counts.get("model_call_ended", 0) >= len(context.acceptance_turns)
+        and event_counts.get("agent_end", 0) >= len(context.acceptance_turns)
+        and event_counts.get("after_tool_call", 0) >= len(context.acceptance_turns)
         and persisted_session
         and schema_ok
         and content_safe
@@ -158,11 +225,14 @@ def inspect_telemetry(
         "event_counts": event_counts,
         "persisted_session": persisted_session,
         "session_hash_matched": bool(session_records),
+        "run_hash_correlation_used": any(item.get("runHash") for item in relevant_records),
+        "unscoped_tool_fallback_used": fallback_used,
         "schema_ok": schema_ok,
         "content_safe": content_safe,
         "parent_permissions_ok": parent_permissions_ok,
         "file_permissions_ok": file_permissions_ok,
         "records_after_start": len(records),
+        "correlated_records": len(relevant_records),
         "session_records": len(session_records),
         "metrics": {
             "ttft": {
