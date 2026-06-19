@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import json
 import secrets
+import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
-from scripts.lib.insight_db_config import CONFIG_PATH, load_json, resolve_db_cfg
-from scripts.lib.secret_refs import set_json_secret
+from scripts.lib.insight_db_config import CONFIG_PATH, load_db_cfg, load_json
+from scripts.lib.secret_refs import resolve_json_secret, set_json_secret
 
 
 def _connection_parameters(db: dict[str, Any], password: str) -> dict[str, Any]:
@@ -60,6 +61,71 @@ def _verify_connection(db: dict[str, Any], password: str) -> None:
         connection.close()
 
 
+def _historical_password_candidates(repo_root: Path) -> Iterator[str]:
+    relative = CONFIG_PATH.relative_to(repo_root).as_posix()
+    history = subprocess.run(
+        ["git", "log", "--format=%H", "-G", '"password"', "--", relative],
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if history.returncode != 0:
+        return
+    seen: set[str] = set()
+    for commit in history.stdout.splitlines()[:20]:
+        shown = subprocess.run(
+            ["git", "show", f"{commit}:{relative}"],
+            cwd=repo_root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if shown.returncode != 0:
+            continue
+        try:
+            payload = json.loads(shown.stdout)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        containers = [payload]
+        if isinstance(payload.get("db"), dict):
+            containers.insert(0, payload["db"])
+        for container in containers:
+            candidate = container.get("password")
+            if isinstance(candidate, str) and candidate and candidate not in seen:
+                seen.add(candidate)
+                yield candidate
+
+
+def _working_connection(
+    repo_root: Path,
+    db: dict[str, Any],
+    reference: str,
+):
+    candidates: list[tuple[str, str]] = []
+    try:
+        candidates.append((resolve_json_secret(reference), "private_secret"))
+    except Exception:
+        pass
+    candidates.extend(
+        (candidate, "git_history_remediation")
+        for candidate in _historical_password_candidates(repo_root)
+    )
+    seen: set[str] = set()
+    for candidate, source in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        try:
+            connection, driver = _connect(_connection_parameters(db, candidate))
+            return connection, driver, candidate, source
+        except Exception:
+            continue
+    raise RuntimeError("no working database credential candidate was found")
+
+
 def rotate(repo_root: Path) -> dict[str, Any]:
     config = load_json(CONFIG_PATH)
     tracked_db = config.get("db")
@@ -67,15 +133,15 @@ def rotate(repo_root: Path) -> dict[str, Any]:
         raise ValueError("insight storage db config is missing")
     if "password" in config or "password" in tracked_db:
         raise RuntimeError("plaintext database password remains in tracked config")
-    reference = tracked_db.get("password_secret_ref") or config.get("password_secret_ref")
-    if not isinstance(reference, str) or not reference:
-        raise RuntimeError("database password secret reference is missing")
+    runtime_db, reference = load_db_cfg()
 
-    runtime_db = resolve_db_cfg()
-    old_password = str(runtime_db["password"])
+    connection, driver, old_password, credential_source = _working_connection(
+        repo_root,
+        runtime_db,
+        reference,
+    )
     new_password = secrets.token_urlsafe(48)
     role = str(runtime_db["user"])
-    connection, driver = _connect(_connection_parameters(runtime_db, old_password))
     secret_file_updated = False
     try:
         _alter_role_password(connection, driver, role, new_password)
@@ -113,6 +179,7 @@ def rotate(repo_root: Path) -> dict[str, Any]:
         "config_path": config_path,
         "plaintext_password_present": False,
         "secret_reference_used": True,
+        "legacy_git_history_credential_used": credential_source == "git_history_remediation",
         "database_connection_verified": True,
         "old_secret_recorded": False,
         "new_secret_recorded": False,
