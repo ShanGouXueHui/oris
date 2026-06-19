@@ -52,7 +52,11 @@ def _skill_frontmatter(skill_file: Path) -> tuple[dict[str, str], str]:
     if not lines or lines[0].strip() != "---":
         raise RuntimeError("routing skill frontmatter is missing")
     try:
-        closing = next(index for index, line in enumerate(lines[1:], 1) if line.strip() == "---")
+        closing = next(
+            index
+            for index, line in enumerate(lines[1:], 1)
+            if line.strip() == "---"
+        )
     except StopIteration as exc:
         raise RuntimeError("routing skill frontmatter is not closed") from exc
     metadata: dict[str, str] = {}
@@ -62,6 +66,22 @@ def _skill_frontmatter(skill_file: Path) -> tuple[dict[str, str], str]:
         key, value = line.split(":", 1)
         metadata[key.strip()] = value.strip().strip('"\'')
     return metadata, "\n".join(lines[closing + 1 :])
+
+
+def _validate_skill_metadata(metadata: dict[str, str]) -> None:
+    if metadata.get("user-invocable", "").lower() != "false":
+        raise RuntimeError("routing skill must not expose a user command")
+    if metadata.get("disable-model-invocation", "false").lower() == "true":
+        raise RuntimeError("routing skill must remain visible to the model")
+    try:
+        openclaw_metadata = json.loads(metadata.get("metadata", "{}"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError("routing skill OpenClaw metadata is invalid") from exc
+    if not isinstance(openclaw_metadata, dict):
+        raise RuntimeError("routing skill OpenClaw metadata is not an object")
+    openclaw = openclaw_metadata.get("openclaw")
+    if not isinstance(openclaw, dict) or openclaw.get("always") is not True:
+        raise RuntimeError("routing skill must be always included in the agent prompt")
 
 
 def _validate_routing_skill(
@@ -74,8 +94,7 @@ def _validate_routing_skill(
         raise RuntimeError("routing skill name differs from acceptance configuration")
     if not metadata.get("description"):
         raise RuntimeError("routing skill description is missing")
-    if metadata.get("user-invocable", "").lower() != "false":
-        raise RuntimeError("routing skill must not expose a user command")
+    _validate_skill_metadata(metadata)
     if not set(approved_tools).issubset(set(body.replace("`", "").split())):
         raise RuntimeError("routing skill does not name every approved typed tool")
     if "Never use `exec`" not in body:
@@ -101,7 +120,9 @@ def load_context() -> RuntimeContext:
     platform = task.get("platform_state")
     plugin = task.get("installed_plugin_state")
     if not all(isinstance(value, dict) for value in (architecture, platform, plugin)):
-        raise RuntimeError("current task is missing architecture, platform, or plugin state")
+        raise RuntimeError(
+            "current task is missing architecture, platform, or plugin state"
+        )
 
     gateway_url = str(architecture["openclaw_local_gateway"]).rstrip("/")
     parsed_gateway = urlparse(gateway_url)
@@ -113,7 +134,9 @@ def load_context() -> RuntimeContext:
     approved_tools = tuple(plugin.get("runtime_tools") or ())
     required_hooks = tuple(plugin.get("runtime_hooks") or ())
     if len(approved_tools) != 3 or len(required_hooks) != 3:
-        raise RuntimeError("current task does not define the exact approved tool and hook sets")
+        raise RuntimeError(
+            "current task does not define the exact approved tool and hook sets"
+        )
 
     agent_acceptance = acceptance["agent_acceptance"]
     turns = agent_acceptance["turns"]
@@ -128,13 +151,19 @@ def load_context() -> RuntimeContext:
     routing_skill = acceptance["routing_skill"]
     if routing_skill.get("install_scope") != "global":
         raise RuntimeError("only managed global routing skill installation is supported")
-    routing_skill_source = (repo_root / str(routing_skill["source_directory"])).resolve()
+    routing_skill_source = (
+        repo_root / str(routing_skill["source_directory"])
+    ).resolve()
     if repo_root not in routing_skill_source.parents:
         raise RuntimeError("routing skill source escapes the ORIS repository")
     skill_file = routing_skill_source / "SKILL.md"
     if not skill_file.is_file():
         raise RuntimeError("routing skill source is missing SKILL.md")
-    _validate_routing_skill(skill_file, str(routing_skill["name"]), approved_tools)
+    _validate_routing_skill(
+        skill_file,
+        str(routing_skill["name"]),
+        approved_tools,
+    )
 
     telemetry_path = Path(
         str(plugin.get("telemetry_path") or acceptance["telemetry"]["default_path"])
@@ -169,14 +198,21 @@ def load_context() -> RuntimeContext:
         approved_tools=approved_tools,
         required_hooks=required_hooks,
         marker_file=marker_file,
-        internal_ports=(int(platform["enqueue_status_port"]), int(platform["intake_port"])),
+        internal_ports=(
+            int(platform["enqueue_status_port"]),
+            int(platform["intake_port"]),
+        ),
         required_profile=str(tool_policy["required_profile"]),
         profile_expansion=_resolve_profile_expansion(acceptance, task),
         safe_probe_candidates=tuple(tool_policy["safe_builtin_probe_candidates"]),
         direct_probe_session_key=str(tool_policy["direct_probe_session_key"]),
         session_prefix=str(agent_acceptance["session_prefix"]),
-        require_gateway_transport=bool(agent_acceptance["require_gateway_transport"]),
-        require_persisted_native_session=bool(agent_acceptance["require_persisted_native_session"]),
+        require_gateway_transport=bool(
+            agent_acceptance["require_gateway_transport"]
+        ),
+        require_persisted_native_session=bool(
+            agent_acceptance["require_persisted_native_session"]
+        ),
         acceptance_turns=tuple(dict(item) for item in turns),
         turn_timeout_seconds=int(agent_acceptance["turn_timeout_seconds"]),
         telemetry_wait_seconds=int(agent_acceptance["telemetry_wait_seconds"]),
