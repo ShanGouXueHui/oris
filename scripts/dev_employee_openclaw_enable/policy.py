@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import os
 import shutil
@@ -7,6 +8,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .agent_skill_policy import (
+    AgentSkillPolicyChange,
+    ensure_skill_visible,
+    skill_is_visible,
+    strip_authorized_skill_addition,
+)
 from .models import RuntimeContext
 from .state import load_json
 
@@ -17,6 +24,24 @@ class PolicyBackup:
     config_file: Path
     marker_file: Path
     original_config: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class PolicyApplication:
+    tool_mode: str
+    skill_policy: AgentSkillPolicyChange
+
+    @property
+    def mode(self) -> str:
+        return f"{self.tool_mode}+{self.skill_policy.mode}"
+
+    def evidence(self) -> dict[str, Any]:
+        return {
+            "mode": self.mode,
+            "tool_mode": self.tool_mode,
+            "skill_policy": self.skill_policy.evidence(),
+            "secret_values_recorded": False,
+        }
 
 
 def _deduplicate(values: list[str]) -> list[str]:
@@ -87,8 +112,10 @@ def _atomic_write_json(path: Path, value: dict[str, Any]) -> None:
     os.chmod(path, 0o600)
 
 
-def apply_readonly_policy(context: RuntimeContext, backup: PolicyBackup) -> str:
-    config = load_json(backup.config_file)
+def _apply_tool_policy(
+    context: RuntimeContext,
+    config: dict[str, Any],
+) -> str:
     tools = config.get("tools")
     if not isinstance(tools, dict):
         raise RuntimeError("OpenClaw tools policy is missing")
@@ -100,20 +127,33 @@ def apply_readonly_policy(context: RuntimeContext, backup: PolicyBackup) -> str:
     if existing_allow is None:
         mode = "materialized-profile-plus-approved"
         new_allow = _deduplicate([*context.profile_expansion, *approved])
-    elif isinstance(existing_allow, list) and all(isinstance(item, str) for item in existing_allow):
+    elif isinstance(existing_allow, list) and all(
+        isinstance(item, str) for item in existing_allow
+    ):
         mode = "preserved-allow-plus-approved"
         new_allow = _deduplicate([*existing_allow, *approved])
     else:
         raise RuntimeError("OpenClaw tools.allow is invalid")
     tools["allow"] = new_allow
     tools["deny"] = [item for item in deny if item not in set(approved)]
-    _atomic_write_json(context.openclaw_config, config)
-    validate_config_scope(context, backup, mode)
     return mode
 
 
-def _without_allow_deny(value: dict[str, Any]) -> dict[str, Any]:
-    copied = json.loads(json.dumps(value))
+def apply_readonly_policy(
+    context: RuntimeContext,
+    backup: PolicyBackup,
+) -> PolicyApplication:
+    config = load_json(backup.config_file)
+    tool_mode = _apply_tool_policy(context, config)
+    skill_policy = ensure_skill_visible(config, context.routing_skill_name)
+    application = PolicyApplication(tool_mode, skill_policy)
+    _atomic_write_json(context.openclaw_config, config)
+    validate_config_scope(context, backup, application)
+    return application
+
+
+def _without_tool_allow_deny(value: dict[str, Any]) -> dict[str, Any]:
+    copied = copy.deepcopy(value)
     tools = copied.get("tools")
     if isinstance(tools, dict):
         tools.pop("allow", None)
@@ -124,13 +164,22 @@ def _without_allow_deny(value: dict[str, Any]) -> dict[str, Any]:
 def validate_config_scope(
     context: RuntimeContext,
     backup: PolicyBackup,
-    mode: str,
+    application: PolicyApplication,
 ) -> None:
-    before = backup.original_config
-    after = load_json(context.openclaw_config)
-    if _without_allow_deny(before) != _without_allow_deny(after):
-        raise RuntimeError("OpenClaw configuration changed outside tools.allow/tools.deny")
-    tools = after.get("tools")
+    before = _without_tool_allow_deny(backup.original_config)
+    after_raw = load_json(context.openclaw_config)
+    after = _without_tool_allow_deny(after_raw)
+    after = strip_authorized_skill_addition(
+        after,
+        application.skill_policy,
+        context.routing_skill_name,
+    )
+    if before != after:
+        raise RuntimeError(
+            "OpenClaw configuration changed outside approved tool and skill policy"
+        )
+
+    tools = after_raw.get("tools")
     if not isinstance(tools, dict):
         raise RuntimeError("OpenClaw tools policy disappeared")
     if any(tool in set(tools.get("deny") or []) for tool in context.approved_tools):
@@ -140,8 +189,16 @@ def validate_config_scope(
         raise RuntimeError("OpenClaw tools.allow is missing after enablement")
     if not set(context.approved_tools).issubset(set(allow)):
         raise RuntimeError("an approved tool is absent from tools.allow")
-    if mode == "materialized-profile-plus-approved" and not set(context.profile_expansion).issubset(set(allow)):
+    if application.tool_mode == "materialized-profile-plus-approved" and not set(
+        context.profile_expansion
+    ).issubset(set(allow)):
         raise RuntimeError("materialized profile expansion is incomplete")
+    if not skill_is_visible(
+        after_raw,
+        context.routing_skill_name,
+        application.skill_policy.agent_id,
+    ):
+        raise RuntimeError("routing skill is not visible to the default agent")
 
 
 def restore_denied_policy(context: RuntimeContext, backup: PolicyBackup) -> None:
@@ -152,14 +209,21 @@ def restore_denied_policy(context: RuntimeContext, backup: PolicyBackup) -> None
     validate_denied_baseline(context)
 
 
-def finalize_marker(context: RuntimeContext, backup: PolicyBackup, mode: str, stamp: str) -> None:
+def finalize_marker(
+    context: RuntimeContext,
+    backup: PolicyBackup,
+    application: PolicyApplication,
+    stamp: str,
+) -> None:
     marker = load_json(context.marker_file)
     marker["state"] = "installed_readonly_tools_enabled"
     marker["readonly_enablement"] = {
-        "policy_mode": mode,
+        "policy_mode": application.mode,
         "tools_denied_backup": str(backup.config_file),
         "routing_skill": context.routing_skill_name,
         "routing_skill_scope": "managed_global",
+        "routing_skill_agent": application.skill_policy.agent_id,
+        "routing_skill_allowlist_scope": application.skill_policy.scope,
         "enabled_at": stamp,
         "write_tools_present": False,
         "automatic_native_agent_acceptance": True,
