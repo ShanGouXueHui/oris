@@ -19,9 +19,9 @@ from .policy import (
     create_backup,
     finalize_marker,
     restore_denied_policy,
-    validate_config_scope,
 )
 from .preflight_checks import run_transaction_preflight
+from .runtime_boundaries import verify_runtime_boundaries
 from .skill import (
     SkillBackup,
     backup_routing_skill,
@@ -31,15 +31,9 @@ from .skill import (
 )
 from .state import (
     active_queue_count,
-    listener_is_loopback_only,
     queue_fingerprint,
     repository_snapshot,
     repository_unchanged,
-)
-from .worktree import (
-    SourceWorktreeSnapshot,
-    source_worktree_snapshot,
-    source_worktree_unchanged,
 )
 
 
@@ -70,28 +64,6 @@ def _commit_evidence(
     state.evidence_commit = commit
     state.evidence_remote_verified = True
     return evidence_log, evidence_json
-
-
-def _verify_runtime_boundaries(
-    context: RuntimeContext,
-    state: RunState,
-    backup: PolicyBackup,
-    application: PolicyApplication,
-    oris_snapshot: SourceWorktreeSnapshot,
-) -> None:
-    validate_config_scope(context, backup, application)
-    runtime = verify_plugin_runtime(context)
-    if not runtime.get("ok") or runtime.get("write_tools"):
-        raise RuntimeError("final plugin runtime contract failed")
-    if not all(listener_is_loopback_only(port) for port in context.internal_ports):
-        raise RuntimeError("an internal listener exposure changed")
-    if not verify_public_routes(context)["ok"]:
-        raise RuntimeError("final public route contract failed")
-    if not source_worktree_unchanged(
-        oris_snapshot,
-        source_worktree_snapshot(context.repo_root),
-    ):
-        raise RuntimeError("ORIS source worktree changed before evidence commit")
 
 
 def _rollback(
@@ -249,7 +221,7 @@ def run_enablement(
             "product repository is unchanged",
         )
 
-        _verify_runtime_boundaries(
+        verify_runtime_boundaries(
             context,
             state,
             policy_backup,
