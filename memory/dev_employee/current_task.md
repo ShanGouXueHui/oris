@@ -1,10 +1,10 @@
 # Current AI Dev Employee Task
 
-Status: `controlled_activation_jit_gate_published_pending_execution`
+Status: `automatic_selftest_remediation_published_pending_diagnostic_verification`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `execute_controlled_readonly_enablement_once`
+Current step: `verify_selftest_remediation_without_mutation`
 
 ## Objective
 
@@ -33,141 +33,113 @@ Native OpenClaw remains the commercial primary UI. The custom ORIS Web Console r
 
 Do not reinstall or upgrade OpenClaw, reinstall the plugin, expose internal listeners, add write tools or touch production host `8.136.28.6`.
 
-## Completed prerequisites
+## Validated candidate baseline
 
-- plugin: `oris-dev-employee` `0.1.0`;
-- installation result: `INSTALLED_TOOLS_DENIED`;
-- plugin source: `8f174b49196aac90b505846200ce260f75355b41`;
-- installation evidence: `b831470063bc640e498d2061fdaeb2bf8bc9639c`;
-- readiness: `26/26 PASS`;
-- readiness evidence: `a63dd823ac4d5b3fa0fa867771f94904d0b4ceee`;
-- latest source governance: `CODE_AUDIT_PASS` across 43 target modules;
-- duplicate bindings, competing authorities, duplicate function bodies, import cycles, oversized modules, forbidden hardcoding, legacy path findings and contract errors: all zero.
-
-Previously proved:
-
-- all three tools pass direct read-only calls;
-- Skill `oris-readonly-status` was visible to Agent `main`;
-- native Gateway transport and persisted sessions work;
-- prior telemetry contained `model_call_ended=3`, `agent_end=3`, `after_tool_call=0`.
-
-Direct invocation and Skill visibility still do not prove model tool materialization or invocation.
-
-## Historical enablement failure
-
-Evidence commit:
-
-`c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
-
-The previous dual-scope candidate was activated, the existing Gateway failed its health gate, and rollback restored the tools-denied baseline. Runtime inventory, direct calls, native Agent acceptance and telemetry acceptance were not reached.
-
-## Diagnostic run 3
-
-Evidence commit:
-
-`366c8b441e8adff5fa684b2255339ad32832cc31`
-
-Result:
-
-`DIAGNOSTIC_RUNTIME_VALIDATION_FAILED`
-
-The installed OpenClaw `config patch --dry-run` rejected the candidate because it contained both non-empty `tools.allow` and non-empty `tools.alsoAllow` in the same scope.
-
-OpenClaw `2026.5.19 (a185ca2)` permits either:
-
-- an explicit `allow` policy; or
-- a tool profile plus additive `alsoAllow` entries.
-
-## Single-scope remediation
-
-Authoritative document:
-
-`docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md`
-
-The corrected candidate uses:
-
-- `tools.profile = coding` unchanged;
-- no materialized `tools.allow`;
-- only the three approved ORIS tools in `tools.alsoAllow`;
-- the approved ORIS tools removed from `tools.deny`.
-
-ORIS now rejects any candidate with both non-empty `allow` and `alsoAllow` before runtime validation.
-
-## Diagnostic run 4 — accepted candidate
-
-Evidence commit:
+Diagnostic evidence commit:
 
 `2eb0e06c4dee75486e3f3859337867d638941901`
 
+The installed runtime accepted the single-scope private candidate:
+
+- `tools.profile = coding` remains unchanged;
+- `tools.allow` is not materialized;
+- the three approved tools are added through `tools.alsoAllow` only;
+- those tools are removed from `tools.deny`;
+- native `config patch --dry-run` passed;
+- active config, Gateway, queue and product remained unchanged.
+
+## Controlled activation attempt — failed after direct calls
+
+Evidence commit:
+
+`2c5c33adfd04f2c6a2312465c198aa18ceac41c1`
+
 Result:
 
-`DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW`
+`FAILED / AssertionError`
 
-Checks:
+The following stages passed:
 
-- `10 PASS`;
-- `0 FAIL`;
-- `6 NOT_CHECKED`.
+- source governance;
+- readiness and tools-denied baseline;
+- Gateway and route health;
+- private listener boundaries;
+- queue and product baselines;
+- just-in-time candidate dry-run;
+- validated-config-to-backup hash equality;
+- routing Skill installation and runtime visibility;
+- single-scope policy activation;
+- Gateway restart and health;
+- plugin runtime inventory;
+- all three ORIS direct read-only calls;
+- queue fingerprint after direct calls.
 
-Verified:
+The failure occurred before the first native Agent acceptance turn. No native Agent telemetry acceptance was reached.
 
-- engineering scan passed across 43 target modules;
-- candidate authorization scope is exactly `profile-plus-alsoAllow`;
-- `tools.allow` count is 0;
-- `tools.alsoAllow` count is 3;
-- `tools.deny` count is 0;
-- native `config patch --dry-run` returned success;
-- patch changed only `tools.alsoAllow` and `tools.deny`;
-- schema and resolvability checks passed with zero errors;
-- active config remained unchanged and unwritten;
-- Gateway remained healthy without restart;
-- queue and product repository remained unchanged;
+Rollback completed successfully:
+
+- policy restored to the exact tools-denied baseline;
+- routing Skill state restored;
+- Gateway restarted and remained HTTP healthy;
+- rollback failure codes were empty;
 - no product task was submitted;
 - no write tool was added.
 
-The GitHub evidence has been reviewed and accepted for one controlled activation attempt.
+## Root cause
 
-## Just-in-time controlled activation gate
+The production policy implementation was correct. The failure was caused by a stale automatic policy selftest that still asserted the removed dual-scope behavior: materializing both `tools.allow` and `tools.alsoAllow`.
 
-Authoritative document:
+The corrected policy deliberately uses only one authorization scope. Therefore the obsolete test assertion raised `AssertionError` after mutation and direct-call checks but before native Agent execution.
 
-`docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_GATE_2026-06-20.md`
+The sanitized evidence intentionally did not retain a traceback. The exact root cause was determined by deterministic source-path inspection of `run_native_acceptance -> run_automatic_acceptance -> discover_agent_cli -> run_selftests -> test_profile_tool_policy`.
 
-Before any active mutation, the enablement transaction now must:
+## Remediation now on `main`
 
-1. re-run source governance;
-2. rebuild the candidate in a private temporary directory;
-3. reject dual authorization scopes or unexpected policy paths;
-4. repeat installed OpenClaw native dry-run;
-5. require schema and resolvability completion with zero errors;
-6. prove the active config was not written;
-7. create the private tools-denied backup;
-8. prove the backup hash exactly matches the validated config hash.
+The code now:
 
-Only after those gates pass may the transaction install the routing Skill, apply the policy and restart the existing Gateway.
+1. aligns runtime policy selftests with the single-scope contract;
+2. covers profile-plus-`alsoAllow`, existing explicit `allow`, and existing `alsoAllow` baselines;
+3. rejects dual non-empty authorization scopes;
+4. converts assertion failures into named `AutomaticSelftestFailure` checks;
+5. runs all automatic selftests during transaction preflight, before Skill installation, config write or Gateway restart;
+6. removes the redundant post-mutation selftest execution from native Agent discovery;
+7. includes the same automatic selftests in diagnostic core validation;
+8. records blocked later stages as `NOT_CHECKED` rather than reporting a misleading zero count.
 
-Any failure after mutation begins must restore the exact tools-denied config, marker and Skill state and prove rollback health.
+Relevant implementation commits:
+
+- `24909447199697410e721e0e62da41fa855c5f58`;
+- `bd762cd2354c115368e9c4f8685f433a0ba2ff7c`;
+- `2f57bc2b5cc35288a550d9ebebd4cdf994f3c35c`;
+- `6d7d0f146a99816cb9fc1046d96eb4bbaa28bdb4`;
+- `d72a5a239e486bae6618b31476bf1714543eeac9`;
+- `fd6c1926b18ef81ff1f6e28ec2dd165a513654ab`.
 
 ## Current blocker
 
-The one authorized controlled activation transaction has not yet executed. The active runtime remains on the healthy tools-denied baseline.
+A controlled enablement retry is not yet authorized. The code remediation must first pass one new diagnostic-only run and publish no-mutation evidence.
+
+The active runtime remains on the healthy tools-denied baseline.
 
 ## Next required action
 
 Run exactly once on the ORIS development/control/execution host:
 
 ```bash
-cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_enable_openclaw_readonly_tools.sh
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_readonly_policy.sh
 ```
 
-Do not execute a second attempt before the resulting GitHub evidence is reviewed.
+This run is diagnostic-only. It must not:
 
-The transaction must either:
+- execute the enablement entrypoint;
+- install the routing Skill;
+- replace active config;
+- restart Gateway;
+- invoke ORIS tools;
+- submit a product task;
+- add write tools.
 
-- finish native read-only tool, telemetry and invariance acceptance; or
-- automatically restore the exact tools-denied baseline and publish failure evidence.
-
-Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
+It must verify automatic selftests, source governance, native candidate dry-run and final no-mutation invariants. Return only the final `===== SUMMARY =====` block. Detailed evidence will be read from GitHub before any retry decision.
 
 ## Commercial sequence after P0
 
