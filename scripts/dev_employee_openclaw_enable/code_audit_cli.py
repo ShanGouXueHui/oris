@@ -3,18 +3,14 @@ from __future__ import annotations
 import argparse
 import json
 import tempfile
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .clock import utc_compact_stamp
 from .context import discover_repo_root
 from .engineering_scan import scan_repository_sources
 from .git_evidence import EvidenceArtifact, publish_evidence_artifacts
 from .process import run
-
-
-def _stamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
 def _git_state(repo_root: Path) -> tuple[str, str, str]:
@@ -153,7 +149,7 @@ def _parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = _parser().parse_args()
     repo_root = discover_repo_root()
-    stamp = _stamp()
+    stamp = utc_compact_stamp()
     report, audited_commit, contract_error = audit_code_state(repo_root)
     counts = _counts(report)
     local_log, local_json, relative_log, relative_json = _write_report(
