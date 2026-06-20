@@ -87,7 +87,6 @@ _ADDITIONAL_AUTHORITIES = {
     "probe_free_mesh_protocol": (
         "scripts/dev_employee_openclaw_enable/free_mesh_protocol.py"
     ),
-    "WRITE_CAPABLE_CORE_TOOLS": "scripts/dev_employee_openclaw_enable/tool_authority.py",
     "is_write_capable_tool": "scripts/dev_employee_openclaw_enable/tool_authority.py",
     "_native_support_tools": "scripts/dev_employee_openclaw_enable/task_contract.py",
     "evaluate_native_support_outcomes": "scripts/dev_employee_openclaw_enable/telemetry_analysis.py",
