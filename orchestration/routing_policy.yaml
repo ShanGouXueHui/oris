@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-05-20
+updated_at: 2026-06-20
 
 global:
   strategy: weighted-fallback
@@ -23,6 +23,21 @@ roles:
     rules:
       require_health_status: [healthy, degraded, unknown]
       avoid_status: [down]
+      allow_free_candidates_only: true
+
+  tool_calling:
+    ordered_candidates:
+      - qwen-coder-turbo-0919
+      - qwen3.6-plus
+      - qwen/qwen3-coder:free
+      - hunyuan-large-role-latest
+      - hunyuan-turbos-latest
+      - glm-4.7-flash
+      - openrouter/free
+    rules:
+      require_health_status: [healthy, degraded, unknown]
+      avoid_status: [down]
+      prefer_tool_capable: true
       allow_free_candidates_only: true
 
   free_fallback:
