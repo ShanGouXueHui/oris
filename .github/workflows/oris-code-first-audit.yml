@@ -1,0 +1,28 @@
+name: ORIS Code First Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  static-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile Python sources
+        run: python -m compileall -q scripts/dev_employee_openclaw_enable scripts/dev_employee_quality
+      - name: Validate shell syntax
+        run: |
+          bash -n scripts/dev_employee_audit_openclaw_enablement_code.sh
+          bash -n scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh
+      - name: Run pure automatic selftests
+        run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python -c 'from scripts.dev_employee_openclaw_enable.selftest import run_selftests; assert run_selftests()'
+      - name: Run static repository audit
+        run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python -c 'import json; from pathlib import Path; from scripts.dev_employee_openclaw_enable.engineering_scan import scan_repository_sources; report=scan_repository_sources(Path.cwd()); print(json.dumps(report, sort_keys=True)); raise SystemExit(0 if report["ok"] else 2)'
