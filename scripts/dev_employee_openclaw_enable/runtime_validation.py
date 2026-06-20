@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import hashlib
 import re
 from pathlib import Path
 from typing import Any
 
+from .command_evidence import command_result_fingerprint
 from .models import RuntimeContext
 from .process import CommandResult, run
 from .runtime_policy_patch import build_policy_validation_patch
@@ -32,19 +32,6 @@ _CATEGORY_TERMS = (
 )
 
 
-def _fingerprint(result: CommandResult) -> dict[str, Any]:
-    combined = (result.stdout + "\n" + result.stderr).encode(
-        "utf-8",
-        errors="replace",
-    )
-    return {
-        "returncode": result.returncode,
-        "stdout_bytes": len(result.stdout.encode("utf-8", errors="replace")),
-        "stderr_bytes": len(result.stderr.encode("utf-8", errors="replace")),
-        "output_sha256": hashlib.sha256(combined).hexdigest(),
-    }
-
-
 def _help(parts: tuple[str, ...]) -> tuple[CommandResult, str]:
     result = run(["openclaw", *parts, "--help"], timeout=30)
     return result, result.stdout + "\n" + result.stderr
@@ -69,7 +56,7 @@ def _patch_dry_run(
     discovered: list[dict[str, Any]],
 ) -> dict[str, Any] | None:
     result, help_text = _help(("config", "patch"))
-    help_fingerprints["config.patch"] = _fingerprint(result)
+    help_fingerprints["config.patch"] = command_result_fingerprint(result)
     required_flags = ("--file", "--dry-run")
     available = result.returncode == 0 and all(
         _contains_flag(help_text, flag) for flag in required_flags
@@ -127,7 +114,7 @@ def _patch_dry_run(
         ),
         "validator": "config.patch.dry-run",
         "validation_scope": "minimal_policy_delta_against_active_config",
-        "validation": _fingerprint(validation),
+        "validation": command_result_fingerprint(validation),
         "validation_diagnostics": summarize_dry_run_output(validation.stdout),
         "diagnostic_categories": _categories(output),
         "active_config_unchanged": active_unchanged,
@@ -149,7 +136,7 @@ def _direct_candidate_validation(
     for parts in _DIRECT_VALIDATOR_CANDIDATES:
         result, help_text = _help(parts)
         name = ".".join(parts)
-        help_fingerprints[name] = _fingerprint(result)
+        help_fingerprints[name] = command_result_fingerprint(result)
         if result.returncode != 0:
             continue
         local_flag = next(
@@ -184,7 +171,7 @@ def _direct_candidate_validation(
             "validator": name,
             "candidate_path_flag": selected_flag,
             "flag_scope": "local" if local_flag else "global",
-            "validation": _fingerprint(validation),
+            "validation": command_result_fingerprint(validation),
             "diagnostic_categories": _categories(output),
             "help_fingerprints": help_fingerprints,
             "discovered": discovered,
@@ -200,7 +187,7 @@ def validate_candidate_with_installed_runtime(
 ) -> dict[str, Any]:
     root_result, root_help = _help(())
     help_fingerprints: dict[str, dict[str, Any]] = {
-        "root": _fingerprint(root_result),
+        "root": command_result_fingerprint(root_result),
     }
     discovered: list[dict[str, Any]] = []
 
