@@ -13,25 +13,27 @@ Do not reconstruct current project truth from chat history when these GitHub fil
 1. `memory/dev_employee/CURRENT_STATE_2026-06-20.md`
 2. `memory/dev_employee/current_task.json`
 3. `memory/dev_employee/current_task.md`
-4. `docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_RETRY_AUTHORIZATION_2026-06-20.md`
-5. latest remediation-verification evidence commit `30a32ba761418d0e7bcbb04ac2b4e0a9ac0c8e82`
-6. latest failed-enablement evidence commit `2c5c33adfd04f2c6a2312465c198aa18ceac41c1`
-7. `docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_GATE_2026-06-20.md`
-8. `docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md`
-9. accepted-candidate diagnostic evidence commit `2eb0e06c4dee75486e3f3859337867d638941901`
-10. `docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md`
-11. `docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md`
-12. `docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md`
-13. `docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-19.md`
-14. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
-15. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md`
-16. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-19.md`
-17. `memory/dev_employee/OPENCLAW_NATIVE_PLUGIN_INSTALL_COMPLETION_2026-06-18.md`
-18. `docs/DEV_EMPLOYEE_OPENCLAW_AGENT_END_POLICY_ADDENDUM_2026-06-18.md`
-19. `docs/DEV_EMPLOYEE_OPENCLAW_PLUGIN_RUNTIME_HOOK_INSPECTION_ADDENDUM_2026-06-18.md`
-20. `docs/DEV_EMPLOYEE_COMMERCIALIZATION_PRIORITY_2026-06-18.md`
-21. `orchestration/project_registry.json`
-22. historical Gateway-failure evidence commit `c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
+4. `docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md`
+5. latest native-Agent failure evidence commit `d5cea6980ad46a51cb4f26f8e6229c11539ea2d5`
+6. `docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_RETRY_AUTHORIZATION_2026-06-20.md`
+7. remediation-verification evidence commit `30a32ba761418d0e7bcbb04ac2b4e0a9ac0c8e82`
+8. stale-selftest failure evidence commit `2c5c33adfd04f2c6a2312465c198aa18ceac41c1`
+9. `docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_GATE_2026-06-20.md`
+10. `docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md`
+11. accepted-candidate diagnostic evidence commit `2eb0e06c4dee75486e3f3859337867d638941901`
+12. `docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md`
+13. `docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md`
+14. `docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md`
+15. `docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-19.md`
+16. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md`
+17. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md`
+18. `docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-19.md`
+19. `memory/dev_employee/OPENCLAW_NATIVE_PLUGIN_INSTALL_COMPLETION_2026-06-18.md`
+20. `docs/DEV_EMPLOYEE_OPENCLAW_AGENT_END_POLICY_ADDENDUM_2026-06-18.md`
+21. `docs/DEV_EMPLOYEE_OPENCLAW_PLUGIN_RUNTIME_HOOK_INSPECTION_ADDENDUM_2026-06-18.md`
+22. `docs/DEV_EMPLOYEE_COMMERCIALIZATION_PRIORITY_2026-06-18.md`
+23. `orchestration/project_registry.json`
+24. historical Gateway-failure evidence commit `c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
 
 Use earlier dated files only for historical background.
 
@@ -81,11 +83,11 @@ Task id:
 
 Status:
 
-`controlled_activation_retry_authorized_pending_execution`
+`effective_tool_surface_diagnostic_published_pending_execution`
 
 Current step:
 
-`execute_single_controlled_readonly_activation_retry`
+`diagnose_model_effective_tool_surface_without_model_turns`
 
 ## Current observed facts
 
@@ -97,31 +99,32 @@ Current step:
 - no product task is active;
 - current runtime is the healthy exact tools-denied baseline.
 
-Latest failed enablement evidence `2c5c33adfd04f2c6a2312465c198aa18ceac41c1` proved candidate activation, Gateway restart, Skill visibility, plugin inventory and direct read-only calls before a stale selftest raised `AssertionError`; rollback was healthy.
+Latest activation evidence `d5cea6980ad46a51cb4f26f8e6229c11539ea2d5` proved:
 
-Latest diagnostic evidence `30a32ba761418d0e7bcbb04ac2b4e0a9ac0c8e82` proved:
+- candidate, Gateway restart, Skill visibility, plugin inventory and direct ORIS calls passed;
+- three native Agent turns completed through Gateway in one persisted session;
+- `model_call_ended=3` and `agent_end=3`;
+- `after_tool_call=0`;
+- no approved tool was reported or observed;
+- native Agent acceptance failed;
+- rollback restored the exact tools-denied baseline and healthy Gateway;
+- no task, product mutation or write tool occurred.
 
-- remediated diagnostic selftests pass;
-- source governance passes across 46 modules;
-- private single-scope candidate remains `profile-plus-alsoAllow` with `tools.allow=0` and `tools.alsoAllow=3`;
-- patch paths are exactly `tools.alsoAllow` and `tools.deny`;
-- native OpenClaw dry-run passes schema and complete resolvability with zero errors;
-- active config remains unchanged and unwritten;
-- Gateway stays healthy without restart;
-- queue and product remain unchanged;
-- no Skill, tool invocation, product task or write tool occurs.
+Direct invocation and plugin inventory do not prove the selected Agent/model received the tools. A third full enablement is prohibited.
 
-Exactly one controlled retry is authorized. A further attempt is prohibited until the resulting evidence is reviewed.
+The next diagnostic uses native `tools.effective` under temporary validated activation, runs no model turn, invokes no ORIS tool, records no raw inventory, and always rolls back.
 
 ## Immediate next action
 
 Run once on development/control host `43.106.55.255` as user `admin`:
 
 ```bash
-cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_enable_openclaw_readonly_tools.sh
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh
 ```
 
-Return only the final `===== SUMMARY =====` block. Do not run the command a second time.
+Do not run `scripts/dev_employee_enable_openclaw_readonly_tools.sh`.
+
+Return only the final `===== SUMMARY =====` block.
 
 ## Environment
 
@@ -161,7 +164,7 @@ Return only the final `===== SUMMARY =====` block. Do not run the command a seco
 
 ## Commercial priority order
 
-1. execute and review the single controlled read-only activation retry;
+1. resolve effective tool materialization or provider/model capability;
 2. complete native natural-language tool and telemetry acceptance;
 3. establish privacy-safe real model/tool/agent latency telemetry;
 4. design explicit typed write actions only after P0 passes;
