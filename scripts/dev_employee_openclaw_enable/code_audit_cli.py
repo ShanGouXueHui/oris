@@ -41,6 +41,15 @@ def _git_state(repo_root: Path) -> tuple[str, str, str]:
     return head_sha, remote_sha, ""
 
 
+def audit_code_state(repo_root: Path) -> tuple[dict[str, Any], str, str]:
+    report = scan_repository_sources(repo_root)
+    audited_commit, _, git_error = _git_state(repo_root)
+    contract_error = str(report.get("contract_error") or git_error or "")
+    report["contract_error"] = contract_error or None
+    report["ok"] = bool(report.get("ok")) and not contract_error
+    return report, audited_commit, contract_error
+
+
 def _counts(report: dict[str, Any]) -> dict[str, int]:
     return {
         "DUPLICATE_BINDINGS": len(report["duplicate_bindings"]),
@@ -145,11 +154,7 @@ def main() -> int:
     args = _parser().parse_args()
     repo_root = discover_repo_root()
     stamp = _stamp()
-    report = scan_repository_sources(repo_root)
-    audited_commit, _, git_error = _git_state(repo_root)
-    contract_error = str(report.get("contract_error") or git_error or "")
-    report["contract_error"] = contract_error or None
-    report["ok"] = bool(report.get("ok")) and not contract_error
+    report, audited_commit, contract_error = audit_code_state(repo_root)
     counts = _counts(report)
     local_log, local_json, relative_log, relative_json = _write_report(
         report,
