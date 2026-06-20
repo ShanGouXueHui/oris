@@ -14,7 +14,6 @@ from .agent_output import (
 from .agent_skill_policy import resolve_default_agent_id
 from .models import RuntimeContext
 from .process import run
-from .selftest import run_selftests
 from .state import load_json
 from .telemetry import inspect_telemetry
 
@@ -35,8 +34,6 @@ def _message_flag_from_help(help_text: str) -> str | None:
 
 
 def discover_agent_cli() -> dict[str, Any]:
-    if not run_selftests():
-        raise RuntimeError("automatic enablement telemetry selftests failed")
     result = run(["openclaw", "agent", "--help"], timeout=30)
     help_text = result.stdout + "\n" + result.stderr
     if result.returncode != 0:
@@ -57,7 +54,7 @@ def discover_agent_cli() -> dict[str, Any]:
         "json_flag": json_flag,
         "agent_flag_available": "--agent" in help_text,
         "local_flag_available": "--local" in help_text,
-        "telemetry_selftests_passed": True,
+        "pre_mutation_selftests_required": True,
     }
 
 
