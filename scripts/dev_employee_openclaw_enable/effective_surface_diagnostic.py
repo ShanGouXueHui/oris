@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .activation_transaction import activate_validated_candidate
 from .agent_skill_policy import resolve_default_agent_id
-from .effective_tool_surface import probe_effective_tool_surface
+from .effective_surface_inventory import probe_approved_effective_tool_surface
 from .enablement_rollback import run_enablement_rollback
 from .evidence import publish_evidence
 from .models import CheckRecorder, RepoSnapshot, RunState, RuntimeContext
@@ -58,6 +58,15 @@ def _record_surface_result(
     state.next_action = "REMEDIATE_EFFECTIVE_TOOL_MATERIALIZATION"
 
 
+def _record_missing_final_baseline(checks: CheckRecorder) -> None:
+    for name in (
+        "final_queue_invariant",
+        "final_product_invariant",
+        "final_listener_invariant",
+    ):
+        checks.not_checked(name, "baseline capture failed before runtime mutation")
+
+
 def run_effective_surface_diagnostic(
     context: RuntimeContext,
     state: RunState,
@@ -103,7 +112,7 @@ def run_effective_surface_diagnostic(
 
         config = load_json(context.openclaw_config)
         agent_id = resolve_default_agent_id(config)
-        surface = probe_effective_tool_surface(
+        surface = probe_approved_effective_tool_surface(
             context,
             context.direct_probe_session_key,
             agent_id,
@@ -136,6 +145,8 @@ def run_effective_surface_diagnostic(
                 state.result = "EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_FAILED"
                 state.failure_code = "final_invariant_failed"
                 state.next_action = "RESTORE_TOOLS_DENIED_BASELINE"
+        else:
+            _record_missing_final_baseline(checks)
         if state.rollback_healthy == "NO":
             state.result = "EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_FAILED"
             state.failure_code = "rollback_failed"
@@ -149,7 +160,17 @@ def run_effective_surface_diagnostic(
                 Path(tempfile.mkdtemp(prefix=f"oris-effective-surface-{stamp}-")),
                 context.effective_surface_evidence,
             )
-        except Exception:
+            checks.pass_check(
+                "effective_surface_evidence",
+                "sanitized detached-worktree evidence published and remote-verified",
+            )
+        except Exception as exc:
             state.evidence_commit = ""
             state.evidence_remote_verified = False
+            state.result = "EFFECTIVE_TOOL_SURFACE_EVIDENCE_PUBLISH_FAILED"
+            state.failure_code = type(exc).__name__
+            state.next_action = (
+                "FIX_EVIDENCE_PUBLICATION_WITHOUT_REPEATING_RUNTIME_DIAGNOSTIC"
+            )
+            checks.fail_check("effective_surface_evidence", type(exc).__name__)
     return evidence_log, evidence_json
