@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repo_root": "/home/admin/projects/oris",
+  "projects_root": "/home/admin/projects",
+  "queue_url": "http://127.0.0.1:18891",
+  "intake_url": "http://127.0.0.1:18892",
+  "enqueue_host": "127.0.0.1",
+  "enqueue_port": 18891,
+  "intake_host": "127.0.0.1",
+  "intake_port": 18892,
+  "web_console_host": "127.0.0.1",
+  "web_console_port": 18893,
+  "default_branch": "main"
+}
