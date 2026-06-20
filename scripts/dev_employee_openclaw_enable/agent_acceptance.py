@@ -13,6 +13,7 @@ from .agent_output import (
     session_identifier_hashes,
 )
 from .agent_skill_policy import resolve_default_agent_id
+from .agent_surface import merge_effective_surfaces
 from .models import RuntimeContext
 from .process import run
 from .state import load_json
@@ -94,32 +95,6 @@ def _agent_command(
     return command
 
 
-def _merge_surfaces(surfaces: list[dict[str, Any]], approved: set[str]) -> dict[str, Any]:
-    checked = [item for item in surfaces if item.get("status") != "NOT_CHECKED"]
-    present = {
-        name
-        for item in checked
-        for name in item.get("approved_tools_present", [])
-        if isinstance(name, str)
-    }
-    missing = approved - present
-    return {
-        "status": "NOT_CHECKED" if not checked else "PASS" if not missing else "FAIL",
-        "reports_observed": sum(int(item.get("report_count") or 0) for item in surfaces),
-        "max_total_tool_count": max(
-            [int(item.get("total_tool_count") or 0) for item in surfaces] or [0]
-        ),
-        "approved_tools_present": sorted(present),
-        "missing_approved_tools": sorted(missing),
-        "routing_skill_present": any(
-            item.get("routing_skill_present") is True for item in checked
-        ),
-        "other_tool_names_recorded": False,
-        "system_prompt_recorded": False,
-        "conversation_content_recorded": False,
-    }
-
-
 def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, Any]:
     cli = discover_agent_cli()
     agent_id = resolve_default_agent_id(load_json(context.openclaw_config))
@@ -183,13 +158,13 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
             )
             failed["turns"] = turns
             failed["agent_id"] = agent_id
-            failed["effective_tool_surface"] = _merge_surfaces(
+            failed["effective_tool_surface"] = merge_effective_surfaces(
                 surfaces,
                 approved_tools,
             )
             return failed
 
-    effective_surface = _merge_surfaces(surfaces, approved_tools)
+    effective_surface = merge_effective_surfaces(surfaces, approved_tools)
     same_cli_session_requested = len(turns) == len(context.acceptance_turns)
     deadline = time.monotonic() + context.telemetry_wait_seconds
     telemetry: dict[str, Any] = {}
