@@ -8,6 +8,7 @@ from .enablement_acceptance import finalize_enablement, run_native_acceptance, v
 from .enablement_activation import verify_runtime_and_direct_calls
 from .enablement_rollback import run_enablement_rollback
 from .evidence import publish_evidence
+from .free_mesh_protocol import probe_free_mesh_protocol
 from .models import CheckRecorder, RunState, RuntimeContext
 from .policy import PolicyApplication, PolicyBackup
 from .preflight_checks import run_transaction_preflight
@@ -26,6 +27,7 @@ _STAGES = (
     "product_baseline",
     "oris_source_baseline",
     "safe_builtin_baseline",
+    "free_mesh_tool_protocol",
     "activation_candidate_gate",
     "activation_candidate_snapshot",
     "private_backup",
@@ -51,6 +53,25 @@ def _mark_unchecked(checks: CheckRecorder) -> None:
             checks.not_checked(name, "blocked by an earlier enablement failure")
 
 
+def _verify_free_mesh_protocol(
+    context: RuntimeContext,
+    state: RunState,
+    checks: CheckRecorder,
+) -> None:
+    protocol = probe_free_mesh_protocol(context.repo_root)
+    state.details["free_mesh_protocol"] = protocol
+    if protocol.get("status") != "PASS":
+        checks.fail_check(
+            "free_mesh_tool_protocol",
+            "Free Mesh protocol v2 tool-calling readiness failed",
+        )
+        raise RuntimeError("Free Mesh tool-calling protocol is not ready")
+    checks.pass_check(
+        "free_mesh_tool_protocol",
+        "loopback Free Mesh protocol v2 and tool calling verified",
+    )
+
+
 def run_enablement(
     context: RuntimeContext,
     state: RunState,
@@ -64,6 +85,7 @@ def run_enablement(
     evidence_json = ""
     try:
         queue_before, baseline_tool, product_before, oris_before = run_transaction_preflight(context, checks)
+        _verify_free_mesh_protocol(context, state, checks)
         activation = activate_validated_candidate(context, state, checks, stamp)
         policy_backup = activation.policy_backup
         skill_backup = activation.skill_backup
