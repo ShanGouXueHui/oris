@@ -45,7 +45,8 @@ def test_effective_tool_surface_parser() -> None:
     assert summary["missing_approved_tools"] == []
     assert summary["all_approved_tools_plugin_owned"] is True
     assert summary["write_capable_core_tools_present"] is True
-    assert "description" not in str(summary)
+    assert summary["tool_descriptions_recorded"] is False
+    assert "must not be retained" not in str(summary)
 
     missing = {
         "profile": "coding",
