@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "directory": "logs/dev_employee/openclaw_readonly_policy_diagnostic",
+  "filename_prefix": "openclaw-readonly-policy-diagnostic",
+  "commit_message_prefix": "chore(dev-employee): record read-only policy diagnostic"
+}
