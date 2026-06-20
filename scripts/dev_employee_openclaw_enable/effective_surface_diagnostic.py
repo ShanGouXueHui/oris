@@ -9,7 +9,7 @@ from .effective_tool_surface import probe_effective_tool_surface
 from .enablement_activation import activate_candidate
 from .enablement_rollback import run_enablement_rollback
 from .evidence import write_and_commit_evidence
-from .models import CheckRecorder, RunState, RuntimeContext
+from .models import CheckRecorder, RepoSnapshot, RunState, RuntimeContext
 from .plugin_runtime import verify_plugin_runtime
 from .policy import PolicyBackup, create_backup
 from .preflight_checks import run_transaction_preflight
@@ -53,7 +53,7 @@ def _verify_final_invariants(
     state: RunState,
     checks: CheckRecorder,
     queue_before: str,
-    product_before,
+    product_before: RepoSnapshot,
 ) -> None:
     queue_ok = (
         queue_fingerprint(context.repo_root) == queue_before
@@ -85,6 +85,24 @@ def _verify_final_invariants(
         state.failure_code = "final_invariant_failed"
 
 
+def _record_rollback_check(state: RunState, checks: CheckRecorder) -> None:
+    if state.rollback_healthy == "YES":
+        checks.pass_check(
+            "effective_surface_rollback",
+            "exact tools-denied baseline and healthy Gateway restored",
+        )
+    elif state.rollback_healthy == "NO":
+        checks.fail_check(
+            "effective_surface_rollback",
+            "rollback did not restore the complete healthy baseline",
+        )
+    else:
+        checks.not_checked(
+            "effective_surface_rollback",
+            "no active mutation occurred",
+        )
+
+
 def run_effective_surface_diagnostic(
     context: RuntimeContext,
     state: RunState,
@@ -94,7 +112,7 @@ def run_effective_surface_diagnostic(
     policy_backup: PolicyBackup | None = None
     skill_backup: SkillBackup | None = None
     queue_before = ""
-    product_before = None
+    product_before: RepoSnapshot | None = None
     evidence_log = ""
     evidence_json = ""
     try:
@@ -176,6 +194,7 @@ def run_effective_surface_diagnostic(
         checks.fail_check("effective_surface_diagnostic", type(exc).__name__)
     finally:
         run_enablement_rollback(context, state, policy_backup, skill_backup)
+        _record_rollback_check(state, checks)
         if product_before is not None and queue_before:
             _verify_final_invariants(
                 context,
