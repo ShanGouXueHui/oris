@@ -4,15 +4,19 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from oris_vnext.infer_refresh import InferRefresh
 from oris_vnext.openai_chat_contract import legacy_prompt_request, load_chat_request
 
 
-ROOT = Path(__file__).resolve().parents[1]
 EXECUTOR = ROOT / "scripts" / "runtime_execute.py"
 LOG_PATH = ROOT / "orchestration" / "execution_log.jsonl"
 
