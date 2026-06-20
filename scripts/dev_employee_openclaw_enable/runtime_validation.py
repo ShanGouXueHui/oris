@@ -8,6 +8,7 @@ from typing import Any
 from .models import RuntimeContext
 from .process import CommandResult, run
 from .runtime_policy_patch import build_policy_validation_patch
+from .runtime_validation_output import summarize_dry_run_output
 from .state import sha256_file
 
 
@@ -32,7 +33,10 @@ _CATEGORY_TERMS = (
 
 
 def _fingerprint(result: CommandResult) -> dict[str, Any]:
-    combined = (result.stdout + "\n" + result.stderr).encode("utf-8", errors="replace")
+    combined = (result.stdout + "\n" + result.stderr).encode(
+        "utf-8",
+        errors="replace",
+    )
     return {
         "returncode": result.returncode,
         "stdout_bytes": len(result.stdout.encode("utf-8", errors="replace")),
@@ -124,6 +128,7 @@ def _patch_dry_run(
         "validator": "config.patch.dry-run",
         "validation_scope": "minimal_policy_delta_against_active_config",
         "validation": _fingerprint(validation),
+        "validation_diagnostics": summarize_dry_run_output(validation.stdout),
         "diagnostic_categories": _categories(output),
         "active_config_unchanged": active_unchanged,
         "active_config_written": False,
