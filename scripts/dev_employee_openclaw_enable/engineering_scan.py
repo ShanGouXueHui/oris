@@ -30,11 +30,26 @@ _AUDIT_AUTHORITY_FILES = (
     Path("scripts/dev_employee_diagnose_openclaw_model_tool_call_routing.sh"),
     Path("scripts/dev_employee_diagnose_openclaw_readonly_policy.sh"),
     Path("scripts/dev_employee_enable_openclaw_readonly_tools.sh"),
+    Path("scripts/oris_free_mesh_api.py"),
+    Path("scripts/oris_infer.py"),
+    Path("scripts/runtime_execute.py"),
+    Path("oris_vnext/free_mesh_compat.py"),
+    Path("oris_vnext/free_mesh_http.py"),
+    Path("oris_vnext/free_mesh_inference.py"),
+    Path("oris_vnext/infer_refresh.py"),
+    Path("oris_vnext/openai_chat_contract.py"),
+    Path("oris_vnext/runtime_execution_engine.py"),
+    Path("oris_vnext/runtime_execution_state.py"),
+    Path("oris_vnext/runtime_provider_client.py"),
+    Path("tests/test_free_mesh_tool_calling.py"),
+    Path("orchestration/routing_policy.yaml"),
+    Path("orchestration/runtime_policy.yaml"),
     Path("memory/dev_employee/current_task.json"),
     Path("memory/dev_employee/current_task.md"),
     Path("docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_MODEL_TOOL_CALL_AND_HARNESS_DIAGNOSTIC_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_CALLING_FIX_2026-06-20.md"),
 )
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
@@ -58,6 +73,16 @@ _ADDITIONAL_AUTHORITIES = {
     "run_model_tool_diagnostic": (
         "scripts/dev_employee_openclaw_enable/model_tool_diagnostic_runtime.py"
     ),
+    "parse_chat_request": "oris_vnext/openai_chat_contract.py",
+    "normalize_assistant_message": "oris_vnext/openai_chat_contract.py",
+    "model_to_role": "oris_vnext/free_mesh_compat.py",
+    "chat_payload": "oris_vnext/free_mesh_compat.py",
+    "build_handler": "oris_vnext/free_mesh_http.py",
+    "FreeMeshInference": "oris_vnext/free_mesh_inference.py",
+    "InferRefresh": "oris_vnext/infer_refresh.py",
+    "execute_provider": "oris_vnext/runtime_provider_client.py",
+    "RuntimeExecutionState": "oris_vnext/runtime_execution_state.py",
+    "RuntimeExecutionEngine": "oris_vnext/runtime_execution_engine.py",
 }
 
 
@@ -109,6 +134,17 @@ def _deduplicate_oversized(
     return list(unique.values())
 
 
+def _routing_contract_error(repo_root: Path) -> str:
+    for relative in (
+        Path("orchestration/routing_policy.yaml"),
+        Path("orchestration/runtime_policy.yaml"),
+    ):
+        text = (repo_root / relative).read_text(encoding="utf-8")
+        if "tool_calling:" not in text:
+            return f"tool_calling role missing from {relative.as_posix()}"
+    return ""
+
+
 def _combined_contract_error(repo_root: Path) -> str:
     existing = contract_error(repo_root)
     if existing:
@@ -117,7 +153,7 @@ def _combined_contract_error(repo_root: Path) -> str:
         load_standalone_evidence_target(repo_root, _POLICY_EVIDENCE_CONFIG)
     except Exception as exc:
         return str(exc) or type(exc).__name__
-    return ""
+    return _routing_contract_error(repo_root)
 
 
 def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
@@ -129,7 +165,6 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
         audit_paths,
     )
     architecture = scan_python_architecture(repo_root, _effective_authorities())
-
     duplicate_bindings = [
         item.to_dict()
         for item in quality_findings
@@ -153,7 +188,6 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
         *active_path_findings(repo_root),
     ]
     contract = _combined_contract_error(repo_root)
-
     failures = (
         duplicate_bindings,
         architecture["authority_violations"],
