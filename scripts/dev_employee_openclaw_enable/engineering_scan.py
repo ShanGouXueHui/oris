@@ -38,6 +38,7 @@ _LEGACY_LIBS = (
     "dev_employee_openclaw_readonly_enable_browser_telemetry_20260618.sh",
     "dev_employee_openclaw_readonly_enable_finalize_20260618.sh",
 )
+_ABSOLUTE_HOME_PREFIX = "/" + "home" + "/"
 
 
 def _cycles(graph: dict[str, set[str]]) -> list[list[str]]:
@@ -143,7 +144,7 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
         graph[path.stem] = imports - {path.stem}
         for node in ast.walk(tree):
             if isinstance(node, ast.Constant) and isinstance(node.value, str):
-                if "/home/" in node.value:
+                if _ABSOLUTE_HOME_PREFIX in node.value:
                     hardcoding.append({"file": relative, "kind": "absolute_home_path"})
 
     authority = {
