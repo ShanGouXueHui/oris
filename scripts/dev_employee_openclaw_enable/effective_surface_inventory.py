@@ -17,6 +17,10 @@ _SAFE_SCALAR_FIELDS = (
     "plugin_tool_count",
     "approved_tool_count",
 )
+_UNAVAILABLE_REASONS = {
+    "tools_effective_rpc_failed",
+    "tools_effective_payload_invalid",
+}
 
 
 def _safe_scalar_fields(value: dict[str, Any]) -> dict[str, Any]:
@@ -44,23 +48,34 @@ def sanitize_effective_tool_surface(
         if isinstance(name, str) and name in approved
     )
     missing = sorted(approved - set(present))
-    status = "PASS" if not missing and not wrong_owner else "FAIL"
-    reason = value.get("reason_code")
-    if not isinstance(reason, str) or not reason:
-        if missing:
-            reason = "approved_tools_absent_from_effective_surface"
-        elif wrong_owner:
-            reason = "approved_tools_not_plugin_owned"
-        else:
-            reason = None
+    upstream_reason = value.get("reason_code")
+    unavailable_reason = (
+        upstream_reason
+        if isinstance(upstream_reason, str)
+        and upstream_reason in _UNAVAILABLE_REASONS
+        else None
+    )
+    if unavailable_reason:
+        status = "FAIL"
+        reason = unavailable_reason
+    elif missing:
+        status = "FAIL"
+        reason = "approved_tools_absent_from_effective_surface"
+    elif wrong_owner:
+        status = "FAIL"
+        reason = "approved_tools_not_plugin_owned"
+    else:
+        status = "PASS"
+        reason = None
 
-    result: dict[str, Any] = {
+    wrong_owner_set = set(wrong_owner)
+    return {
         **_safe_scalar_fields(value),
-        "status": status if value.get("status") != "FAIL" or present else "FAIL",
+        "status": status,
         "reason_code": reason,
         "approved_tools_present": present,
         "approved_tool_ownership": {
-            name: name not in set(wrong_owner) for name in present
+            name: name not in wrong_owner_set for name in present
         },
         "missing_approved_tools": missing,
         "wrong_owner_approved_tools": wrong_owner,
@@ -73,9 +88,6 @@ def sanitize_effective_tool_surface(
         "provider_or_model_recorded": False,
         "sensitive_values_recorded": False,
     }
-    if value.get("status") == "FAIL" and not present:
-        result["status"] = "FAIL"
-    return result
 
 
 def probe_approved_effective_tool_surface(
