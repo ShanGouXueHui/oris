@@ -13,15 +13,22 @@ from .engineering_scan_policy import (
     contract_error,
     legacy_path_findings,
 )
+from .evidence_config import load_standalone_evidence_target
 from .models import RuntimeContext
 
 
+_POLICY_EVIDENCE_CONFIG = Path(
+    "config/dev_employee/openclaw_policy_diagnostic_evidence.json"
+)
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
         "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
     ),
     "probe_approved_effective_tool_surface": (
         "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
+    ),
+    "load_standalone_evidence_target": (
+        "scripts/dev_employee_openclaw_enable/evidence_config.py"
     ),
 }
 
@@ -59,6 +66,17 @@ def _deduplicate_oversized(
     return list(unique.values())
 
 
+def _combined_contract_error(repo_root: Path) -> str:
+    existing = contract_error(repo_root)
+    if existing:
+        return existing
+    try:
+        load_standalone_evidence_target(repo_root, _POLICY_EVIDENCE_CONFIG)
+    except Exception as exc:
+        return str(exc) or type(exc).__name__
+    return ""
+
+
 def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
     policy = load_policy(repo_root)
     quality_findings, quality_file_count = scan_repository(repo_root, policy)
@@ -86,7 +104,7 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
         *legacy_path_findings(repo_root),
         *active_path_findings(repo_root),
     ]
-    contract = contract_error(repo_root)
+    contract = _combined_contract_error(repo_root)
 
     failures = (
         duplicate_bindings,
