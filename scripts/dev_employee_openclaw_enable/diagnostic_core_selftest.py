@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from . import skill as skill_facade
 from .candidate_validation import candidate_policy_compatibility
 from .models import CheckRecorder, stage_status
+from .runtime_policy_patch import build_policy_validation_patch
 from .skill_installation import (
     SkillBackup,
     SkillPathBackup,
@@ -29,8 +30,53 @@ def _assert_skill_facade() -> None:
     assert skill_facade.verify_routing_skill_runtime is verify_routing_skill_runtime
 
 
+def _assert_policy_patch_builder() -> None:
+    active = {
+        "tools": {
+            "profile": "coding",
+            "deny": ["tool_a", "tool_b", "tool_c"],
+            "unrelated": {"privateValue": "must-not-be-copied"},
+        },
+        "agents": {"defaults": {"skills": ["existing-skill"]}},
+        "gateway": {"token": "must-not-be-copied"},
+    }
+    candidate = {
+        "tools": {
+            "profile": "coding",
+            "allow": ["group:fs", "tool_a", "tool_b", "tool_c"],
+            "alsoAllow": ["tool_a", "tool_b", "tool_c"],
+            "deny": [],
+            "unrelated": {"privateValue": "redacted"},
+        },
+        "agents": {
+            "defaults": {"skills": ["existing-skill", "sample-routing-skill"]}
+        },
+        "gateway": {"token": "redacted"},
+    }
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        active_path = root / "active.json"
+        candidate_path = root / "candidate.json"
+        active_path.write_text(json.dumps(active), encoding="utf-8")
+        candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+        context = SimpleNamespace(openclaw_config=active_path)
+        patch_path, replace_paths, evidence = build_policy_validation_patch(
+            context,
+            candidate_path,
+        )
+        patch = json.loads(patch_path.read_text(encoding="utf-8"))
+    assert replace_paths == ()
+    assert set(patch) == {"tools", "agents"}
+    assert set(patch["tools"]) == {"allow", "alsoAllow", "deny"}
+    assert patch["agents"]["defaults"]["skills"][-1] == "sample-routing-skill"
+    assert "gateway" not in patch
+    assert "unrelated" not in patch["tools"]
+    assert evidence["patch_content_recorded"] is False
+
+
 def run_core_diagnostic_selftests() -> bool:
     _assert_skill_facade()
+    _assert_policy_patch_builder()
     recorder = CheckRecorder()
     recorder.pass_check("pass", "ok")
     recorder.fail_check("fail", "bad")
