@@ -44,6 +44,7 @@ _AUDIT_AUTHORITY_FILES = (
     Path("oris_vnext/runtime_provider_client.py"),
     Path("tests/test_free_mesh_tool_calling.py"),
     Path("tests/test_free_mesh_protocol.py"),
+    Path("tests/test_script_entrypoint_bootstrap.py"),
     Path("orchestration/routing_policy.yaml"),
     Path("orchestration/runtime_policy.yaml"),
     Path("memory/dev_employee/current_task.json"),
