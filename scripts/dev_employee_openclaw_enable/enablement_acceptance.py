@@ -3,13 +3,8 @@ from __future__ import annotations
 from .agent_acceptance import run_automatic_acceptance
 from .models import CheckRecorder, RepoSnapshot, RunState, RuntimeContext
 from .policy import PolicyApplication, PolicyBackup, finalize_marker
+from .readonly_invariants import product_is_unchanged, queue_is_unchanged
 from .runtime_boundaries import verify_runtime_boundaries
-from .state import (
-    active_queue_count,
-    queue_fingerprint,
-    repository_snapshot,
-    repository_unchanged,
-)
 from .worktree import SourceWorktreeSnapshot
 
 
@@ -22,9 +17,6 @@ def run_native_acceptance(
 ) -> None:
     automatic = run_automatic_acceptance(context, stamp)
     state.details["native_agent_acceptance"] = automatic
-    surface = automatic.get("effective_tool_surface")
-    if isinstance(surface, dict):
-        state.details["effective_tool_surface"] = surface
     if not automatic.get("accepted"):
         state.native_agent_acceptance_pass = False
         raise RuntimeError(
@@ -53,10 +45,7 @@ def run_native_acceptance(
         "typed hook telemetry is private, schema-safe, and read-only",
     )
 
-    if (
-        queue_fingerprint(context.repo_root) != queue_before
-        or active_queue_count(context.repo_root) != 0
-    ):
+    if not queue_is_unchanged(context, queue_before):
         state.queue_unchanged = False
         raise RuntimeError("queue changed during native agent acceptance")
     state.queue_unchanged = True
@@ -75,10 +64,7 @@ def verify_final_invariants(
     policy_backup: PolicyBackup,
     application: PolicyApplication,
 ) -> None:
-    if not repository_unchanged(
-        product_before,
-        repository_snapshot(context.product_repo),
-    ):
+    if not product_is_unchanged(context, product_before):
         state.product_unchanged = False
         raise RuntimeError("product repository changed during read-only acceptance")
     state.product_unchanged = True
