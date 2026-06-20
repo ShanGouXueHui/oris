@@ -19,6 +19,11 @@ from .state import load_json
 
 SUCCESS_RESULT = "EFFECTIVE_TOOL_SURFACE_VALIDATED_PENDING_EVIDENCE_REVIEW"
 MISSING_RESULT = "EFFECTIVE_TOOL_SURFACE_MISSING_APPROVED_TOOLS"
+UNAVAILABLE_RESULT = "EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_UNAVAILABLE"
+_UNAVAILABLE_REASONS = {
+    "tools_effective_rpc_failed",
+    "tools_effective_payload_invalid",
+}
 
 
 def _record_rollback_check(state: RunState, checks: CheckRecorder) -> None:
@@ -53,9 +58,13 @@ def _record_surface_result(
         return
     reason = str(surface.get("reason_code") or "effective_surface_failed")
     checks.fail_check("effective_tool_surface", reason)
-    state.result = MISSING_RESULT
     state.failure_code = reason
-    state.next_action = "REMEDIATE_EFFECTIVE_TOOL_MATERIALIZATION"
+    if reason in _UNAVAILABLE_REASONS:
+        state.result = UNAVAILABLE_RESULT
+        state.next_action = "REPAIR_NATIVE_EFFECTIVE_SURFACE_DIAGNOSTIC_PATH"
+    else:
+        state.result = MISSING_RESULT
+        state.next_action = "REMEDIATE_EFFECTIVE_TOOL_MATERIALIZATION"
 
 
 def _record_missing_final_baseline(checks: CheckRecorder) -> None:
