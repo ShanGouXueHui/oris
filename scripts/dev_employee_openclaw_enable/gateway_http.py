@@ -3,8 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-import urllib.error
-import urllib.request
+from urllib import error as urllib_error
+from urllib import request as urllib_request
 from typing import Any
 
 from .models import RuntimeContext
@@ -27,11 +27,11 @@ def _join_url(base: str, route: str) -> str:
 
 
 def _http_get(url: str, timeout: int = 10) -> tuple[int, bytes]:
-    request = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
+    request = urllib_request.Request(url, headers={"Cache-Control": "no-cache"})
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with urllib_request.urlopen(request, timeout=timeout) as response:
             return response.status, response.read(2_000_000)
-    except urllib.error.HTTPError as exc:
+    except urllib_error.HTTPError as exc:
         return exc.code, exc.read(2_000_000)
     except Exception:
         return 0, b""
@@ -78,7 +78,7 @@ def invoke_tool(
         },
         separators=(",", ":"),
     ).encode("utf-8")
-    request = urllib.request.Request(
+    request = urllib_request.Request(
         _join_url(context.gateway_url, "/tools/invoke"),
         data=body,
         method="POST",
@@ -91,12 +91,12 @@ def invoke_tool(
     status = 0
     payload: dict[str, Any] = {}
     try:
-        with urllib.request.urlopen(request, timeout=20) as response:
+        with urllib_request.urlopen(request, timeout=20) as response:
             status = response.status
             decoded = json.loads(response.read(1_000_000))
             if isinstance(decoded, dict):
                 payload = decoded
-    except urllib.error.HTTPError as exc:
+    except urllib_error.HTTPError as exc:
         status = exc.code
     except Exception:
         status = 0
