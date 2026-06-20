@@ -99,3 +99,57 @@ def reported_tool_names(value: Any, approved_tools: set[str]) -> set[str]:
         for child in value:
             names.update(reported_tool_names(child, approved_tools))
     return names
+
+
+def _prompt_reports(value: Any) -> list[dict[str, Any]]:
+    reports: list[dict[str, Any]] = []
+    if isinstance(value, dict):
+        tools = value.get("tools")
+        skills = value.get("skills")
+        tool_entries = tools.get("entries") if isinstance(tools, dict) else None
+        skill_entries = skills.get("entries") if isinstance(skills, dict) else None
+        if isinstance(tool_entries, list) and isinstance(skill_entries, list):
+            reports.append(value)
+        for child in value.values():
+            reports.extend(_prompt_reports(child))
+    elif isinstance(value, list):
+        for child in value:
+            reports.extend(_prompt_reports(child))
+    return reports
+
+
+def effective_tool_surface(
+    value: Any,
+    approved_tools: set[str],
+    routing_skill_name: str,
+) -> dict[str, Any]:
+    reports = _prompt_reports(value)
+    tool_names: set[str] = set()
+    skill_names: set[str] = set()
+    for report in reports:
+        tools = report.get("tools")
+        skills = report.get("skills")
+        tool_entries = tools.get("entries") if isinstance(tools, dict) else []
+        skill_entries = skills.get("entries") if isinstance(skills, dict) else []
+        for entry in tool_entries if isinstance(tool_entries, list) else []:
+            name = entry.get("name") if isinstance(entry, dict) else None
+            if isinstance(name, str) and name:
+                tool_names.add(name)
+        for entry in skill_entries if isinstance(skill_entries, list) else []:
+            name = entry.get("name") if isinstance(entry, dict) else None
+            if isinstance(name, str) and name:
+                skill_names.add(name)
+    present = approved_tools.intersection(tool_names)
+    missing = approved_tools - tool_names
+    status = "NOT_CHECKED" if not reports else "PASS" if not missing else "FAIL"
+    return {
+        "status": status,
+        "report_count": len(reports),
+        "total_tool_count": len(tool_names),
+        "approved_tools_present": sorted(present),
+        "missing_approved_tools": sorted(missing),
+        "routing_skill_present": routing_skill_name in skill_names,
+        "other_tool_names_recorded": False,
+        "system_prompt_recorded": False,
+        "conversation_content_recorded": False,
+    }
