@@ -3,8 +3,8 @@ from __future__ import annotations
 import hashlib
 import re
 import time
-import urllib.error
-import urllib.request
+from urllib import error as urllib_error
+from urllib import request as urllib_request
 from dataclasses import dataclass
 from typing import Any
 
@@ -62,11 +62,11 @@ class GatewayServiceError(RuntimeError):
 
 
 def _http_status(url: str, timeout: int = 5) -> int:
-    request = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
+    request = urllib_request.Request(url, headers={"Cache-Control": "no-cache"})
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with urllib_request.urlopen(request, timeout=timeout) as response:
             return int(response.status)
-    except urllib.error.HTTPError as exc:
+    except urllib_error.HTTPError as exc:
         return int(exc.code)
     except Exception:
         return 0
