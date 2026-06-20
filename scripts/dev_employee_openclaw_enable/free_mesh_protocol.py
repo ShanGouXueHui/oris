@@ -4,10 +4,10 @@ import ipaddress
 import json
 import subprocess
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any
+from urllib import error as urllib_error
+from urllib import request as urllib_request
 
 
 FREE_MESH_SERVICE = "oris-free-mesh-api.service"
@@ -91,19 +91,19 @@ def probe_free_mesh_protocol(
     for index in range(max(1, attempts)):
         completed_attempts = index + 1
         try:
-            request = urllib.request.Request(
+            request = urllib_request.Request(
                 url,
                 headers={"Accept": "application/json"},
                 method="GET",
             )
-            with urllib.request.urlopen(request, timeout=timeout_seconds) as response:
+            with urllib_request.urlopen(request, timeout=timeout_seconds) as response:
                 http_status = int(response.status)
                 body = json.loads(response.read().decode("utf-8"))
             validation = validate_health_payload(body)
             if http_status == 200 and validation.get("accepted"):
                 break
         except (
-            urllib.error.URLError,
+            urllib_error.URLError,
             TimeoutError,
             json.JSONDecodeError,
             UnicodeDecodeError,
