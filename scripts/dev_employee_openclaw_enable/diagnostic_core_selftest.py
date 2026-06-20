@@ -14,6 +14,7 @@ from .models import CheckRecorder, stage_status
 from .profile_tool_policy import enable_profile_tools
 from .runtime_policy_patch import build_policy_validation_patch
 from .runtime_validation_output import summarize_dry_run_output
+from .selftest import run_selftests
 from .skill_installation import (
     SkillBackup,
     SkillPathBackup,
@@ -179,6 +180,7 @@ def _assert_sanitized_runtime_output() -> None:
 
 
 def run_core_diagnostic_selftests() -> bool:
+    assert run_selftests()
     _assert_skill_facade()
     _assert_single_scope_transform()
     _assert_policy_patch_builder()
