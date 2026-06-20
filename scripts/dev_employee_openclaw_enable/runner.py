@@ -21,6 +21,33 @@ from .state import sha256_file
 
 
 SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
+_ENABLEMENT_STAGES = (
+    "source_code_governance",
+    "automatic_selftests",
+    "authoritative_readiness",
+    "tools_denied_baseline",
+    "gateway_and_routes",
+    "private_internal_listeners",
+    "queue_baseline",
+    "product_baseline",
+    "oris_source_baseline",
+    "safe_builtin_baseline",
+    "activation_candidate_gate",
+    "activation_candidate_snapshot",
+    "private_backup",
+    "routing_skill",
+    "controlled_policy_enablement",
+    "routing_skill_runtime",
+    "plugin_runtime",
+    "direct_tool_calls",
+    "queue_after_direct_calls",
+    "automatic_native_agent_acceptance",
+    "telemetry_privacy",
+    "final_queue_invariant",
+    "final_product_invariant",
+    "final_runtime_and_route_invariants",
+    "private_marker",
+)
 
 
 def _record_failure(state: RunState, checks: CheckRecorder, exc: Exception) -> None:
@@ -34,6 +61,13 @@ def _record_failure(state: RunState, checks: CheckRecorder, exc: Exception) -> N
     if isinstance(exc, GatewayServiceError):
         state.details["gateway_failure_diagnostics"] = exc.safe_evidence
     checks.fail_check("automatic_enablement", type(exc).__name__)
+
+
+def _mark_remaining_not_checked(checks: CheckRecorder) -> None:
+    recorded = {str(item.get("name")) for item in checks.checks}
+    for name in _ENABLEMENT_STAGES:
+        if name not in recorded:
+            checks.not_checked(name, "blocked by an earlier enablement failure")
 
 
 def _commit_evidence(
@@ -143,6 +177,7 @@ def run_enablement(
         return evidence_log, evidence_json
     except Exception as exc:
         _record_failure(state, checks, exc)
+        _mark_remaining_not_checked(checks)
         run_enablement_rollback(context, state, policy_backup, skill_backup)
         try:
             evidence_log, evidence_json = _commit_evidence(
