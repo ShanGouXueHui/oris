@@ -9,6 +9,7 @@ from .gateway_http import select_safe_baseline_tool, verify_public_routes
 from .models import CheckRecorder, RepoSnapshot, RuntimeContext
 from .policy import validate_denied_baseline
 from .process import run
+from .selftest import AutomaticSelftestFailure, run_selftests
 from .state import (
     active_queue_count,
     listener_is_loopback_only,
@@ -47,6 +48,18 @@ def _gateway_active(context: RuntimeContext) -> bool:
     return result.returncode == 0 and result.stdout.strip() == "active"
 
 
+def _run_pre_mutation_selftests(checks: CheckRecorder) -> None:
+    try:
+        run_selftests()
+    except AutomaticSelftestFailure as exc:
+        checks.fail_check("automatic_selftests", exc.check_name)
+        raise
+    checks.pass_check(
+        "automatic_selftests",
+        "policy, Skill, telemetry correlation, and output metadata selftests passed",
+    )
+
+
 def run_transaction_preflight(
     context: RuntimeContext,
     checks: CheckRecorder,
@@ -59,6 +72,7 @@ def run_transaction_preflight(
         "source_code_governance",
         "duplicate, authority, cycle, module-size, hardcoding and contract gates passed",
     )
+    _run_pre_mutation_selftests(checks)
 
     _require_private_file(context.openclaw_config)
     _require_private_file(context.marker_file)
