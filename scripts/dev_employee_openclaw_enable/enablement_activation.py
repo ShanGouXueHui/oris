@@ -30,6 +30,7 @@ def activate_candidate(
 ) -> PolicyApplication:
     _require_validated_config_hash(context, validated_config_sha256)
     state.mutation_started = True
+    state.details["routing_skill_mutation_attempted"] = True
     skill_details = install_routing_skill(context, skill_backup)
     state.routing_skill_installed = True
     state.details["routing_skill"] = skill_details
