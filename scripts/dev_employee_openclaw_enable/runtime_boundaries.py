@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from .gateway import verify_plugin_runtime, verify_public_routes
+from .gateway_http import verify_public_routes
 from .models import RunState, RuntimeContext
+from .plugin_runtime import verify_plugin_runtime
 from .policy import PolicyApplication, PolicyBackup, validate_config_scope
 from .state import listener_is_loopback_only
 from .worktree import (
