@@ -1,98 +1,116 @@
 # Current AI Dev Employee Task
 
-Status: `three_tool_native_acceptance_functionally_passed_validator_fix_pending`
+Status: `three_tool_native_acceptance_passed_support_tool_contract_fix_pending`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `fix_telemetry_schema_outcome_contract_then_rerun_once`
+Current step: `merge_bounded_native_skill_support_contract_then_rerun_once`
 
 ## Latest complete acceptance evidence
 
 Evidence commit:
 
-`22ee300081e98d8e2df4c3f4a495c9608db98d2b`
+`59725fd783732464b6aec0f249868e78e30a5da2`
 
 Reported result:
 
 `FAILED / RuntimeError`
 
-The runtime path itself completed successfully:
+The previous telemetry schema correction worked:
 
+- `schema_ok=true`;
+- `execution_outcome_ok=true`;
+- all three ORIS tools were called successfully exactly once;
+- no failed model, tool, or Agent outcome was recorded.
+
+The complete runtime path also proved:
+
+- source governance and automatic selftests passed;
 - Free Mesh protocol version 2 passed;
-- direct calls to all three ORIS tools passed;
-- three native Agent turns returned zero through Gateway;
-- one persisted native session was proven;
-- `model_call_ended=6`;
-- `agent_end=3`;
-- `after_tool_call=4`;
-- all three required tools were observed;
-- no unapproved tool was observed;
-- exact three-turn boundary passed;
+- all direct probes passed;
+- three native Agent turns completed through Gateway;
+- one persisted native session and the exact three-turn boundary passed;
 - telemetry content safety and file permissions passed;
-- rollback restored the exact tools-denied baseline;
+- queue and product baselines remained protected;
+- rollback restored the exact tools-denied configuration;
 - no product task or write tool was introduced.
 
-Tool attempts were:
+Observed telemetry counts:
 
-- `oris_queue_status`: 1;
-- `oris_latest_task_status`: 2;
-- `oris_task_status`: 1.
+- `model_call_ended=7`;
+- `agent_end=3`;
+- `after_tool_call=4`;
+- `oris_queue_status=1`;
+- `oris_latest_task_status=1`;
+- `oris_task_status=1`;
+- native core tool `read=1`.
 
 ## Accurate failure boundary
 
-The only failed telemetry field was:
+The only rejection was:
 
-`schema_ok=false`
+`unexpected_tools_seen=[read]`
 
-The Plugin contract explicitly permits `success` and `error` boolean fields. The validator also lists those fields in its allowed schema, but then incorrectly marks any `error=true` or `success=false` record as a schema violation.
+OpenClaw injects a compact Skill catalog rather than every complete Skill body. A model may therefore use the native `read` tool to load the selected `SKILL.md` body before applying it.
 
-This conflates two separate concerns:
+The previous validator incorrectly treated the native Skill-hydration call as an additional ORIS business capability.
 
-1. whether a telemetry record has an approved structure;
-2. whether an individual model, tool, or Agent attempt reported failure.
+## Correct authority separation
 
-The duplicate latest-task call indicates a possible recoverable retry. A recoverable attempt must be counted and surfaced, but it must not be mislabeled as malformed telemetry.
+### ORIS business tools
 
-## Required correction
+The approved ORIS capability set remains unchanged:
 
-Separate telemetry schema validation from execution-outcome validation.
+- `oris_queue_status`;
+- `oris_task_status`;
+- `oris_latest_task_status`.
 
-Schema validation must continue to reject:
+All three must remain Plugin-owned and must each complete successfully.
 
-- malformed JSON;
-- non-object records;
-- unknown or forbidden fields;
-- unexpected hook types;
-- invalid hashes;
-- invalid duration values.
+### Native support tool
 
-Execution-outcome validation must:
+The acceptance contract separately declares:
 
-- require at least one non-failed call for every approved ORIS tool;
-- reject any explicitly failed `agent_end` record;
-- retain failed-attempt counts and retry metadata;
-- permit a failed intermediate attempt only when the required tool later succeeds and the Agent turn completes successfully.
+- tool: `read`;
+- maximum calls: `1`;
+- purpose: load the approved routing Skill body from the native OpenClaw Skill catalog.
 
-No Plugin modification, OpenClaw reinstall, provider/model change, or policy broadening is required.
+This does not add `read` to the ORIS approved-tool set and does not modify the active OpenClaw tool surface.
+
+## Mandatory rejection rules
+
+The run still fails when:
+
+- a support tool exceeds its configured count;
+- a support-tool call reports failure;
+- a support tool appears after the first ORIS business-tool call;
+- any undeclared tool appears;
+- a support tool overlaps an ORIS business tool;
+- a known write-capable tool is configured as support;
+- any ORIS tool lacks a successful call;
+- any Agent completion fails;
+- schema, privacy, permissions, session, turn, queue, product, route, listener, or source invariants fail.
+
+No tool arguments, results, conversation content, Skill body, or filesystem path may be recorded in GitHub evidence.
 
 ## Current runtime state
 
 The failed transaction rolled back successfully:
 
 - exact tools-denied configuration restored;
-- previous marker and routing Skill state restored;
+- previous marker and routing Skill restored;
 - Gateway healthy;
 - queue and product unchanged;
 - write tools absent.
 
 ## Next required action
 
-1. merge the telemetry schema/outcome correction only after the exact branch passes the unified code-first audit;
+1. merge the bounded native Skill support-tool contract only after the exact branch passes the unified code-first audit;
 2. rerun the existing complete acceptance exactly once:
 
 `scripts/dev_employee_enable_openclaw_readonly_tools.sh`
 
-On success, retain the validated read-only policy and routing Skill and proceed to P0 completion persistence plus the privacy-safe latency baseline.
+Success requires all three ORIS tools plus zero or one successful pre-ORIS Skill-hydration `read`, with every existing final invariant passing.
 
 ## Prohibitions
 
