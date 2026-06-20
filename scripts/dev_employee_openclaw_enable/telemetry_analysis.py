@@ -113,3 +113,26 @@ def evaluate_native_support_outcomes(
         "tool_arguments_or_results_recorded": False,
         "conversation_content_recorded": False,
     }
+
+
+def build_latency_metrics(
+    records: list[dict[str, Any]],
+    expected_tools: set[str],
+    support_tools: set[str],
+) -> dict[str, Any]:
+    def tool_metrics(names: set[str]) -> dict[str, Any]:
+        return {
+            tool: duration_stats(duration_values(records, "after_tool_call", tool))
+            for tool in sorted(names)
+        }
+
+    return {
+        "ttft": {
+            "available": False,
+            "reason": "approved typed hooks do not expose a first-token timestamp",
+        },
+        "model_duration": duration_stats(duration_values(records, "model_call_ended")),
+        "total_agent_duration": duration_stats(duration_values(records, "agent_end")),
+        "tool_duration": tool_metrics(expected_tools),
+        "native_support_tool_duration": tool_metrics(support_tools),
+    }
