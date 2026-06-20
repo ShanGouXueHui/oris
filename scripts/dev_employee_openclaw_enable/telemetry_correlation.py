@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from typing import Any
 
 
@@ -22,6 +23,15 @@ def _tool_names(records: list[dict[str, Any]]) -> set[str]:
     }
 
 
+def _tool_counts(records: list[dict[str, Any]]) -> Counter[str]:
+    return Counter(
+        str(item.get("toolName"))
+        for item in records
+        if item.get("event") == "after_tool_call"
+        and isinstance(item.get("toolName"), str)
+    )
+
+
 def _append_unique(
     target: list[dict[str, Any]],
     additions: list[dict[str, Any]],
@@ -40,7 +50,11 @@ def correlate_records(
     expected_events: set[str],
     required_turns: int,
     same_cli_session_requested: bool,
+    native_support_tool_limits: dict[str, int] | None = None,
 ) -> dict[str, Any]:
+    support_limits = dict(native_support_tool_limits or {})
+    support_tools = set(support_limits)
+    authorized_tools = expected_tools | support_tools
     all_event_counts = _event_counts(records, expected_events)
     all_tools_seen = _tool_names(records)
     matched_session_records = [
@@ -98,13 +112,23 @@ def correlate_records(
 
     event_counts = _event_counts(correlated, expected_events)
     tools_seen = _tool_names(correlated)
-    unexpected_tools = tools_seen - expected_tools
+    tool_counts = _tool_counts(correlated)
+    unexpected_tools = tools_seen - authorized_tools
+    support_tools_seen = tools_seen.intersection(support_tools)
+    support_tool_counts = {
+        name: tool_counts.get(name, 0) for name in sorted(support_tools)
+    }
+    support_limits_ok = all(
+        support_tool_counts[name] <= support_limits[name]
+        for name in support_tool_counts
+    )
     agent_end_count = event_counts.get("agent_end", 0)
     model_count = event_counts.get("model_call_ended", 0)
     tool_count = event_counts.get("after_tool_call", 0)
 
     exact_agent_turn_boundary = agent_end_count == required_turns
-    typed_tools_complete = expected_tools.issubset(tools_seen) and not unexpected_tools
+    typed_tools_complete = expected_tools.issubset(tools_seen)
+    tool_authority_valid = not unexpected_tools and support_limits_ok
     hooks_complete = (
         model_count >= required_turns
         and tool_count >= required_turns
@@ -119,6 +143,7 @@ def correlate_records(
         and window_is_single_agent
         and hooks_complete
         and typed_tools_complete
+        and tool_authority_valid
     )
     persisted_session = (
         agent_end_count >= required_turns
@@ -128,7 +153,12 @@ def correlate_records(
             or fallback_safe
         )
     )
-    accepted = hooks_complete and typed_tools_complete and persisted_session
+    accepted = (
+        hooks_complete
+        and typed_tools_complete
+        and tool_authority_valid
+        and persisted_session
+    )
 
     return {
         "accepted": accepted,
@@ -139,6 +169,9 @@ def correlate_records(
         "all_event_counts": all_event_counts,
         "tools_seen": tools_seen,
         "all_tools_seen": all_tools_seen,
+        "native_support_tools_seen": support_tools_seen,
+        "native_support_tool_counts": support_tool_counts,
+        "native_support_tool_limits_ok": support_limits_ok,
         "unexpected_tools": unexpected_tools,
         "observed_session_hash_count": len(observed_session_hashes),
         "persisted_session": persisted_session,
