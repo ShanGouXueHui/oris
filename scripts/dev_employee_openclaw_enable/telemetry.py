@@ -9,8 +9,7 @@ from typing import Any
 from .models import RuntimeContext
 from .telemetry_analysis import (
     bounded_string_values,
-    duration_stats,
-    duration_values,
+    build_latency_metrics,
     evaluate_execution_outcomes,
     evaluate_native_support_outcomes,
 )
@@ -216,30 +215,11 @@ def inspect_telemetry(
         "records_after_start": len(records),
         "correlated_records": len(relevant_records),
         "session_records": len(correlation["matched_session_records"]),
-        "metrics": {
-            "ttft": {
-                "available": False,
-                "reason": "approved typed hooks do not expose a first-token timestamp",
-            },
-            "model_duration": duration_stats(
-                duration_values(relevant_records, "model_call_ended")
-            ),
-            "total_agent_duration": duration_stats(
-                duration_values(relevant_records, "agent_end")
-            ),
-            "tool_duration": {
-                tool: duration_stats(
-                    duration_values(relevant_records, "after_tool_call", tool)
-                )
-                for tool in sorted(expected_tools)
-            },
-            "native_support_tool_duration": {
-                tool: duration_stats(
-                    duration_values(relevant_records, "after_tool_call", tool)
-                )
-                for tool in sorted(support_tools)
-            },
-        },
+        "metrics": build_latency_metrics(
+            relevant_records,
+            expected_tools,
+            support_tools,
+        ),
         "secret_values_recorded": False,
         "conversation_content_recorded": False,
     }
