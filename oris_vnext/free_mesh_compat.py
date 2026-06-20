@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import time
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Any
 
 LOGICAL_MODELS = {
     "openrouter/auto": "primary_general",
+    "oris/free-auto": "primary_general",
     "oris/free-coding": "coding",
     "oris/free-report": "report_generation",
     "oris/free-fallback": "free_fallback",
@@ -25,8 +27,14 @@ def load_json(path: str | Path) -> dict[str, Any]:
     return raw
 
 
-def model_to_role(model: str | None) -> tuple[str, str]:
+def model_to_role(
+    model: str | None,
+    *,
+    requires_tools: bool = False,
+) -> tuple[str, str]:
     logical_model = model or "openrouter/auto"
+    if requires_tools:
+        return logical_model, "tool_calling"
     return logical_model, LOGICAL_MODELS.get(logical_model, "primary_general")
 
 
@@ -34,11 +42,11 @@ def messages_to_prompt(messages: Any) -> str:
     if not isinstance(messages, list):
         return ""
     parts: list[str] = []
-    for msg in messages:
-        if not isinstance(msg, dict):
+    for message in messages:
+        if not isinstance(message, dict):
             continue
-        role = str(msg.get("role", "user"))
-        content = msg.get("content", "")
+        role = str(message.get("role", "user"))
+        content = message.get("content", "")
         if isinstance(content, list):
             content = "\n".join(
                 str(item.get("text", "")) if isinstance(item, dict) else str(item)
@@ -53,13 +61,33 @@ def models_payload() -> dict[str, Any]:
     return {
         "object": "list",
         "data": [
-            {"id": model_id, "object": "model", "created": now, "owned_by": "oris-free-mesh"}
+            {
+                "id": model_id,
+                "object": "model",
+                "created": now,
+                "owned_by": "oris-free-mesh",
+            }
             for model_id in sorted(LOGICAL_MODELS)
         ],
     }
 
 
-def chat_payload(*, request_id: str, model: str, text: str, used_model: str | None = None, used_provider: str | None = None) -> dict[str, Any]:
+def chat_payload(
+    *,
+    request_id: str,
+    model: str,
+    message: dict[str, Any] | None = None,
+    text: str | None = None,
+    finish_reason: str | None = None,
+    used_model: str | None = None,
+    used_provider: str | None = None,
+) -> dict[str, Any]:
+    if message is None:
+        message = {"role": "assistant", "content": text or ""}
+    normalized = copy.deepcopy(message)
+    normalized["role"] = "assistant"
+    if not finish_reason:
+        finish_reason = "tool_calls" if normalized.get("tool_calls") else "stop"
     return {
         "id": f"chatcmpl-oris-{request_id}",
         "object": "chat.completion",
@@ -68,10 +96,18 @@ def chat_payload(*, request_id: str, model: str, text: str, used_model: str | No
         "choices": [
             {
                 "index": 0,
-                "message": {"role": "assistant", "content": text},
-                "finish_reason": "stop",
+                "message": normalized,
+                "finish_reason": finish_reason,
             }
         ],
-        "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
-        "oris": {"used_model": used_model, "used_provider": used_provider, "routing": "runtime_plan_free_mesh"},
+        "usage": {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+        },
+        "oris": {
+            "used_model": used_model,
+            "used_provider": used_provider,
+            "routing": "runtime_plan_free_mesh",
+        },
     }
