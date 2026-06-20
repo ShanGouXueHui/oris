@@ -20,6 +20,20 @@ from .models import RuntimeContext
 _POLICY_EVIDENCE_CONFIG = Path(
     "config/dev_employee/openclaw_policy_diagnostic_evidence.json"
 )
+_AUDIT_DIRECTORY_ROOTS = (
+    Path("scripts/dev_employee_openclaw_enable"),
+    Path("scripts/dev_employee_quality"),
+    Path("config/dev_employee"),
+)
+_AUDIT_AUTHORITY_FILES = (
+    Path("scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh"),
+    Path("scripts/dev_employee_diagnose_openclaw_readonly_policy.sh"),
+    Path("scripts/dev_employee_enable_openclaw_readonly_tools.sh"),
+    Path("memory/dev_employee/current_task.json"),
+    Path("memory/dev_employee/current_task.md"),
+    Path("docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md"),
+)
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
         "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
@@ -38,6 +52,21 @@ def _effective_authorities() -> dict[str, str]:
     authorities.pop("run", None)
     authorities.update(_ADDITIONAL_AUTHORITIES)
     return authorities
+
+
+def _audit_source_paths(repo_root: Path, suffixes: set[str]) -> tuple[Path, ...]:
+    paths = {
+        path.relative_to(repo_root)
+        for relative_root in _AUDIT_DIRECTORY_ROOTS
+        for path in (repo_root / relative_root).rglob("*")
+        if path.is_file() and path.suffix.lower() in suffixes
+    }
+    paths.update(
+        relative
+        for relative in _AUDIT_AUTHORITY_FILES
+        if (repo_root / relative).is_file()
+    )
+    return tuple(sorted(paths))
 
 
 def _oversized_target_modules(repo_root: Path) -> list[dict[str, Any]]:
@@ -79,7 +108,12 @@ def _combined_contract_error(repo_root: Path) -> str:
 
 def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
     policy = load_policy(repo_root)
-    quality_findings, quality_file_count = scan_repository(repo_root, policy)
+    audit_paths = _audit_source_paths(repo_root, policy.source_extensions)
+    quality_findings, quality_file_count = scan_repository(
+        repo_root,
+        policy,
+        audit_paths,
+    )
     architecture = scan_python_architecture(repo_root, _effective_authorities())
 
     duplicate_bindings = [
