@@ -5,11 +5,14 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .models import RuntimeContext
 from .process import CommandResult, run
+from .runtime_policy_patch import build_policy_validation_patch
+from .state import sha256_file
 
 
 _PATH_FLAGS = ("--config", "--config-path")
-_VALIDATOR_CANDIDATES = (
+_DIRECT_VALIDATOR_CANDIDATES = (
     ("config", "validate"),
     ("config", "check"),
 )
@@ -24,6 +27,7 @@ _CATEGORY_TERMS = (
     "group",
     "plugin",
     "tool",
+    "policy",
 )
 
 
@@ -54,14 +58,90 @@ def _categories(text: str) -> list[str]:
     return [term for term in _CATEGORY_TERMS if term in lowered]
 
 
-def validate_candidate_with_installed_runtime(candidate_path: Path) -> dict[str, Any]:
-    root_result, root_help = _help(())
-    help_fingerprints: dict[str, dict[str, Any]] = {
-        "root": _fingerprint(root_result),
+def _patch_dry_run(
+    context: RuntimeContext,
+    candidate_path: Path,
+    help_fingerprints: dict[str, dict[str, Any]],
+    discovered: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    result, help_text = _help(("config", "patch"))
+    help_fingerprints["config.patch"] = _fingerprint(result)
+    required_flags = ("--file", "--dry-run")
+    available = result.returncode == 0 and all(
+        _contains_flag(help_text, flag) for flag in required_flags
+    )
+    discovery: dict[str, Any] = {
+        "validator": "config.patch.dry-run",
+        "available": available,
+        "file_flag": _contains_flag(help_text, "--file"),
+        "dry_run_flag": _contains_flag(help_text, "--dry-run"),
+        "replace_path_flag": _contains_flag(help_text, "--replace-path"),
+        "json_flag": _contains_flag(help_text, "--json"),
     }
-    discovered: list[dict[str, Any]] = []
+    discovered.append(discovery)
+    if not available:
+        return None
 
-    for parts in _VALIDATOR_CANDIDATES:
+    patch_path, replace_paths, patch_evidence = build_policy_validation_patch(
+        context,
+        candidate_path,
+    )
+    if replace_paths and not discovery["replace_path_flag"]:
+        discovery["usable"] = False
+        discovery["reason_code"] = "replace_path_flag_unavailable"
+        return None
+
+    command = [
+        "openclaw",
+        "config",
+        "patch",
+        "--file",
+        str(patch_path),
+        "--dry-run",
+    ]
+    for path in replace_paths:
+        command.extend(["--replace-path", path])
+    if discovery["json_flag"]:
+        command.append("--json")
+
+    before_sha = sha256_file(context.openclaw_config)
+    validation = run(command, timeout=60)
+    after_sha = sha256_file(context.openclaw_config)
+    active_unchanged = before_sha == after_sha
+    output = validation.stdout + "\n" + validation.stderr
+    discovery["usable"] = True
+    return {
+        "status": (
+            "PASS" if validation.returncode == 0 and active_unchanged else "FAIL"
+        ),
+        "reason_code": (
+            None
+            if validation.returncode == 0 and active_unchanged
+            else "policy_patch_dry_run_rejected"
+            if active_unchanged
+            else "policy_patch_dry_run_modified_active_config"
+        ),
+        "validator": "config.patch.dry-run",
+        "validation_scope": "minimal_policy_delta_against_active_config",
+        "validation": _fingerprint(validation),
+        "diagnostic_categories": _categories(output),
+        "active_config_unchanged": active_unchanged,
+        "active_config_written": False,
+        "policy_patch": patch_evidence,
+        "help_fingerprints": help_fingerprints,
+        "discovered": discovered,
+        "candidate_config_recorded": False,
+        "secret_values_recorded": False,
+    }
+
+
+def _direct_candidate_validation(
+    candidate_path: Path,
+    root_help: str,
+    help_fingerprints: dict[str, dict[str, Any]],
+    discovered: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    for parts in _DIRECT_VALIDATOR_CANDIDATES:
         result, help_text = _help(parts)
         name = ".".join(parts)
         help_fingerprints[name] = _fingerprint(result)
@@ -87,11 +167,11 @@ def validate_candidate_with_installed_runtime(candidate_path: Path) -> dict[str,
         )
         if selected_flag is None:
             continue
-
-        if local_flag:
-            command = ["openclaw", *parts, selected_flag, str(candidate_path)]
-        else:
-            command = ["openclaw", selected_flag, str(candidate_path), *parts]
+        command = (
+            ["openclaw", *parts, selected_flag, str(candidate_path)]
+            if local_flag
+            else ["openclaw", selected_flag, str(candidate_path), *parts]
+        )
         validation = run(command, timeout=60)
         output = validation.stdout + "\n" + validation.stderr
         return {
@@ -106,10 +186,40 @@ def validate_candidate_with_installed_runtime(candidate_path: Path) -> dict[str,
             "candidate_config_recorded": False,
             "secret_values_recorded": False,
         }
+    return None
+
+
+def validate_candidate_with_installed_runtime(
+    context: RuntimeContext,
+    candidate_path: Path,
+) -> dict[str, Any]:
+    root_result, root_help = _help(())
+    help_fingerprints: dict[str, dict[str, Any]] = {
+        "root": _fingerprint(root_result),
+    }
+    discovered: list[dict[str, Any]] = []
+
+    patch_result = _patch_dry_run(
+        context,
+        candidate_path,
+        help_fingerprints,
+        discovered,
+    )
+    if patch_result is not None:
+        return patch_result
+
+    direct_result = _direct_candidate_validation(
+        candidate_path,
+        root_help,
+        help_fingerprints,
+        discovered,
+    )
+    if direct_result is not None:
+        return direct_result
 
     return {
         "status": "NOT_CHECKED",
-        "reason_code": "no_candidate_path_validator_discovered",
+        "reason_code": "no_safe_candidate_validator_discovered",
         "help_fingerprints": help_fingerprints,
         "discovered": discovered,
         "candidate_config_recorded": False,
