@@ -4,7 +4,7 @@ import os
 import shutil
 from pathlib import Path
 
-from .gateway import select_safe_baseline_tool, verify_public_routes
+from .gateway_http import select_safe_baseline_tool, verify_public_routes
 from .models import CheckRecorder, RepoSnapshot, RuntimeContext
 from .policy import validate_denied_baseline
 from .process import run
@@ -96,7 +96,7 @@ def run_transaction_preflight(
         and repository_is_clean(product_before)
     ):
         raise RuntimeError(
-            "product repository baseline differs from authoritative task state"
+            "product repository baseline differs from authoritative configuration"
         )
     checks.pass_check(
         "product_baseline",
