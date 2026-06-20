@@ -132,3 +132,62 @@ Expected changed paths:
 - `tools.deny`.
 
 The active config hash must remain unchanged. Gateway must not restart. No ORIS tool or product task may be invoked.
+
+## Immediate next action
+
+Run once on development/control host `43.106.55.255` as user `admin`:
+
+```bash
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_readonly_policy.sh
+```
+
+The run remains diagnostic-only. Do not execute enablement, activate the candidate, replace active config, restart Gateway, install the Skill, invoke ORIS tools, submit a product task or add write tools.
+
+Read the resulting GitHub evidence before any activation decision.
+
+## Environment
+
+- ORIS development/control/execution: `43.106.55.255`, user `admin`;
+- ORIS repository: `/home/admin/projects/oris`;
+- separate production host: `8.136.28.6`, user `deploy`; do not touch;
+- OpenClaw Gateway: `127.0.0.1:18789`;
+- enqueue/status: `127.0.0.1:18891`;
+- intake: `127.0.0.1:18892`;
+- Web Console: `127.0.0.1:18893`;
+- OpenClaw: `2026.5.19 (a185ca2)`;
+- Node: `v22.22.2`;
+- npm: `10.9.7`;
+- Codex CLI: real coding executor;
+- provider/model identities are runtime facts and must not be hardcoded;
+- ZenMux remains excluded unless explicitly reopened.
+
+## Engineering and interaction contract
+
+- Chinese, professional, direct and structured;
+- do not ask the user to decide routine engineering details;
+- write long scripts, documents and patches directly to GitHub;
+- give one short pull-and-run command only when host execution is required;
+- no long heredocs;
+- detailed logs go under `logs/dev_employee/` and are read from GitHub;
+- every user-run script ends with exactly one `===== SUMMARY =====`;
+- never print or commit secrets, raw config or private marker content;
+- user-facing shell scripts do not use `set -e`;
+- scan for duplicate definitions and hardcoded values before every edit;
+- reuse one authoritative definition per rule;
+- split large files by responsibility;
+- configuration and code remain separated;
+- generic commercial implementation only;
+- evidence is committed once through a detached worktree;
+- competing long-lived branches are prohibited;
+- do not append to tracked logs after commit.
+
+## Commercial priority order
+
+1. validate and enable the three read-only tools through a runtime-accepted policy;
+2. complete native natural-language acceptance;
+3. establish privacy-safe real latency telemetry;
+4. design explicit typed write actions only after P0 passes;
+5. add generic project onboarding and capability discovery;
+6. add controlled Admin Provider/Model/Policy management;
+7. add monitoring, privacy/retention, backup/restore and disaster recovery;
+8. add multi-tenant quotas, metering and commercial packaging.
