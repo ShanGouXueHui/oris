@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-import hashlib
 import re
 import time
-from urllib import error as urllib_error
-from urllib import request as urllib_request
 from dataclasses import dataclass
 from typing import Any
+from urllib import error as urllib_error
+from urllib import request as urllib_request
 
+from .command_evidence import command_result_fingerprint
 from .models import RuntimeContext
-from .process import CommandResult, run
+from .process import run
 
 
 _REDACT_PATTERNS = (
@@ -92,16 +92,6 @@ def service_snapshot(context: RuntimeContext) -> ServiceSnapshot:
     )
 
 
-def _digest(result: CommandResult) -> dict[str, Any]:
-    combined = (result.stdout + "\n" + result.stderr).encode("utf-8", errors="replace")
-    return {
-        "returncode": result.returncode,
-        "stdout_bytes": len(result.stdout.encode("utf-8", errors="replace")),
-        "stderr_bytes": len(result.stderr.encode("utf-8", errors="replace")),
-        "output_sha256": hashlib.sha256(combined).hexdigest(),
-    }
-
-
 def _safe_rows(text: str, limit: int) -> list[str]:
     rows: list[str] = []
     for raw in text.splitlines():
@@ -148,11 +138,11 @@ def capture_service_failure(context: RuntimeContext) -> dict[str, Any]:
     return {
         "snapshot": service_snapshot(context).evidence(),
         "systemctl": {
-            **_digest(status),
+            **command_result_fingerprint(status),
             "status_rows": _safe_rows(status.stdout + "\n" + status.stderr, 40),
         },
         "journalctl": {
-            **_digest(journal),
+            **command_result_fingerprint(journal),
             "journal_rows": _safe_rows(journal.stdout + "\n" + journal.stderr, 80),
         },
         "bounded": True,
@@ -173,7 +163,7 @@ def restart_service_and_wait(
             "gateway_restart_failed",
             {
                 "before": before.evidence(),
-                "restart": _digest(restarted),
+                "restart": command_result_fingerprint(restarted),
                 "failure_diagnostics": capture_service_failure(context),
             },
         )
