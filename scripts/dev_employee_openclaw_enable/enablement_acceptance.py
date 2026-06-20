@@ -30,11 +30,11 @@ def run_native_acceptance(
     state.telemetry_privacy_pass = bool(
         telemetry.get("schema_ok")
         and telemetry.get("content_safe")
-        and telemetry.get("only_approved_tools_used")
+        and telemetry.get("only_authorized_tools_used")
     )
     if not state.telemetry_privacy_pass:
         raise RuntimeError(
-            "telemetry privacy, schema, or approved-tool validation failed"
+            "telemetry privacy, schema, or authorized-tool validation failed"
         )
     checks.pass_check(
         "automatic_native_agent_acceptance",
