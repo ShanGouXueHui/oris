@@ -1,26 +1,39 @@
 {
-  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "three_tool_native_acceptance_passed_support_tool_contract_fix_pending",
+  "task_id": "commercial-openclaw-typed-write-actions-20260620",
+  "status": "readonly_p0_completed_latency_baseline_v1_persisted_typed_write_actions_design_pending",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "merge_bounded_native_skill_support_contract_then_rerun_once",
-  "objective": "Correct the native Skill support-tool acceptance boundary without expanding ORIS business capabilities, then rerun the existing three-tool native OpenClaw acceptance exactly once.",
+  "current_step": "new_chat_audit_current_main_then_reconcile_and_implement_offline_typed_write_action_foundation",
+  "objective": "Design and implement the minimum generic offline foundation for typed write actions with approval, RBAC, project authorization, idempotency and audit while preserving the accepted read-only runtime and keeping write actions unregistered and disabled until a separate controlled activation gate passes.",
+  "predecessor_completed_task": {
+    "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+    "result": "ENABLED_READONLY_AUTOMATIC_ACCEPTED",
+    "completed": true,
+    "evidence_commit": "65217d4bb81f4ac3cd8c6d917af95425d2b47529",
+    "checks_total": 26,
+    "checks_pass": 26,
+    "checks_fail": 0,
+    "checks_not_checked": 0
+  },
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
     "primary_public_entry": "https://control.orisfy.com",
     "openclaw_local_gateway": "http://127.0.0.1:18789",
     "plugin_id": "oris-dev-employee",
-    "custom_oris_ui_role": "restricted diagnostics and rollback only",
-    "do_not_reinstall_or_upgrade_openclaw": true,
-    "do_not_reinstall_plugin_in_current_task": true,
-    "write_tools_allowed_in_current_task": false,
+    "custom_oris_ui_role": "restricted administration, diagnostics and rollback only",
+    "formal_chain": "user -> native OpenClaw UI/session -> native ORIS Plugin/Agent Harness -> ORIS authorization/task governance -> Codex execution -> product commit/tests -> ORIS evidence returned through OpenClaw",
     "broad_prompt_keyword_task_creation_allowed": false,
+    "generic_exec_or_write_tool_allowed": false,
     "mainstream_branch": "main",
     "zenmux_allowed": false
   },
   "platform_state": {
+    "development_host": "43.106.55.255",
+    "development_user": "admin",
+    "production_host_must_not_be_touched": "8.136.28.6",
+    "production_user": "deploy",
     "openclaw_version": "2026.5.19 (a185ca2)",
     "openclaw_gateway_service": "openclaw-gateway.service",
     "openclaw_gateway_port": 18789,
@@ -33,8 +46,33 @@
     "intake_loopback_only": true,
     "active_product_task": false,
     "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+    "product_path": "/home/admin/projects/oris-final-acceptance-api",
     "product_baseline_commit": "bcb93e17ea88704548101f5e4a5c460e15a80ec7",
-    "production_host_must_not_be_touched": "8.136.28.6"
+    "research_database": "oris_insight",
+    "research_schema": "insight",
+    "research_database_role": "research_only_not_dev_employee_task_state"
+  },
+  "readonly_p0": {
+    "completed": true,
+    "result": "ENABLED_READONLY_AUTOMATIC_ACCEPTED",
+    "evidence_commit": "65217d4bb81f4ac3cd8c6d917af95425d2b47529",
+    "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T213307Z.json",
+    "evidence_log": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T213307Z.log",
+    "selected_policy_mode": "profile-authority-preserved+created-profile-also-allow+skill-unrestricted",
+    "routing_skill": "oris-readonly-status",
+    "routing_skill_installed": true,
+    "routing_skill_agent": "main",
+    "routing_skill_runtime_visible": true,
+    "gateway_transport_proven": true,
+    "persisted_native_session": true,
+    "telemetry_privacy_pass": true,
+    "queue_unchanged": true,
+    "product_unchanged": true,
+    "write_tools_absent": true,
+    "rollback_count": 0,
+    "rollback_required": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false
   },
   "approved_readonly_tools": [
     "oris_queue_status",
@@ -45,7 +83,9 @@
     {
       "name": "read",
       "max_calls": 1,
-      "purpose": "load the approved routing Skill body from the native OpenClaw Skill catalog before the first ORIS business-tool call",
+      "must_precede_first_oris_business_tool": true,
+      "must_succeed": true,
+      "purpose": "load the approved routing Skill body from the native OpenClaw Skill catalog",
       "oris_business_tool": false,
       "new_effective_tool": false
     }
@@ -55,142 +95,122 @@
     "after_tool_call",
     "agent_end"
   ],
-  "completed_readiness": {
-    "result": "READY",
-    "checks_total": 26,
-    "checks_pass": 26,
-    "evidence_commit": "a63dd823ac4d5b3fa0fa867771f94904d0b4ceee"
-  },
-  "latest_model_tool_diagnostic": {
-    "result": "MODEL_TOOL_CALL_AND_ORIS_ROUTING_PASS",
-    "evidence_commit": "c415c614ac726906186da1756e3beb7c2de003b2",
-    "checks_total": 26,
-    "checks_pass": 26,
-    "free_mesh_protocol_version": 2,
-    "effective_approved_tool_count": 3,
-    "safe_builtin_tool_called": true,
-    "oris_queue_tool_called": true,
-    "persisted_native_session": true,
-    "telemetry_privacy_pass": true,
-    "rollback_healthy": true
-  },
-  "previous_schema_failure": {
-    "evidence_commit": "22ee300081e98d8e2df4c3f4a495c9608db98d2b",
-    "resolved_by_commit": "e3f9ef451f35fee679c4c040d83dcbe017cec9aa",
-    "schema_outcome_separation_verified_by_latest_run": true
-  },
-  "latest_full_acceptance": {
-    "result": "FAILED",
-    "failure_code": "RuntimeError",
-    "evidence_commit": "59725fd783732464b6aec0f249868e78e30a5da2",
-    "checks_total": 27,
-    "checks_pass": 20,
-    "checks_fail": 1,
-    "checks_not_checked": 6,
-    "free_mesh_protocol_version": 2,
-    "direct_tool_calls_pass": true,
-    "native_agent_turn_count": 3,
-    "native_agent_return_codes_pass": true,
-    "gateway_transport_proven": true,
-    "persisted_native_session": true,
-    "model_call_ended_count": 7,
-    "agent_end_count": 3,
-    "after_tool_call_count": 4,
-    "expected_tool_attempt_counts": {
-      "oris_queue_status": 1,
-      "oris_latest_task_status": 1,
-      "oris_task_status": 1
+  "latency_baseline_v1": {
+    "source_evidence_commit": "65217d4bb81f4ac3cd8c6d917af95425d2b47529",
+    "privacy_safe": true,
+    "commercial_slo_or_sla": false,
+    "model_duration_ms": {
+      "count": 8,
+      "min": 2661,
+      "p50": 5478,
+      "max": 49734
     },
-    "expected_tools_successful": true,
-    "execution_outcome_ok": true,
-    "schema_ok": true,
-    "content_safe": true,
-    "file_permissions_ok": true,
-    "exact_agent_turn_boundary": true,
-    "native_core_tools_seen": {
-      "read": 1
+    "agent_total_duration_ms": {
+      "count": 3,
+      "min": 8538,
+      "p50": 9029,
+      "max": 69134
     },
-    "unexpected_tools_seen": [
-      "read"
+    "tool_duration_ms": {
+      "oris_queue_status": {
+        "count": 1,
+        "min": 13,
+        "p50": 13,
+        "max": 13
+      },
+      "oris_task_status": {
+        "count": 1,
+        "min": 42,
+        "p50": 42,
+        "max": 42
+      },
+      "oris_latest_task_status": {
+        "count": 2,
+        "min": 13,
+        "p50": 27,
+        "max": 41
+      },
+      "read": {
+        "count": 1,
+        "min": 92,
+        "p50": 92,
+        "max": 92
+      }
+    },
+    "ttft_available": false,
+    "ttft_unavailable_reason": "approved typed hooks do not expose a first-token timestamp",
+    "interpretation": "ORIS tool execution is millisecond-scale; model and Agent orchestration dominate observed latency. More samples are required before defining an SLO or SLA."
+  },
+  "current_write_capability_state": {
+    "typed_write_actions_registered": false,
+    "typed_write_actions_runtime_enabled": false,
+    "generic_exec_tool_enabled": false,
+    "generic_file_write_tool_enabled": false,
+    "real_product_write_acceptance_authorized": false
+  },
+  "next_phase_design": {
+    "plan": "docs/DEV_EMPLOYEE_TYPED_WRITE_ACTIONS_COMMERCIAL_PHASE_PLAN_2026-06-20.md",
+    "required_capabilities": [
+      "typed action schemas",
+      "identity mapping",
+      "RBAC",
+      "project authorization",
+      "risk classification",
+      "immutable prepared operations",
+      "approval authority and replay protection",
+      "idempotency",
+      "atomic task and queue transaction",
+      "cancellation",
+      "explicit terminal retry",
+      "privacy-safe audit"
     ],
-    "rollback_count": 1,
-    "rollback_healthy": true,
-    "product_task_submitted": false,
-    "write_tools_added": false
+    "provisional_actions_to_reconcile_with_existing_authority": [
+      "oris_prepare_goal",
+      "oris_submit_goal",
+      "oris_cancel_task",
+      "oris_retry_task"
+    ],
+    "runtime_activation_authorized": false,
+    "real_product_task_authorized": false
   },
-  "failure_analysis": {
-    "functional_oris_tool_acceptance_passed": true,
-    "schema_and_execution_outcome_passed": true,
-    "privacy_and_permission_checks_passed": true,
-    "tool_authority_contract_error": true,
-    "root_cause": "The acceptance validator treated one native OpenClaw read call used during Skill loading as an additional ORIS business capability.",
-    "required_correction": "Maintain the three Plugin-owned ORIS tools as the sole business-tool authority while separately permitting zero or one successful pre-ORIS native read call for approved Skill hydration.",
-    "plugin_change_required": false,
-    "openclaw_reinstall_required": false,
-    "provider_model_change_required": false,
-    "effective_surface_expansion_required": false
-  },
-  "support_tool_rejection_rules": [
-    "reject a configured support tool that overlaps an ORIS business tool",
-    "reject a known write-capable support tool",
-    "reject duplicate support-tool names",
-    "reject missing purpose or invalid call limit",
-    "reject support-tool calls over the configured limit",
-    "reject a failed support-tool call",
-    "reject a support-tool call after the first ORIS business-tool call",
-    "reject every undeclared tool",
-    "do not record tool arguments, results, Skill content, conversation content or filesystem path"
-  ],
-  "current_runtime_after_failure": {
-    "tools_denied_baseline_restored": true,
-    "routing_skill_restored": true,
-    "gateway_healthy": true,
-    "queue_unchanged": true,
-    "product_unchanged": true,
-    "write_tools_absent": true
-  },
-  "next_action": "Merge the bounded native Skill support-tool contract after a zero-finding code-first audit, then rerun scripts/dev_employee_enable_openclaw_readonly_tools.sh exactly once.",
-  "next_action_entrypoint": "scripts/dev_employee_enable_openclaw_readonly_tools.sh",
-  "next_action_execution_limit": 1,
+  "next_action": "Start a new conversation, read the authoritative context, run a fresh code-first audit on current main, inspect and reconcile existing authorization/task/queue/idempotency/Plugin/Harness implementations, then implement only the minimum generic offline typed write-action foundation. Keep write actions unregistered and runtime-disabled.",
   "next_action_requirements": [
-    "all three Plugin-owned ORIS tools must succeed",
-    "zero or one declared native Skill support read may occur",
-    "the support read must precede the first ORIS business-tool call",
-    "no support call may fail",
-    "no undeclared tool may appear",
-    "require schema, privacy, permissions, persisted session and exact turn boundary",
-    "require queue, product, source, route, listener and write-tool invariants",
-    "publish sanitized detached-worktree evidence",
-    "on failure restore exact tools-denied configuration, marker and routing Skill state"
+    "do not redesign the architecture",
+    "do not touch OpenClaw runtime before the fresh code-first audit passes",
+    "do not change or remove the accepted read-only policy",
+    "do not enable a generic exec or write tool",
+    "do not register typed write actions during contract-only implementation",
+    "do not submit a real product task",
+    "one rule must have one authoritative implementation",
+    "configuration and code must remain separated",
+    "all implementation must be generic and project-registry driven",
+    "publish tests and durable evidence through GitHub"
   ],
-  "success_state": {
-    "expected_result": "ENABLED_READONLY_AUTOMATIC_ACCEPTED",
-    "retain_validated_readonly_policy": true,
-    "retain_routing_skill": true,
-    "retain_private_marker": true,
-    "next_action": "PERSIST_READONLY_P0_COMPLETION_AND_ESTABLISH_PRIVACY_SAFE_LATENCY_BASELINE"
-  },
   "unfinished_original_work": [
-    "successful native natural-language acceptance for all three read-only tools",
-    "read-only P0 completion persistence",
-    "real privacy-safe model/tool/agent latency baseline",
     "typed write actions with approval, RBAC, project authorization, idempotency and audit",
     "generic project onboarding and capability discovery",
     "Admin UI Provider, Model and Policy management",
-    "monitoring and alerting",
+    "monitoring, alerts and SLOs",
     "privacy and retention controls",
-    "backup, restore and disaster recovery",
+    "backup, restore, upgrade rollback and disaster recovery",
     "multi-tenant identity and isolation",
-    "quota, metering and commercial packaging",
-    "production deployment validation"
+    "quota and metering",
+    "commercial packaging",
+    "production deployment validation under a separate task"
   ],
   "authoritative_context": [
+    "memory/dev_employee/CONTEXT_INDEX_ADDENDUM_2026-06-20.md",
+    "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-20.md",
+    "memory/dev_employee/SESSION_ARCHIVE_COMPLETION_2026-06-20.md",
+    "memory/dev_employee/ENVIRONMENT_AND_WORKING_CONTEXT_2026-06-20.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
-    "config/dev_employee/openclaw_readonly_acceptance.json",
-    "docs/DEV_EMPLOYEE_NATIVE_SKILL_SUPPORT_TOOL_CONTRACT_2026-06-20.md",
-    "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T203730Z.json",
+    "docs/DEV_EMPLOYEE_READONLY_P0_COMPLETION_AND_LATENCY_BASELINE_2026-06-20.md",
+    "docs/DEV_EMPLOYEE_TYPED_WRITE_ACTIONS_COMMERCIAL_PHASE_PLAN_2026-06-20.md",
+    "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_2026-06-16.md",
+    "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-17.md",
+    "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-19.md",
     "orchestration/project_registry.json"
   ],
   "updated_at": "2026-06-20"
