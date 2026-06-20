@@ -1,0 +1,38 @@
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+checked_at=20260620T200926Z
+result=FAILED
+failure_code=RuntimeError
+selected_policy_mode=profile-authority-preserved+created-profile-also-allow+skill-unrestricted
+routing_skill_installed=NO
+CHECK|source_code_governance|PASS|duplicate, authority, cycle, module-size, hardcoding and contract gates passed
+CHECK|automatic_selftests|PASS|policy, Skill, telemetry correlation, and output metadata selftests passed
+CHECK|authoritative_readiness|PASS|latest READY evidence verified
+CHECK|tools_denied_baseline|PASS|approved tools remain denied before mutation
+CHECK|gateway_and_routes|PASS|existing Gateway and native public root are healthy
+CHECK|private_internal_listeners|PASS|required ORIS listeners are loopback-only
+CHECK|queue_baseline|PASS|zero active tasks and queue fingerprint captured
+CHECK|product_baseline|PASS|product HEAD, remote main, and clean worktree verified
+CHECK|oris_source_baseline|PASS|ORIS source worktree clean; configured runtime artifacts excluded
+CHECK|safe_builtin_baseline|PASS|safe built-in tool is accessible before mutation
+CHECK|free_mesh_tool_protocol|PASS|loopback Free Mesh protocol v2 and tool calling verified
+CHECK|activation_candidate_gate|PASS|single-scope candidate passed just-in-time native dry-run
+CHECK|activation_candidate_snapshot|PASS|validated active configuration exactly matches private backup
+CHECK|private_backup|PASS|tools-denied config, marker, and routing Skill backup captured
+CHECK|routing_skill|PASS|managed ORIS read-only routing skill installed
+CHECK|controlled_policy_enablement|PASS|minimal approved tool and agent-skill policy applied
+CHECK|routing_skill_runtime|PASS|routing skill is eligible and visible to the selected agent
+CHECK|plugin_runtime|PASS|exact read-only tools and typed hooks verified
+CHECK|direct_tool_calls|PASS|three ORIS tools and safe baseline tool passed
+CHECK|queue_after_direct_calls|PASS|queue fingerprint is unchanged
+CHECK|automatic_enablement|FAIL|RuntimeError
+CHECK|automatic_native_agent_acceptance|NOT_CHECKED|blocked by an earlier enablement failure
+CHECK|telemetry_privacy|NOT_CHECKED|blocked by an earlier enablement failure
+CHECK|final_queue_invariant|NOT_CHECKED|blocked by an earlier enablement failure
+CHECK|final_product_invariant|NOT_CHECKED|blocked by an earlier enablement failure
+CHECK|final_runtime_and_route_invariants|NOT_CHECKED|blocked by an earlier enablement failure
+CHECK|private_marker|NOT_CHECKED|blocked by an earlier enablement failure
+product_task_submitted=NO
+write_tools_added=NO
+openclaw_reinstalled_or_upgraded=NO
+secret_values_recorded=NO
+conversation_content_recorded=NO
