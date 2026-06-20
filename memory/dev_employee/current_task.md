@@ -1,85 +1,104 @@
 # Current AI Dev Employee Task
 
-Status: `model_tool_call_and_oris_routing_pass_pending_three_tool_native_acceptance`
+Status: `three_tool_native_acceptance_functionally_passed_validator_fix_pending`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `run_three_tool_native_language_acceptance`
+Current step: `fix_telemetry_schema_outcome_contract_then_rerun_once`
 
-## Objective
+## Latest complete acceptance evidence
 
-Complete the existing native OpenClaw read-only acceptance for all three approved ORIS tools without adding write capability or submitting a product task:
+Evidence commit:
 
-- `oris_queue_status`;
-- `oris_latest_task_status`;
-- `oris_task_status`.
+`22ee300081e98d8e2df4c3f4a495c9608db98d2b`
 
-## Proven current boundary
+Reported result:
 
-Sanitized evidence commit:
+`FAILED / RuntimeError`
 
-`c415c614ac726906186da1756e3beb7c2de003b2`
+The runtime path itself completed successfully:
 
-Result:
+- Free Mesh protocol version 2 passed;
+- direct calls to all three ORIS tools passed;
+- three native Agent turns returned zero through Gateway;
+- one persisted native session was proven;
+- `model_call_ended=6`;
+- `agent_end=3`;
+- `after_tool_call=4`;
+- all three required tools were observed;
+- no unapproved tool was observed;
+- exact three-turn boundary passed;
+- telemetry content safety and file permissions passed;
+- rollback restored the exact tools-denied baseline;
+- no product task or write tool was introduced.
 
-`MODEL_TOOL_CALL_AND_ORIS_ROUTING_PASS`
+Tool attempts were:
 
-The evidence proves:
+- `oris_queue_status`: 1;
+- `oris_latest_task_status`: 2;
+- `oris_task_status`: 1.
 
-- `26/26` checks passed;
-- Free Mesh protocol version 2 was healthy with tool calling enabled;
-- all three approved ORIS tools were present in the native effective surface and plugin-owned;
-- a safe built-in tool was called by the runtime model;
-- `oris_queue_status` was called through the native Agent Harness;
-- two approved `after_tool_call` events were correlated;
-- persisted native-session and telemetry privacy checks passed;
-- exact tools-denied rollback completed successfully;
-- queue, product repository, and listener invariants passed;
-- no product task was submitted and no write tool was added.
+## Accurate failure boundary
 
-The earlier effective-surface versus provider/model-capability boundary is resolved.
+The only failed telemetry field was:
+
+`schema_ok=false`
+
+The Plugin contract explicitly permits `success` and `error` boolean fields. The validator also lists those fields in its allowed schema, but then incorrectly marks any `error=true` or `success=false` record as a schema violation.
+
+This conflates two separate concerns:
+
+1. whether a telemetry record has an approved structure;
+2. whether an individual model, tool, or Agent attempt reported failure.
+
+The duplicate latest-task call indicates a possible recoverable retry. A recoverable attempt must be counted and surfaced, but it must not be mislabeled as malformed telemetry.
+
+## Required correction
+
+Separate telemetry schema validation from execution-outcome validation.
+
+Schema validation must continue to reject:
+
+- malformed JSON;
+- non-object records;
+- unknown or forbidden fields;
+- unexpected hook types;
+- invalid hashes;
+- invalid duration values.
+
+Execution-outcome validation must:
+
+- require at least one non-failed call for every approved ORIS tool;
+- reject any explicitly failed `agent_end` record;
+- retain failed-attempt counts and retry metadata;
+- permit a failed intermediate attempt only when the required tool later succeeds and the Agent turn completes successfully.
+
+No Plugin modification, OpenClaw reinstall, provider/model change, or policy broadening is required.
+
+## Current runtime state
+
+The failed transaction rolled back successfully:
+
+- exact tools-denied configuration restored;
+- previous marker and routing Skill state restored;
+- Gateway healthy;
+- queue and product unchanged;
+- write tools absent.
 
 ## Next required action
 
-Run the existing complete read-only acceptance transaction once:
+1. merge the telemetry schema/outcome correction only after the exact branch passes the unified code-first audit;
+2. rerun the existing complete acceptance exactly once:
 
 `scripts/dev_employee_enable_openclaw_readonly_tools.sh`
 
-The transaction must use `config/dev_employee/openclaw_readonly_acceptance.json`, which defines three natural-language turns in one persisted native OpenClaw session.
-
-Before policy mutation and model turns it must revalidate source governance, selftests, readiness, tools-denied baseline, Gateway/routes, loopback listeners, queue baseline, product baseline, ORIS source cleanliness, and Free Mesh protocol version 2.
-
-## Passing conditions
-
-- all three natural-language turns succeed;
-- all three approved ORIS tools appear in correlated telemetry;
-- no unapproved tool appears;
-- Gateway transport and one persisted native session are proven;
-- telemetry privacy, schema, and permissions pass;
-- queue, product, ORIS source, routes, listeners, and write-tool invariants pass;
-- sanitized GitHub evidence is committed and remote-verified.
-
-On success, the validated read-only policy and routing Skill remain active for the native OpenClaw UI. The next action becomes `ESTABLISH_PRIVACY_SAFE_LATENCY_BASELINE`.
-
-On failure, the existing transaction must restore the exact tools-denied configuration, marker, and routing Skill state and publish failure evidence. Do not repeat the complete acceptance before reviewing that evidence.
+On success, retain the validated read-only policy and routing Skill and proceed to P0 completion persistence plus the privacy-safe latency baseline.
 
 ## Prohibitions
 
 - no write tools or typed write actions in this task;
 - no product task submission;
 - no OpenClaw reinstall or upgrade;
-- no broad prompt-keyword task creation;
 - no provider/model hardcoding;
 - no public exposure of ports `18891` or `18892`;
 - do not touch production host `8.136.28.6`.
-
-## Remaining commercialization sequence
-
-1. complete the three-tool native read-only acceptance;
-2. persist read-only P0 completion state;
-3. establish a real privacy-safe model/tool/agent latency baseline;
-4. design typed write actions with approval, RBAC, project authorization, idempotency, and audit;
-5. add generic project onboarding and capability discovery;
-6. add controlled Admin UI management for Provider, Model, and Policy;
-7. add monitoring, privacy/retention, backup/restore, and disaster recovery;
-8. add multi-tenant identity, quotas, metering, and commercial packaging.
