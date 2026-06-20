@@ -1,12 +1,12 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "three_tool_native_acceptance_functionally_passed_validator_fix_pending",
+  "status": "three_tool_native_acceptance_passed_support_tool_contract_fix_pending",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "fix_telemetry_schema_outcome_contract_then_rerun_once",
-  "objective": "Correct the telemetry validator contract without weakening real failure detection, then rerun the existing three-tool native OpenClaw acceptance exactly once.",
+  "current_step": "merge_bounded_native_skill_support_contract_then_rerun_once",
+  "objective": "Correct the native Skill support-tool acceptance boundary without expanding ORIS business capabilities, then rerun the existing three-tool native OpenClaw acceptance exactly once.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
     "primary_public_entry": "https://control.orisfy.com",
@@ -41,6 +41,15 @@
     "oris_task_status",
     "oris_latest_task_status"
   ],
+  "native_support_tool_policy": [
+    {
+      "name": "read",
+      "max_calls": 1,
+      "purpose": "load the approved routing Skill body from the native OpenClaw Skill catalog before the first ORIS business-tool call",
+      "oris_business_tool": false,
+      "new_effective_tool": false
+    }
+  ],
   "required_hooks": [
     "model_call_ended",
     "after_tool_call",
@@ -65,10 +74,15 @@
     "telemetry_privacy_pass": true,
     "rollback_healthy": true
   },
+  "previous_schema_failure": {
+    "evidence_commit": "22ee300081e98d8e2df4c3f4a495c9608db98d2b",
+    "resolved_by_commit": "e3f9ef451f35fee679c4c040d83dcbe017cec9aa",
+    "schema_outcome_separation_verified_by_latest_run": true
+  },
   "latest_full_acceptance": {
     "result": "FAILED",
     "failure_code": "RuntimeError",
-    "evidence_commit": "22ee300081e98d8e2df4c3f4a495c9608db98d2b",
+    "evidence_commit": "59725fd783732464b6aec0f249868e78e30a5da2",
     "checks_total": 27,
     "checks_pass": 20,
     "checks_fail": 1,
@@ -79,40 +93,54 @@
     "native_agent_return_codes_pass": true,
     "gateway_transport_proven": true,
     "persisted_native_session": true,
-    "model_call_ended_count": 6,
+    "model_call_ended_count": 7,
     "agent_end_count": 3,
     "after_tool_call_count": 4,
-    "expected_tools_seen": [
-      "oris_queue_status",
-      "oris_latest_task_status",
-      "oris_task_status"
-    ],
-    "unexpected_tools_seen": [],
-    "only_approved_tools_used": true,
-    "exact_agent_turn_boundary": true,
-    "content_safe": true,
-    "file_permissions_ok": true,
-    "schema_ok": false,
-    "tool_attempt_counts": {
+    "expected_tool_attempt_counts": {
       "oris_queue_status": 1,
-      "oris_latest_task_status": 2,
+      "oris_latest_task_status": 1,
       "oris_task_status": 1
     },
+    "expected_tools_successful": true,
+    "execution_outcome_ok": true,
+    "schema_ok": true,
+    "content_safe": true,
+    "file_permissions_ok": true,
+    "exact_agent_turn_boundary": true,
+    "native_core_tools_seen": {
+      "read": 1
+    },
+    "unexpected_tools_seen": [
+      "read"
+    ],
     "rollback_count": 1,
     "rollback_healthy": true,
     "product_task_submitted": false,
     "write_tools_added": false
   },
   "failure_analysis": {
-    "functional_tool_routing_passed": true,
+    "functional_oris_tool_acceptance_passed": true,
+    "schema_and_execution_outcome_passed": true,
     "privacy_and_permission_checks_passed": true,
-    "validator_contract_error": true,
-    "root_cause": "The telemetry validator treated error=true or success=false as a schema violation even though the Plugin telemetry contract explicitly allows those boolean fields.",
-    "required_correction": "Separate record schema validity from execution outcome. Permit recoverable retries only when every required tool has at least one non-failed call and all agent_end records are non-failed.",
+    "tool_authority_contract_error": true,
+    "root_cause": "The acceptance validator treated one native OpenClaw read call used during Skill loading as an additional ORIS business capability.",
+    "required_correction": "Maintain the three Plugin-owned ORIS tools as the sole business-tool authority while separately permitting zero or one successful pre-ORIS native read call for approved Skill hydration.",
     "plugin_change_required": false,
     "openclaw_reinstall_required": false,
-    "provider_model_change_required": false
+    "provider_model_change_required": false,
+    "effective_surface_expansion_required": false
   },
+  "support_tool_rejection_rules": [
+    "reject a configured support tool that overlaps an ORIS business tool",
+    "reject a known write-capable support tool",
+    "reject duplicate support-tool names",
+    "reject missing purpose or invalid call limit",
+    "reject support-tool calls over the configured limit",
+    "reject a failed support-tool call",
+    "reject a support-tool call after the first ORIS business-tool call",
+    "reject every undeclared tool",
+    "do not record tool arguments, results, Skill content, conversation content or filesystem path"
+  ],
   "current_runtime_after_failure": {
     "tools_denied_baseline_restored": true,
     "routing_skill_restored": true,
@@ -121,16 +149,16 @@
     "product_unchanged": true,
     "write_tools_absent": true
   },
-  "next_action": "Merge the telemetry schema/outcome separation after zero-finding code-first audit, then rerun scripts/dev_employee_enable_openclaw_readonly_tools.sh exactly once.",
+  "next_action": "Merge the bounded native Skill support-tool contract after a zero-finding code-first audit, then rerun scripts/dev_employee_enable_openclaw_readonly_tools.sh exactly once.",
   "next_action_entrypoint": "scripts/dev_employee_enable_openclaw_readonly_tools.sh",
   "next_action_execution_limit": 1,
   "next_action_requirements": [
-    "schema validation must inspect only record structure and field types",
-    "execution outcome validation must require one non-failed call for each approved tool",
-    "execution outcome validation must reject any failed agent_end record",
-    "recoverable failed attempts must be counted and reported without being mislabeled as schema errors",
-    "run all three natural-language turns in one persisted native session",
-    "require no unapproved tools",
+    "all three Plugin-owned ORIS tools must succeed",
+    "zero or one declared native Skill support read may occur",
+    "the support read must precede the first ORIS business-tool call",
+    "no support call may fail",
+    "no undeclared tool may appear",
+    "require schema, privacy, permissions, persisted session and exact turn boundary",
     "require queue, product, source, route, listener and write-tool invariants",
     "publish sanitized detached-worktree evidence",
     "on failure restore exact tools-denied configuration, marker and routing Skill state"
@@ -161,8 +189,8 @@
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
     "config/dev_employee/openclaw_readonly_acceptance.json",
-    "logs/dev_employee/openclaw_model_tool_call_diagnostic/openclaw-model-tool-call-diagnostic-20260620T194226Z.json",
-    "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T200926Z.json",
+    "docs/DEV_EMPLOYEE_NATIVE_SKILL_SUPPORT_TOOL_CONTRACT_2026-06-20.md",
+    "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T203730Z.json",
     "orchestration/project_registry.json"
   ],
   "updated_at": "2026-06-20"
