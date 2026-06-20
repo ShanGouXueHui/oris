@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from .agent_output import reported_tool_names, session_identifier_hashes
+from .agent_output import (
+    effective_tool_surface,
+    reported_tool_names,
+    session_identifier_hashes,
+)
 from .telemetry_correlation import correlate_records
 
 
@@ -90,3 +94,41 @@ def test_output_metadata() -> None:
     assert len(hashes) == 1
     assert "private-session-id" not in next(iter(hashes))
     assert reported_tool_names(payload, TOOLS) == {sample_tool}
+
+    report_payload = {
+        "meta": {
+            "systemPromptReport": {
+                "tools": {
+                    "entries": [
+                        {"name": name, "schemaChars": 20, "summaryChars": 10}
+                        for name in sorted(TOOLS)
+                    ]
+                },
+                "skills": {"entries": [{"name": "sample-routing-skill"}]},
+            }
+        }
+    }
+    surface = effective_tool_surface(
+        report_payload,
+        TOOLS,
+        "sample-routing-skill",
+    )
+    assert surface["status"] == "PASS"
+    assert surface["approved_tools_present"] == sorted(TOOLS)
+    assert surface["missing_approved_tools"] == []
+    assert surface["routing_skill_present"] is True
+    assert surface["other_tool_names_recorded"] is False
+
+    missing_payload = {
+        "systemPromptReport": {
+            "tools": {"entries": [{"name": sorted(TOOLS)[0]}]},
+            "skills": {"entries": []},
+        }
+    }
+    missing_surface = effective_tool_surface(
+        missing_payload,
+        TOOLS,
+        "sample-routing-skill",
+    )
+    assert missing_surface["status"] == "FAIL"
+    assert len(missing_surface["missing_approved_tools"]) == len(TOOLS) - 1
