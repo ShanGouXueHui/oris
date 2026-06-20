@@ -26,6 +26,7 @@ _AUDIT_DIRECTORY_ROOTS = (
     Path("config/dev_employee"),
 )
 _AUDIT_AUTHORITY_FILES = (
+    Path("scripts/dev_employee_activate_free_mesh_tool_calling_and_diagnose.sh"),
     Path("scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh"),
     Path("scripts/dev_employee_diagnose_openclaw_model_tool_call_routing.sh"),
     Path("scripts/dev_employee_diagnose_openclaw_readonly_policy.sh"),
@@ -42,6 +43,7 @@ _AUDIT_AUTHORITY_FILES = (
     Path("oris_vnext/runtime_execution_state.py"),
     Path("oris_vnext/runtime_provider_client.py"),
     Path("tests/test_free_mesh_tool_calling.py"),
+    Path("tests/test_free_mesh_protocol.py"),
     Path("orchestration/routing_policy.yaml"),
     Path("orchestration/runtime_policy.yaml"),
     Path("memory/dev_employee/current_task.json"),
@@ -72,6 +74,15 @@ _ADDITIONAL_AUTHORITIES = {
     ),
     "run_model_tool_diagnostic": (
         "scripts/dev_employee_openclaw_enable/model_tool_diagnostic_runtime.py"
+    ),
+    "endpoint_from_config": (
+        "scripts/dev_employee_openclaw_enable/free_mesh_protocol.py"
+    ),
+    "validate_health_payload": (
+        "scripts/dev_employee_openclaw_enable/free_mesh_protocol.py"
+    ),
+    "probe_free_mesh_protocol": (
+        "scripts/dev_employee_openclaw_enable/free_mesh_protocol.py"
     ),
     "parse_chat_request": "oris_vnext/openai_chat_contract.py",
     "normalize_assistant_message": "oris_vnext/openai_chat_contract.py",
