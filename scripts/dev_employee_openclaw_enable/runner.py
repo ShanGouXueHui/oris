@@ -12,9 +12,19 @@ from .enablement_acceptance import (
 from .enablement_activation import activate_candidate, verify_runtime_and_direct_calls
 from .evidence import write_and_commit_evidence
 from .models import CheckRecorder, RunState, RuntimeContext
-from .policy import PolicyApplication, PolicyBackup, create_backup, restore_denied_policy
+from .policy import (
+    PolicyApplication,
+    PolicyBackup,
+    create_backup,
+    restore_denied_policy,
+    validate_denied_baseline,
+)
 from .preflight_checks import run_transaction_preflight
-from .service_control import GatewayServiceError, restart_service_and_wait
+from .service_control import (
+    GatewayServiceError,
+    restart_service_and_wait,
+    service_snapshot,
+)
 from .skill_installation import SkillBackup, backup_routing_skill, restore_routing_skill
 from .state import sha256_file
 
@@ -102,6 +112,15 @@ def _rollback(
             "required": False,
             "reason": "candidate_gateway_restart_not_attempted",
         }
+
+    try:
+        state.details["rollback_denied_baseline"] = validate_denied_baseline(context)
+    except Exception as exc:
+        failures.append("denied_baseline:" + type(exc).__name__)
+    final_gateway = service_snapshot(context)
+    state.details["rollback_final_gateway"] = final_gateway.evidence()
+    if not final_gateway.healthy:
+        failures.append("gateway_final_health")
 
     state.rollback_count += 1
     state.details["rollback_failure_codes"] = failures
