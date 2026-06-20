@@ -55,6 +55,8 @@ def sanitize_agent_acceptance(
     metrics = metrics if isinstance(metrics, dict) else {}
     tool_metrics = metrics.get("tool_duration")
     tool_metrics = tool_metrics if isinstance(tool_metrics, dict) else {}
+    unexpected = telemetry.get("unexpected_tools_seen")
+    unexpected_count = len(unexpected) if isinstance(unexpected, list) else 0
     return {
         "accepted": automatic.get("accepted") is True,
         "reason": automatic.get("reason") if isinstance(automatic.get("reason"), str) else None,
@@ -69,11 +71,7 @@ def sanitize_agent_acceptance(
                 telemetry.get("expected_tools_seen"),
                 expected_tools,
             ),
-            "unexpected_tool_count": len(
-                telemetry.get("unexpected_tools_seen", [])
-                if isinstance(telemetry.get("unexpected_tools_seen"), list)
-                else []
-            ),
+            "unexpected_tool_count": unexpected_count,
             "event_counts": telemetry.get("event_counts")
             if isinstance(telemetry.get("event_counts"), dict)
             else {},
@@ -134,6 +132,7 @@ def classify_model_tool_diagnostic(
         and telemetry["parent_permissions_ok"]
         and telemetry["file_permissions_ok"]
         and telemetry["only_authorized_tools_used"]
+        and telemetry["unexpected_tool_count"] == 0
     )
     state.telemetry_privacy_pass = privacy_ok
     state.native_agent_acceptance_pass = control_called and oris_called
