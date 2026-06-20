@@ -4,6 +4,7 @@ from .effective_surface_inventory_selftest import (
     test_effective_surface_inventory_sanitizer,
 )
 from .effective_tool_surface import summarize_effective_tool_payload
+from .model_tool_diagnostic_selftest import test_model_tool_diagnostic_result
 
 
 _APPROVED = (
@@ -84,3 +85,4 @@ def test_effective_tool_surface_parser() -> None:
     assert owner_summary["status"] == "FAIL"
     assert owner_summary["wrong_owner_approved_tools"] == [_APPROVED[0]]
     test_effective_surface_inventory_sanitizer()
+    test_model_tool_diagnostic_result()
