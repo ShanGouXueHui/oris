@@ -1,5 +1,5 @@
 version: 1
-updated_at: null
+updated_at: 2026-06-20
 
 defaults:
   retry_attempts: 2
@@ -13,6 +13,10 @@ roles:
   primary_general:
     retry_attempts: 2
     max_failover_hops: 3
+
+  tool_calling:
+    retry_attempts: 1
+    max_failover_hops: 7
 
   free_fallback:
     retry_attempts: 1
