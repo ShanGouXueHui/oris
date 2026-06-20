@@ -41,9 +41,16 @@ def _runtime_validation() -> dict[str, object]:
         "active_config_written": False,
         "policy_patch": {
             "changed_paths": ["tools.alsoAllow", "tools.deny"],
+            "patch_roots": ["tools"],
+            "replace_paths": [],
+            "private_temporary_location": True,
+            "patch_content_recorded": False,
+            "secret_values_recorded": False,
         },
         "validation_diagnostics": {
             "ok": True,
+            "operations": 2,
+            "input_modes": ["json"],
             "error_count": 0,
             "checks": {
                 "schema": True,
@@ -80,6 +87,7 @@ def run_activation_candidate_gate_selftests() -> bool:
 
     unexpected_path = copy.deepcopy(_runtime_validation())
     unexpected_path["policy_patch"]["changed_paths"].append("gateway.port")
+    unexpected_path["validation_diagnostics"]["operations"] = 3
     try:
         validate_activation_candidate_result(
             _application(),
@@ -103,4 +111,17 @@ def run_activation_candidate_gate_selftests() -> bool:
         pass
     else:
         raise AssertionError("unsafe runtime output evidence was accepted")
+
+    wrong_validator = copy.deepcopy(_runtime_validation())
+    wrong_validator["validator"] = "config.validate"
+    try:
+        validate_activation_candidate_result(
+            _application(),
+            _compatibility(),
+            wrong_validator,
+        )
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("non-patch validator was accepted")
     return True
