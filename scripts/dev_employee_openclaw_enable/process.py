@@ -3,7 +3,7 @@ from __future__ import annotations
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping, Sequence
+from typing import Sequence
 
 
 @dataclass(frozen=True)
@@ -19,12 +19,10 @@ def run(
     *,
     cwd: Path | None = None,
     timeout: int | None = None,
-    env: Mapping[str, str] | None = None,
 ) -> CommandResult:
     process = subprocess.run(
         list(args),
         cwd=str(cwd) if cwd else None,
-        env=dict(env) if env else None,
         text=True,
         capture_output=True,
         timeout=timeout,
