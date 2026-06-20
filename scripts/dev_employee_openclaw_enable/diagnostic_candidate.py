@@ -78,7 +78,10 @@ def inspect_private_candidate(
     candidate_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     compatibility = candidate_policy_compatibility(context, candidate_path)
-    runtime_validation = validate_candidate_with_installed_runtime(candidate_path)
+    runtime_validation = validate_candidate_with_installed_runtime(
+        context,
+        candidate_path,
+    )
     return compatibility, runtime_validation
 
 
