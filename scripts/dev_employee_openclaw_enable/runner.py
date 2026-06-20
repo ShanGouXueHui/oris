@@ -3,6 +3,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
+from .activation_candidate_gate import run_activation_candidate_gate
 from .enablement_acceptance import (
     finalize_enablement,
     run_native_acceptance,
@@ -15,6 +16,7 @@ from .policy import PolicyApplication, PolicyBackup, create_backup, restore_deni
 from .preflight_checks import run_transaction_preflight
 from .service_control import GatewayServiceError, restart_service_and_wait
 from .skill_installation import SkillBackup, backup_routing_skill, restore_routing_skill
+from .state import sha256_file
 
 
 SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
@@ -92,7 +94,23 @@ def run_enablement(
         queue_before, baseline_tool, product_before, oris_before = (
             run_transaction_preflight(context, checks)
         )
+        activation_gate = run_activation_candidate_gate(
+            context,
+            state,
+            checks,
+            stamp,
+        )
         policy_backup = create_backup(context, stamp)
+        if sha256_file(policy_backup.config_file) != activation_gate.get(
+            "active_config_sha256"
+        ):
+            raise RuntimeError(
+                "active configuration changed after activation candidate validation"
+            )
+        checks.pass_check(
+            "activation_candidate_snapshot",
+            "validated active configuration exactly matches the private backup",
+        )
         skill_backup = backup_routing_skill(context, policy_backup.directory)
         checks.pass_check(
             "private_backup",
@@ -133,7 +151,7 @@ def run_enablement(
         state.result = SUCCESS_RESULT
         state.failure_code = ""
         state.next_action = (
-            "PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN"
+            "PERSIST_COMPLETION_AND_ESTABLISH_PRIVACY_SAFE_LATENCY_BASELINE"
         )
         state.rollback_healthy = "NOT_REQUIRED"
         evidence_log, evidence_json = _commit_evidence(
