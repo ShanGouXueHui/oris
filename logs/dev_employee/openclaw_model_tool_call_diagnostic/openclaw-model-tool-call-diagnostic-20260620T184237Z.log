@@ -1,0 +1,16 @@
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+checked_at=20260620T184237Z
+result=MODEL_TOOL_DIAGNOSTIC_FAILED
+failure_code=AutomaticSelftestFailure
+selected_policy_mode=NONE
+routing_skill_installed=NO
+CHECK|code_audit_gate|PASS|exact main revision passed
+CHECK|source_code_governance|PASS|duplicate, authority, cycle, module-size, hardcoding and contract gates passed
+CHECK|automatic_selftests|FAIL|effective_tool_surface_parser
+CHECK|model_tool_diagnostic|FAIL|AutomaticSelftestFailure
+CHECK|model_tool_diagnostic_rollback|FAIL|rollback did not restore the healthy tools-denied baseline
+product_task_submitted=NO
+write_tools_added=NO
+openclaw_reinstalled_or_upgraded=NO
+secret_values_recorded=NO
+conversation_content_recorded=NO

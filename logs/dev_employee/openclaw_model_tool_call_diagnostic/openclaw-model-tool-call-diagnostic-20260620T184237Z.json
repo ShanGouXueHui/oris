@@ -1,0 +1,66 @@
+{
+  "check_summary": {
+    "fail": 3,
+    "not_checked": 0,
+    "pass": 2,
+    "total": 5
+  },
+  "checked_at": "20260620T184237Z",
+  "checks": [
+    {
+      "detail": "exact main revision passed",
+      "name": "code_audit_gate",
+      "status": "PASS"
+    },
+    {
+      "detail": "duplicate, authority, cycle, module-size, hardcoding and contract gates passed",
+      "name": "source_code_governance",
+      "status": "PASS"
+    },
+    {
+      "detail": "effective_tool_surface_parser",
+      "name": "automatic_selftests",
+      "status": "FAIL"
+    },
+    {
+      "detail": "AutomaticSelftestFailure",
+      "name": "model_tool_diagnostic",
+      "status": "FAIL"
+    },
+    {
+      "detail": "rollback did not restore the healthy tools-denied baseline",
+      "name": "model_tool_diagnostic_rollback",
+      "status": "FAIL"
+    }
+  ],
+  "config_scope_valid": null,
+  "details": {},
+  "direct_tool_calls_pass": null,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_model_tool_call_diagnostic/openclaw-model-tool-call-diagnostic-20260620T184237Z.json",
+    "log_path": "logs/dev_employee/openclaw_model_tool_call_diagnostic/openclaw-model-tool-call-diagnostic-20260620T184237Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "AutomaticSelftestFailure",
+  "native_agent_acceptance_pass": null,
+  "next_action": "READ_MODEL_TOOL_DIAGNOSTIC_FAILURE_EVIDENCE",
+  "product_unchanged": null,
+  "queue_unchanged": null,
+  "result": "MODEL_TOOL_DIAGNOSTIC_FAILED",
+  "rollback": {
+    "count": 0,
+    "healthy": "NOT_REQUIRED"
+  },
+  "routing_skill_installed": false,
+  "safety": {
+    "conversation_content_recorded": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "NONE",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": null,
+  "write_tools_absent": null
+}
