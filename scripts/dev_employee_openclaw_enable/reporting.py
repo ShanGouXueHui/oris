@@ -23,6 +23,7 @@ def print_summary(
 ) -> None:
     skill_runtime = _detail_dict(state, "routing_skill_runtime")
     automatic = _detail_dict(state, "native_agent_acceptance")
+    effective = _detail_dict(state, "effective_tool_surface")
     telemetry = automatic.get("telemetry")
     telemetry = telemetry if isinstance(telemetry, dict) else {}
     all_event_counts = telemetry.get("all_event_counts")
@@ -57,6 +58,32 @@ def print_summary(
         + (
             str(all_event_counts.get("after_tool_call", 0))
             if telemetry
+            else "NOT_CHECKED"
+        )
+    )
+    print(
+        "EFFECTIVE_TOOL_SURFACE_PASS="
+        + (
+            "PASS"
+            if effective.get("status") == "PASS"
+            else "FAIL"
+            if effective
+            else "NOT_CHECKED"
+        )
+    )
+    print(
+        "EFFECTIVE_APPROVED_TOOL_COUNT="
+        + (
+            str(len(effective.get("approved_tools_present", [])))
+            if effective
+            else "NOT_CHECKED"
+        )
+    )
+    print(
+        "EFFECTIVE_MISSING_APPROVED_TOOL_COUNT="
+        + (
+            str(len(effective.get("missing_approved_tools", [])))
+            if effective
             else "NOT_CHECKED"
         )
     )
