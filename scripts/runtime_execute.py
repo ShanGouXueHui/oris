@@ -3,16 +3,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from oris_vnext.openai_chat_contract import (
     legacy_prompt_request,
     load_chat_request,
 )
 from oris_vnext.runtime_execution_engine import RuntimeExecutionEngine
-
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 def _parser() -> argparse.ArgumentParser:
