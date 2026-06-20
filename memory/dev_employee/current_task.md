@@ -1,77 +1,111 @@
 # Current AI Dev Employee Task
 
-Status: `controlled_activation_retry_authorized_pending_execution`
+Status: `effective_tool_surface_diagnostic_published_pending_execution`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `execute_single_controlled_readonly_activation_retry`
+Current step: `diagnose_model_effective_tool_surface_without_model_turns`
 
 ## Objective
 
-Enable only these three read-only ORIS typed tools through the installed native OpenClaw plugin:
+Determine whether these three approved ORIS tools are actually present in the selected Agent session's model-facing OpenClaw tool inventory:
 
 - `oris_queue_status`;
 - `oris_task_status`;
 - `oris_latest_task_status`.
 
-Then prove native natural-language tool use, no task or product mutation, no write tool, privacy-safe typed-hook telemetry, a real model/tool/agent latency baseline and automatic rollback to the tools-denied state on failure.
+A third natural-language enablement attempt is prohibited until this boundary is resolved.
 
-## Latest diagnostic review
+## Latest controlled activation evidence
 
 Evidence commit:
 
-`30a32ba761418d0e7bcbb04ac2b4e0a9ac0c8e82`
+`d5cea6980ad46a51cb4f26f8e6229c11539ea2d5`
 
-Result:
+Passed before the failure:
 
-`DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW`
+- source governance and named automatic selftests;
+- private single-scope candidate native dry-run;
+- exact validated-config-to-backup hash equality;
+- managed routing Skill installation and visibility to Agent `main`;
+- single-scope policy activation;
+- existing Gateway restart and health;
+- exact plugin read-only tool and typed-hook inventory;
+- all three direct ORIS read-only calls;
+- queue invariance after direct calls.
 
-Verified:
+Three native Agent turns then completed successfully through Gateway in one persisted session:
 
-- diagnostic selftests passed, including the remediated single-scope policy selftests;
-- source governance passed across 46 modules with zero duplicate bindings, competing authorities, duplicate function bodies, import cycles, oversized modules, forbidden hardcoding, legacy findings or contract errors;
-- active runtime remained on the exact tools-denied baseline;
-- Gateway was healthy before and after validation and was not restarted;
-- candidate authorization scope was exactly `profile-plus-alsoAllow`;
-- `tools.allow=0`, `tools.alsoAllow=3`, candidate `tools.deny=0`;
-- patch paths were exactly `tools.alsoAllow` and `tools.deny`;
-- installed OpenClaw native `config patch --dry-run` passed schema and complete resolvability checks with zero errors;
-- active config was neither written nor changed;
-- queue and product repository remained unchanged;
-- no Skill installation, ORIS tool invocation, task submission or write tool occurred.
+- all return codes were zero;
+- all outputs were structured and present;
+- no embedded fallback occurred;
+- `model_call_ended=3`;
+- `agent_end=3`.
 
-## Retry authorization
+However:
 
-Authoritative document:
+- `after_tool_call=0`;
+- no approved tool name was reported;
+- no approved tool appeared in telemetry;
+- native Agent acceptance failed.
 
-`docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_RETRY_AUTHORIZATION_2026-06-20.md`
+Rollback restored the exact tools-denied config, marker and routing Skill state and left Gateway healthy. No task, product mutation or write tool occurred.
 
-Exactly one controlled read-only activation retry is authorized on development/control host `43.106.55.255`.
+## Unresolved boundary
 
-Before mutation, the transaction must re-run compilation, source governance, named automatic selftests, private candidate construction, native dry-run validation and exact config-hash-to-backup matching.
+Direct `/tools/invoke` success proves that the plugin endpoints work. Plugin inventory proves registration. Skill visibility proves instruction visibility.
 
-After mutation, it must verify Gateway health, Skill visibility, exact plugin inventory, direct read-only calls, three native natural-language Agent turns in one persisted session, typed-hook telemetry, privacy-safe latency metadata and all queue/product/listener invariants.
+None of those facts proves that the selected Agent session and runtime model received the ORIS tools in its effective model-facing tool set.
 
-Any failure after mutation begins must restore the exact tools-denied policy, marker and Skill state and prove final Gateway health.
+Two explanations remain:
 
-A further retry is prohibited until the resulting evidence is reviewed.
+1. the optional ORIS tools were absent from the effective Agent inventory;
+2. the tools were present, but the runtime provider/model did not issue tool calls.
+
+## Effective tool surface diagnostic
+
+Authoritative plan:
+
+`docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md`
+
+The new diagnostic uses OpenClaw's native `tools.effective` Gateway RPC. It temporarily activates the already validated read-only policy, inspects the effective inventory for the configured persisted Agent session, then always restores the exact tools-denied baseline.
+
+It retains only:
+
+- effective profile and counts;
+- the names of the three approved ORIS tools only;
+- whether each approved tool is owned by `oris-dev-employee`;
+- safe command fingerprints and invariants.
+
+It does not retain raw RPC output, unrelated tool names, tool descriptions, raw session identifiers, config content, secrets or conversation content.
+
+The diagnostic does not run model turns and does not invoke an ORIS tool.
 
 ## Next required action
 
 Run exactly once on the ORIS development/control/execution host:
 
 ```bash
-cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_enable_openclaw_readonly_tools.sh
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh
 ```
 
-Do not execute the command a second time. Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
+Do not run `scripts/dev_employee_enable_openclaw_readonly_tools.sh`.
+
+The diagnostic must restore the tools-denied baseline whether the approved tools are present, absent or the RPC fails. Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
+
+## Decision after evidence review
+
+- approved tools absent: remediate OpenClaw effective materialization or session-policy resolution;
+- approved tools present: diagnose provider/model tool-call capability and Harness routing without hardcoding a provider or model;
+- native RPC unavailable: stop and remediate the diagnostic path; do not substitute direct calls or catalog inventory.
 
 ## Commercial sequence after P0
 
-1. complete native read-only tool and telemetry acceptance;
-2. establish real privacy-safe model/tool/agent latency baselines;
-3. design typed write actions with approval, RBAC, project authorization, idempotency and audit;
-4. add generic project onboarding and capability discovery;
-5. move routine Provider, Model and Policy management to controlled Admin UI;
-6. add monitoring, privacy/retention, backup/restore and disaster recovery;
-7. add multi-tenant identity, quotas, metering and commercial packaging.
+1. resolve the effective tool surface or provider/model capability boundary;
+2. complete native read-only tool and telemetry acceptance;
+3. establish real privacy-safe model/tool/agent latency baselines;
+4. design typed write actions with approval, RBAC, project authorization, idempotency and audit;
+5. add generic project onboarding and capability discovery;
+6. move routine Provider, Model and Policy management to controlled Admin UI;
+7. add monitoring, privacy/retention, backup/restore and disaster recovery;
+8. add multi-tenant identity, quotas, metering and commercial packaging.
