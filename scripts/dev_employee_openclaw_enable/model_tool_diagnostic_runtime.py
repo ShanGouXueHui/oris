@@ -58,9 +58,15 @@ def _rollback_check(state: RunState, checks: CheckRecorder) -> None:
             "exact tools-denied baseline and healthy Gateway restored",
         )
         return
-    checks.fail_check(
+    if state.rollback_healthy == "NO":
+        checks.fail_check(
+            "model_tool_diagnostic_rollback",
+            "rollback did not restore the healthy tools-denied baseline",
+        )
+        return
+    checks.not_checked(
         "model_tool_diagnostic_rollback",
-        "rollback did not restore the healthy tools-denied baseline",
+        "no runtime mutation occurred; rollback was not required",
     )
 
 
