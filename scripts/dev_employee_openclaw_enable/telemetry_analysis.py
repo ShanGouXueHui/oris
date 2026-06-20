@@ -92,6 +92,7 @@ def evaluate_execution_outcomes(
 def evaluate_native_support_outcomes(
     records: list[dict[str, Any]],
     support_tools: set[str],
+    expected_tools: set[str],
 ) -> dict[str, Any]:
     support_records = [
         item
@@ -106,9 +107,29 @@ def evaluate_native_support_outcomes(
             if record_failed(item)
         }
     )
+    first_expected_index = next(
+        (
+            index
+            for index, item in enumerate(records)
+            if item.get("event") == "after_tool_call"
+            and item.get("toolName") in expected_tools
+        ),
+        len(records),
+    )
+    late_support_tools = sorted(
+        {
+            str(item.get("toolName"))
+            for index, item in enumerate(records)
+            if index > first_expected_index
+            and item.get("event") == "after_tool_call"
+            and item.get("toolName") in support_tools
+        }
+    )
     return {
-        "ok": not failed_tools,
+        "ok": not failed_tools and not late_support_tools,
         "failed_tools": failed_tools,
+        "late_support_tools": late_support_tools,
+        "hydration_order_valid": not late_support_tools,
         "failed_call_count": sum(record_failed(item) for item in support_records),
         "tool_arguments_or_results_recorded": False,
         "conversation_content_recorded": False,
