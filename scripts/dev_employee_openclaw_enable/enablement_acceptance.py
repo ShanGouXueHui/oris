@@ -22,6 +22,9 @@ def run_native_acceptance(
 ) -> None:
     automatic = run_automatic_acceptance(context, stamp)
     state.details["native_agent_acceptance"] = automatic
+    surface = automatic.get("effective_tool_surface")
+    if isinstance(surface, dict):
+        state.details["effective_tool_surface"] = surface
     if not automatic.get("accepted"):
         state.native_agent_acceptance_pass = False
         raise RuntimeError(
