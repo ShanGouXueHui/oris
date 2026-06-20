@@ -1,9 +1,10 @@
 {
   "schema_version": 1,
-  "purpose": "Authoritative active commercial Dev Employee execution and governance source surface. Historical one-shot migration and evidence-generation scripts are not runtime authorities.",
+  "purpose": "Authoritative active commercial Dev Employee execution and governance source surface. Every active authority is enumerated or included through an explicit package root; no scanner allowlist suppresses findings.",
   "directory_roots": [
     "scripts/dev_employee_openclaw_enable",
-    "scripts/dev_employee_quality"
+    "scripts/dev_employee_quality",
+    "scripts/dev_employee_runtime"
   ],
   "files": [
     ".github/workflows/oris-code-first-audit.yml",
@@ -12,6 +13,7 @@
     "config/dev_employee/openclaw_policy_diagnostic_evidence.json",
     "config/dev_employee/openclaw_readonly_acceptance.json",
     "config/dev_employee/repository_quality_policy.json",
+    "config/dev_employee/runtime_settings.json",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
     "orchestration/openclaw_plugins/oris-dev-employee/openclaw.plugin.json",
@@ -53,7 +55,8 @@
   ],
   "architecture_directory_roots": [
     "scripts/dev_employee_openclaw_enable",
-    "scripts/dev_employee_quality"
+    "scripts/dev_employee_quality",
+    "scripts/dev_employee_runtime"
   ],
   "architecture_files": [
     "oris_vnext/free_mesh_compat.py",
@@ -79,17 +82,5 @@
     "tests/test_free_mesh_protocol.py",
     "tests/test_free_mesh_tool_calling.py",
     "tests/test_script_entrypoint_bootstrap.py"
-  ],
-  "historical_non_authority_patterns": [
-    "scripts/*_20????????.py",
-    "scripts/*_20????????.sh",
-    "scripts/dev_employee_apply_*.py",
-    "scripts/dev_employee_apply_*.sh",
-    "scripts/dev_employee_deploy_*.sh",
-    "scripts/dev_employee_finalize_*.sh",
-    "scripts/dev_employee_prepare_*.py",
-    "scripts/dev_employee_prepare_*.sh",
-    "scripts/dev_employee_validate_*.py",
-    "scripts/dev_employee_validate_*.sh"
   ]
 }
