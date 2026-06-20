@@ -3,28 +3,26 @@ from __future__ import annotations
 import ast
 import hashlib
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
-
-
-_PACKAGE_ROOTS = (
-    Path("scripts"),
-    Path("oris_vnext"),
-    Path("tests"),
-)
 
 
 def _module_name(repo_root: Path, path: Path) -> str:
     return path.relative_to(repo_root).with_suffix("").as_posix().replace("/", ".")
 
 
-def target_python_files(repo_root: Path) -> tuple[Path, ...]:
+def target_python_files(
+    repo_root: Path,
+    configured_files: Iterable[Path],
+) -> tuple[Path, ...]:
     files = {
-        path
-        for relative_root in _PACKAGE_ROOTS
-        for path in (repo_root / relative_root).rglob("*.py")
-        if path.is_file() and "__pycache__" not in path.parts
+        path.resolve()
+        for path in configured_files
+        if path.is_file() and path.suffix == ".py" and "__pycache__" not in path.parts
     }
+    for path in files:
+        path.relative_to(repo_root.resolve())
     return tuple(sorted(files))
 
 
@@ -80,8 +78,9 @@ def _cycles(graph: dict[str, set[str]]) -> list[list[str]]:
 def scan_python_architecture(
     repo_root: Path,
     authorities: dict[str, str],
+    configured_files: Iterable[Path],
 ) -> dict[str, Any]:
-    files = target_python_files(repo_root)
+    files = target_python_files(repo_root, configured_files)
     module_by_path = {path: _module_name(repo_root, path) for path in files}
     known_modules = set(module_by_path.values())
     definitions: dict[str, list[str]] = defaultdict(list)
