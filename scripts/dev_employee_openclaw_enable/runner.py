@@ -67,31 +67,48 @@ def _rollback(
     restart_attempted = (
         state.details.get("candidate_gateway_restart_attempted") is True
     )
-    try:
-        if policy_attempted:
-            if policy_backup is None:
-                raise RuntimeError("policy rollback backup is unavailable")
-            restore_denied_policy(context, policy_backup)
-        if skill_attempted:
-            if skill_backup is None:
-                raise RuntimeError("routing Skill rollback backup is unavailable")
-            restore_routing_skill(skill_backup)
-        if restart_attempted:
-            state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
+    failures: list[str] = []
+
+    if policy_attempted:
+        if policy_backup is None:
+            failures.append("policy_backup_unavailable")
         else:
-            state.details["rollback_gateway_restart"] = {
-                "required": False,
-                "reason": "candidate_gateway_restart_not_attempted",
-            }
-        state.rollback_count += 1
-        state.rollback_healthy = "YES"
+            try:
+                restore_denied_policy(context, policy_backup)
+                state.details["rollback_policy_restored"] = True
+            except Exception as exc:
+                failures.append("policy_restore:" + type(exc).__name__)
+
+    if skill_attempted:
+        if skill_backup is None:
+            failures.append("skill_backup_unavailable")
+        else:
+            try:
+                restore_routing_skill(skill_backup)
+                state.details["rollback_skill_restored"] = True
+            except Exception as exc:
+                failures.append("skill_restore:" + type(exc).__name__)
+
+    if restart_attempted:
+        try:
+            state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
+        except GatewayServiceError as exc:
+            failures.append("gateway_restart:" + exc.code)
+            state.details["rollback_gateway_failure_diagnostics"] = exc.safe_evidence
+        except Exception as exc:
+            failures.append("gateway_restart:" + type(exc).__name__)
+    else:
+        state.details["rollback_gateway_restart"] = {
+            "required": False,
+            "reason": "candidate_gateway_restart_not_attempted",
+        }
+
+    state.rollback_count += 1
+    state.details["rollback_failure_codes"] = failures
+    state.rollback_healthy = "NO" if failures else "YES"
+    if not failures:
         state.mutation_started = False
         state.routing_skill_installed = False
-    except GatewayServiceError as exc:
-        state.details["rollback_gateway_failure_diagnostics"] = exc.safe_evidence
-        state.rollback_healthy = "NO"
-    except Exception:
-        state.rollback_healthy = "NO"
 
 
 def run_enablement(
