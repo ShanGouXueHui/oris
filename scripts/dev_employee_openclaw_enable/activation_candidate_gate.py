@@ -50,6 +50,25 @@ def _required_skill_path(application: dict[str, Any]) -> str | None:
     raise RuntimeError("candidate skill-policy scope is invalid")
 
 
+def _validate_patch_metadata(
+    patch: dict[str, Any],
+    expected_roots: set[str],
+    expected_replace_paths: list[str],
+) -> None:
+    roots = patch.get("patch_roots")
+    replace_paths = patch.get("replace_paths")
+    if not isinstance(roots, list) or set(roots) != expected_roots:
+        raise RuntimeError("candidate patch roots differ from the approved policy scope")
+    if replace_paths != expected_replace_paths:
+        raise RuntimeError("candidate replacement paths differ from the approved policy scope")
+    if patch.get("private_temporary_location") is not True:
+        raise RuntimeError("candidate patch was not built in a private temporary location")
+    if patch.get("patch_content_recorded") is not False:
+        raise RuntimeError("candidate patch content was retained in evidence")
+    if patch.get("secret_values_recorded") is not False:
+        raise RuntimeError("candidate patch retained secret values")
+
+
 def validate_activation_candidate_result(
     application: dict[str, Any],
     compatibility: dict[str, Any],
@@ -78,6 +97,8 @@ def validate_activation_candidate_result(
     skill_requirement = _required_skill_path(application)
     if runtime_validation.get("status") != "PASS":
         raise RuntimeError("installed runtime rejected the activation candidate")
+    if runtime_validation.get("validator") != "config.patch.dry-run":
+        raise RuntimeError("activation candidate was not checked by the native patch dry-run")
     if runtime_validation.get("active_config_unchanged") is not True:
         raise RuntimeError("candidate dry-run changed the active configuration")
     if runtime_validation.get("active_config_written") is not False:
@@ -96,16 +117,22 @@ def validate_activation_candidate_result(
 
     actual_paths = set(changed_paths)
     agent_paths = {path for path in actual_paths if _AGENT_SKILL_PATH.fullmatch(path)}
+    expected_roots = {"tools"}
+    expected_replace_paths: list[str] = []
     if skill_requirement is None and agent_paths:
         raise RuntimeError("candidate changes an unrequired agent Skill path")
     if skill_requirement == "agents.defaults.skills":
         expected_paths.add(skill_requirement)
+        expected_roots.add("agents")
     elif skill_requirement == "agent-scoped-skill-path":
         if len(agent_paths) != 1:
             raise RuntimeError("candidate agent Skill path is missing or ambiguous")
         expected_paths.update(agent_paths)
+        expected_roots.add("agents")
+        expected_replace_paths.append("agents.list")
     if actual_paths != expected_paths:
         raise RuntimeError("candidate changes paths outside the approved policy delta")
+    _validate_patch_metadata(patch, expected_roots, expected_replace_paths)
 
     diagnostics = runtime_validation.get("validation_diagnostics")
     if not isinstance(diagnostics, dict):
@@ -118,6 +145,10 @@ def validate_activation_candidate_result(
         raise RuntimeError("runtime schema or resolvability validation is incomplete")
     if diagnostics.get("ok") is not True or diagnostics.get("error_count") != 0:
         raise RuntimeError("runtime validation diagnostics contain an error")
+    if diagnostics.get("operations") != len(actual_paths):
+        raise RuntimeError("runtime validation operation count differs from changed paths")
+    if diagnostics.get("input_modes") != ["json"]:
+        raise RuntimeError("runtime validation did not use JSON patch mode")
     if diagnostics.get("raw_output_recorded") is not False:
         raise RuntimeError("runtime validation retained raw output")
     if diagnostics.get("secret_refs_recorded") is not False:
@@ -127,7 +158,7 @@ def validate_activation_candidate_result(
         "status": "PASS",
         "authorization_scope": expected_scope,
         "changed_paths": sorted(actual_paths),
-        "validator": runtime_validation.get("validator"),
+        "validator": "config.patch.dry-run",
         "active_config_unchanged": True,
         "active_config_written": False,
         "schema_validated": True,
