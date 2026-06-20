@@ -50,6 +50,40 @@ def _mode_owner_ok(path: Path, expected_mode: int) -> bool:
     return stat.st_uid == Path.home().stat().st_uid and (stat.st_mode & 0o777) == expected_mode
 
 
+def _record_schema_ok(item: dict[str, Any], expected_events: set[str]) -> bool:
+    keys = set(item)
+    if not keys.issubset(ALLOWED_KEYS) or any(
+        FORBIDDEN_KEY.search(key) for key in keys
+    ):
+        return False
+    timestamp = item.get("timestamp")
+    if not isinstance(timestamp, str) or not timestamp:
+        return False
+    if item.get("event") not in expected_events:
+        return False
+    for key in ("runHash", "callHash", "sessionHash"):
+        if key in item and not re.fullmatch(r"[0-9a-f]{64}", str(item[key])):
+            return False
+    duration = item.get("durationMs")
+    if duration is not None and (
+        not isinstance(duration, (int, float))
+        or isinstance(duration, bool)
+        or duration < 0
+    ):
+        return False
+    for key in ("success", "error"):
+        if key in item and not isinstance(item[key], bool):
+            return False
+    for key in ("outcome", "provider", "model", "toolName"):
+        if key in item and (
+            not isinstance(item[key], str)
+            or not item[key]
+            or len(item[key]) > 160
+        ):
+            return False
+    return True
+
+
 def _read_records(
     context: RuntimeContext,
     started_at: str,
@@ -77,22 +111,10 @@ def _read_records(
             if not isinstance(item, dict):
                 schema_ok = False
                 continue
-            if str(item.get("timestamp") or "") < started_at:
+            timestamp = item.get("timestamp")
+            if isinstance(timestamp, str) and timestamp < started_at:
                 continue
-            keys = set(item)
-            if not keys.issubset(ALLOWED_KEYS) or any(
-                FORBIDDEN_KEY.search(key) for key in keys
-            ):
-                schema_ok = False
-            if item.get("event") not in expected_events:
-                schema_ok = False
-            for key in ("runHash", "callHash", "sessionHash"):
-                if key in item and not re.fullmatch(r"[0-9a-f]{64}", str(item[key])):
-                    schema_ok = False
-            duration = item.get("durationMs")
-            if duration is not None and (
-                not isinstance(duration, (int, float)) or duration < 0
-            ):
+            if not _record_schema_ok(item, expected_events):
                 schema_ok = False
             records.append(item)
     return records, schema_ok, content_safe
