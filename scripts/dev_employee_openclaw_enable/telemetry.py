@@ -3,11 +3,16 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import statistics
 from pathlib import Path
 from typing import Any
 
 from .models import RuntimeContext
+from .telemetry_analysis import (
+    bounded_string_values,
+    duration_stats,
+    duration_values,
+    evaluate_execution_outcomes,
+)
 from .telemetry_correlation import correlate_records
 
 
@@ -43,18 +48,6 @@ def _mode_owner_ok(path: Path, expected_mode: int) -> bool:
         return True
     stat = path.stat()
     return stat.st_uid == Path.home().stat().st_uid and (stat.st_mode & 0o777) == expected_mode
-
-
-def _duration_stats(values: list[float]) -> dict[str, Any]:
-    if not values:
-        return {"available": False, "count": 0}
-    return {
-        "available": True,
-        "count": len(values),
-        "min_ms": round(min(values), 3),
-        "p50_ms": round(statistics.median(values), 3),
-        "max_ms": round(max(values), 3),
-    }
 
 
 def _read_records(
@@ -101,39 +94,8 @@ def _read_records(
                 not isinstance(duration, (int, float)) or duration < 0
             ):
                 schema_ok = False
-            if item.get("error") is True or item.get("success") is False:
-                schema_ok = False
             records.append(item)
     return records, schema_ok, content_safe
-
-
-def _duration_values(
-    records: list[dict[str, Any]],
-    event_name: str,
-    tool_name: str | None = None,
-) -> list[float]:
-    values: list[float] = []
-    for item in records:
-        if item.get("event") != event_name:
-            continue
-        if tool_name is not None and item.get("toolName") != tool_name:
-            continue
-        duration = item.get("durationMs")
-        if isinstance(duration, (int, float)):
-            values.append(float(duration))
-    return values
-
-
-def _bounded_string_values(
-    records: list[dict[str, Any]],
-    key: str,
-) -> list[str]:
-    values: set[str] = set()
-    for item in records:
-        value = item.get(key)
-        if isinstance(value, str) and value and len(value) <= 160:
-            values.add(value)
-    return sorted(values)
 
 
 def inspect_telemetry(
@@ -162,6 +124,7 @@ def inspect_telemetry(
     relevant_records = correlation["correlated_records"]
     tools_seen = set(correlation["tools_seen"])
     unexpected_tools = set(correlation["unexpected_tools"])
+    outcomes = evaluate_execution_outcomes(relevant_records, expected_tools)
     current = context.telemetry_path
     rotated = Path(str(current) + ".1")
     parent_permissions_ok = _mode_owner_ok(current.parent, 0o700)
@@ -171,6 +134,7 @@ def inspect_telemetry(
     )
     accepted = bool(
         correlation["accepted"]
+        and outcomes["ok"]
         and schema_ok
         and content_safe
         and parent_permissions_ok
@@ -181,11 +145,13 @@ def inspect_telemetry(
         "expected_tools_seen": sorted(expected_tools.intersection(tools_seen)),
         "unexpected_tools_seen": sorted(unexpected_tools),
         "only_approved_tools_used": not unexpected_tools,
+        "execution_outcome_ok": bool(outcomes["ok"]),
+        "execution_outcomes": outcomes,
         "event_counts": correlation["event_counts"],
         "all_event_counts": correlation["all_event_counts"],
         "all_tools_seen": sorted(correlation["all_tools_seen"]),
-        "providers_seen": _bounded_string_values(relevant_records, "provider"),
-        "models_seen": _bounded_string_values(relevant_records, "model"),
+        "providers_seen": bounded_string_values(relevant_records, "provider"),
+        "models_seen": bounded_string_values(relevant_records, "model"),
         "persisted_session": bool(correlation["persisted_session"]),
         "session_hash_matched": bool(correlation["matched_session_records"]),
         "correlation_mode": correlation["correlation_mode"],
@@ -210,15 +176,15 @@ def inspect_telemetry(
                 "available": False,
                 "reason": "approved typed hooks do not expose a first-token timestamp",
             },
-            "model_duration": _duration_stats(
-                _duration_values(relevant_records, "model_call_ended")
+            "model_duration": duration_stats(
+                duration_values(relevant_records, "model_call_ended")
             ),
-            "total_agent_duration": _duration_stats(
-                _duration_values(relevant_records, "agent_end")
+            "total_agent_duration": duration_stats(
+                duration_values(relevant_records, "agent_end")
             ),
             "tool_duration": {
-                tool: _duration_stats(
-                    _duration_values(relevant_records, "after_tool_call", tool)
+                tool: duration_stats(
+                    duration_values(relevant_records, "after_tool_call", tool)
                 )
                 for tool in sorted(expected_tools)
             },
