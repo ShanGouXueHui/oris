@@ -94,7 +94,8 @@ def sanitize_agent_acceptance(
             "content_safe": telemetry.get("content_safe") is True,
             "parent_permissions_ok": telemetry.get("parent_permissions_ok") is True,
             "file_permissions_ok": telemetry.get("file_permissions_ok") is True,
-            "only_approved_tools_used": telemetry.get("only_approved_tools_used") is True,
+            "only_authorized_tools_used": telemetry.get("only_authorized_tools_used")
+            is True,
             "records_after_start": telemetry.get("records_after_start"),
             "correlated_records": telemetry.get("correlated_records"),
             "session_records": telemetry.get("session_records"),
@@ -132,7 +133,7 @@ def classify_model_tool_diagnostic(
         and telemetry["content_safe"]
         and telemetry["parent_permissions_ok"]
         and telemetry["file_permissions_ok"]
-        and telemetry["only_approved_tools_used"]
+        and telemetry["only_authorized_tools_used"]
     )
     state.telemetry_privacy_pass = privacy_ok
     state.native_agent_acceptance_pass = control_called and oris_called
