@@ -6,7 +6,12 @@ from typing import Any
 from scripts.dev_employee_quality.policy import load_policy
 from scripts.dev_employee_quality.repository import scan_repository
 
-from .engineering_scan_ast import scan_python_architecture, target_python_files
+from .code_audit_scope import (
+    architecture_paths,
+    load_code_audit_scope,
+    source_paths,
+)
+from .engineering_scan_ast import scan_python_architecture
 from .engineering_scan_policy import (
     AUTHORITIES,
     active_path_findings,
@@ -19,31 +24,6 @@ from .models import RuntimeContext
 
 _POLICY_EVIDENCE_CONFIG = Path(
     "config/dev_employee/openclaw_policy_diagnostic_evidence.json"
-)
-# Complete active source surface for the commercial Dev Employee. Runtime state,
-# promoted evidence and historical documents remain excluded by the repository
-# quality policy; executable/config authorities are not allowlisted away.
-_AUDIT_DIRECTORY_ROOTS = (
-    Path("scripts"),
-    Path("oris_vnext"),
-    Path("tests"),
-    Path("orchestration/openclaw_plugins"),
-    Path("config/dev_employee"),
-    Path(".github/workflows"),
-)
-_AUDIT_AUTHORITY_FILES = (
-    Path("orchestration/routing_policy.yaml"),
-    Path("orchestration/runtime_policy.yaml"),
-    Path("orchestration/project_registry.json"),
-    Path("memory/dev_employee/current_task.json"),
-    Path("memory/dev_employee/current_task.md"),
-    Path("docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md"),
-    Path("docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md"),
-    Path("docs/DEV_EMPLOYEE_MODEL_TOOL_CALL_AND_HARNESS_DIAGNOSTIC_2026-06-20.md"),
-    Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_CALLING_FIX_2026-06-20.md"),
-    Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_PROTOCOL_ACTIVATION_2026-06-20.md"),
-    Path("docs/DEV_EMPLOYEE_NATIVE_SKILL_SUPPORT_TOOL_CONTRACT_2026-06-20.md"),
-    Path("docs/DEV_EMPLOYEE_TYPED_WRITE_ACTIONS_COMMERCIAL_PHASE_PLAN_2026-06-20.md"),
 )
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
@@ -99,24 +79,12 @@ def _effective_authorities() -> dict[str, str]:
     return authorities
 
 
-def _audit_source_paths(repo_root: Path, suffixes: set[str]) -> tuple[Path, ...]:
-    paths = {
-        path.relative_to(repo_root)
-        for relative_root in _AUDIT_DIRECTORY_ROOTS
-        for path in (repo_root / relative_root).rglob("*")
-        if path.is_file() and path.suffix.lower() in suffixes
-    }
-    paths.update(
-        relative
-        for relative in _AUDIT_AUTHORITY_FILES
-        if (repo_root / relative).is_file()
-    )
-    return tuple(sorted(paths))
-
-
-def _oversized_target_modules(repo_root: Path) -> list[dict[str, Any]]:
+def _oversized_target_modules(
+    repo_root: Path,
+    paths: tuple[Path, ...],
+) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
-    for path in target_python_files(repo_root):
+    for path in paths:
         line_count = len(path.read_text(encoding="utf-8").splitlines())
         if line_count > 240:
             findings.append(
@@ -157,6 +125,7 @@ def _combined_contract_error(repo_root: Path) -> str:
         return existing
     try:
         load_standalone_evidence_target(repo_root, _POLICY_EVIDENCE_CONFIG)
+        load_code_audit_scope(repo_root)
     except Exception as exc:
         return str(exc) or type(exc).__name__
     return _routing_contract_error(repo_root)
@@ -164,13 +133,19 @@ def _combined_contract_error(repo_root: Path) -> str:
 
 def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
     policy = load_policy(repo_root)
-    audit_paths = _audit_source_paths(repo_root, policy.source_extensions)
+    scope = load_code_audit_scope(repo_root)
+    audit_paths = source_paths(repo_root, scope, policy.source_extensions)
+    architecture_files = architecture_paths(repo_root, scope)
     quality_findings, quality_file_count = scan_repository(
         repo_root,
         policy,
         audit_paths,
     )
-    architecture = scan_python_architecture(repo_root, _effective_authorities())
+    architecture = scan_python_architecture(
+        repo_root,
+        _effective_authorities(),
+        architecture_files,
+    )
     duplicate_bindings = [
         item.to_dict()
         for item in quality_findings
@@ -181,7 +156,7 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
         for item in quality_findings
         if item.rule_id == "large_file"
     ]
-    oversized.extend(_oversized_target_modules(repo_root))
+    oversized.extend(_oversized_target_modules(repo_root, architecture_files))
     oversized = _deduplicate_oversized(oversized)
     hardcoding = [
         item.to_dict()
