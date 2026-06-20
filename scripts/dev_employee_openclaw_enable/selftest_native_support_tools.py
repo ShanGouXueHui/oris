@@ -28,6 +28,16 @@ def _records() -> list[dict]:
     return records
 
 
+def _support_record(success: bool = True) -> dict:
+    return {
+        "event": "after_tool_call",
+        "toolName": SUPPORT_TOOL,
+        "sessionHash": "a" * 64,
+        "success": success,
+        "error": not success,
+    }
+
+
 def _correlate(records: list[dict], max_calls: int = 1) -> dict:
     return correlate_records(
         records=records,
@@ -41,43 +51,26 @@ def _correlate(records: list[dict], max_calls: int = 1) -> dict:
 
 
 def test_native_support_tool_policy() -> None:
-    one_support_call = _records() + [
-        {
-            "event": "after_tool_call",
-            "toolName": SUPPORT_TOOL,
-            "sessionHash": "a" * 64,
-            "success": True,
-        }
-    ]
+    one_support_call = [_support_record(), *_records()]
     accepted = _correlate(one_support_call)
     assert accepted["accepted"] is True
     assert accepted["native_support_tool_limits_ok"] is True
     assert accepted["native_support_tool_counts"] == {SUPPORT_TOOL: 1}
     assert accepted["unexpected_tools"] == set()
 
-    excessive = _correlate(
-        one_support_call
-        + [
-            {
-                "event": "after_tool_call",
-                "toolName": SUPPORT_TOOL,
-                "sessionHash": "a" * 64,
-                "success": True,
-            }
-        ]
-    )
+    excessive = _correlate([_support_record(), *one_support_call])
     assert excessive["accepted"] is False
     assert excessive["native_support_tool_limits_ok"] is False
 
     unexpected = _correlate(
-        one_support_call
-        + [
+        [
+            *one_support_call,
             {
                 "event": "after_tool_call",
                 "toolName": UNEXPECTED_TOOL,
                 "sessionHash": "a" * 64,
                 "success": True,
-            }
+            },
         ]
     )
     assert unexpected["accepted"] is False
@@ -86,19 +79,23 @@ def test_native_support_tool_policy() -> None:
     support_success = evaluate_native_support_outcomes(
         one_support_call,
         {SUPPORT_TOOL},
+        TOOLS,
     )
     assert support_success["ok"] is True
+    assert support_success["hydration_order_valid"] is True
+
+    late_support = evaluate_native_support_outcomes(
+        [*_records(), _support_record()],
+        {SUPPORT_TOOL},
+        TOOLS,
+    )
+    assert late_support["ok"] is False
+    assert late_support["hydration_order_valid"] is False
 
     support_failure = evaluate_native_support_outcomes(
-        [
-            {
-                "event": "after_tool_call",
-                "toolName": SUPPORT_TOOL,
-                "success": False,
-                "error": True,
-            }
-        ],
+        [_support_record(success=False), *_records()],
         {SUPPORT_TOOL},
+        TOOLS,
     )
     assert support_failure["ok"] is False
     assert support_failure["failed_call_count"] == 1
