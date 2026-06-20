@@ -4,6 +4,7 @@ import os
 import shutil
 from pathlib import Path
 
+from .engineering_scan import scan_engineering_sources
 from .gateway_http import select_safe_baseline_tool, verify_public_routes
 from .models import CheckRecorder, RepoSnapshot, RuntimeContext
 from .policy import validate_denied_baseline
@@ -51,6 +52,14 @@ def run_transaction_preflight(
     checks: CheckRecorder,
 ) -> tuple[str, str, RepoSnapshot, SourceWorktreeSnapshot]:
     _require_commands()
+    engineering = scan_engineering_sources(context)
+    if not engineering.get("ok"):
+        raise RuntimeError("source code governance gate failed before enablement")
+    checks.pass_check(
+        "source_code_governance",
+        "duplicate, authority, cycle, module-size, hardcoding and contract gates passed",
+    )
+
     _require_private_file(context.openclaw_config)
     _require_private_file(context.marker_file)
     if not context.product_repo.is_dir():
