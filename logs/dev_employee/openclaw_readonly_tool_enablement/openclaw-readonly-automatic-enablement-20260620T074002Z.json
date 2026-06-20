@@ -1,0 +1,279 @@
+{
+  "check_summary": {
+    "fail": 0,
+    "not_checked": 7,
+    "pass": 9,
+    "total": 16
+  },
+  "checked_at": "20260620T074002Z",
+  "checks": [
+    {
+      "detail": "diagnostic selftests passed",
+      "name": "diagnostic_selftests",
+      "status": "PASS"
+    },
+    {
+      "detail": "target source authority and hardcoding scan passed",
+      "name": "source_authority_and_hardcoding_scan",
+      "status": "PASS"
+    },
+    {
+      "detail": "exact approved tools remain denied in the active baseline",
+      "name": "tools_denied_baseline",
+      "status": "PASS"
+    },
+    {
+      "detail": "existing Gateway PID and HTTP health captured",
+      "name": "gateway_baseline_health",
+      "status": "PASS"
+    },
+    {
+      "detail": "candidate built in a private temporary path without active mutation",
+      "name": "private_candidate_build",
+      "status": "PASS"
+    },
+    {
+      "detail": "candidate optional-tool and Skill policy are internally consistent",
+      "name": "candidate_policy_compatibility",
+      "status": "PASS"
+    },
+    {
+      "detail": "installed CLI exposed no safe alternate-config validator",
+      "name": "installed_runtime_candidate_validation",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "diagnostic-only run intentionally did not replace active configuration",
+      "name": "active_candidate_activation",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "requires runtime-accepted active candidate and controlled restart",
+      "name": "runtime_plugin_inventory",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "requires runtime-accepted active candidate and controlled restart",
+      "name": "direct_tool_calls",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "requires runtime-accepted active candidate and controlled restart",
+      "name": "native_agent_acceptance",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "requires native Agent tool calls",
+      "name": "telemetry_acceptance",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "no active mutation occurred",
+      "name": "rollback",
+      "status": "NOT_CHECKED"
+    },
+    {
+      "detail": "Gateway remained healthy on the exact tools-denied active config",
+      "name": "final_gateway_health",
+      "status": "PASS"
+    },
+    {
+      "detail": "queue state remained unchanged",
+      "name": "queue_invariant",
+      "status": "PASS"
+    },
+    {
+      "detail": "product repository remained unchanged",
+      "name": "product_invariant",
+      "status": "PASS"
+    }
+  ],
+  "config_scope_valid": true,
+  "details": {
+    "baseline_policy": {
+      "allow_count": 0,
+      "allow_present": false,
+      "also_allow_count": 0,
+      "also_allow_present": false,
+      "approved_denied": [
+        "oris_latest_task_status",
+        "oris_queue_status",
+        "oris_task_status"
+      ],
+      "deny_count": 3,
+      "profile": "coding"
+    },
+    "candidate": {
+      "active_config_replaced": false,
+      "candidate_config_recorded": false,
+      "private_temporary_location": true,
+      "sensitive_values_redacted": true,
+      "sha256": "904460a65788879b4a5bdd949b79bc9a1daf82b590e646eaee7d952762881c78"
+    },
+    "candidate_compatibility": {
+      "allow_count": 13,
+      "also_allow_count": 3,
+      "approved_tool_count": 3,
+      "candidate_config_recorded": false,
+      "checks": {
+        "allow_unique": true,
+        "also_allow_unique": true,
+        "approved_materialized": true,
+        "approved_profile_authorized": true,
+        "approved_removed_from_deny": true,
+        "deny_unique": true,
+        "group_selectors_well_formed": true,
+        "profile_expansion_materialized": true,
+        "profile_matches": true,
+        "routing_skill_visible": true
+      },
+      "default_agent_id": "main",
+      "deny_count": 0,
+      "group_selector_count": 5,
+      "status": "PASS"
+    },
+    "diagnostic_check_summary": {
+      "fail": 0,
+      "not_checked": 7,
+      "pass": 9,
+      "total": 16
+    },
+    "diagnostic_stage_status": {
+      "config_scope": "PASS",
+      "direct_tool_calls": "NOT_CHECKED",
+      "native_agent_acceptance": "NOT_CHECKED",
+      "product_unchanged": "PASS",
+      "queue_unchanged": "PASS",
+      "telemetry_privacy": "NOT_CHECKED",
+      "write_tools_absent": "NOT_CHECKED"
+    },
+    "engineering_scan": {
+      "duplicate_authorities": {},
+      "files_scanned": 44,
+      "forbidden_hardcoding": [],
+      "ok": true,
+      "oversized_modules": [],
+      "oversized_modules_require_layered_remediation": false
+    },
+    "final_baseline": {
+      "active_config_unchanged": true,
+      "all_unchanged": true,
+      "gateway": {
+        "active_state": "active",
+        "healthy": true,
+        "http_status": 200,
+        "main_pid_present": true
+      },
+      "gateway_healthy": true,
+      "product_unchanged": true,
+      "queue_unchanged": true
+    },
+    "gateway_before": {
+      "active_state": "active",
+      "healthy": true,
+      "http_status": 200,
+      "main_pid_present": true
+    },
+    "installed_runtime_validation": {
+      "candidate_config_recorded": false,
+      "discovered": [
+        {
+          "candidate_path_flag": null,
+          "flag_scope": "none",
+          "validator": "config.validate"
+        },
+        {
+          "candidate_path_flag": null,
+          "flag_scope": "none",
+          "validator": "config.check"
+        }
+      ],
+      "help_fingerprints": {
+        "config.check": {
+          "output_sha256": "d53de0e4566cbfb1c64c57f93546de0a48c99965861158a281b70c695589c62e",
+          "returncode": 0,
+          "stderr_bytes": 0,
+          "stdout_bytes": 1936
+        },
+        "config.validate": {
+          "output_sha256": "e5ddc0bd3a9d231f90c4fb6c0befb776f27408217a956a796b92d38a279775ef",
+          "returncode": 0,
+          "stderr_bytes": 0,
+          "stdout_bytes": 297
+        },
+        "root": {
+          "output_sha256": "69a0b356976b1e12ac08183ee188484d4ec0986c512e2b4f55ed7b14ebb62d9a",
+          "returncode": 0,
+          "stderr_bytes": 0,
+          "stdout_bytes": 6368
+        }
+      },
+      "reason_code": "no_candidate_path_validator_discovered",
+      "secret_values_recorded": false,
+      "status": "NOT_CHECKED"
+    },
+    "policy_application": {
+      "mode": "materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted",
+      "secret_values_recorded": false,
+      "skill_policy": {
+        "after_count": 0,
+        "agent_id": "main",
+        "before_count": 0,
+        "changed": false,
+        "scope": "unrestricted",
+        "secret_values_recorded": false,
+        "unrestricted": true
+      },
+      "tool_policy": {
+        "allow_added_count": 13,
+        "allow_after_count": 13,
+        "allow_before_count": 0,
+        "allow_existed_before": false,
+        "allow_mode": "materialized-profile-plus-approved",
+        "also_allow_added_count": 3,
+        "also_allow_after_count": 3,
+        "also_allow_before_count": 0,
+        "also_allow_existed_before": false,
+        "also_allow_mode": "created-profile-also-allow",
+        "mode": "materialized-profile-plus-approved+created-profile-also-allow",
+        "secret_values_recorded": false
+      }
+    },
+    "safety_boundaries": {
+      "active_config_mutated": false,
+      "diagnostic_only": true,
+      "failure_capture_controller_ready": true,
+      "gateway_restarted": false,
+      "product_task_submitted": false,
+      "write_tools_added": false
+    }
+  },
+  "direct_tool_calls_pass": null,
+  "evidence": {
+    "json_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T074002Z.json",
+    "log_path": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T074002Z.log",
+    "self_commit_sha_omitted_to_prevent_post_commit_log_drift": true
+  },
+  "failure_code": "candidate_path_validator_not_discovered",
+  "native_agent_acceptance_pass": null,
+  "next_action": "READ_GITHUB_CLI_DISCOVERY_EVIDENCE_BEFORE_ANY_ACTIVATION",
+  "product_unchanged": true,
+  "queue_unchanged": true,
+  "result": "DIAGNOSTIC_VALIDATOR_UNAVAILABLE",
+  "rollback": {
+    "count": 0,
+    "healthy": "NOT_REQUIRED"
+  },
+  "routing_skill_installed": false,
+  "safety": {
+    "conversation_content_recorded": false,
+    "openclaw_reinstalled_or_upgraded": false,
+    "product_task_submitted": false,
+    "secret_values_recorded": false,
+    "write_tools_added": false
+  },
+  "selected_policy_mode": "materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted",
+  "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
+  "telemetry_privacy_pass": null,
+  "write_tools_absent": null
+}
