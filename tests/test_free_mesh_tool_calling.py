@@ -4,8 +4,6 @@ import json
 import stat
 from pathlib import Path
 
-import pytest
-
 from oris_vnext.free_mesh_compat import chat_payload, model_to_role
 from oris_vnext.free_mesh_inference import FreeMeshInference
 from oris_vnext.openai_chat_contract import (
@@ -109,8 +107,12 @@ def test_provider_cannot_inject_unapproved_tool() -> None:
             }
         ]
     }
-    with pytest.raises(ChatContractError):
+    raised = False
+    try:
         normalize_assistant_message(response, ("session_status",))
+    except ChatContractError:
+        raised = True
+    assert raised
 
 
 def test_tool_requests_use_tool_calling_role() -> None:
@@ -156,3 +158,16 @@ def test_private_request_file_is_mode_600() -> None:
         assert stored["tools"] == sample_request()["tools"]
     finally:
         path.unlink(missing_ok=True)
+
+
+def run_all() -> None:
+    test_chat_request_preserves_tool_protocol_without_metadata_leak()
+    test_provider_tool_call_is_normalized_and_authorized()
+    test_provider_cannot_inject_unapproved_tool()
+    test_tool_requests_use_tool_calling_role()
+    test_chat_payload_preserves_tool_call_message()
+    test_private_request_file_is_mode_600()
+
+
+if __name__ == "__main__":
+    run_all()
