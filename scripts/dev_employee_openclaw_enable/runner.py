@@ -10,22 +10,13 @@ from .enablement_acceptance import (
     verify_final_invariants,
 )
 from .enablement_activation import activate_candidate, verify_runtime_and_direct_calls
+from .enablement_rollback import run_enablement_rollback
 from .evidence import write_and_commit_evidence
 from .models import CheckRecorder, RunState, RuntimeContext
-from .policy import (
-    PolicyApplication,
-    PolicyBackup,
-    create_backup,
-    restore_denied_policy,
-    validate_denied_baseline,
-)
+from .policy import PolicyApplication, PolicyBackup, create_backup
 from .preflight_checks import run_transaction_preflight
-from .service_control import (
-    GatewayServiceError,
-    restart_service_and_wait,
-    service_snapshot,
-)
-from .skill_installation import SkillBackup, backup_routing_skill, restore_routing_skill
+from .service_control import GatewayServiceError
+from .skill_installation import SkillBackup, backup_routing_skill
 from .state import sha256_file
 
 
@@ -62,72 +53,6 @@ def _commit_evidence(
     state.evidence_commit = commit
     state.evidence_remote_verified = True
     return evidence_log, evidence_json
-
-
-def _rollback(
-    context: RuntimeContext,
-    state: RunState,
-    policy_backup: PolicyBackup | None,
-    skill_backup: SkillBackup | None,
-) -> None:
-    if not state.mutation_started:
-        return
-    policy_attempted = state.details.get("policy_config_write_attempted") is True
-    skill_attempted = state.details.get("routing_skill_mutation_attempted") is True
-    restart_attempted = (
-        state.details.get("candidate_gateway_restart_attempted") is True
-    )
-    failures: list[str] = []
-
-    if policy_attempted:
-        if policy_backup is None:
-            failures.append("policy_backup_unavailable")
-        else:
-            try:
-                restore_denied_policy(context, policy_backup)
-                state.details["rollback_policy_restored"] = True
-            except Exception as exc:
-                failures.append("policy_restore:" + type(exc).__name__)
-
-    if skill_attempted:
-        if skill_backup is None:
-            failures.append("skill_backup_unavailable")
-        else:
-            try:
-                restore_routing_skill(skill_backup)
-                state.details["rollback_skill_restored"] = True
-            except Exception as exc:
-                failures.append("skill_restore:" + type(exc).__name__)
-
-    if restart_attempted:
-        try:
-            state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
-        except GatewayServiceError as exc:
-            failures.append("gateway_restart:" + exc.code)
-            state.details["rollback_gateway_failure_diagnostics"] = exc.safe_evidence
-        except Exception as exc:
-            failures.append("gateway_restart:" + type(exc).__name__)
-    else:
-        state.details["rollback_gateway_restart"] = {
-            "required": False,
-            "reason": "candidate_gateway_restart_not_attempted",
-        }
-
-    try:
-        state.details["rollback_denied_baseline"] = validate_denied_baseline(context)
-    except Exception as exc:
-        failures.append("denied_baseline:" + type(exc).__name__)
-    final_gateway = service_snapshot(context)
-    state.details["rollback_final_gateway"] = final_gateway.evidence()
-    if not final_gateway.healthy:
-        failures.append("gateway_final_health")
-
-    state.rollback_count += 1
-    state.details["rollback_failure_codes"] = failures
-    state.rollback_healthy = "NO" if failures else "YES"
-    if not failures:
-        state.mutation_started = False
-        state.routing_skill_installed = False
 
 
 def run_enablement(
@@ -218,7 +143,7 @@ def run_enablement(
         return evidence_log, evidence_json
     except Exception as exc:
         _record_failure(state, checks, exc)
-        _rollback(context, state, policy_backup, skill_backup)
+        run_enablement_rollback(context, state, policy_backup, skill_backup)
         try:
             evidence_log, evidence_json = _commit_evidence(
                 context,
