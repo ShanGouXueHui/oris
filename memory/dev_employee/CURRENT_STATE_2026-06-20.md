@@ -8,11 +8,11 @@ Task id:
 
 Status:
 
-`effective_tool_surface_diagnostic_published_pending_execution`
+`handoff_archived_pending_new_chat_code_first_continuation`
 
 Current step:
 
-`diagnose_model_effective_tool_surface_without_model_turns`
+`new_chat_audit_current_main_then_diagnose_effective_tool_surface`
 
 ## Fixed commercial architecture
 
@@ -29,6 +29,17 @@ Native OpenClaw remains the commercial primary UI. The custom ORIS Web Console r
 
 Do not reinstall or upgrade OpenClaw. Do not reinstall the plugin. Do not expose internal listeners. Do not add write tools in this task. Do not touch production host `8.136.28.6`.
 
+## Durable handoff completed
+
+The complete 2026-06-20 conversation state is now persisted in GitHub:
+
+- `memory/dev_employee/SESSION_ARCHIVE_2026-06-20.md`;
+- `memory/dev_employee/ENVIRONMENT_AND_WORKING_CONTEXT_2026-06-20.md`;
+- `memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-20.md`;
+- `docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md`.
+
+These files preserve the original startup mandate, architecture, environment, systems, database boundary, Provider/Model rules, interaction preferences, engineering standards, execution history, latest failure, rollback state, unfinished work and next decision tree.
+
 ## Installed baseline
 
 - plugin: `oris-dev-employee` `0.1.0`;
@@ -37,7 +48,8 @@ Do not reinstall or upgrade OpenClaw. Do not reinstall the plugin. Do not expose
 - runtime hooks: `model_call_ended`, `after_tool_call`, `agent_end`;
 - readiness: `26/26 PASS`;
 - active product task: none;
-- current runtime after rollback: exact healthy tools-denied baseline.
+- current runtime after rollback: exact healthy tools-denied baseline;
+- write tools: absent and unauthorized.
 
 ## Latest controlled activation
 
@@ -49,7 +61,7 @@ Result:
 
 `FAILED / RuntimeError`
 
-Passed before the failure:
+Passed before failure:
 
 - source governance and named automatic selftests;
 - private single-scope candidate native dry-run;
@@ -61,7 +73,7 @@ Passed before the failure:
 - direct invocation of all three approved ORIS tools;
 - queue invariance after direct calls.
 
-Three native Agent turns completed through Gateway in one persisted session. Every turn returned zero, produced structured output and avoided embedded fallback.
+Three native Agent turns completed through Gateway in one persisted session. Each turn returned zero, produced structured output and avoided embedded fallback.
 
 Observed telemetry:
 
@@ -94,6 +106,29 @@ Two explanations remain:
 
 A third full enablement attempt is prohibited until this distinction is proven.
 
+## Code-first continuation gate
+
+Authoritative rule:
+
+`docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md`
+
+The next conversation must first audit current `main`, including all newly added effective-surface diagnostic files and wrappers.
+
+Before runtime work, the audit must prove:
+
+- duplicate bindings: 0;
+- competing authorities: 0;
+- duplicate function bodies: 0;
+- import cycles: 0;
+- oversized mixed-responsibility modules: 0;
+- forbidden hardcoding: 0;
+- legacy execution paths: 0;
+- configuration-contract error: none.
+
+The audit must also inspect duplicate parsers, validators, policies, profile expansion, service helpers, rollback helpers, evidence publishers and entrypoints.
+
+No OpenClaw runtime access, Gateway restart, `tools.effective`, model turn or task submission is allowed before `CODE_AUDIT_PASS` on the exact current commit.
+
 ## Effective tool surface diagnostic
 
 Authoritative plan:
@@ -104,38 +139,56 @@ Entrypoint:
 
 `scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh`
 
-The diagnostic:
+After the code gate passes, the diagnostic may run exactly once. It:
 
-- compiles and re-runs source governance and automatic selftests;
-- repeats the private candidate native dry-run;
+- repeats source governance and selftests;
+- repeats private candidate native dry-run;
 - temporarily activates only the validated read-only policy;
-- calls native Gateway RPC `tools.effective` for the configured persisted Agent session;
-- does not run a model turn;
-- does not invoke an ORIS tool;
-- retains only sanitized effective-inventory counts and the three approved names;
+- calls native Gateway RPC `tools.effective` for the persisted Agent session;
+- runs no model turn;
+- invokes no ORIS tool;
+- records only sanitized approved-tool inventory metadata;
 - always restores the exact tools-denied config, marker and Skill state;
 - proves final Gateway, queue, product and listener invariants;
 - publishes detached-worktree evidence.
 
+## Decision after diagnostic evidence
+
+- approved tools absent: remediate OpenClaw optional-tool materialization or session-policy resolution;
+- approved tools present: diagnose provider/model tool-call capability and Agent Harness routing without hardcoding provider/model identity;
+- RPC unavailable or unsafe: rollback and stop; do not substitute direct calls or catalog inventory.
+
 ## Next action
 
-Run exactly once:
+Start a new conversation using:
 
-```bash
-cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh
-```
+`memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-20.md`
+
+The new conversation must read GitHub context, complete and fix the code-first audit, then run the effective-tool-surface diagnostic only after the code gate passes.
 
 Do not run `scripts/dev_employee_enable_openclaw_readonly_tools.sh`.
 
-Return only the final `===== SUMMARY =====` block. Detailed evidence will be read from GitHub before choosing the materialization or provider/model remediation path.
+## Work still not completed
 
-## Commercial sequence after P0
+- native natural-language acceptance for all three read-only tools;
+- approved-only non-zero `after_tool_call` telemetry;
+- real privacy-safe model/tool/agent latency baseline;
+- read-only P0 completion persistence;
+- typed write actions with approval, RBAC, project authorization, idempotency and audit;
+- generic onboarding and capability discovery;
+- controlled Admin UI for Provider, Model and Policy;
+- monitoring, privacy/retention, backup/restore and disaster recovery;
+- multi-tenant identity, quotas, metering and commercial packaging;
+- production validation.
 
-1. resolve effective tool materialization or provider/model tool-call capability;
-2. complete native read-only tool and telemetry acceptance;
-3. establish privacy-safe real model/tool/agent latency baselines;
-4. design typed write actions with approval, RBAC, project authorization, idempotency and audit;
-5. add generic project onboarding and capability discovery;
-6. move routine Provider, Model and Policy management to controlled Admin UI;
-7. add monitoring, privacy/retention, backup/restore and disaster recovery;
-8. add multi-tenant identity, quotas, metering and commercial packaging.
+## Commercial sequence
+
+1. code-first audit and correction on current `main`;
+2. resolve effective tool materialization or provider/model capability;
+3. complete native read-only tool and telemetry acceptance;
+4. establish privacy-safe real latency baselines;
+5. design typed write actions only after P0 passes;
+6. generic project onboarding and capability discovery;
+7. controlled Admin management;
+8. monitoring, privacy, backup and DR;
+9. multi-tenant commercial packaging.
