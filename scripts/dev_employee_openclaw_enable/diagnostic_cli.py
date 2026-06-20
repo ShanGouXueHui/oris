@@ -1,15 +1,10 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
+from .clock import utc_compact_stamp
 from .context import load_context
 from .diagnostic import SUCCESS_RESULT, run_policy_diagnostic
 from .models import CheckRecorder, RunState, RuntimeContext
 from .reporting import print_summary
-
-
-def _stamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
 def main() -> int:
@@ -24,7 +19,7 @@ def main() -> int:
             context,
             state,
             checks,
-            _stamp(),
+            utc_compact_stamp(),
         )
     except Exception as exc:
         state.result = "DIAGNOSTIC_BOOTSTRAP_FAILED"
