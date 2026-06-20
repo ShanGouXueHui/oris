@@ -8,11 +8,11 @@ Task id:
 
 Status:
 
-`diagnostic_patch_dry_run_published_pending_runtime_execution`
+`single_scope_policy_remediation_published_pending_runtime_dry_run`
 
 Current step:
 
-`execute_native_config_patch_dry_run_diagnostic`
+`execute_single_scope_native_config_patch_dry_run_diagnostic`
 
 ## Fixed commercial architecture
 
@@ -40,6 +40,21 @@ Do not reinstall or upgrade OpenClaw. Do not reinstall the plugin. Do not expose
 - readiness: `26/26 PASS`;
 - readiness evidence: `a63dd823ac4d5b3fa0fa867771f94904d0b4ceee`.
 
+## Code governance state
+
+The target package code audit passed across 42 modules before the latest runtime diagnostic:
+
+- duplicate bindings: 0;
+- competing authorities: 0;
+- duplicate function bodies: 0;
+- import cycles: 0;
+- oversized modules: 0;
+- forbidden hardcoding: 0;
+- legacy path findings: 0;
+- contract errors: 0.
+
+The structural source-code blocker is closed. Any later code change must pass the same gate again before runtime work.
+
 ## Historical enablement failure
 
 Evidence commit:
@@ -49,14 +64,6 @@ Evidence commit:
 The dual-stage candidate was activated, the existing Gateway did not pass its health gate, and rollback restored the exact tools-denied baseline. Runtime inventory, direct tool calls, native Agent acceptance and telemetry acceptance were not reached.
 
 This historical result does not authorize another blind activation.
-
-## Diagnostic run 1
-
-Evidence commit:
-
-`df9d21839974e4adcc6bde9b62db0fe468b3cc76`
-
-The run stopped at the engineering source gate because `skill.py` exceeded the 240-line module limit. Duplicate authorities and hardcoding findings were zero. The module was split without changing its public API.
 
 ## Diagnostic run 2
 
@@ -68,56 +75,75 @@ Result:
 
 `DIAGNOSTIC_VALIDATOR_UNAVAILABLE`
 
+The installed CLI exposed `config validate` and `config check`, but neither accepted an alternate candidate path. No policy rejection was observed.
+
+## Diagnostic run 3
+
+Evidence commit:
+
+`366c8b441e8adff5fa684b2255339ad32832cc31`
+
+Result:
+
+`DIAGNOSTIC_RUNTIME_VALIDATION_FAILED`
+
 Checks:
 
 - 9 PASS;
-- 0 FAIL;
-- 7 NOT_CHECKED.
+- 1 FAIL;
+- 6 NOT_CHECKED.
 
 Verified:
 
-- diagnostic selftests pass;
-- source authority, hardcoding and module-size checks pass;
-- exact approved tools remain denied in the active baseline;
-- Gateway is active and HTTP healthy;
-- candidate is built privately without active mutation;
-- candidate profile, allow, alsoAllow, deny, group selectors and Skill visibility are internally valid;
-- active config remains unchanged;
-- queue remains unchanged;
-- product repository remains unchanged;
-- Gateway is not restarted;
-- no product task is submitted;
-- no write tool is added.
+- source governance and diagnostic selftests passed;
+- exact approved tools remained denied in the active baseline;
+- Gateway baseline and final health passed;
+- private candidate build passed;
+- ORIS candidate compatibility passed under the previous internal rules;
+- active configuration remained unchanged;
+- Gateway was not restarted;
+- queue and product repository remained unchanged;
+- no product task was submitted;
+- no write tool was added.
 
-The installed CLI exposes `config validate` and `config check`, but neither accepts an alternate candidate path. This is not a policy rejection.
+The installed native `config patch --dry-run` rejected the candidate because it contained both non-empty `tools.allow` and non-empty `tools.alsoAllow`.
 
-## Native dry-run remediation
+OpenClaw `2026.5.19 (a185ca2)` requires one authorization scope:
 
-Installed runtime:
+1. explicit `allow`; or
+2. profile plus additive `alsoAllow`.
 
-`OpenClaw 2026.5.19 (a185ca2)`
+## Single-scope remediation
 
-The matching OpenClaw implementation supports:
+Authoritative document:
 
-```text
-openclaw config patch --file <patch> --dry-run
-```
+`docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md`
 
-ORIS now generates a private mode-0600 patch containing only the actual policy delta. The dry run validates the post-change in-memory config and must leave the active config hash unchanged.
+The corrected current-baseline policy is:
 
-Implementation:
+- preserve `tools.profile = coding`;
+- do not create `tools.allow`;
+- add only the three approved ORIS tools to `tools.alsoAllow`;
+- remove those three tools from `tools.deny`.
 
-- `scripts/dev_employee_openclaw_enable/runtime_policy_patch.py`;
-- `scripts/dev_employee_openclaw_enable/runtime_validation.py`;
-- `docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md`.
+The expected minimal patch changes only:
 
-The patch does not include unrelated Gateway, Provider/Model or credential configuration. Evidence does not include patch content, candidate content or raw CLI output.
+- `tools.alsoAllow`;
+- `tools.deny`.
+
+The code now:
+
+- rejects non-empty `allow` plus non-empty `alsoAllow` before runtime validation;
+- supports existing explicit-allow baselines without creating `alsoAllow`;
+- supports current profile baselines through `alsoAllow` only;
+- verifies rollback scope reconstruction for the selected mode;
+- records sanitized OpenClaw validation rule codes and message hashes without raw messages or SecretRef values.
 
 ## Current blocker
 
-The installed OpenClaw runtime has not yet executed `config patch --dry-run` against the minimal policy delta.
+The corrected single-scope candidate has not yet passed the installed OpenClaw native dry-run.
 
-Candidate activation remains prohibited until the next diagnostic evidence is read.
+Candidate activation remains prohibited until the next GitHub diagnostic evidence is read.
 
 ## Next action
 
@@ -129,7 +155,9 @@ cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/d
 
 The run remains diagnostic-only. It must not activate the candidate, replace active config, restart Gateway, install the routing Skill, invoke ORIS tools, submit a product task or add write tools.
 
-Return only the final `===== SUMMARY =====` block. Read detailed evidence from GitHub before any enablement retry.
+The diagnostic must first re-pass the source governance and selftest gates. A runtime dry-run `PASS` permits evidence review only.
+
+Return only the final `===== SUMMARY =====` block. Read detailed evidence from GitHub before any activation decision.
 
 ## Commercial sequence after P0
 
