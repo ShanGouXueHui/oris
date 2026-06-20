@@ -1,11 +1,11 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "diagnostic_patch_dry_run_published_pending_runtime_execution",
+  "status": "single_scope_policy_remediation_published_pending_runtime_dry_run",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "execute_native_config_patch_dry_run_diagnostic",
+  "current_step": "execute_single_scope_native_config_patch_dry_run_diagnostic",
   "objective": "Enable only the three approved read-only ORIS tools through the existing native OpenClaw plugin, verify natural-language typed-tool use and privacy-safe latency telemetry, and preserve automatic rollback to the tools-denied state. Do not add write actions in this task.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -63,6 +63,19 @@
     "checks_pass": 26,
     "evidence_commit": "a63dd823ac4d5b3fa0fa867771f94904d0b4ceee"
   },
+  "completed_code_governance": {
+    "result": "CODE_AUDIT_PASS",
+    "files_scanned": 42,
+    "duplicate_bindings": 0,
+    "authority_violations": 0,
+    "duplicate_function_bodies": 0,
+    "import_cycles": 0,
+    "oversized_modules": 0,
+    "forbidden_hardcoding": 0,
+    "legacy_path_findings": 0,
+    "contract_error": null,
+    "fix_commit": "4afc7679af383b1f3ca9e126f4d09210f8028306"
+  },
   "enablement_history": {
     "latest_enablement_evidence_commit": "c68e7d2f50a84f6e68199d2fada9a244f31e4f41",
     "latest_enablement_failure_stage": "post_candidate_activation_gateway_health",
@@ -81,7 +94,6 @@
       "remediated": true
     },
     "second_run": {
-      "checked_at": "2026-06-20T07:40:02Z",
       "result": "DIAGNOSTIC_VALIDATOR_UNAVAILABLE",
       "failure_code": "candidate_path_validator_not_discovered",
       "checks_pass": 9,
@@ -97,51 +109,58 @@
       "product_unchanged": true,
       "active_config_unchanged": true,
       "gateway_restarted": false,
-      "rollback_required": false,
+      "evidence_commit": "7c01b72a8ae71c2cbf62a0ae4032ab245b09335c"
+    },
+    "third_run": {
+      "result": "DIAGNOSTIC_RUNTIME_VALIDATION_FAILED",
+      "failure_code": "installed_runtime_candidate_validation_failed",
+      "checks_pass": 9,
+      "checks_fail": 1,
+      "checks_not_checked": 6,
+      "validator": "config.patch.dry-run",
+      "validator_available": true,
+      "active_config_unchanged": true,
+      "gateway_healthy": true,
+      "gateway_restarted": false,
+      "queue_unchanged": true,
+      "product_unchanged": true,
       "product_task_submitted": false,
       "write_tools_added": false,
-      "evidence_commit": "7c01b72a8ae71c2cbf62a0ae4032ab245b09335c",
-      "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T074002Z.json"
+      "rejected_policy_paths": [
+        "tools.allow",
+        "tools.alsoAllow",
+        "tools.deny"
+      ],
+      "root_cause": "OpenClaw 2026.5.19 forbids non-empty tools.allow and tools.alsoAllow in the same policy scope.",
+      "evidence_commit": "366c8b441e8adff5fa684b2255339ad32832cc31"
     }
   },
-  "validator_facts": {
-    "config_validate_present": true,
-    "config_check_present": true,
-    "config_validate_alternate_path_supported": false,
-    "config_check_alternate_path_supported": false,
-    "interpretation": "No policy rejection was observed. The two direct validators cannot safely validate a private candidate path in this installed runtime.",
-    "official_runtime_compatible_path": "openclaw config patch --file <patch> --dry-run",
-    "official_source_ref": "openclaw/openclaw a185ca2"
-  },
-  "dry_run_remediation": {
+  "single_scope_policy_remediation": {
     "published": true,
-    "implementation_document": "docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md",
-    "policy_patch_builder": "scripts/dev_employee_openclaw_enable/runtime_policy_patch.py",
-    "runtime_validator": "scripts/dev_employee_openclaw_enable/runtime_validation.py",
-    "entrypoint": "scripts/dev_employee_diagnose_openclaw_readonly_policy.sh",
-    "private_patch_mode": "0600",
-    "minimal_changed_paths_only": true,
-    "active_config_hash_before_after": true,
-    "raw_patch_recorded": false,
-    "raw_cli_output_recorded": false,
+    "document": "docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md",
+    "current_baseline_mode": "coding-profile-plus-approved-alsoAllow",
+    "expected_changed_paths": [
+      "tools.alsoAllow",
+      "tools.deny"
+    ],
+    "tools_allow_materialized": false,
+    "approved_tools_added_to_also_allow": true,
+    "approved_tools_removed_from_deny": true,
+    "non_empty_allow_and_also_allow_rejected_by_oris": true,
+    "raw_runtime_error_recorded": false,
+    "sanitized_runtime_rule_codes_enabled": true,
     "candidate_activated": false,
-    "gateway_restart": false,
-    "implementation_commits": [
-      "12392337ba8f33eda5228f3d87e5b6961d255e72",
-      "3a9259c44e2f3f92672a52b85441a15c6a8967a8",
-      "2690501651ca2bd45637460a2dc5d0d9b2ab3501",
-      "061fb475e0f5e7abf4411f71888e81cd74bbabf5",
-      "5452d3faf0c2a27c7991ee85b81545d87f38955d"
-    ]
+    "gateway_restart": false
   },
-  "blocked_reason": "The candidate has passed ORIS static policy compatibility checks, but the installed OpenClaw runtime has not yet executed its native config patch dry-run against the minimal policy delta. Activation remains prohibited until that evidence is reviewed.",
-  "next_action": "Pull latest main and run the diagnostic entrypoint exactly once. The run must execute native config patch dry-run only and must not activate the candidate or restart Gateway. Read the resulting GitHub evidence before any enablement retry.",
+  "blocked_reason": "The prior candidate was rejected because it simultaneously used non-empty tools.allow and tools.alsoAllow. The code now selects one OpenClaw schema-compatible authorization scope, but the corrected minimal patch has not yet passed the installed runtime dry-run.",
+  "next_action": "Pull latest main and run the diagnostic entrypoint exactly once. Verify the corrected patch changes only tools.alsoAllow and tools.deny, passes OpenClaw config patch --dry-run, and leaves active config and Gateway unchanged. Read GitHub evidence before activation.",
   "next_action_requirements": [
     "pull latest origin/main on the ORIS development/control host",
     "run scripts/dev_employee_diagnose_openclaw_readonly_policy.sh exactly once",
     "do not run the enablement entrypoint",
-    "verify config.patch exposes --file and --dry-run",
-    "validate only the minimal policy delta",
+    "verify the code governance gate still passes",
+    "verify candidate has no non-empty tools.allow",
+    "verify changed policy paths are tools.alsoAllow and tools.deny only",
     "verify active config hash is unchanged",
     "verify Gateway remains healthy without restart",
     "publish sanitized detached-worktree evidence",
@@ -160,18 +179,15 @@
   ],
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
-    "memory/dev_employee/CURRENT_STATE_2026-06-19.md",
-    "memory/dev_employee/SESSION_ARCHIVE_2026-06-19.md",
+    "memory/dev_employee/CURRENT_STATE_2026-06-20.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
-    "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md",
-    "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md",
+    "docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md",
+    "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md",
     "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-19.md",
     "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-19.md",
-    "docs/DEV_EMPLOYEE_COMMERCIALIZATION_PRIORITY_2026-06-18.md",
-    "orchestration/project_registry.json",
-    "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-19.md"
+    "orchestration/project_registry.json"
   ],
-  "updated_at": "2026-06-20T07:46:00Z"
+  "updated_at": "2026-06-20"
 }
