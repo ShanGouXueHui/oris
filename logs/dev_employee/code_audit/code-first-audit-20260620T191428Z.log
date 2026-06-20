@@ -1,0 +1,14 @@
+checked_at=20260620T191428Z
+audited_commit=db9325031f4072fd1c6fc756f2f81132ad23c896
+result=CODE_AUDIT_PASS
+duplicate_bindings=0
+authority_violations=0
+duplicate_function_bodies=0
+import_cycles=0
+oversized_modules=0
+forbidden_hardcoding=0
+legacy_path_findings=0
+contract_error=
+openclaw_accessed=NO
+gateway_restarted=NO
+task_submitted=NO
