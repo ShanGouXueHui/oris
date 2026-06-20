@@ -23,6 +23,10 @@ def _run(check_name: str, check: Callable[[], None]) -> None:
 def run_selftests() -> bool:
     checks: tuple[tuple[str, Callable[[], None]], ...] = (
         ("telemetry_correlation", telemetry_checks.test_telemetry_correlation),
+        (
+            "telemetry_schema_and_outcomes",
+            telemetry_checks.test_telemetry_schema_and_outcomes,
+        ),
         ("output_metadata", telemetry_checks.test_output_metadata),
         ("agent_skill_policy", policy_checks.test_agent_skill_policy),
         ("profile_tool_policy", policy_checks.test_profile_tool_policy),

@@ -1,6 +1,13 @@
 from __future__ import annotations
 
+import json
+import tempfile
+from pathlib import Path
+from types import SimpleNamespace
+
 from .agent_output import reported_tool_names, session_identifier_hashes
+from .telemetry import _read_records
+from .telemetry_analysis import evaluate_execution_outcomes
 from .telemetry_correlation import correlate_records
 
 
@@ -78,6 +85,92 @@ def test_telemetry_correlation() -> None:
     )
     assert unexpected["accepted"] is False
     assert UNEXPECTED_TOOL in unexpected["unexpected_tools"]
+
+
+def test_telemetry_schema_and_outcomes() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        telemetry_path = Path(directory) / "latency.jsonl"
+        context = SimpleNamespace(
+            telemetry_path=telemetry_path,
+            required_hooks=tuple(EVENTS),
+        )
+        telemetry_path.write_text(
+            json.dumps(
+                {
+                    "timestamp": "2026-06-20T20:00:01.000Z",
+                    "event": "after_tool_call",
+                    "toolName": MISSING_TOOL,
+                    "success": False,
+                    "error": True,
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        records, schema_ok, content_safe = _read_records(
+            context,
+            "2026-06-20T20:00:00.000Z",
+        )
+        assert len(records) == 1
+        assert schema_ok is True
+        assert content_safe is True
+
+        telemetry_path.write_text(
+            json.dumps(
+                {
+                    "timestamp": "2026-06-20T20:00:02.000Z",
+                    "event": "after_tool_call",
+                    "toolName": MISSING_TOOL,
+                    "success": "false",
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        _, invalid_schema_ok, _ = _read_records(
+            context,
+            "2026-06-20T20:00:00.000Z",
+        )
+        assert invalid_schema_ok is False
+
+    retry_records = _records()
+    retry_records.append(
+        {
+            "event": "after_tool_call",
+            "toolName": MISSING_TOOL,
+            "success": False,
+            "error": True,
+        }
+    )
+    retry = evaluate_execution_outcomes(retry_records, TOOLS)
+    assert retry["ok"] is True
+    assert retry["failed_event_count"] == 1
+    assert MISSING_TOOL in retry["retry_tools"]
+
+    failed_tool_records = [
+        {
+            **item,
+            "success": False,
+            "error": True,
+        }
+        if item.get("event") == "after_tool_call"
+        and item.get("toolName") == MISSING_TOOL
+        else item
+        for item in _records()
+    ]
+    failed_tool = evaluate_execution_outcomes(failed_tool_records, TOOLS)
+    assert failed_tool["ok"] is False
+    assert MISSING_TOOL in failed_tool["missing_successful_tools"]
+
+    failed_agent_records = [
+        {**item, "success": False}
+        if item.get("event") == "agent_end" and index == 2
+        else item
+        for index, item in enumerate(_records())
+    ]
+    failed_agent = evaluate_execution_outcomes(failed_agent_records, TOOLS)
+    assert failed_agent["ok"] is False
+    assert failed_agent["failed_agent_end_count"] == 1
 
 
 def test_output_metadata() -> None:
