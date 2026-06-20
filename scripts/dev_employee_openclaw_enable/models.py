@@ -24,6 +24,13 @@ class EvidenceTarget:
 
 
 @dataclass(frozen=True)
+class NativeSupportToolPolicy:
+    name: str
+    max_calls: int
+    purpose: str
+
+
+@dataclass(frozen=True)
 class RuntimeContext:
     repo_root: Path
     task_id: str
@@ -43,6 +50,7 @@ class RuntimeContext:
     plugin_id: str
     plugin_version: str
     approved_tools: tuple[str, ...]
+    native_support_tools: tuple[NativeSupportToolPolicy, ...]
     required_hooks: tuple[str, ...]
     marker_file: Path
     internal_ports: tuple[int, ...]
@@ -69,6 +77,10 @@ class RuntimeContext:
     @property
     def evidence_commit_prefix(self) -> str:
         return self.enablement_evidence.commit_message_prefix
+
+    @property
+    def native_support_tool_limits(self) -> dict[str, int]:
+        return {item.name: item.max_calls for item in self.native_support_tools}
 
 
 @dataclass(frozen=True)
