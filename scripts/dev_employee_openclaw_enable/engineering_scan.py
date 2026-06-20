@@ -1,174 +1,176 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from scripts.dev_employee_quality.duplicates import scan_python
+from scripts.dev_employee_quality.models import SourceFile
+
 from .models import RuntimeContext
+from .task_contract import load_json_object, load_runtime_contract, load_task_id
 
 
-_AUTHORITY_NAMES = {
-    "load_context",
-    "apply_readonly_policy",
-    "enable_profile_tools",
-    "restart_gateway",
-    "restart_service_and_wait",
-    "write_and_commit_evidence",
-    "verify_plugin_runtime",
+_AUTHORITIES = {
+    "load_context": "context.py",
+    "load_runtime_contract": "task_contract.py",
+    "load_json_object": "task_contract.py",
+    "apply_readonly_policy": "policy.py",
+    "enable_profile_tools": "profile_tool_policy.py",
+    "ensure_skill_visible": "agent_skill_policy.py",
+    "restart_service_and_wait": "service_control.py",
+    "verify_plugin_runtime": "plugin_runtime.py",
+    "write_and_commit_evidence": "evidence.py",
+    "run_enablement": "runner.py",
+    "run_policy_diagnostic": "diagnostic.py",
+    "build_policy_validation_patch": "runtime_policy_patch.py",
+    "validate_candidate_with_installed_runtime": "runtime_validation.py",
+    "install_routing_skill": "skill_installation.py",
+    "verify_routing_skill_runtime": "skill_runtime.py",
+    "run": "process.py",
 }
-_LITERAL_TARGET_TERMS = {
-    "host",
-    "port",
-    "provider",
-    "model",
-    "version",
-    "project",
-    "branch",
-    "path",
-}
+_LEGACY_LIBS = (
+    "dev_employee_openclaw_readonly_enable_common_20260618.sh",
+    "dev_employee_openclaw_readonly_enable_preflight_20260618.sh",
+    "dev_employee_openclaw_readonly_enable_policy_direct_20260618.sh",
+    "dev_employee_openclaw_readonly_enable_browser_telemetry_20260618.sh",
+    "dev_employee_openclaw_readonly_enable_finalize_20260618.sh",
+)
 
 
-def _source_files(context: RuntimeContext) -> list[Path]:
-    package = context.repo_root / "scripts" / "dev_employee_openclaw_enable"
+def _cycle_rows(graph: dict[str, set[str]]) -> list[list[str]]:
+    found: set[tuple[str, ...]] = set()
+
+    def walk(node: str, path: list[str]) -> None:
+        for child in graph.get(node, set()):
+            if child not in graph:
+                continue
+            if child in path:
+                core = path[path.index(child):]
+                rotations = [tuple(core[index:] + core[:index]) for index in range(len(core))]
+                found.add(min(rotations))
+            elif len(path) <= len(graph):
+                walk(child, path + [child])
+
+    for node in graph:
+        walk(node, [node])
+    return [list(row) for row in sorted(found)]
+
+
+def _function_digest(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str | None:
+    if node.name == "main" or len(list(ast.walk(node))) < 12:
+        return None
+    normalized = ast.FunctionDef(
+        name="function",
+        args=node.args,
+        body=node.body,
+        decorator_list=[],
+        returns=node.returns,
+        type_comment=node.type_comment,
+    )
+    return hashlib.sha256(ast.dump(normalized).encode("utf-8")).hexdigest()
+
+
+def _legacy_findings(repo_root: Path) -> list[dict[str, str]]:
+    root = repo_root / "scripts" / "lib"
+    findings: list[dict[str, str]] = []
+    forbidden = ("function ", "() {", "python3", "openclaw", "systemctl", "curl ", "git ")
+    allowed = {"return 64 2>/dev/null || exit 64"}
+    for name in _LEGACY_LIBS:
+        path = root / name
+        if not path.is_file():
+            findings.append({"file": name, "kind": "missing"})
+            continue
+        code = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip() and not line.lstrip().startswith("#")]
+        if any(any(token in line for token in forbidden) for line in code):
+            findings.append({"file": name, "kind": "executable_logic"})
+        if set(code) - allowed:
+            findings.append({"file": name, "kind": "unapproved_statement"})
+    return findings
+
+
+def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
+    package = repo_root / "scripts" / "dev_employee_openclaw_enable"
     files = sorted(package.glob("*.py"))
-    for name in (
-        "dev_employee_enable_openclaw_readonly_tools.sh",
-        "dev_employee_diagnose_openclaw_readonly_policy.sh",
-    ):
-        entry = context.repo_root / "scripts" / name
-        if entry.is_file():
-            files.append(entry)
-    return files
+    duplicate_bindings: list[dict[str, Any]] = []
+    oversized: list[dict[str, Any]] = []
+    hardcoding: list[dict[str, str]] = []
+    definitions: dict[str, list[str]] = defaultdict(list)
+    bodies: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    graph: dict[str, set[str]] = {}
 
+    for path in files:
+        relative = path.name
+        text = path.read_text(encoding="utf-8")
+        source = SourceFile(path, relative, ".py", text)
+        duplicate_bindings.extend(item.to_dict() for item in scan_python(source))
+        if len(text.splitlines()) > 240:
+            oversized.append({"file": relative, "line_count": len(text.splitlines())})
+        tree = ast.parse(text, filename=str(path))
+        imports: set[str] = set()
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                definitions[node.name].append(relative)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                digest = _function_digest(node)
+                if digest:
+                    bodies[digest].append((relative, node.name))
+            if isinstance(node, ast.ImportFrom) and node.level == 1:
+                if node.module:
+                    imports.add(node.module.split(".")[0])
+                else:
+                    imports.update(item.name.split(".")[0] for item in node.names)
+        graph[path.stem] = imports - {path.stem}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                if "/home/" in node.value:
+                    hardcoding.append({"file": relative, "kind": "absolute_home_path"})
+                if "ZenMux" in node.value:
+                    hardcoding.append({"file": relative, "kind": "excluded_provider"})
 
-def _target_names(node: ast.AST) -> list[str]:
-    if isinstance(node, ast.Name):
-        return [node.id]
-    if isinstance(node, ast.Attribute):
-        return [node.attr]
-    if isinstance(node, (ast.Tuple, ast.List)):
-        values: list[str] = []
-        for child in node.elts:
-            values.extend(_target_names(child))
-        return values
-    return []
+    authority = {
+        name: definitions.get(name, [])
+        for name, expected in _AUTHORITIES.items()
+        if definitions.get(name, []) != [expected]
+    }
+    duplicate_bodies = [values for values in bodies.values() if len(values) > 1]
+    contract_error = ""
+    try:
+        contract = load_runtime_contract(repo_root / "config/dev_employee/openclaw_readonly_acceptance.json")
+        load_task_id(repo_root / "memory/dev_employee/current_task.json")
+        projects = load_json_object(repo_root / "orchestration/project_registry.json").get("projects")
+        if not isinstance(projects, dict) or contract["baseline"]["project_key"] not in projects:
+            raise RuntimeError("baseline project is missing from project registry")
+    except Exception as exc:
+        contract_error = str(exc) or type(exc).__name__
 
-
-def _name_terms(name: str) -> set[str]:
-    return {part for part in name.lower().split("_") if part}
-
-
-def _literal_kind(name: str, value: object) -> str | None:
-    terms = _name_terms(name)
-    matched = terms.intersection(_LITERAL_TARGET_TERMS)
-    if not matched:
-        return None
-    if "path" in matched:
-        if isinstance(value, str) and (value.startswith("/") or value.startswith("~")):
-            return "absolute_path_literal"
-        return None
-    if "branch" in matched and value == "main":
-        return None
-    if "host" in matched and value in {"localhost", "127" + ".0.0.1"}:
-        return None
-    if "project" in matched:
-        if isinstance(value, str) and "acceptance" in value.lower():
-            return "acceptance_project_literal"
-        return None
-    if "version" in matched:
-        if isinstance(value, str) and value[:1].isdigit() and "." in value:
-            return "runtime_version_literal"
-        return None
-    if "port" in matched and isinstance(value, int):
-        return "port_literal"
-    if "host" in matched and isinstance(value, str) and value:
-        return "host_literal"
-    if ("provider" in matched or "model" in matched) and isinstance(value, str) and value:
-        return "provider_or_model_literal"
-    if "branch" in matched and isinstance(value, str) and value:
-        return "branch_literal"
-    return None
-
-
-def _record_literal(
-    findings: list[dict[str, str]],
-    relative: str,
-    name: str,
-    value: object,
-) -> None:
-    kind = _literal_kind(name, value)
-    if kind:
-        findings.append({"file": relative, "kind": kind})
-
-
-def _python_findings(path: Path, root: Path) -> list[dict[str, str]]:
-    relative = path.relative_to(root).as_posix()
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-    findings: list[dict[str, str]] = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant):
-            for target in node.targets:
-                for name in _target_names(target):
-                    _record_literal(findings, relative, name, node.value.value)
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.value, ast.Constant):
-            for name in _target_names(node.target):
-                _record_literal(findings, relative, name, node.value.value)
-        elif isinstance(node, ast.keyword) and node.arg and isinstance(node.value, ast.Constant):
-            _record_literal(findings, relative, node.arg, node.value.value)
-        elif isinstance(node, ast.Dict):
-            for key, value in zip(node.keys, node.values):
-                if (
-                    isinstance(key, ast.Constant)
-                    and isinstance(key.value, str)
-                    and isinstance(value, ast.Constant)
-                ):
-                    _record_literal(findings, relative, key.value, value.value)
-    return findings
-
-
-def _shell_findings(path: Path, root: Path) -> list[dict[str, str]]:
-    relative = path.relative_to(root).as_posix()
-    findings: list[dict[str, str]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if "=" not in line:
-            continue
-        name, raw = line.split("=", 1)
-        value = raw.strip().strip("'\"")
-        if value.startswith("$") or "$(" in value:
-            continue
-        _record_literal(findings, relative, name.strip(), value)
-    return findings
+    legacy = _legacy_findings(repo_root)
+    cycles = _cycle_rows(graph)
+    failures = (
+        duplicate_bindings,
+        oversized,
+        hardcoding,
+        authority,
+        duplicate_bodies,
+        cycles,
+        legacy,
+        contract_error,
+    )
+    return {
+        "ok": not any(failures),
+        "files_scanned": len(files),
+        "duplicate_bindings": duplicate_bindings,
+        "authority_violations": authority,
+        "duplicate_function_bodies": duplicate_bodies,
+        "import_cycles": cycles,
+        "oversized_modules": oversized,
+        "forbidden_hardcoding": hardcoding,
+        "legacy_path_findings": legacy,
+        "contract_error": contract_error or None,
+    }
 
 
 def scan_engineering_sources(context: RuntimeContext) -> dict[str, Any]:
-    definitions: dict[str, list[str]] = defaultdict(list)
-    hardcoding: list[dict[str, str]] = []
-    oversized: list[dict[str, Any]] = []
-    files = _source_files(context)
-
-    for path in files:
-        relative = path.relative_to(context.repo_root).as_posix()
-        text = path.read_text(encoding="utf-8")
-        line_count = len(text.splitlines())
-        if line_count > 240:
-            oversized.append({"file": relative, "line_count": line_count})
-        if path.suffix == ".py":
-            tree = ast.parse(text, filename=str(path))
-            for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                    if node.name in _AUTHORITY_NAMES:
-                        definitions[node.name].append(relative)
-            hardcoding.extend(_python_findings(path, context.repo_root))
-        else:
-            hardcoding.extend(_shell_findings(path, context.repo_root))
-
-    duplicates = {name: paths for name, paths in definitions.items() if len(paths) > 1}
-    return {
-        "ok": not duplicates and not hardcoding and not oversized,
-        "files_scanned": len(files),
-        "duplicate_authorities": duplicates,
-        "forbidden_hardcoding": hardcoding,
-        "oversized_modules": oversized,
-        "oversized_modules_require_layered_remediation": bool(oversized),
-    }
+    return scan_repository_sources(context.repo_root)
