@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from . import skill as skill_facade
 from .candidate_validation import candidate_policy_compatibility
 from .models import CheckRecorder, stage_status
+from .profile_tool_policy import enable_profile_tools
 from .runtime_policy_patch import build_policy_validation_patch
 from .skill_installation import (
     SkillBackup,
@@ -30,6 +31,25 @@ def _assert_skill_facade() -> None:
     assert skill_facade.verify_routing_skill_runtime is verify_routing_skill_runtime
 
 
+def _assert_single_scope_transform() -> None:
+    tools = {
+        "profile": "coding",
+        "deny": ["tool_a", "tool_b", "tool_c"],
+    }
+    change = enable_profile_tools(
+        tools,
+        ("tool_a", "tool_b", "tool_c"),
+        ("group:fs", "group:runtime"),
+        "coding",
+    )
+    assert "allow" not in tools
+    assert tools["alsoAllow"] == ["tool_a", "tool_b", "tool_c"]
+    assert tools["deny"] == []
+    assert change.added_to_allow == ()
+    assert change.added_to_also_allow == ("tool_a", "tool_b", "tool_c")
+    assert change.allow_mode == "profile-authority-preserved"
+
+
 def _assert_policy_patch_builder() -> None:
     active = {
         "tools": {
@@ -43,7 +63,6 @@ def _assert_policy_patch_builder() -> None:
     candidate = {
         "tools": {
             "profile": "coding",
-            "allow": ["group:fs", "tool_a", "tool_b", "tool_c"],
             "alsoAllow": ["tool_a", "tool_b", "tool_c"],
             "deny": [],
             "unrelated": {"privateValue": "redacted"},
@@ -67,16 +86,65 @@ def _assert_policy_patch_builder() -> None:
         patch = json.loads(patch_path.read_text(encoding="utf-8"))
     assert replace_paths == ()
     assert set(patch) == {"tools", "agents"}
-    assert set(patch["tools"]) == {"allow", "alsoAllow", "deny"}
+    assert set(patch["tools"]) == {"alsoAllow", "deny"}
     assert patch["agents"]["defaults"]["skills"][-1] == "sample-routing-skill"
     assert "gateway" not in patch
     assert "unrelated" not in patch["tools"]
+    assert evidence["changed_paths"] == ["tools.alsoAllow", "tools.deny", "agents.defaults.skills"]
     assert evidence["patch_content_recorded"] is False
+
+
+def _compatibility_context() -> SimpleNamespace:
+    return SimpleNamespace(
+        approved_tools=("tool_a", "tool_b", "tool_c"),
+        profile_expansion=("group:fs", "group:runtime"),
+        required_profile="coding",
+        routing_skill_name="sample-routing-skill",
+    )
+
+
+def _assert_candidate_compatibility() -> None:
+    valid = {
+        "tools": {
+            "profile": "coding",
+            "alsoAllow": ["tool_a", "tool_b", "tool_c"],
+            "deny": ["other"],
+        }
+    }
+    invalid = {
+        "tools": {
+            "profile": "coding",
+            "allow": ["group:fs", "tool_a", "tool_b", "tool_c"],
+            "alsoAllow": ["tool_a", "tool_b", "tool_c"],
+            "deny": ["other"],
+        }
+    }
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        valid_path = root / "valid.json"
+        invalid_path = root / "invalid.json"
+        valid_path.write_text(json.dumps(valid), encoding="utf-8")
+        invalid_path.write_text(json.dumps(invalid), encoding="utf-8")
+        valid_result = candidate_policy_compatibility(
+            _compatibility_context(),
+            valid_path,
+        )
+        invalid_result = candidate_policy_compatibility(
+            _compatibility_context(),
+            invalid_path,
+        )
+    assert valid_result["status"] == "PASS"
+    assert valid_result["authorization_scope"] == "profile-plus-alsoAllow"
+    assert valid_result["checks"]["routing_skill_visible"] is True
+    assert invalid_result["status"] == "FAIL"
+    assert invalid_result["checks"]["single_authorization_scope"] is False
 
 
 def run_core_diagnostic_selftests() -> bool:
     _assert_skill_facade()
+    _assert_single_scope_transform()
     _assert_policy_patch_builder()
+    _assert_candidate_compatibility()
     recorder = CheckRecorder()
     recorder.pass_check("pass", "ok")
     recorder.fail_check("fail", "bad")
@@ -87,25 +155,4 @@ def run_core_diagnostic_selftests() -> bool:
     assert stage_status(True) == "PASS"
     assert stage_status(False) == "FAIL"
     assert stage_status(None) == "NOT_CHECKED"
-
-    context = SimpleNamespace(
-        approved_tools=("tool_a", "tool_b", "tool_c"),
-        profile_expansion=("group:fs", "group:runtime"),
-        required_profile="coding",
-        routing_skill_name="sample-routing-skill",
-    )
-    candidate = {
-        "tools": {
-            "profile": "coding",
-            "allow": ["group:fs", "group:runtime", "tool_a", "tool_b", "tool_c"],
-            "alsoAllow": ["tool_a", "tool_b", "tool_c"],
-            "deny": ["other"],
-        }
-    }
-    with tempfile.TemporaryDirectory() as directory:
-        path = Path(directory) / "candidate.json"
-        path.write_text(json.dumps(candidate), encoding="utf-8")
-        result = candidate_policy_compatibility(context, path)
-    assert result["status"] == "PASS"
-    assert result["checks"]["routing_skill_visible"] is True
     return True
