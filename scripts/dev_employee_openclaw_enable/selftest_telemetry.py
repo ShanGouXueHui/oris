@@ -90,6 +90,10 @@ def test_telemetry_correlation() -> None:
 def test_telemetry_schema_and_outcomes() -> None:
     with tempfile.TemporaryDirectory() as directory:
         telemetry_path = Path(directory) / "latency.jsonl"
+        context = SimpleNamespace(
+            telemetry_path=telemetry_path,
+            required_hooks=tuple(EVENTS),
+        )
         telemetry_path.write_text(
             json.dumps(
                 {
@@ -103,10 +107,6 @@ def test_telemetry_schema_and_outcomes() -> None:
             + "\n",
             encoding="utf-8",
         )
-        context = SimpleNamespace(
-            telemetry_path=telemetry_path,
-            required_hooks=tuple(EVENTS),
-        )
         records, schema_ok, content_safe = _read_records(
             context,
             "2026-06-20T20:00:00.000Z",
@@ -114,6 +114,24 @@ def test_telemetry_schema_and_outcomes() -> None:
         assert len(records) == 1
         assert schema_ok is True
         assert content_safe is True
+
+        telemetry_path.write_text(
+            json.dumps(
+                {
+                    "timestamp": "2026-06-20T20:00:02.000Z",
+                    "event": "after_tool_call",
+                    "toolName": MISSING_TOOL,
+                    "success": "false",
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        _, invalid_schema_ok, _ = _read_records(
+            context,
+            "2026-06-20T20:00:00.000Z",
+        )
+        assert invalid_schema_ok is False
 
     retry_records = _records()
     retry_records.append(
