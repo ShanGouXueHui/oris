@@ -1,0 +1,32 @@
+{
+  "audited_commit": "15fb317522800ec781bcb165f534460c93d1cf3a",
+  "checked_at": "20260620T184123Z",
+  "contract_error": null,
+  "counts": {
+    "AUTHORITY_VIOLATIONS": 0,
+    "DUPLICATE_BINDINGS": 0,
+    "DUPLICATE_FUNCTION_BODIES": 0,
+    "FORBIDDEN_HARDCODING": 0,
+    "IMPORT_CYCLES": 0,
+    "LEGACY_PATH_FINDINGS": 0,
+    "OVERSIZED_MODULES": 0
+  },
+  "files_scanned": 92,
+  "findings": {
+    "authority_violations": {},
+    "duplicate_bindings": [],
+    "duplicate_function_bodies": [],
+    "forbidden_hardcoding": [],
+    "import_cycles": [],
+    "legacy_path_findings": [],
+    "oversized_modules": []
+  },
+  "python_architecture_files_scanned": 79,
+  "result": "CODE_AUDIT_PASS",
+  "safety": {
+    "gateway_restarted": false,
+    "openclaw_accessed": false,
+    "task_submitted": false
+  },
+  "schema_version": 1
+}
