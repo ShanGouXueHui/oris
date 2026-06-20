@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from .gateway import direct_readonly_probe, verify_plugin_runtime, verify_public_routes
+from .gateway_http import direct_readonly_probe, verify_public_routes
 from .models import CheckRecorder, RunState, RuntimeContext
+from .plugin_runtime import verify_plugin_runtime
 from .policy import PolicyApplication, PolicyBackup, apply_readonly_policy
 from .service_control import GatewayServiceError, restart_service_and_wait
-from .skill import SkillBackup, install_routing_skill, verify_routing_skill_runtime
+from .skill_installation import SkillBackup, install_routing_skill
+from .skill_runtime import verify_routing_skill_runtime
 from .state import active_queue_count, queue_fingerprint
 
 
