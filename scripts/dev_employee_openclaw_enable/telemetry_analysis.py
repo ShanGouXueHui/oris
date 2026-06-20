@@ -87,3 +87,29 @@ def evaluate_execution_outcomes(
         "tool_arguments_or_results_recorded": False,
         "conversation_content_recorded": False,
     }
+
+
+def evaluate_native_support_outcomes(
+    records: list[dict[str, Any]],
+    support_tools: set[str],
+) -> dict[str, Any]:
+    support_records = [
+        item
+        for item in records
+        if item.get("event") == "after_tool_call"
+        and item.get("toolName") in support_tools
+    ]
+    failed_tools = sorted(
+        {
+            str(item.get("toolName"))
+            for item in support_records
+            if record_failed(item)
+        }
+    )
+    return {
+        "ok": not failed_tools,
+        "failed_tools": failed_tools,
+        "failed_call_count": sum(record_failed(item) for item in support_records),
+        "tool_arguments_or_results_recorded": False,
+        "conversation_content_recorded": False,
+    }
