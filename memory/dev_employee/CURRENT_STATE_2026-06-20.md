@@ -8,11 +8,11 @@ Task id:
 
 Status:
 
-`controlled_activation_retry_authorized_pending_execution`
+`effective_tool_surface_diagnostic_published_pending_execution`
 
 Current step:
 
-`execute_single_controlled_readonly_activation_retry`
+`diagnose_model_effective_tool_surface_without_model_turns`
 
 ## Fixed commercial architecture
 
@@ -37,83 +37,105 @@ Do not reinstall or upgrade OpenClaw. Do not reinstall the plugin. Do not expose
 - runtime hooks: `model_call_ended`, `after_tool_call`, `agent_end`;
 - readiness: `26/26 PASS`;
 - active product task: none;
-- current runtime: exact healthy tools-denied baseline.
+- current runtime after rollback: exact healthy tools-denied baseline.
 
-## Previous activation failure and remediation
-
-Activation evidence:
-
-`2c5c33adfd04f2c6a2312465c198aa18ceac41c1`
-
-The candidate, Gateway restart, routing Skill visibility, plugin runtime inventory and all three direct ORIS read-only calls passed. Failure occurred before the first native Agent turn because a stale automatic test still asserted the obsolete dual-scope policy.
-
-Rollback restored the exact tools-denied configuration and routing Skill state and returned Gateway to healthy status. No task, product mutation or write tool occurred.
-
-The remediation now:
-
-- aligns tests with single-scope `profile + alsoAllow` policy;
-- executes named automatic selftests before mutation;
-- removes the redundant post-mutation test rerun;
-- reports blocked stages as `NOT_CHECKED`.
-
-## Latest diagnostic verification
+## Latest controlled activation
 
 Evidence commit:
 
-`30a32ba761418d0e7bcbb04ac2b4e0a9ac0c8e82`
+`d5cea6980ad46a51cb4f26f8e6229c11539ea2d5`
 
 Result:
 
-`DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW`
+`FAILED / RuntimeError`
 
-Checks:
+Passed before the failure:
 
-- 10 PASS;
-- 0 FAIL;
-- 6 intentional NOT_CHECKED post-activation stages.
+- source governance and named automatic selftests;
+- private single-scope candidate native dry-run;
+- validated configuration and private backup hash equality;
+- routing Skill installation and visibility to Agent `main`;
+- single-scope policy activation;
+- existing Gateway restart and health;
+- exact plugin read-only tool and typed-hook inventory;
+- direct invocation of all three approved ORIS tools;
+- queue invariance after direct calls.
 
-Verified:
+Three native Agent turns completed through Gateway in one persisted session. Every turn returned zero, produced structured output and avoided embedded fallback.
 
-- diagnostic selftests passed;
-- source governance passed across 46 modules with all structural findings at zero;
-- exact tools-denied baseline remained active;
-- Gateway remained healthy and was not restarted;
-- private candidate used exactly `profile-plus-alsoAllow`;
-- `tools.allow=0`, `tools.alsoAllow=3`, candidate `tools.deny=0`;
-- patch paths were exactly `tools.alsoAllow` and `tools.deny`;
-- native OpenClaw dry-run passed schema and complete resolvability checks with zero errors;
-- active config was unchanged and unwritten;
-- queue and product remained unchanged;
-- no Skill, ORIS tool, product task or write tool was created or invoked.
+Observed telemetry:
 
-## Controlled retry authorization
+- `model_call_ended=3`;
+- `agent_end=3`;
+- `after_tool_call=0`;
+- approved tools seen: none;
+- unexpected tools seen: none.
 
-Authoritative document:
+Native Agent acceptance failed because no tool invocation occurred.
 
-`docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_RETRY_AUTHORIZATION_2026-06-20.md`
+Rollback completed successfully:
 
-The diagnostic evidence has been reviewed and authorizes exactly one controlled read-only activation retry on development/control host `43.106.55.255`.
+- exact tools-denied config restored;
+- routing Skill state restored;
+- Gateway restarted and remained healthy;
+- rollback failure codes: none;
+- no product task, product mutation or write tool occurred.
 
-The transaction must run all pre-mutation gates, complete native Agent and telemetry acceptance, or automatically restore the exact tools-denied baseline and prove final Gateway health.
+## Current unresolved boundary
 
-A third attempt is not authorized.
+Direct typed invocation proves the plugin endpoint works. Plugin inventory proves registration. Skill visibility proves the instructions are visible.
+
+These facts do not prove the three optional plugin tools were present in the selected Agent session's effective model-facing tool inventory.
+
+Two explanations remain:
+
+1. the approved tools were absent from the effective inventory;
+2. the approved tools were present, but the runtime provider/model did not issue tool calls.
+
+A third full enablement attempt is prohibited until this distinction is proven.
+
+## Effective tool surface diagnostic
+
+Authoritative plan:
+
+`docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md`
+
+Entrypoint:
+
+`scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh`
+
+The diagnostic:
+
+- compiles and re-runs source governance and automatic selftests;
+- repeats the private candidate native dry-run;
+- temporarily activates only the validated read-only policy;
+- calls native Gateway RPC `tools.effective` for the configured persisted Agent session;
+- does not run a model turn;
+- does not invoke an ORIS tool;
+- retains only sanitized effective-inventory counts and the three approved names;
+- always restores the exact tools-denied config, marker and Skill state;
+- proves final Gateway, queue, product and listener invariants;
+- publishes detached-worktree evidence.
 
 ## Next action
 
 Run exactly once:
 
 ```bash
-cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_enable_openclaw_readonly_tools.sh
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh
 ```
 
-Do not run it again before the resulting GitHub evidence is reviewed. Return only the final `===== SUMMARY =====` block.
+Do not run `scripts/dev_employee_enable_openclaw_readonly_tools.sh`.
+
+Return only the final `===== SUMMARY =====` block. Detailed evidence will be read from GitHub before choosing the materialization or provider/model remediation path.
 
 ## Commercial sequence after P0
 
-1. complete native read-only tool and telemetry acceptance;
-2. establish privacy-safe real model/tool/agent latency baselines;
-3. design typed write actions with approval, RBAC, project authorization, idempotency and audit;
-4. add generic project onboarding and capability discovery;
-5. move routine Provider, Model and Policy management to controlled Admin UI;
-6. add monitoring, privacy/retention, backup/restore and disaster recovery;
-7. add multi-tenant identity, quotas, metering and commercial packaging.
+1. resolve effective tool materialization or provider/model tool-call capability;
+2. complete native read-only tool and telemetry acceptance;
+3. establish privacy-safe real model/tool/agent latency baselines;
+4. design typed write actions with approval, RBAC, project authorization, idempotency and audit;
+5. add generic project onboarding and capability discovery;
+6. move routine Provider, Model and Policy management to controlled Admin UI;
+7. add monitoring, privacy/retention, backup/restore and disaster recovery;
+8. add multi-tenant identity, quotas, metering and commercial packaging.
