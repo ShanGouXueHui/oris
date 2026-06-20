@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
+from .clock import utc_compact_stamp
 from .code_audit_cli import audit_code_state
 from .context import discover_repo_root, load_context
 from .effective_surface_diagnostic import (
@@ -10,10 +9,6 @@ from .effective_surface_diagnostic import (
 )
 from .models import CheckRecorder, RunState, RuntimeContext
 from .reporting import print_summary
-
-
-def _stamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
 def main() -> int:
@@ -45,7 +40,7 @@ def main() -> int:
             context,
             state,
             checks,
-            _stamp(),
+            utc_compact_stamp(),
         )
     except Exception as exc:
         state.result = "EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_FAILED"
