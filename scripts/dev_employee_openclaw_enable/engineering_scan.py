@@ -20,33 +20,21 @@ from .models import RuntimeContext
 _POLICY_EVIDENCE_CONFIG = Path(
     "config/dev_employee/openclaw_policy_diagnostic_evidence.json"
 )
+# Complete active source surface for the commercial Dev Employee. Runtime state,
+# promoted evidence and historical documents remain excluded by the repository
+# quality policy; executable/config authorities are not allowlisted away.
 _AUDIT_DIRECTORY_ROOTS = (
-    Path("scripts/dev_employee_openclaw_enable"),
-    Path("scripts/dev_employee_quality"),
+    Path("scripts"),
+    Path("oris_vnext"),
+    Path("tests"),
+    Path("orchestration/openclaw_plugins"),
     Path("config/dev_employee"),
+    Path(".github/workflows"),
 )
 _AUDIT_AUTHORITY_FILES = (
-    Path("scripts/dev_employee_activate_free_mesh_tool_calling_and_diagnose.sh"),
-    Path("scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh"),
-    Path("scripts/dev_employee_diagnose_openclaw_model_tool_call_routing.sh"),
-    Path("scripts/dev_employee_diagnose_openclaw_readonly_policy.sh"),
-    Path("scripts/dev_employee_enable_openclaw_readonly_tools.sh"),
-    Path("scripts/oris_free_mesh_api.py"),
-    Path("scripts/oris_infer.py"),
-    Path("scripts/runtime_execute.py"),
-    Path("oris_vnext/free_mesh_compat.py"),
-    Path("oris_vnext/free_mesh_http.py"),
-    Path("oris_vnext/free_mesh_inference.py"),
-    Path("oris_vnext/infer_refresh.py"),
-    Path("oris_vnext/openai_chat_contract.py"),
-    Path("oris_vnext/runtime_execution_engine.py"),
-    Path("oris_vnext/runtime_execution_state.py"),
-    Path("oris_vnext/runtime_provider_client.py"),
-    Path("tests/test_free_mesh_tool_calling.py"),
-    Path("tests/test_free_mesh_protocol.py"),
-    Path("tests/test_script_entrypoint_bootstrap.py"),
     Path("orchestration/routing_policy.yaml"),
     Path("orchestration/runtime_policy.yaml"),
+    Path("orchestration/project_registry.json"),
     Path("memory/dev_employee/current_task.json"),
     Path("memory/dev_employee/current_task.md"),
     Path("docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md"),
@@ -55,6 +43,7 @@ _AUDIT_AUTHORITY_FILES = (
     Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_CALLING_FIX_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_PROTOCOL_ACTIVATION_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_NATIVE_SKILL_SUPPORT_TOOL_CONTRACT_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_TYPED_WRITE_ACTIONS_COMMERCIAL_PHASE_PLAN_2026-06-20.md"),
 )
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
