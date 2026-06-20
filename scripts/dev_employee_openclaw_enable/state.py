@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 
 from .models import RepoSnapshot
 from .process import run
+from .task_contract import load_json_object as load_json
 
 
 ACTIVE_QUEUE_SUFFIXES = {
@@ -86,19 +86,11 @@ def listener_is_loopback_only(port: int) -> bool:
     listeners: list[str] = []
     for line in result.stdout.splitlines():
         parts = line.split()
-        if len(parts) < 4:
-            continue
-        local = parts[3]
-        if local.endswith(f":{port}") or local.endswith(f"]:{port}"):
-            listeners.append(local)
+        if len(parts) >= 4:
+            local = parts[3]
+            if local.endswith(f":{port}") or local.endswith(f"]:{port}"):
+                listeners.append(local)
     return bool(listeners) and all(
         value.startswith("127.0.0.1:") or value.startswith("[::1]:")
         for value in listeners
     )
-
-
-def load_json(path: Path) -> dict:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict):
-        raise ValueError(f"expected JSON object: {path}")
-    return value
