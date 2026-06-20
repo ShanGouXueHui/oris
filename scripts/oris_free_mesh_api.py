@@ -2,16 +2,20 @@
 from __future__ import annotations
 
 import json
+import sys
 import threading
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from oris_vnext.free_mesh_compat import load_json
 from oris_vnext.free_mesh_http import build_handler
 from oris_vnext.free_mesh_inference import FreeMeshInference
 
 
-ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config" / "oris_free_mesh_api.json"
 
 
