@@ -7,30 +7,25 @@ from pathlib import Path
 from typing import Any
 
 
+_PACKAGE_ROOTS = (
+    Path("scripts/dev_employee_openclaw_enable"),
+    Path("scripts/dev_employee_quality"),
+)
+
+
 def _module_name(repo_root: Path, path: Path) -> str:
     return path.relative_to(repo_root).with_suffix("").as_posix().replace("/", ".")
 
 
 def target_python_files(repo_root: Path) -> tuple[Path, ...]:
-    roots = (
-        repo_root / "scripts" / "dev_employee_openclaw_enable",
-        repo_root / "scripts" / "dev_employee_quality",
-    )
-    files = {
-        path
-        for root in roots
-        if root.is_dir()
-        for path in root.glob("*.py")
-        if path.is_file()
-    }
-    scripts_root = repo_root / "scripts"
-    if scripts_root.is_dir():
-        files.update(
+    return tuple(
+        sorted(
             path
-            for path in scripts_root.glob("dev_employee*.py")
+            for relative_root in _PACKAGE_ROOTS
+            for path in (repo_root / relative_root).glob("*.py")
             if path.is_file()
         )
-    return tuple(sorted(files))
+    )
 
 
 def _function_digest(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str | None:
