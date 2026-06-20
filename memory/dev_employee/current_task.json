@@ -1,11 +1,11 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "single_scope_policy_remediation_published_pending_runtime_dry_run",
+  "status": "controlled_activation_jit_gate_published_pending_execution",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "execute_single_scope_native_config_patch_dry_run_diagnostic",
+  "current_step": "execute_controlled_readonly_enablement_once",
   "objective": "Enable only the three approved read-only ORIS tools through the existing native OpenClaw plugin, verify natural-language typed-tool use and privacy-safe latency telemetry, and preserve automatic rollback to the tools-denied state. Do not add write actions in this task.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -65,7 +65,7 @@
   },
   "completed_code_governance": {
     "result": "CODE_AUDIT_PASS",
-    "files_scanned": 42,
+    "files_scanned": 43,
     "duplicate_bindings": 0,
     "authority_violations": 0,
     "duplicate_function_bodies": 0,
@@ -74,7 +74,8 @@
     "forbidden_hardcoding": 0,
     "legacy_path_findings": 0,
     "contract_error": null,
-    "fix_commit": "4afc7679af383b1f3ca9e126f4d09210f8028306"
+    "fix_commit": "4afc7679af383b1f3ca9e126f4d09210f8028306",
+    "latest_verified_by_evidence_commit": "2eb0e06c4dee75486e3f3859337867d638941901"
   },
   "enablement_history": {
     "latest_enablement_evidence_commit": "c68e7d2f50a84f6e68199d2fada9a244f31e4f41",
@@ -133,6 +134,34 @@
       ],
       "root_cause": "OpenClaw 2026.5.19 forbids non-empty tools.allow and tools.alsoAllow in the same policy scope.",
       "evidence_commit": "366c8b441e8adff5fa684b2255339ad32832cc31"
+    },
+    "fourth_run": {
+      "result": "DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW",
+      "failure_code": null,
+      "checks_pass": 10,
+      "checks_fail": 0,
+      "checks_not_checked": 6,
+      "validator": "config.patch.dry-run",
+      "authorization_scope": "profile-plus-alsoAllow",
+      "allow_count": 0,
+      "also_allow_count": 3,
+      "deny_count": 0,
+      "changed_paths": [
+        "tools.alsoAllow",
+        "tools.deny"
+      ],
+      "schema_pass": true,
+      "resolvability_pass": true,
+      "validation_error_count": 0,
+      "active_config_unchanged": true,
+      "gateway_healthy": true,
+      "gateway_restarted": false,
+      "queue_unchanged": true,
+      "product_unchanged": true,
+      "product_task_submitted": false,
+      "write_tools_added": false,
+      "evidence_commit": "2eb0e06c4dee75486e3f3859337867d638941901",
+      "evidence_reviewed": true
     }
   },
   "single_scope_policy_remediation": {
@@ -152,21 +181,38 @@
     "candidate_activated": false,
     "gateway_restart": false
   },
-  "blocked_reason": "The prior candidate was rejected because it simultaneously used non-empty tools.allow and tools.alsoAllow. The code now selects one OpenClaw schema-compatible authorization scope, but the corrected minimal patch has not yet passed the installed runtime dry-run.",
-  "next_action": "Pull latest main and run the diagnostic entrypoint exactly once. Verify the corrected patch changes only tools.alsoAllow and tools.deny, passes OpenClaw config patch --dry-run, and leaves active config and Gateway unchanged. Read GitHub evidence before activation.",
+  "controlled_activation_gate": {
+    "published": true,
+    "document": "docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_GATE_2026-06-20.md",
+    "diagnostic_evidence_reviewed": true,
+    "diagnostic_evidence_commit": "2eb0e06c4dee75486e3f3859337867d638941901",
+    "source_governance_rechecked_before_mutation": true,
+    "private_candidate_rebuilt_before_mutation": true,
+    "installed_runtime_dry_run_repeated_before_mutation": true,
+    "validated_config_hash_must_match_backup": true,
+    "unexpected_policy_paths_rejected": true,
+    "unsafe_runtime_output_evidence_rejected": true,
+    "rollback_required_after_mutation_failure": true,
+    "controlled_activation_authorized": true,
+    "execution_count_authorized": 1
+  },
+  "blocked_reason": "Controlled activation has not yet executed. The validated tools-denied baseline remains active until the one authorized enablement transaction begins.",
+  "next_action": "Pull latest main and run scripts/dev_employee_enable_openclaw_readonly_tools.sh exactly once on the development/control host. The transaction must re-run source governance and native dry-run before mutation, then complete native read-only acceptance or restore the exact tools-denied baseline.",
   "next_action_requirements": [
     "pull latest origin/main on the ORIS development/control host",
-    "run scripts/dev_employee_diagnose_openclaw_readonly_policy.sh exactly once",
-    "do not run the enablement entrypoint",
-    "verify the code governance gate still passes",
-    "verify candidate has no non-empty tools.allow",
-    "verify changed policy paths are tools.alsoAllow and tools.deny only",
-    "verify active config hash is unchanged",
-    "verify Gateway remains healthy without restart",
+    "run scripts/dev_employee_enable_openclaw_readonly_tools.sh exactly once",
+    "do not run a second enablement attempt before reading GitHub evidence",
+    "re-run code governance before mutation",
+    "rebuild and validate the single-scope candidate before mutation",
+    "verify validated config hash exactly matches the private backup",
+    "use the existing openclaw-gateway.service only",
+    "verify runtime inventory, direct read-only calls and native natural-language acceptance",
+    "verify privacy-safe typed-hook telemetry and latency data",
+    "verify queue, product and listener invariants",
+    "rollback automatically on any post-mutation failure",
     "publish sanitized detached-worktree evidence",
-    "read GitHub evidence before activation",
-    "do not invoke ORIS tools or submit a product task",
-    "do not add write tools"
+    "do not add write tools or submit a product task",
+    "do not touch the production host"
   ],
   "commercial_sequence_after_p0": [
     "complete native read-only tool and telemetry acceptance",
@@ -182,6 +228,7 @@
     "memory/dev_employee/CURRENT_STATE_2026-06-20.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
+    "docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_GATE_2026-06-20.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md",

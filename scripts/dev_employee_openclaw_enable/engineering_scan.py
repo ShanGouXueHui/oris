@@ -20,6 +20,8 @@ _AUTHORITIES = {
     "apply_readonly_policy": "policy.py",
     "enable_profile_tools": "profile_tool_policy.py",
     "ensure_skill_visible": "agent_skill_policy.py",
+    "run_activation_candidate_gate": "activation_candidate_gate.py",
+    "run_enablement_rollback": "enablement_rollback.py",
     "restart_service_and_wait": "service_control.py",
     "verify_plugin_runtime": "plugin_runtime.py",
     "write_and_commit_evidence": "evidence.py",

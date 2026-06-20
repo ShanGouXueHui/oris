@@ -1,10 +1,10 @@
 # Current AI Dev Employee Task
 
-Status: `single_scope_policy_remediation_published_pending_runtime_dry_run`
+Status: `controlled_activation_jit_gate_published_pending_execution`
 
 Task id: `commercial-openclaw-readonly-tool-enable-20260618`
 
-Current step: `execute_single_scope_native_config_patch_dry_run_diagnostic`
+Current step: `execute_controlled_readonly_enablement_once`
 
 ## Objective
 
@@ -41,7 +41,7 @@ Do not reinstall or upgrade OpenClaw, reinstall the plugin, expose internal list
 - installation evidence: `b831470063bc640e498d2061fdaeb2bf8bc9639c`;
 - readiness: `26/26 PASS`;
 - readiness evidence: `a63dd823ac4d5b3fa0fa867771f94904d0b4ceee`;
-- source code governance: `CODE_AUDIT_PASS` across 42 target modules;
+- latest source governance: `CODE_AUDIT_PASS` across 43 target modules;
 - duplicate bindings, competing authorities, duplicate function bodies, import cycles, oversized modules, forbidden hardcoding, legacy path findings and contract errors: all zero.
 
 Previously proved:
@@ -59,19 +59,7 @@ Evidence commit:
 
 `c68e7d2f50a84f6e68199d2fada9a244f31e4f41`
 
-The candidate policy was activated, the existing Gateway failed its health gate, and rollback restored the tools-denied baseline. Runtime inventory, direct calls, native Agent acceptance and telemetry acceptance were not reached.
-
-## Diagnostic run 2
-
-Evidence commit:
-
-`7c01b72a8ae71c2cbf62a0ae4032ab245b09335c`
-
-Result:
-
-`DIAGNOSTIC_VALIDATOR_UNAVAILABLE`
-
-The installed CLI exposed `config validate` and `config check`, but neither accepted an alternate candidate path. No policy rejection was observed.
+The previous dual-scope candidate was activated, the existing Gateway failed its health gate, and rollback restored the tools-denied baseline. Runtime inventory, direct calls, native Agent acceptance and telemetry acceptance were not reached.
 
 ## Diagnostic run 3
 
@@ -83,83 +71,101 @@ Result:
 
 `DIAGNOSTIC_RUNTIME_VALIDATION_FAILED`
 
-Checks:
+The installed OpenClaw `config patch --dry-run` rejected the candidate because it contained both non-empty `tools.allow` and non-empty `tools.alsoAllow` in the same scope.
 
-- `9 PASS`;
-- `1 FAIL`;
-- `6 NOT_CHECKED`.
-
-Verified:
-
-- all diagnostic selftests and source governance checks passed;
-- exact tools-denied baseline remained active;
-- Gateway remained active and HTTP healthy;
-- private candidate build passed without active mutation;
-- active config, queue and product repository remained unchanged;
-- Gateway was not restarted;
-- no product task was submitted;
-- no write tool was added.
-
-The installed OpenClaw `config patch --dry-run` rejected the candidate because the candidate contained both non-empty `tools.allow` and non-empty `tools.alsoAllow` in the same scope.
-
-OpenClaw `2026.5.19 (a185ca2)` explicitly requires either:
+OpenClaw `2026.5.19 (a185ca2)` permits either:
 
 - an explicit `allow` policy; or
 - a tool profile plus additive `alsoAllow` entries.
 
-It does not permit both non-empty lists together.
-
 ## Single-scope remediation
 
-Authoritative remediation document:
+Authoritative document:
 
 `docs/DEV_EMPLOYEE_OPENCLAW_SINGLE_SCOPE_TOOL_POLICY_REMEDIATION_2026-06-20.md`
 
-The active baseline has `tools.profile = coding` and no existing non-empty `tools.allow`. Therefore the corrected candidate uses:
+The corrected candidate uses:
 
 - `tools.profile = coding` unchanged;
 - no materialized `tools.allow`;
 - only the three approved ORIS tools in `tools.alsoAllow`;
 - the approved ORIS tools removed from `tools.deny`.
 
-The expected policy patch now changes only:
+ORIS now rejects any candidate with both non-empty `allow` and `alsoAllow` before runtime validation.
 
-- `tools.alsoAllow`;
-- `tools.deny`.
+## Diagnostic run 4 — accepted candidate
 
-Code enforcement now includes:
+Evidence commit:
 
-- ORIS rejects any candidate with both non-empty `allow` and `alsoAllow`;
-- the policy transformer selects exactly one authorization scope;
-- positive selftests cover `profile + alsoAllow`;
-- negative selftests cover the rejected dual-scope policy;
-- dry-run JSON output is converted into sanitized rule codes and hashes without preserving raw messages or SecretRef identifiers.
+`2eb0e06c4dee75486e3f3859337867d638941901`
+
+Result:
+
+`DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW`
+
+Checks:
+
+- `10 PASS`;
+- `0 FAIL`;
+- `6 NOT_CHECKED`.
+
+Verified:
+
+- engineering scan passed across 43 target modules;
+- candidate authorization scope is exactly `profile-plus-alsoAllow`;
+- `tools.allow` count is 0;
+- `tools.alsoAllow` count is 3;
+- `tools.deny` count is 0;
+- native `config patch --dry-run` returned success;
+- patch changed only `tools.alsoAllow` and `tools.deny`;
+- schema and resolvability checks passed with zero errors;
+- active config remained unchanged and unwritten;
+- Gateway remained healthy without restart;
+- queue and product repository remained unchanged;
+- no product task was submitted;
+- no write tool was added.
+
+The GitHub evidence has been reviewed and accepted for one controlled activation attempt.
+
+## Just-in-time controlled activation gate
+
+Authoritative document:
+
+`docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_GATE_2026-06-20.md`
+
+Before any active mutation, the enablement transaction now must:
+
+1. re-run source governance;
+2. rebuild the candidate in a private temporary directory;
+3. reject dual authorization scopes or unexpected policy paths;
+4. repeat installed OpenClaw native dry-run;
+5. require schema and resolvability completion with zero errors;
+6. prove the active config was not written;
+7. create the private tools-denied backup;
+8. prove the backup hash exactly matches the validated config hash.
+
+Only after those gates pass may the transaction install the routing Skill, apply the policy and restart the existing Gateway.
+
+Any failure after mutation begins must restore the exact tools-denied config, marker and Skill state and prove rollback health.
 
 ## Current blocker
 
-The corrected single-scope candidate has not yet passed the installed OpenClaw native dry-run.
-
-Candidate activation remains prohibited until the resulting GitHub evidence is read.
+The one authorized controlled activation transaction has not yet executed. The active runtime remains on the healthy tools-denied baseline.
 
 ## Next required action
 
 Run exactly once on the ORIS development/control/execution host:
 
 ```bash
-cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_diagnose_openclaw_readonly_policy.sh
+cd /home/admin/projects/oris && git pull --ff-only origin main && bash scripts/dev_employee_enable_openclaw_readonly_tools.sh
 ```
 
-This remains diagnostic-only. It must not:
+Do not execute a second attempt before the resulting GitHub evidence is reviewed.
 
-- execute the enablement entrypoint;
-- replace active config;
-- restart Gateway;
-- install the routing Skill;
-- invoke ORIS tools;
-- submit a product task;
-- add write tools.
+The transaction must either:
 
-The run must first pass the source governance and selftest gates. A native dry-run `PASS` authorizes evidence review only, not automatic activation.
+- finish native read-only tool, telemetry and invariance acceptance; or
+- automatically restore the exact tools-denied baseline and publish failure evidence.
 
 Return only the final `===== SUMMARY =====` block. Detailed evidence will be read directly from GitHub.
 

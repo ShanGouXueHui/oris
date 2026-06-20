@@ -3,18 +3,21 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
+from .activation_candidate_gate import run_activation_candidate_gate
 from .enablement_acceptance import (
     finalize_enablement,
     run_native_acceptance,
     verify_final_invariants,
 )
 from .enablement_activation import activate_candidate, verify_runtime_and_direct_calls
+from .enablement_rollback import run_enablement_rollback
 from .evidence import write_and_commit_evidence
 from .models import CheckRecorder, RunState, RuntimeContext
-from .policy import PolicyApplication, PolicyBackup, create_backup, restore_denied_policy
+from .policy import PolicyApplication, PolicyBackup, create_backup
 from .preflight_checks import run_transaction_preflight
-from .service_control import GatewayServiceError, restart_service_and_wait
-from .skill_installation import SkillBackup, backup_routing_skill, restore_routing_skill
+from .service_control import GatewayServiceError
+from .skill_installation import SkillBackup, backup_routing_skill
+from .state import sha256_file
 
 
 SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
@@ -52,31 +55,6 @@ def _commit_evidence(
     return evidence_log, evidence_json
 
 
-def _rollback(
-    context: RuntimeContext,
-    state: RunState,
-    policy_backup: PolicyBackup | None,
-    skill_backup: SkillBackup | None,
-) -> None:
-    if not state.mutation_started:
-        return
-    try:
-        if policy_backup is not None:
-            restore_denied_policy(context, policy_backup)
-        if skill_backup is not None:
-            restore_routing_skill(skill_backup)
-        state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
-        state.rollback_count += 1
-        state.rollback_healthy = "YES"
-        state.mutation_started = False
-        state.routing_skill_installed = False
-    except GatewayServiceError as exc:
-        state.details["rollback_gateway_failure_diagnostics"] = exc.safe_evidence
-        state.rollback_healthy = "NO"
-    except Exception:
-        state.rollback_healthy = "NO"
-
-
 def run_enablement(
     context: RuntimeContext,
     state: RunState,
@@ -92,7 +70,24 @@ def run_enablement(
         queue_before, baseline_tool, product_before, oris_before = (
             run_transaction_preflight(context, checks)
         )
+        activation_gate = run_activation_candidate_gate(
+            context,
+            state,
+            checks,
+            stamp,
+        )
+        validated_config_sha256 = activation_gate.get("active_config_sha256")
+        if not isinstance(validated_config_sha256, str) or not validated_config_sha256:
+            raise RuntimeError("validated active configuration hash is unavailable")
         policy_backup = create_backup(context, stamp)
+        if sha256_file(policy_backup.config_file) != validated_config_sha256:
+            raise RuntimeError(
+                "active configuration changed after activation candidate validation"
+            )
+        checks.pass_check(
+            "activation_candidate_snapshot",
+            "validated active configuration exactly matches the private backup",
+        )
         skill_backup = backup_routing_skill(context, policy_backup.directory)
         checks.pass_check(
             "private_backup",
@@ -104,6 +99,7 @@ def run_enablement(
             checks,
             policy_backup,
             skill_backup,
+            validated_config_sha256,
         )
         verify_runtime_and_direct_calls(
             context,
@@ -133,7 +129,7 @@ def run_enablement(
         state.result = SUCCESS_RESULT
         state.failure_code = ""
         state.next_action = (
-            "PERSIST_COMPLETION_AND_BEGIN_P1_TYPED_WRITE_ACTION_DESIGN"
+            "PERSIST_COMPLETION_AND_ESTABLISH_PRIVACY_SAFE_LATENCY_BASELINE"
         )
         state.rollback_healthy = "NOT_REQUIRED"
         evidence_log, evidence_json = _commit_evidence(
@@ -147,7 +143,7 @@ def run_enablement(
         return evidence_log, evidence_json
     except Exception as exc:
         _record_failure(state, checks, exc)
-        _rollback(context, state, policy_backup, skill_backup)
+        run_enablement_rollback(context, state, policy_backup, skill_backup)
         try:
             evidence_log, evidence_json = _commit_evidence(
                 context,
