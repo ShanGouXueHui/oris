@@ -58,6 +58,7 @@ class RuntimeContext:
     telemetry_wait_seconds: int
     telemetry_path: Path
     enablement_evidence: EvidenceTarget
+    policy_diagnostic_evidence: EvidenceTarget
     effective_surface_evidence: EvidenceTarget
     readiness_evidence: Path
 
