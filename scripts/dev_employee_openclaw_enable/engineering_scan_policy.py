@@ -22,7 +22,7 @@ AUTHORITIES = {
         "scripts/dev_employee_openclaw_enable/enablement_rollback.py"
     ),
     "summarize_effective_tool_payload": (
-        "scripts/dev_employee_openclaw_enable/effective_tool_contract.py"
+        "scripts/dev_employee_openclaw_enable/effective_tool_surface.py"
     ),
     "probe_effective_tool_surface": (
         "scripts/dev_employee_openclaw_enable/effective_tool_surface.py"
@@ -134,15 +134,22 @@ def active_path_findings(repo_root: Path) -> list[dict[str, str]]:
         findings.append({"file": relative, "kind": "missing_diagnostic_entrypoint"})
     else:
         text = diagnostic.read_text(encoding="utf-8")
-        audit_index = text.find("code_audit_cli")
-        diagnostic_index = text.find("effective_surface_cli")
-        if audit_index < 0 or diagnostic_index < 0 or audit_index > diagnostic_index:
-            findings.append(
-                {"file": relative, "kind": "code_gate_not_before_runtime_diagnostic"}
-            )
         if "dev_employee_enable_openclaw_readonly_tools.sh" in text:
             findings.append(
                 {"file": relative, "kind": "full_enablement_entrypoint_referenced"}
+            )
+
+    cli = repo_root / "scripts/dev_employee_openclaw_enable/effective_surface_cli.py"
+    cli_relative = cli.relative_to(repo_root).as_posix()
+    if not cli.is_file():
+        findings.append({"file": cli_relative, "kind": "missing_diagnostic_cli"})
+    else:
+        text = cli.read_text(encoding="utf-8")
+        audit_index = text.find("audit_code_state")
+        context_index = text.find("load_context()")
+        if audit_index < 0 or context_index < 0 or audit_index > context_index:
+            findings.append(
+                {"file": cli_relative, "kind": "code_gate_not_before_runtime_context"}
             )
 
     authority_doc = (
