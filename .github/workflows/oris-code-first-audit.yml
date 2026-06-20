@@ -25,4 +25,12 @@ jobs:
       - name: Run pure automatic selftests
         run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python -c 'from scripts.dev_employee_openclaw_enable.selftest import run_selftests; assert run_selftests()'
       - name: Run static repository audit
-        run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python -c 'import json; from pathlib import Path; from scripts.dev_employee_openclaw_enable.engineering_scan import scan_repository_sources; report=scan_repository_sources(Path.cwd()); print(json.dumps(report, sort_keys=True)); raise SystemExit(0 if report["ok"] else 2)'
+        run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python -c 'import json; from pathlib import Path; from scripts.dev_employee_openclaw_enable.engineering_scan import scan_repository_sources; report=scan_repository_sources(Path.cwd()); payload=json.dumps(report, sort_keys=True, indent=2); Path("code-first-audit.json").write_text(payload+"\n", encoding="utf-8"); print(payload); raise SystemExit(0 if report["ok"] else 2)'
+      - name: Upload static audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oris-code-first-audit
+          path: code-first-audit.json
+          if-no-files-found: error
+          retention-days: 1
