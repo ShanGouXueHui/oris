@@ -153,6 +153,7 @@ def inspect_telemetry(
     support_outcomes = evaluate_native_support_outcomes(
         relevant_records,
         support_tools,
+        expected_tools,
     )
     current = context.telemetry_path
     rotated = Path(str(current) + ".1")
