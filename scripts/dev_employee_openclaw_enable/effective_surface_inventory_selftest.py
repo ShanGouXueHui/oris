@@ -43,6 +43,7 @@ def test_effective_surface_inventory_sanitizer() -> None:
     wrong_owner["reason_code"] = "approved_tools_absent_from_effective_surface"
     sanitized_owner = sanitize_effective_tool_surface(wrong_owner, _APPROVED)
     assert sanitized_owner["status"] == "FAIL"
+    assert sanitized_owner["reason_code"] == "approved_tools_not_plugin_owned"
     assert sanitized_owner["approved_tool_ownership"][_APPROVED[0]] is False
 
     rpc_failure = sanitize_effective_tool_surface(
