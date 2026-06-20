@@ -22,6 +22,8 @@ _AUTHORITIES = {
     "ensure_skill_visible": "agent_skill_policy.py",
     "run_activation_candidate_gate": "activation_candidate_gate.py",
     "run_enablement_rollback": "enablement_rollback.py",
+    "probe_effective_tool_surface": "effective_tool_surface.py",
+    "run_effective_surface_diagnostic": "effective_surface_diagnostic.py",
     "restart_service_and_wait": "service_control.py",
     "verify_plugin_runtime": "plugin_runtime.py",
     "write_and_commit_evidence": "evidence.py",
