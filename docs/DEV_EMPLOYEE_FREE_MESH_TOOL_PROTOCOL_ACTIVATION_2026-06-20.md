@@ -27,6 +27,27 @@ The entrypoint performs the following ordered transaction:
 9. publish sanitized GitHub evidence;
 10. print the standard summary only.
 
+## 2026-06-20 bootstrap regression
+
+The first activation attempt returned:
+
+- service state `activating`;
+- no protocol version;
+- no tool-calling readiness;
+- no OpenClaw access;
+- no Gateway restart;
+- no product task submission.
+
+The failure was traced to a direct-entrypoint import regression introduced during the Free Mesh protocol refactor. The previous service entrypoint inserted the repository root into `sys.path` before importing `oris_vnext`. The refactored files imported `oris_vnext` first and calculated the repository root afterwards.
+
+This breaks when systemd or a subprocess executes an absolute script path because Python places the script directory, not the repository root, on the initial module search path. The affected entrypoints were:
+
+- `scripts/oris_free_mesh_api.py`;
+- `scripts/oris_infer.py`;
+- `scripts/runtime_execute.py`.
+
+All three now restore the repository bootstrap before package imports. `tests/test_script_entrypoint_bootstrap.py` reproduces the systemd-style environment by clearing `PYTHONPATH`, changing to an external working directory, enabling Python isolated mode, and loading each entrypoint by absolute path.
+
 ## Failure behavior
 
 ### Code gate failure
