@@ -54,6 +54,7 @@ _AUDIT_AUTHORITY_FILES = (
     Path("docs/DEV_EMPLOYEE_MODEL_TOOL_CALL_AND_HARNESS_DIAGNOSTIC_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_CALLING_FIX_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_PROTOCOL_ACTIVATION_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_NATIVE_SKILL_SUPPORT_TOOL_CONTRACT_2026-06-20.md"),
 )
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
@@ -86,6 +87,9 @@ _ADDITIONAL_AUTHORITIES = {
     "probe_free_mesh_protocol": (
         "scripts/dev_employee_openclaw_enable/free_mesh_protocol.py"
     ),
+    "is_write_capable_tool": "scripts/dev_employee_openclaw_enable/tool_authority.py",
+    "_native_support_tools": "scripts/dev_employee_openclaw_enable/task_contract.py",
+    "evaluate_native_support_outcomes": "scripts/dev_employee_openclaw_enable/telemetry_analysis.py",
     "parse_chat_request": "oris_vnext/openai_chat_contract.py",
     "normalize_assistant_message": "oris_vnext/openai_chat_contract.py",
     "model_to_role": "oris_vnext/free_mesh_compat.py",

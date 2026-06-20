@@ -1,5 +1,5 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "runtime": {
     "openclaw_version": "2026.5.19",
     "openclaw_config_path": "~/.openclaw/openclaw.json",
@@ -92,6 +92,13 @@
       "model_call_ended",
       "after_tool_call",
       "agent_end"
+    ],
+    "native_support_tools": [
+      {
+        "name": "read",
+        "max_calls": 1,
+        "purpose": "load the approved routing Skill body from its native OpenClaw Skill catalog entry"
+      }
     ]
   },
   "evidence": {

@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from .tool_authority import is_write_capable_tool
+
 
 _SHA = re.compile(r"[0-9a-f]{40}")
 
@@ -80,13 +82,9 @@ def load_task_id(path: Path) -> str:
 def _evidence_target(evidence: dict[str, Any], name: str) -> dict[str, str]:
     value = require_mapping(evidence.get(name), f"evidence.{name}")
     return {
-        "directory": require_string(
-            value.get("directory"),
-            f"evidence.{name}.directory",
-        ),
+        "directory": require_string(value.get("directory"), f"evidence.{name}.directory"),
         "filename_prefix": require_string(
-            value.get("filename_prefix"),
-            f"evidence.{name}.filename_prefix",
+            value.get("filename_prefix"), f"evidence.{name}.filename_prefix"
         ),
         "commit_message_prefix": require_string(
             value.get("commit_message_prefix"),
@@ -95,9 +93,35 @@ def _evidence_target(evidence: dict[str, Any], name: str) -> dict[str, str]:
     }
 
 
+def _native_support_tools(
+    telemetry: dict[str, Any],
+    approved_tools: tuple[str, ...],
+    max_turns: int,
+) -> tuple[dict[str, Any], ...]:
+    raw = telemetry.get("native_support_tools")
+    if not isinstance(raw, list) or not all(isinstance(item, dict) for item in raw):
+        raise RuntimeError("invalid telemetry.native_support_tools")
+    values: list[dict[str, Any]] = []
+    names: set[str] = set()
+    for index, item in enumerate(raw):
+        label = f"telemetry.native_support_tools[{index}]"
+        name = require_string(item.get("name"), f"{label}.name")
+        max_calls = require_integer(item.get("max_calls"), f"{label}.max_calls")
+        purpose = require_string(item.get("purpose"), f"{label}.purpose")
+        if name in names or name in approved_tools:
+            raise RuntimeError("native support tool overlaps another tool authority")
+        if is_write_capable_tool(name):
+            raise RuntimeError("write-capable tool cannot be a native support tool")
+        if max_calls < 1 or max_calls > max_turns:
+            raise RuntimeError("native support tool max_calls is outside turn bounds")
+        names.add(name)
+        values.append({"name": name, "max_calls": max_calls, "purpose": purpose})
+    return tuple(values)
+
+
 def load_runtime_contract(path: Path) -> dict[str, Any]:
     root = load_json_object(path)
-    if root.get("schema_version") != 4:
+    if root.get("schema_version") != 5:
         raise RuntimeError("unsupported acceptance contract schema")
     runtime = require_mapping(root.get("runtime"), "runtime")
     plugin = require_mapping(root.get("plugin"), "plugin")
@@ -111,16 +135,14 @@ def load_runtime_contract(path: Path) -> dict[str, Any]:
     evidence_targets = {
         "enablement": _evidence_target(evidence, "enablement"),
         "effective_surface_diagnostic": _evidence_target(
-            evidence,
-            "effective_surface_diagnostic",
+            evidence, "effective_surface_diagnostic"
         ),
     }
 
     version = require_string(runtime.get("openclaw_version"), "runtime.openclaw_version")
-    gateway_url = require_string(
-        runtime.get("gateway_url"),
-        "runtime.gateway_url",
-    ).rstrip("/")
+    gateway_url = require_string(runtime.get("gateway_url"), "runtime.gateway_url").rstrip(
+        "/"
+    )
     gateway = urlparse(gateway_url)
     if (
         gateway.scheme != "http"
@@ -128,37 +150,33 @@ def load_runtime_contract(path: Path) -> dict[str, Any]:
         or gateway.port is None
     ):
         raise RuntimeError("runtime.gateway_url must be loopback HTTP with a port")
-    public_url = require_string(runtime.get("public_url"), "runtime.public_url").rstrip("/")
+    public_url = require_string(runtime.get("public_url"), "runtime.public_url").rstrip(
+        "/"
+    )
     public = urlparse(public_url)
     if public.scheme != "https" or not public.hostname:
         raise RuntimeError("runtime.public_url must be HTTPS")
     internal_ports = require_unique_integers(
-        runtime.get("internal_ports"),
-        "runtime.internal_ports",
+        runtime.get("internal_ports"), "runtime.internal_ports"
     )
     if gateway.port in internal_ports:
         raise RuntimeError("Gateway port must differ from internal ORIS ports")
 
     profile = require_string(tools.get("required_profile"), "tool_policy.required_profile")
     expansions = require_mapping(
-        tools.get("profile_expansions"),
-        "tool_policy.profile_expansions",
+        tools.get("profile_expansions"), "tool_policy.profile_expansions"
     )
     version_expansion = require_mapping(
-        expansions.get(version),
-        "tool_policy.profile_expansions.runtime",
+        expansions.get(version), "tool_policy.profile_expansions.runtime"
     )
     approved_tools = require_unique_strings(
-        tools.get("approved_tools"),
-        "tool_policy.approved_tools",
+        tools.get("approved_tools"), "tool_policy.approved_tools"
     )
     profile_expansion = require_unique_strings(
-        version_expansion.get(profile),
-        "tool_policy.profile_expansion",
+        version_expansion.get(profile), "tool_policy.profile_expansion"
     )
     hooks = require_unique_strings(
-        telemetry.get("required_events"),
-        "telemetry.required_events",
+        telemetry.get("required_events"), "telemetry.required_events"
     )
 
     raw_turns = agent.get("turns")
@@ -175,6 +193,9 @@ def load_runtime_contract(path: Path) -> dict[str, Any]:
         approved_tools
     ):
         raise RuntimeError("agent acceptance tools differ from approved tools")
+    native_support_tools = _native_support_tools(
+        telemetry, approved_tools, len(turns)
+    )
 
     commit = require_string(baseline.get("expected_commit"), "baseline.expected_commit")
     if _SHA.fullmatch(commit) is None:
@@ -199,6 +220,7 @@ def load_runtime_contract(path: Path) -> dict[str, Any]:
         "required_profile": profile,
         "profile_expansion": profile_expansion,
         "approved_tools": approved_tools,
+        "native_support_tools": native_support_tools,
         "required_hooks": hooks,
         "turns": turns,
         "expected_commit": commit,

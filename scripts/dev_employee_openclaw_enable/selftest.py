@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from . import selftest_native_support_tools as native_support_checks
 from . import selftest_policy as policy_checks
 from . import selftest_telemetry as telemetry_checks
 from .effective_tool_surface_selftest import test_effective_tool_surface_parser
@@ -26,6 +27,14 @@ def run_selftests() -> bool:
         (
             "telemetry_schema_and_outcomes",
             telemetry_checks.test_telemetry_schema_and_outcomes,
+        ),
+        (
+            "native_support_tool_policy",
+            native_support_checks.test_native_support_tool_policy,
+        ),
+        (
+            "native_support_contract_validation",
+            native_support_checks.test_native_support_contract_validation,
         ),
         ("output_metadata", telemetry_checks.test_output_metadata),
         ("agent_skill_policy", policy_checks.test_agent_skill_policy),

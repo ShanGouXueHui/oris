@@ -87,3 +87,73 @@ def evaluate_execution_outcomes(
         "tool_arguments_or_results_recorded": False,
         "conversation_content_recorded": False,
     }
+
+
+def evaluate_native_support_outcomes(
+    records: list[dict[str, Any]],
+    support_tools: set[str],
+    expected_tools: set[str],
+) -> dict[str, Any]:
+    support_records = [
+        item
+        for item in records
+        if item.get("event") == "after_tool_call"
+        and item.get("toolName") in support_tools
+    ]
+    failed_tools = sorted(
+        {
+            str(item.get("toolName"))
+            for item in support_records
+            if record_failed(item)
+        }
+    )
+    first_expected_index = next(
+        (
+            index
+            for index, item in enumerate(records)
+            if item.get("event") == "after_tool_call"
+            and item.get("toolName") in expected_tools
+        ),
+        len(records),
+    )
+    late_support_tools = sorted(
+        {
+            str(item.get("toolName"))
+            for index, item in enumerate(records)
+            if index > first_expected_index
+            and item.get("event") == "after_tool_call"
+            and item.get("toolName") in support_tools
+        }
+    )
+    return {
+        "ok": not failed_tools and not late_support_tools,
+        "failed_tools": failed_tools,
+        "late_support_tools": late_support_tools,
+        "hydration_order_valid": not late_support_tools,
+        "failed_call_count": sum(record_failed(item) for item in support_records),
+        "tool_arguments_or_results_recorded": False,
+        "conversation_content_recorded": False,
+    }
+
+
+def build_latency_metrics(
+    records: list[dict[str, Any]],
+    expected_tools: set[str],
+    support_tools: set[str],
+) -> dict[str, Any]:
+    def tool_metrics(names: set[str]) -> dict[str, Any]:
+        return {
+            tool: duration_stats(duration_values(records, "after_tool_call", tool))
+            for tool in sorted(names)
+        }
+
+    return {
+        "ttft": {
+            "available": False,
+            "reason": "approved typed hooks do not expose a first-token timestamp",
+        },
+        "model_duration": duration_stats(duration_values(records, "model_call_ended")),
+        "total_agent_duration": duration_stats(duration_values(records, "agent_end")),
+        "tool_duration": tool_metrics(expected_tools),
+        "native_support_tool_duration": tool_metrics(support_tools),
+    }

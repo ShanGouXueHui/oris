@@ -9,9 +9,9 @@ from typing import Any
 from .models import RuntimeContext
 from .telemetry_analysis import (
     bounded_string_values,
-    duration_stats,
-    duration_values,
+    build_latency_metrics,
     evaluate_execution_outcomes,
+    evaluate_native_support_outcomes,
 )
 from .telemetry_correlation import correlate_records
 
@@ -129,6 +129,8 @@ def inspect_telemetry(
 ) -> dict[str, Any]:
     expected_events = set(context.required_hooks)
     expected_tools = set(context.approved_tools)
+    support_limits = context.native_support_tool_limits
+    support_tools = set(support_limits)
     expected_session_hashes = {
         hashlib.sha256(session_key.encode("utf-8")).hexdigest()
     }
@@ -142,11 +144,17 @@ def inspect_telemetry(
         expected_events=expected_events,
         required_turns=len(context.acceptance_turns),
         same_cli_session_requested=same_cli_session_requested,
+        native_support_tool_limits=support_limits,
     )
     relevant_records = correlation["correlated_records"]
     tools_seen = set(correlation["tools_seen"])
     unexpected_tools = set(correlation["unexpected_tools"])
     outcomes = evaluate_execution_outcomes(relevant_records, expected_tools)
+    support_outcomes = evaluate_native_support_outcomes(
+        relevant_records,
+        support_tools,
+        expected_tools,
+    )
     current = context.telemetry_path
     rotated = Path(str(current) + ".1")
     parent_permissions_ok = _mode_owner_ok(current.parent, 0o700)
@@ -154,9 +162,15 @@ def inspect_telemetry(
         rotated,
         0o600,
     )
+    tool_authority_ok = bool(
+        not unexpected_tools
+        and correlation["native_support_tool_limits_ok"]
+        and support_outcomes["ok"]
+    )
     accepted = bool(
         correlation["accepted"]
         and outcomes["ok"]
+        and tool_authority_ok
         and schema_ok
         and content_safe
         and parent_permissions_ok
@@ -165,8 +179,17 @@ def inspect_telemetry(
     return {
         "accepted": accepted,
         "expected_tools_seen": sorted(expected_tools.intersection(tools_seen)),
+        "native_support_tools_seen": sorted(
+            correlation["native_support_tools_seen"]
+        ),
+        "native_support_tool_counts": correlation["native_support_tool_counts"],
+        "native_support_tool_limits_ok": correlation[
+            "native_support_tool_limits_ok"
+        ],
+        "native_support_outcome_ok": bool(support_outcomes["ok"]),
+        "native_support_outcomes": support_outcomes,
         "unexpected_tools_seen": sorted(unexpected_tools),
-        "only_approved_tools_used": not unexpected_tools,
+        "only_authorized_tools_used": tool_authority_ok,
         "execution_outcome_ok": bool(outcomes["ok"]),
         "execution_outcomes": outcomes,
         "event_counts": correlation["event_counts"],
@@ -193,24 +216,11 @@ def inspect_telemetry(
         "records_after_start": len(records),
         "correlated_records": len(relevant_records),
         "session_records": len(correlation["matched_session_records"]),
-        "metrics": {
-            "ttft": {
-                "available": False,
-                "reason": "approved typed hooks do not expose a first-token timestamp",
-            },
-            "model_duration": duration_stats(
-                duration_values(relevant_records, "model_call_ended")
-            ),
-            "total_agent_duration": duration_stats(
-                duration_values(relevant_records, "agent_end")
-            ),
-            "tool_duration": {
-                tool: duration_stats(
-                    duration_values(relevant_records, "after_tool_call", tool)
-                )
-                for tool in sorted(expected_tools)
-            },
-        },
+        "metrics": build_latency_metrics(
+            relevant_records,
+            expected_tools,
+            support_tools,
+        ),
         "secret_values_recorded": False,
         "conversation_content_recorded": False,
     }

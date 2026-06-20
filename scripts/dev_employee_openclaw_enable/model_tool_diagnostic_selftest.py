@@ -14,9 +14,11 @@ CONTROL = "session_status"
 ORIS = "oris_queue_status"
 
 
-def _automatic(seen: list[str]) -> dict:
+def _automatic(seen: list[str], unexpected: bool = False) -> dict:
+    unexpected_tools = ["unrelated_tool"] if unexpected else []
+    authorized = not unexpected
     return {
-        "accepted": set(seen) == {CONTROL, ORIS},
+        "accepted": set(seen) == {CONTROL, ORIS} and authorized,
         "agent_targeted_explicitly": True,
         "gateway_transport_proven": True,
         "persisted_native_session": True,
@@ -36,9 +38,9 @@ def _automatic(seen: list[str]) -> dict:
             }
         ],
         "telemetry": {
-            "accepted": set(seen) == {CONTROL, ORIS},
+            "accepted": set(seen) == {CONTROL, ORIS} and authorized,
             "expected_tools_seen": seen,
-            "unexpected_tools_seen": ["unrelated_tool"],
+            "unexpected_tools_seen": unexpected_tools,
             "event_counts": {"agent_end": 2, "model_call_ended": 2},
             "all_event_counts": {"after_tool_call": len(seen)},
             "providers_seen": ["runtime-provider"],
@@ -49,7 +51,7 @@ def _automatic(seen: list[str]) -> dict:
             "content_safe": True,
             "parent_permissions_ok": True,
             "file_permissions_ok": True,
-            "only_approved_tools_used": True,
+            "only_authorized_tools_used": authorized,
             "records_after_start": 6,
             "correlated_records": 6,
             "session_records": 6,
@@ -66,12 +68,12 @@ def _automatic(seen: list[str]) -> dict:
     }
 
 
-def _classified(seen: list[str]) -> RunState:
+def _classified(seen: list[str], unexpected: bool = False) -> RunState:
     state = RunState()
     classify_model_tool_diagnostic(
         state,
         CheckRecorder(),
-        _automatic(seen),
+        _automatic(seen, unexpected),
         CONTROL,
         ORIS,
     )
@@ -89,8 +91,19 @@ def test_model_tool_diagnostic_result() -> None:
         CONTROL,
         ORIS,
     }
-    assert sanitized["telemetry"]["unexpected_tool_count"] == 1
+    assert sanitized["telemetry"]["unexpected_tool_count"] == 0
     assert sanitized["unrelated_tool_names_recorded"] is False
+
+    unauthorized = sanitize_agent_acceptance(
+        _automatic([CONTROL, ORIS], unexpected=True),
+        {CONTROL, ORIS},
+    )
+    assert unauthorized["telemetry"]["unexpected_tool_count"] == 1
+    assert unauthorized["unrelated_tool_names_recorded"] is False
+
     assert _classified([CONTROL, ORIS]).result == PASS_RESULT
     assert _classified([CONTROL]).result == ROUTING_RESULT
     assert _classified([]).result == CAPABILITY_RESULT
+    assert _classified([CONTROL, ORIS], unexpected=True).result == (
+        "MODEL_TOOL_DIAGNOSTIC_PRIVACY_FAILED"
+    )

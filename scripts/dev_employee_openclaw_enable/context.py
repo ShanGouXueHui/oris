@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .models import EvidenceTarget, RuntimeContext
+from .models import EvidenceTarget, NativeSupportToolPolicy, RuntimeContext
 from .task_contract import load_json_object, load_runtime_contract, load_task_id
 
 
@@ -98,6 +98,14 @@ def load_context() -> RuntimeContext:
         contract["approved_tools"],
     )
     readiness = root / raw["readiness_evidence_directory"]
+    support_tools = tuple(
+        NativeSupportToolPolicy(
+            name=item["name"],
+            max_calls=item["max_calls"],
+            purpose=item["purpose"],
+        )
+        for item in contract["native_support_tools"]
+    )
 
     return RuntimeContext(
         repo_root=root,
@@ -118,6 +126,7 @@ def load_context() -> RuntimeContext:
         plugin_id=plugin["id"],
         plugin_version=plugin["version"],
         approved_tools=contract["approved_tools"],
+        native_support_tools=support_tools,
         required_hooks=contract["required_hooks"],
         marker_file=Path(plugin["private_marker"]).expanduser(),
         internal_ports=contract["internal_ports"],
