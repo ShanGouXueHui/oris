@@ -13,6 +13,24 @@ if [ -z "$REPO_ROOT" ]; then
   exit 1
 fi
 
+PYTHONDONTWRITEBYTECODE=1 python3 -m compileall -q \
+  "$REPO_ROOT/scripts/dev_employee_openclaw_enable" \
+  "$REPO_ROOT/scripts/dev_employee_quality"
+COMPILE_RC=$?
+
+if [ "$COMPILE_RC" -ne 0 ]; then
+  echo "===== SUMMARY ====="
+  echo "RESULT=FAILED"
+  echo "FAILURE_CODE=activation_package_compile_failed"
+  echo "OPENCLAW_ACCESSED=NO"
+  echo "GATEWAY_RESTARTED=NO"
+  echo "TASK_SUBMITTED=NO"
+  echo "NEXT_ACTION=FIX_COMPILE_FAILURE_BEFORE_ENABLEMENT"
+  echo "SEND_TO_CHAT=THIS_SUMMARY_ONLY"
+  echo "===== END SUMMARY ====="
+  exit "$COMPILE_RC"
+fi
+
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$REPO_ROOT" \
   python3 -m scripts.dev_employee_openclaw_enable.cli
 exit "$?"
