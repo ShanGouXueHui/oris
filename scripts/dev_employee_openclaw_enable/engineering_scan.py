@@ -16,6 +16,23 @@ from .engineering_scan_policy import (
 from .models import RuntimeContext
 
 
+_ADDITIONAL_AUTHORITIES = {
+    "sanitize_effective_tool_surface": (
+        "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
+    ),
+    "probe_approved_effective_tool_surface": (
+        "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
+    ),
+}
+
+
+def _effective_authorities() -> dict[str, str]:
+    authorities = dict(AUTHORITIES)
+    authorities.pop("run", None)
+    authorities.update(_ADDITIONAL_AUTHORITIES)
+    return authorities
+
+
 def _oversized_target_modules(repo_root: Path) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
     for path in target_python_files(repo_root):
@@ -45,7 +62,7 @@ def _deduplicate_oversized(
 def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
     policy = load_policy(repo_root)
     quality_findings, quality_file_count = scan_repository(repo_root, policy)
-    architecture = scan_python_architecture(repo_root, AUTHORITIES)
+    architecture = scan_python_architecture(repo_root, _effective_authorities())
 
     duplicate_bindings = [
         item.to_dict()
