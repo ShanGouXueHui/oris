@@ -1,11 +1,11 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "diagnostic_source_gate_remediated_pending_safe_rerun",
+  "status": "diagnostic_patch_dry_run_published_pending_runtime_execution",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "rerun_github_hosted_pre_activation_policy_diagnostic_after_skill_module_split",
+  "current_step": "execute_native_config_patch_dry_run_diagnostic",
   "objective": "Enable only the three approved read-only ORIS tools through the existing native OpenClaw plugin, verify natural-language typed-tool use and privacy-safe latency telemetry, and preserve automatic rollback to the tools-denied state. Do not add write actions in this task.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
@@ -23,20 +23,12 @@
     "broad_prompt_keyword_task_creation_allowed": false,
     "mainstream_branch": "main"
   },
-  "previous_task": {
-    "task_id": "commercial-openclaw-native-plugin-install-20260618",
-    "status": "completed",
-    "result": "INSTALLED_TOOLS_DENIED",
-    "plugin_source_commit": "8f174b49196aac90b505846200ce260f75355b41",
-    "artifact_sha256": "976377c2e5ffbf6932d5e43bed17c4d07cfcb16fefb7383b5ab593d4ed1eecda",
-    "evidence_commit": "b831470063bc640e498d2061fdaeb2bf8bc9639c",
-    "evidence_json": "logs/dev_employee/openclaw_native_plugin_install/openclaw-native-plugin-install-tools-disabled-20260618T205656Z.json"
-  },
   "installed_plugin_state": {
     "plugin_id": "oris-dev-employee",
     "version": "0.1.0",
-    "enabled_at_verified_baseline": true,
-    "plugin_error_count_at_verified_baseline": 0,
+    "installation_result": "INSTALLED_TOOLS_DENIED",
+    "plugin_source_commit": "8f174b49196aac90b505846200ce260f75355b41",
+    "installation_evidence_commit": "b831470063bc640e498d2061fdaeb2bf8bc9639c",
     "runtime_tools": [
       "oris_queue_status",
       "oris_task_status",
@@ -47,13 +39,8 @@
       "after_tool_call",
       "agent_end"
     ],
-    "tools_effectively_denied_after_latest_rollback": true,
-    "write_tools_absent_at_verified_baseline": true,
-    "conversation_access_policy": true,
-    "auth_mode": "token",
-    "private_marker": "~/.openclaw/private/oris-dev-employee-plugin-install-current.json",
-    "preinstall_backup": "/home/admin/.openclaw/backups/native-plugin-install-20260618T205656Z/openclaw.json.before.bak",
-    "approved_rollback_script": "scripts/dev_employee_rollback_openclaw_native_plugin_v2_20260618.sh"
+    "tools_effectively_denied": true,
+    "write_tools_absent": true
   },
   "platform_state": {
     "openclaw_version": "2026.5.19 (a185ca2)",
@@ -68,132 +55,108 @@
     "intake_loopback_only": true,
     "active_product_task": false,
     "product_baseline_commit": "bcb93e17ea88704548101f5e4a5c460e15a80ec7",
-    "insight_database": "oris_insight",
-    "insight_schema": "insight",
-    "latest_database_security_result": "ALREADY_SECURE_AND_VERIFIED",
-    "latest_database_security_evidence_commit": "bc799a640138a19800270ecab1a656f09d70252a"
+    "production_host_must_not_be_touched": "8.136.28.6"
   },
   "completed_readiness": {
     "result": "READY",
     "checks_total": 26,
     "checks_pass": 26,
-    "evidence_commit": "a63dd823ac4d5b3fa0fa867771f94904d0b4ceee",
-    "evidence_json": "logs/dev_employee/openclaw_readonly_tool_readiness/openclaw-readonly-tool-readiness-20260618T212757Z.json"
+    "evidence_commit": "a63dd823ac4d5b3fa0fa867771f94904d0b4ceee"
   },
-  "quality_state": {
-    "repository_scan_result": "FINDINGS",
-    "repository_findings": 865,
-    "active_target_gate": "PASS",
-    "active_target_findings": 0,
-    "interpretation": "Repository-wide legacy quality debt remains, while the active OpenClaw remediation target passed its quality gate. Generated/runtime artifacts are excluded from active source findings."
+  "enablement_history": {
+    "latest_enablement_evidence_commit": "c68e7d2f50a84f6e68199d2fada9a244f31e4f41",
+    "latest_enablement_failure_stage": "post_candidate_activation_gateway_health",
+    "latest_enablement_rollback_healthy": true,
+    "runtime_inventory_reached": false,
+    "native_agent_acceptance_reached": false,
+    "product_task_submitted": false,
+    "write_tools_added": false
   },
-  "diagnostic_implementation": {
-    "published": true,
-    "entrypoint": "scripts/dev_employee_diagnose_openclaw_readonly_policy.sh",
-    "implementation_document": "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md",
-    "source_authority_scan": true,
-    "candidate_private_temporary_path": true,
-    "candidate_sensitive_values_redacted": true,
-    "installed_validator_discovery": true,
-    "candidate_active_config_mutation": false,
-    "candidate_gateway_restart": false,
-    "controlled_activation_failure_capture_ready": true,
-    "tri_state_evidence": true,
-    "detached_worktree_evidence": true,
-    "runtime_execution_completed": true,
-    "runtime_result": "DIAGNOSTIC_FAILED",
-    "runtime_evidence_commit": "df9d21839974e4adcc6bde9b62db0fe468b3cc76",
-    "runtime_failure_stage": "source_authority_and_hardcoding_scan",
-    "runtime_failure_reason": "scripts/dev_employee_openclaw_enable/skill.py exceeded the 240-line layered-module gate at 261 lines",
-    "duplicate_authorities_found": 0,
-    "forbidden_hardcoding_found": 0,
-    "oversized_modules_found": 1,
-    "source_gate_remediation": {
-      "completed": true,
-      "skill_facade": "scripts/dev_employee_openclaw_enable/skill.py",
-      "installation_module": "scripts/dev_employee_openclaw_enable/skill_installation.py",
-      "runtime_module": "scripts/dev_employee_openclaw_enable/skill_runtime.py",
-      "line_counts": {
-        "skill.py": 22,
-        "skill_installation.py": 181,
-        "skill_runtime.py": 85
-      },
-      "facade_compatibility_selftest_added": true,
-      "latest_remediation_commit": "a4c1c04befeccc45c48ce55c901c87e9b0df1a70"
+  "diagnostic_history": {
+    "first_run": {
+      "result": "DIAGNOSTIC_FAILED",
+      "failure_stage": "source_authority_and_hardcoding_scan",
+      "reason": "skill.py exceeded the 240-line layered-module gate",
+      "evidence_commit": "df9d21839974e4adcc6bde9b62db0fe468b3cc76",
+      "remediated": true
+    },
+    "second_run": {
+      "checked_at": "2026-06-20T07:40:02Z",
+      "result": "DIAGNOSTIC_VALIDATOR_UNAVAILABLE",
+      "failure_code": "candidate_path_validator_not_discovered",
+      "checks_pass": 9,
+      "checks_fail": 0,
+      "checks_not_checked": 7,
+      "source_scan_pass": true,
+      "tools_denied_baseline_pass": true,
+      "gateway_baseline_health_pass": true,
+      "candidate_build_pass": true,
+      "candidate_policy_compatibility_pass": true,
+      "config_scope_valid": true,
+      "queue_unchanged": true,
+      "product_unchanged": true,
+      "active_config_unchanged": true,
+      "gateway_restarted": false,
+      "rollback_required": false,
+      "product_task_submitted": false,
+      "write_tools_added": false,
+      "evidence_commit": "7c01b72a8ae71c2cbf62a0ae4032ab245b09335c",
+      "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T074002Z.json"
     }
   },
-  "enablement_progress": {
-    "direct_tool_calls_passed_in_prior_attempts": true,
-    "routing_skill_runtime_visible_in_prior_attempts": true,
-    "routing_skill_agent": "main",
-    "prior_native_agent_model_turns_completed": true,
-    "prior_after_tool_call_count": 0,
-    "prior_conclusion": "Direct tool success and skill visibility did not prove model tool materialization or invocation.",
-    "dual_stage_policy_source_commits": [
-      "741f24687c751ebfa405d8ea74c8a45a53a09161",
-      "0182858e58fefdb267f7cb3cf8b76bf6a8064323",
-      "c48a8741645cfd57ba24530a6dc4da767612568a",
-      "d650a0f9e4686df4b46157ace680e9bb08e396ff"
+  "validator_facts": {
+    "config_validate_present": true,
+    "config_check_present": true,
+    "config_validate_alternate_path_supported": false,
+    "config_check_alternate_path_supported": false,
+    "interpretation": "No policy rejection was observed. The two direct validators cannot safely validate a private candidate path in this installed runtime.",
+    "official_runtime_compatible_path": "openclaw config patch --file <patch> --dry-run",
+    "official_source_ref": "openclaw/openclaw a185ca2"
+  },
+  "dry_run_remediation": {
+    "published": true,
+    "implementation_document": "docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md",
+    "policy_patch_builder": "scripts/dev_employee_openclaw_enable/runtime_policy_patch.py",
+    "runtime_validator": "scripts/dev_employee_openclaw_enable/runtime_validation.py",
+    "entrypoint": "scripts/dev_employee_diagnose_openclaw_readonly_policy.sh",
+    "private_patch_mode": "0600",
+    "minimal_changed_paths_only": true,
+    "active_config_hash_before_after": true,
+    "raw_patch_recorded": false,
+    "raw_cli_output_recorded": false,
+    "candidate_activated": false,
+    "gateway_restart": false,
+    "implementation_commits": [
+      "12392337ba8f33eda5228f3d87e5b6961d255e72",
+      "3a9259c44e2f3f92672a52b85441a15c6a8967a8",
+      "2690501651ca2bd45637460a2dc5d0d9b2ab3501",
+      "061fb475e0f5e7abf4411f71888e81cd74bbabf5",
+      "5452d3faf0c2a27c7991ee85b81545d87f38955d"
     ]
   },
-  "latest_enablement_attempt": {
-    "checked_at": "2026-06-19T20:09:33Z",
-    "result": "FAILED",
-    "failure_code": "RuntimeError:existing OpenClaw Gateway did not become healthy",
-    "selected_policy_mode": "materialized-profile-plus-approved+created-profile-also-allow+skill-unrestricted",
-    "candidate_allow_count": 13,
-    "candidate_also_allow_count": 3,
-    "failure_stage": "post_candidate_activation_gateway_health",
-    "runtime_inventory_reached": false,
-    "direct_tool_calls_reached": false,
-    "native_agent_acceptance_reached": false,
-    "telemetry_acceptance_reached": false,
-    "rollback_count": 1,
-    "rollback_healthy": true,
-    "product_task_submitted": false,
-    "write_tools_added": false,
-    "secret_values_printed": false,
-    "evidence_commit": "c68e7d2f50a84f6e68199d2fada9a244f31e4f41"
-  },
-  "latest_diagnostic_attempt": {
-    "checked_at": "2026-06-19T21:39:58Z",
-    "result": "DIAGNOSTIC_FAILED",
-    "failure_code": "engineering_source_scan_failed",
-    "checks_pass": 1,
-    "checks_fail": 1,
-    "checks_not_checked": 14,
-    "failure_stage": "source_authority_and_hardcoding_scan",
-    "oversized_file": "scripts/dev_employee_openclaw_enable/skill.py",
-    "oversized_line_count": 261,
-    "active_config_mutated": false,
-    "gateway_restarted": false,
-    "rollback_required": false,
-    "product_task_submitted": false,
-    "write_tools_added": false,
-    "evidence_commit": "df9d21839974e4adcc6bde9b62db0fe468b3cc76",
-    "evidence_json": "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260619T213958Z.json"
-  },
-  "blocked_reason": "The first diagnostic stopped safely at the engineering source gate because skill.py exceeded the 240-line module threshold. The module has now been split without changing the public Skill API. A second diagnostic-only run is required to verify the source gate and reach installed OpenClaw validator discovery.",
-  "next_action": "Pull the latest main and rerun only scripts/dev_employee_diagnose_openclaw_readonly_policy.sh once. Do not run enablement. Read the new GitHub evidence before selecting or activating any policy.",
+  "blocked_reason": "The candidate has passed ORIS static policy compatibility checks, but the installed OpenClaw runtime has not yet executed its native config patch dry-run against the minimal policy delta. Activation remains prohibited until that evidence is reviewed.",
+  "next_action": "Pull latest main and run the diagnostic entrypoint exactly once. The run must execute native config patch dry-run only and must not activate the candidate or restart Gateway. Read the resulting GitHub evidence before any enablement retry.",
   "next_action_requirements": [
-    "pull the latest main branch on the ORIS development/control host",
+    "pull latest origin/main on the ORIS development/control host",
     "run scripts/dev_employee_diagnose_openclaw_readonly_policy.sh exactly once",
-    "do not run the enablement entrypoint in the same step",
-    "verify diagnostic selftests include Skill facade compatibility",
-    "verify source authority and hardcoding scan passes with no oversized modules",
-    "verify the active tools-denied config hash remains unchanged",
-    "verify the Gateway remains healthy without restart",
-    "record installed validator discovery as PASS, FAIL or NOT_CHECKED",
-    "publish sanitized evidence and remote SHA through a detached worktree",
-    "read GitHub evidence before choosing a candidate policy",
-    "do not invoke a write tool or submit a product task"
+    "do not run the enablement entrypoint",
+    "verify config.patch exposes --file and --dry-run",
+    "validate only the minimal policy delta",
+    "verify active config hash is unchanged",
+    "verify Gateway remains healthy without restart",
+    "publish sanitized detached-worktree evidence",
+    "read GitHub evidence before activation",
+    "do not invoke ORIS tools or submit a product task",
+    "do not add write tools"
   ],
   "commercial_sequence_after_p0": [
-    "explicit typed write actions with approval, project authorization, idempotency and audit",
-    "generic project onboarding and capability discovery",
-    "controlled Admin UI for routine provider and policy management",
-    "monitoring, privacy/retention, backup/restore and disaster recovery",
-    "multi-tenant identity, quotas, metering and commercial packaging"
+    "complete native read-only tool and telemetry acceptance",
+    "establish real privacy-safe model/tool/agent latency baselines",
+    "design typed write actions with approval, RBAC, project authorization, idempotency and audit",
+    "add generic project onboarding and capability discovery",
+    "move routine Provider, Model and Policy management to controlled Admin UI",
+    "add monitoring, privacy/retention, backup/restore and disaster recovery",
+    "add multi-tenant identity, quotas, metering and commercial packaging"
   ],
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
@@ -203,11 +166,12 @@
     "memory/dev_employee/current_task.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_ENABLEMENT_DIAGNOSTIC_PLAN_2026-06-19.md",
     "docs/DEV_EMPLOYEE_OPENCLAW_READONLY_POLICY_DIAGNOSTIC_IMPLEMENTATION_2026-06-19.md",
+    "docs/DEV_EMPLOYEE_OPENCLAW_POLICY_DRY_RUN_VALIDATION_ADDENDUM_2026-06-20.md",
     "docs/DEV_EMPLOYEE_ENGINEERING_STANDARD_ADDENDUM_2026-06-19.md",
     "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-19.md",
     "docs/DEV_EMPLOYEE_COMMERCIALIZATION_PRIORITY_2026-06-18.md",
     "orchestration/project_registry.json",
     "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-19.md"
   ],
-  "updated_at": "2026-06-19T21:51:25Z"
+  "updated_at": "2026-06-20T07:46:00Z"
 }
