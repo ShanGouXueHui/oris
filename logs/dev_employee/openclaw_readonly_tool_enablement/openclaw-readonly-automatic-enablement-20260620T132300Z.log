@@ -1,0 +1,27 @@
+task_id=commercial-openclaw-readonly-tool-enable-20260618
+checked_at=20260620T132300Z
+result=DIAGNOSTIC_CANDIDATE_VALIDATED_PENDING_EVIDENCE_REVIEW
+failure_code=
+selected_policy_mode=profile-authority-preserved+created-profile-also-allow+skill-unrestricted
+routing_skill_installed=NO
+CHECK|diagnostic_selftests|PASS|diagnostic selftests passed
+CHECK|source_authority_and_hardcoding_scan|PASS|target source authority and hardcoding scan passed
+CHECK|tools_denied_baseline|PASS|exact approved tools remain denied in the active baseline
+CHECK|gateway_baseline_health|PASS|existing Gateway PID and HTTP health captured
+CHECK|private_candidate_build|PASS|candidate built in a private temporary path without active mutation
+CHECK|candidate_policy_compatibility|PASS|candidate optional-tool and Skill policy are internally consistent
+CHECK|installed_runtime_candidate_validation|PASS|installed OpenClaw accepted the private candidate through a discovered validator
+CHECK|active_candidate_activation|NOT_CHECKED|diagnostic-only run intentionally did not replace active configuration
+CHECK|runtime_plugin_inventory|NOT_CHECKED|requires runtime-accepted active candidate and controlled restart
+CHECK|direct_tool_calls|NOT_CHECKED|requires runtime-accepted active candidate and controlled restart
+CHECK|native_agent_acceptance|NOT_CHECKED|requires runtime-accepted active candidate and controlled restart
+CHECK|telemetry_acceptance|NOT_CHECKED|requires native Agent tool calls
+CHECK|rollback|NOT_CHECKED|no active mutation occurred
+CHECK|final_gateway_health|PASS|Gateway remained healthy on the exact tools-denied active config
+CHECK|queue_invariant|PASS|queue state remained unchanged
+CHECK|product_invariant|PASS|product repository remained unchanged
+product_task_submitted=NO
+write_tools_added=NO
+openclaw_reinstalled_or_upgraded=NO
+secret_values_recorded=NO
+conversation_content_recorded=NO
