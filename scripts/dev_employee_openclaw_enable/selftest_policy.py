@@ -77,8 +77,7 @@ def test_agent_skill_policy() -> None:
         raise AssertionError("duplicate skill allowlist entries must be rejected")
 
 
-def test_profile_tool_policy() -> None:
-    approved = tuple(sorted(TOOLS))
+def _assert_profile_also_allow_scope(approved: tuple[str, ...]) -> None:
     created = {
         "tools": {
             "profile": PROFILE,
@@ -86,49 +85,110 @@ def test_profile_tool_policy() -> None:
         }
     }
     created_before = copy.deepcopy(created)
-    created_change = enable_profile_tools(
+    change = enable_profile_tools(
         created["tools"],
         approved,
         PROFILE_EXPANSION,
         PROFILE,
     )
-    assert created_change.allow_mode == "materialized-profile-plus-approved"
-    assert created_change.also_allow_mode == "created-profile-also-allow"
-    assert created["tools"]["allow"] == [*PROFILE_EXPANSION, *approved]
+    assert change.allow_mode == "profile-authority-preserved"
+    assert change.also_allow_mode == "created-profile-also-allow"
+    assert "allow" not in created["tools"]
     assert created["tools"]["alsoAllow"] == list(approved)
+    assert created["tools"]["deny"] == ["write"]
     assert approved_tools_are_profile_visible(created["tools"], approved, PROFILE)
     created_before["tools"].pop("deny")
-    assert strip_authorized_tool_change(created, created_change) == created_before
+    assert strip_authorized_tool_change(created, change) == created_before
 
+
+def _assert_existing_allow_scope(approved: tuple[str, ...]) -> None:
     existing = {
         "tools": {
             "profile": PROFILE,
             "allow": ["group:runtime"],
-            "alsoAllow": ["existing-tool", approved[0]],
             "deny": [*approved, "write"],
         }
     }
     existing_before = copy.deepcopy(existing)
-    existing_change = enable_profile_tools(
+    change = enable_profile_tools(
         existing["tools"],
         approved,
         PROFILE_EXPANSION,
         PROFILE,
     )
-    assert existing_change.allow_mode == "preserved-allow-plus-approved"
-    assert existing_change.also_allow_mode == "extended-profile-also-allow"
+    assert change.allow_mode == "extended-existing-allow"
+    assert change.also_allow_mode == "not-used-existing-allow"
     assert existing["tools"]["allow"] == ["group:runtime", *approved]
-    assert existing["tools"]["alsoAllow"] == ["existing-tool", *approved]
+    assert "alsoAllow" not in existing["tools"]
+    assert existing["tools"]["deny"] == ["write"]
     assert approved_tools_are_profile_visible(existing["tools"], approved, PROFILE)
     existing_before["tools"].pop("deny")
-    assert strip_authorized_tool_change(existing, existing_change) == existing_before
+    assert strip_authorized_tool_change(existing, change) == existing_before
+
+
+def _assert_existing_also_allow_scope(approved: tuple[str, ...]) -> None:
+    existing = {
+        "tools": {
+            "profile": PROFILE,
+            "alsoAllow": ["existing-tool", approved[0]],
+            "deny": [*approved, "write"],
+        }
+    }
+    existing_before = copy.deepcopy(existing)
+    change = enable_profile_tools(
+        existing["tools"],
+        approved,
+        PROFILE_EXPANSION,
+        PROFILE,
+    )
+    assert change.allow_mode == "profile-authority-preserved"
+    assert change.also_allow_mode == "extended-profile-also-allow"
+    assert "allow" not in existing["tools"]
+    assert existing["tools"]["alsoAllow"] == ["existing-tool", *approved]
+    assert existing["tools"]["deny"] == ["write"]
+    assert approved_tools_are_profile_visible(existing["tools"], approved, PROFILE)
+    existing_before["tools"].pop("deny")
+    assert strip_authorized_tool_change(existing, change) == existing_before
+
+
+def _assert_invalid_policy_shapes(approved: tuple[str, ...]) -> None:
+    dual_scope = {
+        "profile": PROFILE,
+        "allow": ["group:runtime"],
+        "alsoAllow": [approved[0]],
+        "deny": list(approved),
+    }
+    try:
+        enable_profile_tools(dual_scope, approved, PROFILE_EXPANSION, PROFILE)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("dual authorization scopes must be rejected")
+
+    duplicate = {
+        "profile": PROFILE,
+        "deny": list(approved),
+        "alsoAllow": ["duplicate", "duplicate"],
+    }
+    try:
+        enable_profile_tools(duplicate, approved, PROFILE_EXPANSION, PROFILE)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("duplicate tools.alsoAllow entries must be rejected")
+
+
+def test_profile_tool_policy() -> None:
+    approved = tuple(sorted(TOOLS))
+    _assert_profile_also_allow_scope(approved)
+    _assert_existing_allow_scope(approved)
+    _assert_existing_also_allow_scope(approved)
 
     already_complete = {
         "tools": {
             "profile": PROFILE,
-            "allow": [*PROFILE_EXPANSION, *approved],
             "alsoAllow": list(approved),
-            "deny": [*approved],
+            "deny": list(approved),
         }
     }
     complete_change = enable_profile_tools(
@@ -139,20 +199,10 @@ def test_profile_tool_policy() -> None:
     )
     assert complete_change.added_to_allow == ()
     assert complete_change.added_to_also_allow == ()
+    assert already_complete["tools"]["deny"] == []
     assert approved_tools_are_profile_visible(
         already_complete["tools"],
         approved,
         PROFILE,
     )
-
-    invalid = {
-        "profile": PROFILE,
-        "deny": list(approved),
-        "alsoAllow": ["duplicate", "duplicate"],
-    }
-    try:
-        enable_profile_tools(invalid, approved, PROFILE_EXPANSION, PROFILE)
-    except RuntimeError:
-        pass
-    else:
-        raise AssertionError("duplicate tools.alsoAllow entries must be rejected")
+    _assert_invalid_policy_shapes(approved)
