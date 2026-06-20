@@ -27,12 +27,14 @@ _AUDIT_DIRECTORY_ROOTS = (
 )
 _AUDIT_AUTHORITY_FILES = (
     Path("scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh"),
+    Path("scripts/dev_employee_diagnose_openclaw_model_tool_call_routing.sh"),
     Path("scripts/dev_employee_diagnose_openclaw_readonly_policy.sh"),
     Path("scripts/dev_employee_enable_openclaw_readonly_tools.sh"),
     Path("memory/dev_employee/current_task.json"),
     Path("memory/dev_employee/current_task.md"),
     Path("docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_MODEL_TOOL_CALL_AND_HARNESS_DIAGNOSTIC_2026-06-20.md"),
 )
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
@@ -43,6 +45,18 @@ _ADDITIONAL_AUTHORITIES = {
     ),
     "load_standalone_evidence_target": (
         "scripts/dev_employee_openclaw_enable/evidence_config.py"
+    ),
+    "load_model_tool_diagnostic_contract": (
+        "scripts/dev_employee_openclaw_enable/model_tool_diagnostic_contract.py"
+    ),
+    "sanitize_agent_acceptance": (
+        "scripts/dev_employee_openclaw_enable/model_tool_diagnostic_result.py"
+    ),
+    "classify_model_tool_diagnostic": (
+        "scripts/dev_employee_openclaw_enable/model_tool_diagnostic_result.py"
+    ),
+    "run_model_tool_diagnostic": (
+        "scripts/dev_employee_openclaw_enable/model_tool_diagnostic_runtime.py"
     ),
 }
 
