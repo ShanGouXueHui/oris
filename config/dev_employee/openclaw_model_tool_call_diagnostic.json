@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "session_prefix": "oris-model-tool-diagnostic",
+  "control_turn": {
+    "intent": "generic_tool_call_control",
+    "message_template": "Use the available {tool_name} tool to inspect current session status. Call the tool and do not answer from memory."
+  },
+  "oris_turn": {
+    "intent": "oris_queue_routing",
+    "expected_tool": "oris_queue_status",
+    "message_template": "Use the available ORIS read-only queue status tool to inspect the current development-employee queue. Call the tool and do not answer from memory."
+  },
+  "turn_timeout_seconds": 240,
+  "telemetry_wait_seconds": 90,
+  "evidence": {
+    "directory": "logs/dev_employee/openclaw_model_tool_call_diagnostic",
+    "filename_prefix": "openclaw-model-tool-call-diagnostic",
+    "commit_message_prefix": "chore(dev-employee): record model tool-call diagnostic"
+  }
+}
