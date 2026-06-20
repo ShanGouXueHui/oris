@@ -33,7 +33,8 @@ jobs:
             oris_vnext/runtime_execution_state.py \
             oris_vnext/runtime_provider_client.py \
             tests/test_free_mesh_tool_calling.py \
-            tests/test_free_mesh_protocol.py
+            tests/test_free_mesh_protocol.py \
+            tests/test_script_entrypoint_bootstrap.py
       - name: Validate shell syntax
         run: |
           bash -n scripts/dev_employee_audit_openclaw_enablement_code.sh
@@ -46,6 +47,8 @@ jobs:
         run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python tests/test_free_mesh_tool_calling.py
       - name: Run Free Mesh protocol tests
         run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python tests/test_free_mesh_protocol.py
+      - name: Run direct entrypoint bootstrap regression
+        run: PYTHONDONTWRITEBYTECODE=1 python tests/test_script_entrypoint_bootstrap.py
       - name: Run static repository audit
         run: PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. python -c 'import json; from pathlib import Path; from scripts.dev_employee_openclaw_enable.engineering_scan import scan_repository_sources; report=scan_repository_sources(Path.cwd()); payload=json.dumps(report, sort_keys=True, indent=2); Path("code-first-audit.json").write_text(payload+"\n", encoding="utf-8"); print(payload); raise SystemExit(0 if report["ok"] else 2)'
       - name: Upload static audit report

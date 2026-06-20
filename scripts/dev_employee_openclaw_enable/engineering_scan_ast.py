@@ -25,6 +25,7 @@ _CALL_CHAIN_FILES = (
     Path("oris_vnext/runtime_provider_client.py"),
     Path("tests/test_free_mesh_tool_calling.py"),
     Path("tests/test_free_mesh_protocol.py"),
+    Path("tests/test_script_entrypoint_bootstrap.py"),
 )
 
 

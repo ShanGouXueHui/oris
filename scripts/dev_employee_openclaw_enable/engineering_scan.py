@@ -44,6 +44,7 @@ _AUDIT_AUTHORITY_FILES = (
     Path("oris_vnext/runtime_provider_client.py"),
     Path("tests/test_free_mesh_tool_calling.py"),
     Path("tests/test_free_mesh_protocol.py"),
+    Path("tests/test_script_entrypoint_bootstrap.py"),
     Path("orchestration/routing_policy.yaml"),
     Path("orchestration/runtime_policy.yaml"),
     Path("memory/dev_employee/current_task.json"),
@@ -52,6 +53,7 @@ _AUDIT_AUTHORITY_FILES = (
     Path("docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_MODEL_TOOL_CALL_AND_HARNESS_DIAGNOSTIC_2026-06-20.md"),
     Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_CALLING_FIX_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_FREE_MESH_TOOL_PROTOCOL_ACTIVATION_2026-06-20.md"),
 )
 _ADDITIONAL_AUTHORITIES = {
     "sanitize_effective_tool_surface": (
