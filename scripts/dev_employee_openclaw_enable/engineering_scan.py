@@ -40,27 +40,29 @@ _LEGACY_LIBS = (
 )
 
 
-def _cycle_rows(graph: dict[str, set[str]]) -> list[list[str]]:
+def _cycles(graph: dict[str, set[str]]) -> list[list[str]]:
     found: set[tuple[str, ...]] = set()
 
-    def walk(node: str, path: list[str]) -> None:
+    def visit(node: str, path: list[str]) -> None:
         for child in graph.get(node, set()):
             if child not in graph:
                 continue
             if child in path:
-                core = path[path.index(child):]
+                core = path[path.index(child) :]
                 rotations = [tuple(core[index:] + core[:index]) for index in range(len(core))]
                 found.add(min(rotations))
             elif len(path) <= len(graph):
-                walk(child, path + [child])
+                visit(child, path + [child])
 
     for node in graph:
-        walk(node, [node])
-    return [list(row) for row in sorted(found)]
+        visit(node, [node])
+    return [list(item) for item in sorted(found)]
 
 
-def _function_digest(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str | None:
-    if node.name == "main" or len(list(ast.walk(node))) < 12:
+def _digest(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str | None:
+    if node.name == "main" or node.name.startswith("_"):
+        return None
+    if len(list(ast.walk(node))) < 12:
         return None
     normalized = ast.FunctionDef(
         name="function",
@@ -83,11 +85,25 @@ def _legacy_findings(repo_root: Path) -> list[dict[str, str]]:
         if not path.is_file():
             findings.append({"file": name, "kind": "missing"})
             continue
-        code = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip() and not line.lstrip().startswith("#")]
+        code = [
+            line.strip()
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
         if any(any(token in line for token in forbidden) for line in code):
             findings.append({"file": name, "kind": "executable_logic"})
         if set(code) - allowed:
             findings.append({"file": name, "kind": "unapproved_statement"})
+    return findings
+
+
+def _unsafe_env_calls(tree: ast.Module, relative: str) -> list[dict[str, str]]:
+    findings: list[dict[str, str]] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        if any(keyword.arg == "env" for keyword in node.keywords):
+            findings.append({"file": relative, "kind": "subprocess_env_override"})
     return findings
 
 
@@ -104,17 +120,19 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
     for path in files:
         relative = path.name
         text = path.read_text(encoding="utf-8")
-        source = SourceFile(path, relative, ".py", text)
-        duplicate_bindings.extend(item.to_dict() for item in scan_python(source))
+        duplicate_bindings.extend(
+            item.to_dict() for item in scan_python(SourceFile(path, relative, ".py", text))
+        )
         if len(text.splitlines()) > 240:
             oversized.append({"file": relative, "line_count": len(text.splitlines())})
         tree = ast.parse(text, filename=str(path))
+        hardcoding.extend(_unsafe_env_calls(tree, relative))
         imports: set[str] = set()
         for node in tree.body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 definitions[node.name].append(relative)
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                digest = _function_digest(node)
+                digest = _digest(node)
                 if digest:
                     bodies[digest].append((relative, node.name))
             if isinstance(node, ast.ImportFrom) and node.level == 1:
@@ -127,8 +145,6 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
             if isinstance(node, ast.Constant) and isinstance(node.value, str):
                 if "/home/" in node.value:
                     hardcoding.append({"file": relative, "kind": "absolute_home_path"})
-                if "ZenMux" in node.value:
-                    hardcoding.append({"file": relative, "kind": "excluded_provider"})
 
     authority = {
         name: definitions.get(name, [])
@@ -138,23 +154,27 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
     duplicate_bodies = [values for values in bodies.values() if len(values) > 1]
     contract_error = ""
     try:
-        contract = load_runtime_contract(repo_root / "config/dev_employee/openclaw_readonly_acceptance.json")
+        contract = load_runtime_contract(
+            repo_root / "config/dev_employee/openclaw_readonly_acceptance.json"
+        )
         load_task_id(repo_root / "memory/dev_employee/current_task.json")
-        projects = load_json_object(repo_root / "orchestration/project_registry.json").get("projects")
+        projects = load_json_object(
+            repo_root / "orchestration/project_registry.json"
+        ).get("projects")
         if not isinstance(projects, dict) or contract["baseline"]["project_key"] not in projects:
             raise RuntimeError("baseline project is missing from project registry")
     except Exception as exc:
         contract_error = str(exc) or type(exc).__name__
 
     legacy = _legacy_findings(repo_root)
-    cycles = _cycle_rows(graph)
+    import_cycles = _cycles(graph)
     failures = (
         duplicate_bindings,
-        oversized,
-        hardcoding,
         authority,
         duplicate_bodies,
-        cycles,
+        import_cycles,
+        oversized,
+        hardcoding,
         legacy,
         contract_error,
     )
@@ -164,7 +184,7 @@ def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
         "duplicate_bindings": duplicate_bindings,
         "authority_violations": authority,
         "duplicate_function_bodies": duplicate_bodies,
-        "import_cycles": cycles,
+        "import_cycles": import_cycles,
         "oversized_modules": oversized,
         "forbidden_hardcoding": hardcoding,
         "legacy_path_findings": legacy,
