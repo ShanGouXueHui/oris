@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from .agent_output import (
+    effective_tool_surface,
     find_transport_metadata,
     parse_json_output,
     reported_tool_names,
@@ -93,6 +94,32 @@ def _agent_command(
     return command
 
 
+def _merge_surfaces(surfaces: list[dict[str, Any]], approved: set[str]) -> dict[str, Any]:
+    checked = [item for item in surfaces if item.get("status") != "NOT_CHECKED"]
+    present = {
+        name
+        for item in checked
+        for name in item.get("approved_tools_present", [])
+        if isinstance(name, str)
+    }
+    missing = approved - present
+    return {
+        "status": "NOT_CHECKED" if not checked else "PASS" if not missing else "FAIL",
+        "reports_observed": sum(int(item.get("report_count") or 0) for item in surfaces),
+        "max_total_tool_count": max(
+            [int(item.get("total_tool_count") or 0) for item in surfaces] or [0]
+        ),
+        "approved_tools_present": sorted(present),
+        "missing_approved_tools": sorted(missing),
+        "routing_skill_present": any(
+            item.get("routing_skill_present") is True for item in checked
+        ),
+        "other_tool_names_recorded": False,
+        "system_prompt_recorded": False,
+        "conversation_content_recorded": False,
+    }
+
+
 def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, Any]:
     cli = discover_agent_cli()
     agent_id = resolve_default_agent_id(load_json(context.openclaw_config))
@@ -103,6 +130,7 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
     )
     approved_tools = set(context.approved_tools)
     turns: list[dict[str, Any]] = []
+    surfaces: list[dict[str, Any]] = []
     output_session_hashes: set[str] = set()
     for turn in context.acceptance_turns:
         message = str(turn["message_template"]).format(task_id=context.task_id)
@@ -117,6 +145,12 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
         payload_session_hashes = session_identifier_hashes(payload)
         output_session_hashes.update(payload_session_hashes)
         payload_tools = reported_tool_names(payload, approved_tools)
+        surface = effective_tool_surface(
+            payload,
+            approved_tools,
+            context.routing_skill_name,
+        )
+        surfaces.append(surface)
         turns.append(
             {
                 "intent": str(turn["intent"]),
@@ -129,6 +163,10 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
                 "reported_transport": transport or "gateway_default_unmarked",
                 "fallback_from_gateway": fallback_from == "gateway",
                 "reported_tool_names": sorted(payload_tools),
+                "effective_tool_surface_status": surface["status"],
+                "effective_approved_tool_count": len(
+                    surface["approved_tools_present"]
+                ),
                 "session_identifier_hash_count": len(payload_session_hashes),
                 "stdout_bytes": len(result.stdout.encode("utf-8")),
                 "stderr_bytes": len(result.stderr.encode("utf-8")),
@@ -138,17 +176,20 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
             context.require_gateway_transport and not gateway_transport_ok
         ):
             failed = _failed_result(
-                (
-                    "embedded_fallback_rejected"
-                    if embedded_fallback
-                    else "native_agent_turn_failed"
-                ),
+                "embedded_fallback_rejected"
+                if embedded_fallback
+                else "native_agent_turn_failed",
                 cli,
             )
             failed["turns"] = turns
             failed["agent_id"] = agent_id
+            failed["effective_tool_surface"] = _merge_surfaces(
+                surfaces,
+                approved_tools,
+            )
             return failed
 
+    effective_surface = _merge_surfaces(surfaces, approved_tools)
     same_cli_session_requested = len(turns) == len(context.acceptance_turns)
     deadline = time.monotonic() + context.telemetry_wait_seconds
     telemetry: dict[str, Any] = {}
@@ -172,14 +213,23 @@ def run_automatic_acceptance(context: RuntimeContext, stamp: str) -> dict[str, A
         and telemetry.get("accepted") is True
         and session_ok
         and transport_ok
+        and effective_surface.get("status") != "FAIL"
     )
+    reason = None
+    if not accepted:
+        reason = (
+            "approved_tools_missing_from_effective_model_surface"
+            if effective_surface.get("status") == "FAIL"
+            else "native_agent_telemetry_acceptance_failed"
+        )
     return {
         "accepted": accepted,
-        "reason": None if accepted else "native_agent_telemetry_acceptance_failed",
+        "reason": reason,
         "cli": cli,
         "agent_id": agent_id,
         "agent_targeted_explicitly": bool(cli.get("agent_flag_available")),
         "turns": turns,
+        "effective_tool_surface": effective_surface,
         "telemetry": telemetry,
         "gateway_transport_mode": "gateway_default_without_local_flag",
         "gateway_transport_proven": transport_ok,
