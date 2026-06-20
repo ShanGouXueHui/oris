@@ -4,6 +4,7 @@ import copy
 from dataclasses import dataclass
 from typing import Any
 
+from .collection_validation import unique_string_list
 from .task_contract import require_unique_strings
 
 
@@ -39,17 +40,13 @@ class ProfileToolPolicyChange:
         }
 
 
-def _values(value: Any, label: str) -> list[str]:
-    return list(require_unique_strings(value, label))
-
-
 def _optional_values(
     tools: dict[str, Any],
     key: str,
 ) -> tuple[list[str], bool]:
     if key not in tools:
         return [], False
-    return _values(tools[key], f"OpenClaw tools.{key}"), True
+    return unique_string_list(tools[key], f"OpenClaw tools.{key}"), True
 
 
 def _append_missing(
@@ -73,7 +70,7 @@ def validate_tool_policy_shape(
 ) -> None:
     if tools.get("profile") != required_profile:
         raise RuntimeError("OpenClaw tool profile differs from the approved profile")
-    _values(tools.get("deny"), "OpenClaw tools.deny")
+    unique_string_list(tools.get("deny"), "OpenClaw tools.deny")
     allow, _ = _optional_values(tools, "allow")
     also_allow, _ = _optional_values(tools, "alsoAllow")
     if allow and also_allow:
@@ -91,7 +88,7 @@ def enable_profile_tools(
     validate_tool_policy_shape(tools, required_profile)
     approved = require_unique_strings(list(approved_tools), "approved tools")
     require_unique_strings(list(profile_expansion), "profile expansion")
-    deny = _values(tools["deny"], "OpenClaw tools.deny")
+    deny = unique_string_list(tools["deny"], "OpenClaw tools.deny")
     old_allow, allow_existed = _optional_values(tools, "allow")
     old_also, also_existed = _optional_values(tools, "alsoAllow")
 
@@ -148,7 +145,7 @@ def _strip(
         if existed:
             tools[key] = []
         return
-    values = _values(tools[key], f"authorized tools.{key}")
+    values = unique_string_list(tools[key], f"authorized tools.{key}")
     for item in added:
         if values.count(item) != 1:
             raise RuntimeError(
@@ -189,7 +186,7 @@ def approved_tools_are_profile_visible(
 ) -> bool:
     try:
         validate_tool_policy_shape(tools, required_profile)
-        deny = set(_values(tools["deny"], "OpenClaw tools.deny"))
+        deny = set(unique_string_list(tools["deny"], "OpenClaw tools.deny"))
         allow, _ = _optional_values(tools, "allow")
         also_allow, _ = _optional_values(tools, "alsoAllow")
     except RuntimeError:

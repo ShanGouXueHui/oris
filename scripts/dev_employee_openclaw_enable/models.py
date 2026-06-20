@@ -17,6 +17,13 @@ def stage_status(value: bool | None) -> str:
 
 
 @dataclass(frozen=True)
+class EvidenceTarget:
+    directory: Path
+    filename_prefix: str
+    commit_message_prefix: str
+
+
+@dataclass(frozen=True)
 class RuntimeContext:
     repo_root: Path
     task_id: str
@@ -50,9 +57,18 @@ class RuntimeContext:
     turn_timeout_seconds: int
     telemetry_wait_seconds: int
     telemetry_path: Path
-    evidence_directory: Path
-    evidence_commit_prefix: str
+    enablement_evidence: EvidenceTarget
+    effective_surface_evidence: EvidenceTarget
     readiness_evidence: Path
+    policy_diagnostic_evidence: EvidenceTarget | None = None
+
+    @property
+    def evidence_directory(self) -> Path:
+        return self.enablement_evidence.directory
+
+    @property
+    def evidence_commit_prefix(self) -> str:
+        return self.enablement_evidence.commit_message_prefix
 
 
 @dataclass(frozen=True)

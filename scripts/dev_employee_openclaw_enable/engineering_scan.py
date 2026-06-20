@@ -1,199 +1,168 @@
 from __future__ import annotations
 
-import ast
-import hashlib
-from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from scripts.dev_employee_quality.duplicates import scan_python
-from scripts.dev_employee_quality.models import SourceFile
+from scripts.dev_employee_quality.policy import load_policy
+from scripts.dev_employee_quality.repository import scan_repository
 
-from .models import RuntimeContext
-from .task_contract import load_json_object, load_runtime_contract, load_task_id
-
-
-_AUTHORITIES = {
-    "load_context": "context.py",
-    "load_runtime_contract": "task_contract.py",
-    "load_json_object": "task_contract.py",
-    "apply_readonly_policy": "policy.py",
-    "enable_profile_tools": "profile_tool_policy.py",
-    "ensure_skill_visible": "agent_skill_policy.py",
-    "run_activation_candidate_gate": "activation_candidate_gate.py",
-    "run_enablement_rollback": "enablement_rollback.py",
-    "probe_effective_tool_surface": "effective_tool_surface.py",
-    "run_effective_surface_diagnostic": "effective_surface_diagnostic.py",
-    "restart_service_and_wait": "service_control.py",
-    "verify_plugin_runtime": "plugin_runtime.py",
-    "write_and_commit_evidence": "evidence.py",
-    "run_enablement": "runner.py",
-    "run_policy_diagnostic": "diagnostic.py",
-    "build_policy_validation_patch": "runtime_policy_patch.py",
-    "validate_candidate_with_installed_runtime": "runtime_validation.py",
-    "install_routing_skill": "skill_installation.py",
-    "verify_routing_skill_runtime": "skill_runtime.py",
-    "run": "process.py",
-}
-_LEGACY_LIBS = (
-    "dev_employee_openclaw_readonly_enable_common_20260618.sh",
-    "dev_employee_openclaw_readonly_enable_preflight_20260618.sh",
-    "dev_employee_openclaw_readonly_enable_policy_direct_20260618.sh",
-    "dev_employee_openclaw_readonly_enable_browser_telemetry_20260618.sh",
-    "dev_employee_openclaw_readonly_enable_finalize_20260618.sh",
+from .engineering_scan_ast import scan_python_architecture, target_python_files
+from .engineering_scan_policy import (
+    AUTHORITIES,
+    active_path_findings,
+    contract_error,
+    legacy_path_findings,
 )
-_ABSOLUTE_HOME_PREFIX = "/" + "home" + "/"
+from .evidence_config import load_standalone_evidence_target
+from .models import RuntimeContext
 
 
-def _cycles(graph: dict[str, set[str]]) -> list[list[str]]:
-    found: set[tuple[str, ...]] = set()
+_POLICY_EVIDENCE_CONFIG = Path(
+    "config/dev_employee/openclaw_policy_diagnostic_evidence.json"
+)
+_AUDIT_DIRECTORY_ROOTS = (
+    Path("scripts/dev_employee_openclaw_enable"),
+    Path("scripts/dev_employee_quality"),
+    Path("config/dev_employee"),
+)
+_AUDIT_AUTHORITY_FILES = (
+    Path("scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh"),
+    Path("scripts/dev_employee_diagnose_openclaw_readonly_policy.sh"),
+    Path("scripts/dev_employee_enable_openclaw_readonly_tools.sh"),
+    Path("memory/dev_employee/current_task.json"),
+    Path("memory/dev_employee/current_task.md"),
+    Path("docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md"),
+    Path("docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md"),
+)
+_ADDITIONAL_AUTHORITIES = {
+    "sanitize_effective_tool_surface": (
+        "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
+    ),
+    "probe_approved_effective_tool_surface": (
+        "scripts/dev_employee_openclaw_enable/effective_surface_inventory.py"
+    ),
+    "load_standalone_evidence_target": (
+        "scripts/dev_employee_openclaw_enable/evidence_config.py"
+    ),
+}
 
-    def visit(node: str, path: list[str]) -> None:
-        for child in graph.get(node, set()):
-            if child not in graph:
-                continue
-            if child in path:
-                core = path[path.index(child) :]
-                rotations = [tuple(core[index:] + core[:index]) for index in range(len(core))]
-                found.add(min(rotations))
-            elif len(path) <= len(graph):
-                visit(child, path + [child])
 
-    for node in graph:
-        visit(node, [node])
-    return [list(item) for item in sorted(found)]
+def _effective_authorities() -> dict[str, str]:
+    authorities = dict(AUTHORITIES)
+    authorities.pop("run", None)
+    authorities.update(_ADDITIONAL_AUTHORITIES)
+    return authorities
 
 
-def _digest(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str | None:
-    if node.name == "main" or node.name.startswith("_"):
-        return None
-    if len(list(ast.walk(node))) < 12:
-        return None
-    normalized = ast.FunctionDef(
-        name="function",
-        args=node.args,
-        body=node.body,
-        decorator_list=[],
-        returns=node.returns,
-        type_comment=node.type_comment,
+def _audit_source_paths(repo_root: Path, suffixes: set[str]) -> tuple[Path, ...]:
+    paths = {
+        path.relative_to(repo_root)
+        for relative_root in _AUDIT_DIRECTORY_ROOTS
+        for path in (repo_root / relative_root).rglob("*")
+        if path.is_file() and path.suffix.lower() in suffixes
+    }
+    paths.update(
+        relative
+        for relative in _AUDIT_AUTHORITY_FILES
+        if (repo_root / relative).is_file()
     )
-    return hashlib.sha256(ast.dump(normalized).encode("utf-8")).hexdigest()
+    return tuple(sorted(paths))
 
 
-def _legacy_findings(repo_root: Path) -> list[dict[str, str]]:
-    root = repo_root / "scripts" / "lib"
-    findings: list[dict[str, str]] = []
-    forbidden = ("function ", "() {", "python3", "openclaw", "systemctl", "curl ", "git ")
-    allowed = {"return 64 2>/dev/null || exit 64"}
-    for name in _LEGACY_LIBS:
-        path = root / name
-        if not path.is_file():
-            findings.append({"file": name, "kind": "missing"})
-            continue
-        code = [
-            line.strip()
-            for line in path.read_text(encoding="utf-8").splitlines()
-            if line.strip() and not line.lstrip().startswith("#")
-        ]
-        if any(any(token in line for token in forbidden) for line in code):
-            findings.append({"file": name, "kind": "executable_logic"})
-        if set(code) - allowed:
-            findings.append({"file": name, "kind": "unapproved_statement"})
+def _oversized_target_modules(repo_root: Path) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    for path in target_python_files(repo_root):
+        line_count = len(path.read_text(encoding="utf-8").splitlines())
+        if line_count > 240:
+            findings.append(
+                {
+                    "file": path.relative_to(repo_root).as_posix(),
+                    "line_count": line_count,
+                    "limit": 240,
+                }
+            )
     return findings
 
 
-def _unsafe_env_calls(tree: ast.Module, relative: str) -> list[dict[str, str]]:
-    findings: list[dict[str, str]] = []
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call):
-            continue
-        if any(keyword.arg == "env" for keyword in node.keywords):
-            findings.append({"file": relative, "kind": "subprocess_env_override"})
-    return findings
+def _deduplicate_oversized(
+    findings: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    unique: dict[tuple[object, object], dict[str, Any]] = {}
+    for item in findings:
+        path = item.get("file") or item.get("path")
+        size = item.get("line_count") or item.get("value")
+        unique[(path, size)] = item
+    return list(unique.values())
+
+
+def _combined_contract_error(repo_root: Path) -> str:
+    existing = contract_error(repo_root)
+    if existing:
+        return existing
+    try:
+        load_standalone_evidence_target(repo_root, _POLICY_EVIDENCE_CONFIG)
+    except Exception as exc:
+        return str(exc) or type(exc).__name__
+    return ""
 
 
 def scan_repository_sources(repo_root: Path) -> dict[str, Any]:
-    package = repo_root / "scripts" / "dev_employee_openclaw_enable"
-    files = sorted(package.glob("*.py"))
-    duplicate_bindings: list[dict[str, Any]] = []
-    oversized: list[dict[str, Any]] = []
-    hardcoding: list[dict[str, str]] = []
-    definitions: dict[str, list[str]] = defaultdict(list)
-    bodies: dict[str, list[tuple[str, str]]] = defaultdict(list)
-    graph: dict[str, set[str]] = {}
+    policy = load_policy(repo_root)
+    audit_paths = _audit_source_paths(repo_root, policy.source_extensions)
+    quality_findings, quality_file_count = scan_repository(
+        repo_root,
+        policy,
+        audit_paths,
+    )
+    architecture = scan_python_architecture(repo_root, _effective_authorities())
 
-    for path in files:
-        relative = path.name
-        text = path.read_text(encoding="utf-8")
-        duplicate_bindings.extend(
-            item.to_dict() for item in scan_python(SourceFile(path, relative, ".py", text))
-        )
-        if len(text.splitlines()) > 240:
-            oversized.append({"file": relative, "line_count": len(text.splitlines())})
-        tree = ast.parse(text, filename=str(path))
-        hardcoding.extend(_unsafe_env_calls(tree, relative))
-        imports: set[str] = set()
-        for node in tree.body:
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                definitions[node.name].append(relative)
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                digest = _digest(node)
-                if digest:
-                    bodies[digest].append((relative, node.name))
-            if isinstance(node, ast.ImportFrom) and node.level == 1:
-                if node.module:
-                    imports.add(node.module.split(".")[0])
-                else:
-                    imports.update(item.name.split(".")[0] for item in node.names)
-        graph[path.stem] = imports - {path.stem}
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Constant) and isinstance(node.value, str):
-                if _ABSOLUTE_HOME_PREFIX in node.value:
-                    hardcoding.append({"file": relative, "kind": "absolute_home_path"})
+    duplicate_bindings = [
+        item.to_dict()
+        for item in quality_findings
+        if item.rule_id in {"duplicate_symbol", "duplicate_json_key", "python_syntax"}
+    ]
+    oversized = [
+        item.to_dict()
+        for item in quality_findings
+        if item.rule_id == "large_file"
+    ]
+    oversized.extend(_oversized_target_modules(repo_root))
+    oversized = _deduplicate_oversized(oversized)
+    hardcoding = [
+        item.to_dict()
+        for item in quality_findings
+        if item.rule_id
+        not in {"duplicate_symbol", "duplicate_json_key", "python_syntax", "large_file"}
+    ]
+    legacy = [
+        *legacy_path_findings(repo_root),
+        *active_path_findings(repo_root),
+    ]
+    contract = _combined_contract_error(repo_root)
 
-    authority = {
-        name: definitions.get(name, [])
-        for name, expected in _AUTHORITIES.items()
-        if definitions.get(name, []) != [expected]
-    }
-    duplicate_bodies = [values for values in bodies.values() if len(values) > 1]
-    contract_error = ""
-    try:
-        contract = load_runtime_contract(
-            repo_root / "config/dev_employee/openclaw_readonly_acceptance.json"
-        )
-        load_task_id(repo_root / "memory/dev_employee/current_task.json")
-        projects = load_json_object(
-            repo_root / "orchestration/project_registry.json"
-        ).get("projects")
-        if not isinstance(projects, dict) or contract["baseline"]["project_key"] not in projects:
-            raise RuntimeError("baseline project is missing from project registry")
-    except Exception as exc:
-        contract_error = str(exc) or type(exc).__name__
-
-    legacy = _legacy_findings(repo_root)
-    import_cycles = _cycles(graph)
     failures = (
         duplicate_bindings,
-        authority,
-        duplicate_bodies,
-        import_cycles,
+        architecture["authority_violations"],
+        architecture["duplicate_function_bodies"],
+        architecture["import_cycles"],
         oversized,
         hardcoding,
         legacy,
-        contract_error,
+        contract,
     )
     return {
         "ok": not any(failures),
-        "files_scanned": len(files),
+        "files_scanned": quality_file_count,
+        "python_architecture_files_scanned": architecture["files_scanned"],
         "duplicate_bindings": duplicate_bindings,
-        "authority_violations": authority,
-        "duplicate_function_bodies": duplicate_bodies,
-        "import_cycles": import_cycles,
+        "authority_violations": architecture["authority_violations"],
+        "duplicate_function_bodies": architecture["duplicate_function_bodies"],
+        "import_cycles": architecture["import_cycles"],
         "oversized_modules": oversized,
         "forbidden_hardcoding": hardcoding,
         "legacy_path_findings": legacy,
-        "contract_error": contract_error or None,
+        "contract_error": contract or None,
+        "quality_findings_total": len(quality_findings),
     }
 
 

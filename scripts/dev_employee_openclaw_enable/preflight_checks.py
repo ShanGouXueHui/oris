@@ -63,6 +63,8 @@ def _run_pre_mutation_selftests(checks: CheckRecorder) -> None:
 def run_transaction_preflight(
     context: RuntimeContext,
     checks: CheckRecorder,
+    *,
+    probe_safe_builtin: bool = True,
 ) -> tuple[str, str, RepoSnapshot, SourceWorktreeSnapshot]:
     _require_commands()
     engineering = scan_engineering_sources(context)
@@ -139,9 +141,16 @@ def run_transaction_preflight(
         "ORIS source worktree clean; configured runtime artifacts excluded",
     )
 
-    baseline_tool = select_safe_baseline_tool(context)
-    checks.pass_check(
-        "safe_builtin_baseline",
-        "safe built-in tool is accessible before mutation",
-    )
+    baseline_tool = ""
+    if probe_safe_builtin:
+        baseline_tool = select_safe_baseline_tool(context)
+        checks.pass_check(
+            "safe_builtin_baseline",
+            "safe built-in tool is accessible before mutation",
+        )
+    else:
+        checks.not_checked(
+            "safe_builtin_baseline",
+            "direct built-in tool invocation is not required for inventory-only diagnostic",
+        )
     return queue_before, baseline_tool, product_before, oris_before

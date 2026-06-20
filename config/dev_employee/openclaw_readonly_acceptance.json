@@ -1,5 +1,5 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "runtime": {
     "openclaw_version": "2026.5.19",
     "openclaw_config_path": "~/.openclaw/openclaw.json",
@@ -95,8 +95,15 @@
     ]
   },
   "evidence": {
-    "directory": "logs/dev_employee/openclaw_readonly_tool_enablement",
-    "commit_message_prefix": "chore(dev-employee): record automatic read-only tool acceptance",
-    "diagnostic_commit_message_prefix": "chore(dev-employee): record OpenClaw read-only policy diagnostic"
+    "enablement": {
+      "directory": "logs/dev_employee/openclaw_readonly_tool_enablement",
+      "filename_prefix": "openclaw-readonly-automatic-enablement",
+      "commit_message_prefix": "chore(dev-employee): record automatic read-only tool acceptance"
+    },
+    "effective_surface_diagnostic": {
+      "directory": "logs/dev_employee/openclaw_effective_tool_surface",
+      "filename_prefix": "openclaw-effective-tool-surface",
+      "commit_message_prefix": "chore(dev-employee): record effective tool surface diagnostic"
+    }
   }
 }

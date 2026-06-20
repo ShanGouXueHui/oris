@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .models import RuntimeContext
+from .models import EvidenceTarget, RuntimeContext
 from .task_contract import load_json_object, load_runtime_contract, load_task_id
 
 
@@ -31,14 +31,16 @@ def _validate_skill(path: Path, name: str, tools: tuple[str, ...]) -> None:
     if not lines or lines[0].strip() != "---":
         raise RuntimeError("routing skill frontmatter is missing")
     try:
-        closing = next(i for i, line in enumerate(lines[1:], 1) if line.strip() == "---")
+        closing = next(
+            i for i, line in enumerate(lines[1:], 1) if line.strip() == "---"
+        )
     except StopIteration as exc:
         raise RuntimeError("routing skill frontmatter is not closed") from exc
     metadata: dict[str, str] = {}
     for line in lines[1:closing]:
         if ":" in line:
             key, value = line.split(":", 1)
-            metadata[key.strip()] = value.strip().strip('"\'')
+            metadata[key.strip()] = value.strip().strip("\"'")
     if metadata.get("name") != name or not metadata.get("description"):
         raise RuntimeError("routing skill identity is invalid")
     if metadata.get("user-invocable", "").lower() != "false":
@@ -56,6 +58,14 @@ def _validate_skill(path: Path, name: str, tools: tuple[str, ...]) -> None:
         raise RuntimeError("routing skill does not name every approved tool")
     if "Never use `exec`" not in body:
         raise RuntimeError("routing skill does not forbid exec fallback")
+
+
+def _evidence_target(root: Path, value: dict[str, str]) -> EvidenceTarget:
+    return EvidenceTarget(
+        directory=root / value["directory"],
+        filename_prefix=value["filename_prefix"],
+        commit_message_prefix=value["commit_message_prefix"],
+    )
 
 
 def load_context() -> RuntimeContext:
@@ -78,11 +88,15 @@ def load_context() -> RuntimeContext:
     skill = contract["skill"]
     tools = contract["tools"]
     agent = contract["agent"]
-    evidence = contract["evidence"]
+    evidence = contract["evidence_targets"]
     skill_source = (root / skill["source_directory"]).resolve()
     if root not in skill_source.parents:
         raise RuntimeError("routing skill source escapes the ORIS repository")
-    _validate_skill(skill_source / "SKILL.md", skill["name"], contract["approved_tools"])
+    _validate_skill(
+        skill_source / "SKILL.md",
+        skill["name"],
+        contract["approved_tools"],
+    )
     readiness = root / raw["readiness_evidence_directory"]
 
     return RuntimeContext(
@@ -118,7 +132,10 @@ def load_context() -> RuntimeContext:
         turn_timeout_seconds=agent["turn_timeout_seconds"],
         telemetry_wait_seconds=agent["telemetry_wait_seconds"],
         telemetry_path=Path(plugin["telemetry_path"]).expanduser(),
-        evidence_directory=root / evidence["directory"],
-        evidence_commit_prefix=evidence["commit_message_prefix"],
+        enablement_evidence=_evidence_target(root, evidence["enablement"]),
+        effective_surface_evidence=_evidence_target(
+            root,
+            evidence["effective_surface_diagnostic"],
+        ),
         readiness_evidence=_latest_ready_evidence(readiness),
     )

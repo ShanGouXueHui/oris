@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import json
 import re
-import shutil
 from pathlib import Path
 from typing import Any
 
-from .models import CheckRecorder, RunState, RuntimeContext
-from .process import run
+from .git_evidence import EvidenceArtifact, publish_evidence_artifacts
+from .models import CheckRecorder, EvidenceTarget, RunState, RuntimeContext
 
 
 SECRET_PATTERNS = (
@@ -139,20 +138,33 @@ def _assert_safe(log_path: Path, json_path: Path) -> None:
     _assert_no_sensitive_keys(payload)
 
 
-def write_and_commit_evidence(
+def publish_evidence(
     context: RuntimeContext,
     state: RunState,
     checks: CheckRecorder,
     stamp: str,
     temp_root: Path,
-) -> tuple[str, str, str]:
+    target: EvidenceTarget,
+) -> tuple[str, str]:
     temp_root.mkdir(parents=True, exist_ok=True)
-    filename = f"openclaw-readonly-automatic-enablement-{stamp}"
-    evidence_log = (context.evidence_directory / f"{filename}.log").relative_to(context.repo_root).as_posix()
-    evidence_json = (context.evidence_directory / f"{filename}.json").relative_to(context.repo_root).as_posix()
+    filename = f"{target.filename_prefix}-{stamp}"
+    evidence_log = (
+        target.directory / f"{filename}.log"
+    ).relative_to(context.repo_root).as_posix()
+    evidence_json = (
+        target.directory / f"{filename}.json"
+    ).relative_to(context.repo_root).as_posix()
     local_log = temp_root / f"{filename}.log"
     local_json = temp_root / f"{filename}.json"
-    payload = _summary_payload(context, state, checks, stamp, evidence_log, evidence_json)
+
+    payload = _summary_payload(
+        context,
+        state,
+        checks,
+        stamp,
+        evidence_log,
+        evidence_json,
+    )
     local_json.write_text(
         json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
         encoding="utf-8",
@@ -160,56 +172,15 @@ def write_and_commit_evidence(
     _write_log(local_log, payload)
     _assert_safe(local_log, local_json)
 
-    fetched = run(["git", "fetch", "origin", "main"], cwd=context.repo_root, timeout=90)
-    if fetched.returncode != 0:
-        raise RuntimeError("unable to fetch ORIS main for evidence")
-    worktree = temp_root / "evidence-worktree"
-    added = run(
-        ["git", "worktree", "add", "--detach", str(worktree), "origin/main"],
-        cwd=context.repo_root,
-        timeout=90,
+    commit = publish_evidence_artifacts(
+        context.repo_root,
+        temp_root,
+        (
+            EvidenceArtifact(evidence_log, local_log),
+            EvidenceArtifact(evidence_json, local_json),
+        ),
+        f"{target.commit_message_prefix} {stamp}",
     )
-    if added.returncode != 0:
-        raise RuntimeError("unable to create detached evidence worktree")
-    try:
-        destination_log = worktree / evidence_log
-        destination_json = worktree / evidence_json
-        destination_log.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(local_log, destination_log)
-        shutil.copy2(local_json, destination_json)
-        staged = run(["git", "add", "--", evidence_log, evidence_json], cwd=worktree)
-        checked = run(["git", "diff", "--cached", "--check"], cwd=worktree)
-        if staged.returncode != 0 or checked.returncode != 0:
-            raise RuntimeError("evidence staging validation failed")
-        committed = run(
-            ["git", "commit", "-m", f"{context.evidence_commit_prefix} {stamp}"],
-            cwd=worktree,
-            timeout=90,
-        )
-        if committed.returncode != 0:
-            raise RuntimeError("evidence commit failed")
-        refreshed = run(["git", "fetch", "origin", "main"], cwd=worktree, timeout=90)
-        if refreshed.returncode != 0:
-            raise RuntimeError("evidence refetch failed")
-        merge_base = run(["git", "merge-base", "HEAD", "origin/main"], cwd=worktree)
-        remote_ref = run(["git", "rev-parse", "origin/main"], cwd=worktree)
-        if merge_base.stdout.strip() != remote_ref.stdout.strip():
-            rebased = run(["git", "rebase", "origin/main"], cwd=worktree, timeout=90)
-            if rebased.returncode != 0:
-                raise RuntimeError("evidence rebase failed")
-        commit = run(["git", "rev-parse", "HEAD"], cwd=worktree)
-        pushed = run(["git", "push", "origin", "HEAD:main"], cwd=worktree, timeout=120)
-        if commit.returncode != 0 or pushed.returncode != 0:
-            raise RuntimeError("evidence push failed")
-        remote = run(
-            ["git", "ls-remote", "--heads", "origin", "refs/heads/main"],
-            cwd=worktree,
-            timeout=60,
-        )
-        remote_sha = remote.stdout.split()[0] if remote.stdout.split() else ""
-        commit_sha = commit.stdout.strip()
-        if not commit_sha or remote_sha != commit_sha:
-            raise RuntimeError("evidence remote SHA mismatch")
-        return commit_sha, evidence_log, evidence_json
-    finally:
-        run(["git", "worktree", "remove", "--force", str(worktree)], cwd=context.repo_root)
+    state.evidence_commit = commit
+    state.evidence_remote_verified = True
+    return evidence_log, evidence_json

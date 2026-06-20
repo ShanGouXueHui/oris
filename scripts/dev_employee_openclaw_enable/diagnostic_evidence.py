@@ -1,10 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import replace
 from pathlib import Path
 
-from .evidence import write_and_commit_evidence
+from .evidence import publish_evidence
+from .evidence_config import load_standalone_evidence_target
 from .models import CheckRecorder, RunState, RuntimeContext, stage_status
+
+
+_TARGET_CONFIG = Path(
+    "config/dev_employee/openclaw_policy_diagnostic_evidence.json"
+)
 
 
 def publish_diagnostic_evidence(
@@ -31,16 +36,18 @@ def publish_diagnostic_evidence(
         "fail": checks.fail_count,
         "not_checked": checks.not_checked_count,
     }
-    diagnostic_context = replace(
+    target = context.policy_diagnostic_evidence
+    if target is None:
+        target = load_standalone_evidence_target(
+            context.repo_root,
+            _TARGET_CONFIG,
+        )
+    evidence_log, evidence_json = publish_evidence(
         context,
-        evidence_commit_prefix=(
-            "chore(dev-employee): record OpenClaw read-only policy diagnostic"
-        ),
-    )
-    return write_and_commit_evidence(
-        diagnostic_context,
         state,
         checks,
         stamp,
         temp_root,
+        target,
     )
+    return state.evidence_commit, evidence_log, evidence_json
