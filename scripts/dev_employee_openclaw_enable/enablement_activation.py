@@ -7,7 +7,17 @@ from .policy import PolicyApplication, PolicyBackup, apply_readonly_policy
 from .service_control import GatewayServiceError, restart_service_and_wait
 from .skill_installation import SkillBackup, install_routing_skill
 from .skill_runtime import verify_routing_skill_runtime
-from .state import active_queue_count, queue_fingerprint
+from .state import active_queue_count, queue_fingerprint, sha256_file
+
+
+def _require_validated_config_hash(
+    context: RuntimeContext,
+    validated_config_sha256: str,
+) -> None:
+    if sha256_file(context.openclaw_config) != validated_config_sha256:
+        raise RuntimeError(
+            "active configuration differs from the just-in-time validated snapshot"
+        )
 
 
 def activate_candidate(
@@ -16,7 +26,9 @@ def activate_candidate(
     checks: CheckRecorder,
     policy_backup: PolicyBackup,
     skill_backup: SkillBackup,
+    validated_config_sha256: str,
 ) -> PolicyApplication:
+    _require_validated_config_hash(context, validated_config_sha256)
     state.mutation_started = True
     skill_details = install_routing_skill(context, skill_backup)
     state.routing_skill_installed = True
@@ -26,12 +38,17 @@ def activate_candidate(
         "managed ORIS read-only routing skill installed",
     )
 
+    _require_validated_config_hash(context, validated_config_sha256)
+    state.details["policy_config_write_attempted"] = True
     application = apply_readonly_policy(context, policy_backup)
+    state.details["policy_config_applied"] = True
     state.selected_policy_mode = application.mode
     state.details["policy_application"] = application.evidence()
     state.config_scope_valid = True
     try:
+        state.details["candidate_gateway_restart_attempted"] = True
         state.details["candidate_gateway_restart"] = restart_service_and_wait(context)
+        state.details["candidate_gateway_restart_completed"] = True
     except GatewayServiceError as exc:
         state.details["gateway_failure_diagnostics"] = exc.safe_evidence
         checks.fail_check("candidate_gateway_health", exc.code)
