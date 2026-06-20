@@ -6,16 +6,7 @@ from typing import Any
 
 from .models import RuntimeContext
 from .process import run
-
-
-_WRITE_TOOL_NAMES = {
-    "write",
-    "edit",
-    "apply_patch",
-    "exec",
-    "process",
-    "code_execution",
-}
+from .tool_authority import WRITE_CAPABLE_CORE_TOOLS
 
 
 def _payload(value: Any) -> dict[str, Any] | None:
@@ -62,7 +53,7 @@ def summarize_effective_tool_payload(
             owner = tool.get("pluginId")
             if source == "plugin":
                 plugin_count += 1
-            if name in _WRITE_TOOL_NAMES:
+            if name in WRITE_CAPABLE_CORE_TOOLS:
                 write_tools_present = True
             if name in approved:
                 approved_seen[name] = {
