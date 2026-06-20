@@ -11,6 +11,20 @@ _PACKAGE_ROOTS = (
     Path("scripts/dev_employee_openclaw_enable"),
     Path("scripts/dev_employee_quality"),
 )
+_CALL_CHAIN_FILES = (
+    Path("scripts/oris_free_mesh_api.py"),
+    Path("scripts/oris_infer.py"),
+    Path("scripts/runtime_execute.py"),
+    Path("oris_vnext/free_mesh_compat.py"),
+    Path("oris_vnext/free_mesh_http.py"),
+    Path("oris_vnext/free_mesh_inference.py"),
+    Path("oris_vnext/infer_refresh.py"),
+    Path("oris_vnext/openai_chat_contract.py"),
+    Path("oris_vnext/runtime_execution_engine.py"),
+    Path("oris_vnext/runtime_execution_state.py"),
+    Path("oris_vnext/runtime_provider_client.py"),
+    Path("tests/test_free_mesh_tool_calling.py"),
+)
 
 
 def _module_name(repo_root: Path, path: Path) -> str:
@@ -18,14 +32,18 @@ def _module_name(repo_root: Path, path: Path) -> str:
 
 
 def target_python_files(repo_root: Path) -> tuple[Path, ...]:
-    return tuple(
-        sorted(
-            path
-            for relative_root in _PACKAGE_ROOTS
-            for path in (repo_root / relative_root).glob("*.py")
-            if path.is_file()
-        )
+    files = {
+        path
+        for relative_root in _PACKAGE_ROOTS
+        for path in (repo_root / relative_root).glob("*.py")
+        if path.is_file()
+    }
+    files.update(
+        repo_root / relative
+        for relative in _CALL_CHAIN_FILES
+        if (repo_root / relative).is_file()
     )
+    return tuple(sorted(files))
 
 
 def _function_digest(node: ast.FunctionDef | ast.AsyncFunctionDef) -> str | None:
