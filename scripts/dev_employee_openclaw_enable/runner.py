@@ -62,12 +62,27 @@ def _rollback(
 ) -> None:
     if not state.mutation_started:
         return
+    policy_attempted = state.details.get("policy_config_write_attempted") is True
+    skill_attempted = state.details.get("routing_skill_mutation_attempted") is True
+    restart_attempted = (
+        state.details.get("candidate_gateway_restart_attempted") is True
+    )
     try:
-        if policy_backup is not None:
+        if policy_attempted:
+            if policy_backup is None:
+                raise RuntimeError("policy rollback backup is unavailable")
             restore_denied_policy(context, policy_backup)
-        if skill_backup is not None:
+        if skill_attempted:
+            if skill_backup is None:
+                raise RuntimeError("routing Skill rollback backup is unavailable")
             restore_routing_skill(skill_backup)
-        state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
+        if restart_attempted:
+            state.details["rollback_gateway_restart"] = restart_service_and_wait(context)
+        else:
+            state.details["rollback_gateway_restart"] = {
+                "required": False,
+                "reason": "candidate_gateway_restart_not_attempted",
+            }
         state.rollback_count += 1
         state.rollback_healthy = "YES"
         state.mutation_started = False
@@ -100,10 +115,11 @@ def run_enablement(
             checks,
             stamp,
         )
+        validated_config_sha256 = activation_gate.get("active_config_sha256")
+        if not isinstance(validated_config_sha256, str) or not validated_config_sha256:
+            raise RuntimeError("validated active configuration hash is unavailable")
         policy_backup = create_backup(context, stamp)
-        if sha256_file(policy_backup.config_file) != activation_gate.get(
-            "active_config_sha256"
-        ):
+        if sha256_file(policy_backup.config_file) != validated_config_sha256:
             raise RuntimeError(
                 "active configuration changed after activation candidate validation"
             )
@@ -122,6 +138,7 @@ def run_enablement(
             checks,
             policy_backup,
             skill_backup,
+            validated_config_sha256,
         )
         verify_runtime_and_direct_calls(
             context,
