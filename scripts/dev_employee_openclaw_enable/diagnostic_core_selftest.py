@@ -6,6 +6,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from . import skill as skill_facade
+from .activation_candidate_gate_selftest import (
+    run_activation_candidate_gate_selftests,
+)
 from .candidate_validation import candidate_policy_compatibility
 from .models import CheckRecorder, stage_status
 from .profile_tool_policy import enable_profile_tools
@@ -181,6 +184,7 @@ def run_core_diagnostic_selftests() -> bool:
     _assert_policy_patch_builder()
     _assert_candidate_compatibility()
     _assert_sanitized_runtime_output()
+    assert run_activation_candidate_gate_selftests()
     recorder = CheckRecorder()
     recorder.pass_check("pass", "ok")
     recorder.fail_check("fail", "bad")
