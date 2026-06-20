@@ -83,7 +83,13 @@ def test_model_tool_diagnostic_result() -> None:
         _automatic([CONTROL, ORIS]),
         {CONTROL, ORIS},
     )
-    assert "unrelated_tool" not in str(sanitized)
+    assert sanitized["turns"][0]["reported_tool_names"] == [CONTROL]
+    assert sanitized["telemetry"]["expected_tools_seen"] == sorted([CONTROL, ORIS])
+    assert set(sanitized["telemetry"]["metrics"]["tool_duration"]) == {
+        CONTROL,
+        ORIS,
+    }
+    assert sanitized["telemetry"]["unexpected_tool_count"] == 1
     assert sanitized["unrelated_tool_names_recorded"] is False
     assert _classified([CONTROL, ORIS]).result == PASS_RESULT
     assert _classified([CONTROL]).result == ROUTING_RESULT
