@@ -160,14 +160,8 @@ def validate_config_scope(
         context.required_profile,
     ):
         raise RuntimeError(
-            "approved tools are not granted at both materialization and profile stages"
+            "approved tools are not authorized by one schema-compatible policy scope"
         )
-    if application.tool_policy.allow_mode == "materialized-profile-plus-approved":
-        allow = tools.get("allow")
-        if not isinstance(allow, list) or not set(context.profile_expansion).issubset(
-            set(allow)
-        ):
-            raise RuntimeError("materialized profile expansion is incomplete")
     if not skill_is_visible(
         after_raw,
         context.routing_skill_name,
@@ -195,14 +189,13 @@ def finalize_marker(
     marker["readonly_enablement"] = {
         "policy_mode": application.mode,
         "profile_tool_policy": application.tool_policy.mode,
-        "materialization_allow_policy": application.tool_policy.allow_mode,
-        "profile_also_allow_policy": application.tool_policy.also_allow_mode,
-        "materialization_allow_addition_count": len(
-            application.tool_policy.added_to_allow
-        ),
-        "profile_also_allow_addition_count": len(
+        "allow_policy": application.tool_policy.allow_mode,
+        "also_allow_policy": application.tool_policy.also_allow_mode,
+        "allow_addition_count": len(application.tool_policy.added_to_allow),
+        "also_allow_addition_count": len(
             application.tool_policy.added_to_also_allow
         ),
+        "single_authorization_scope": True,
         "tools_denied_backup": str(backup.config_file),
         "routing_skill": context.routing_skill_name,
         "routing_skill_scope": "managed_global",
