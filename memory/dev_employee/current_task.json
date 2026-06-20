@@ -1,12 +1,12 @@
 {
   "task_id": "commercial-openclaw-readonly-tool-enable-20260618",
-  "status": "effective_tool_surface_diagnostic_published_pending_execution",
+  "status": "handoff_archived_pending_new_chat_code_first_continuation",
   "task_type": "platform_commercialization",
   "target_project": "oris",
   "target_repo": "ShanGouXueHui/oris",
   "target_path": "/home/admin/projects/oris",
-  "current_step": "diagnose_model_effective_tool_surface_without_model_turns",
-  "objective": "Prove whether the three approved read-only ORIS tools are present in the actual OpenClaw model-facing effective tool inventory before any further natural-language acceptance attempt.",
+  "current_step": "new_chat_audit_current_main_then_diagnose_effective_tool_surface",
+  "objective": "First prove current-main source governance with all duplicate, authority, cycle, hardcoding, layering and contract findings at zero. Then determine whether the three approved read-only ORIS tools are present in the selected Agent session's native OpenClaw model-facing effective tool inventory before any further natural-language acceptance attempt.",
   "architecture_decision": {
     "primary_ui": "native OpenClaw Gateway UI",
     "primary_public_entry": "https://control.orisfy.com",
@@ -17,7 +17,8 @@
     "do_not_reinstall_plugin_in_current_task": true,
     "write_tools_allowed_in_current_task": false,
     "broad_prompt_keyword_task_creation_allowed": false,
-    "mainstream_branch": "main"
+    "mainstream_branch": "main",
+    "zenmux_allowed": false
   },
   "installed_plugin_state": {
     "plugin_id": "oris-dev-employee",
@@ -50,8 +51,12 @@
     "enqueue_loopback_only": true,
     "intake_loopback_only": true,
     "active_product_task": false,
+    "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
     "product_baseline_commit": "bcb93e17ea88704548101f5e4a5c460e15a80ec7",
-    "production_host_must_not_be_touched": "8.136.28.6"
+    "production_host_must_not_be_touched": "8.136.28.6",
+    "research_database": "oris_insight",
+    "research_schema": "insight",
+    "research_database_role": "research_only_not_dev_employee_task_state"
   },
   "completed_readiness": {
     "result": "READY",
@@ -92,11 +97,29 @@
   "failure_boundary": {
     "direct_invocation_proves_plugin_endpoint": true,
     "plugin_inventory_proves_registration": true,
+    "skill_visibility_proves_instruction_visibility": true,
     "direct_invocation_does_not_prove_model_effective_surface": true,
     "skill_visibility_does_not_prove_tool_materialization": true,
     "unresolved_explanations": [
       "approved optional plugin tools were absent from the model-facing effective tool inventory",
       "approved tools were present but the selected runtime provider/model did not issue tool calls"
+    ],
+    "third_full_enablement_authorized": false
+  },
+  "code_first_gate": {
+    "required": true,
+    "document": "docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md",
+    "reason": "The user requires code-quality issues, especially duplicate function and variable definitions, to be corrected before functional work. New effective-surface diagnostic files were added after earlier audits, so current main requires a fresh audit.",
+    "runtime_actions_before_pass_allowed": false,
+    "required_result": "CODE_AUDIT_PASS",
+    "required_zero_findings": [
+      "duplicate_bindings",
+      "authority_violations",
+      "duplicate_function_bodies",
+      "import_cycles",
+      "oversized_modules",
+      "forbidden_hardcoding",
+      "legacy_path_findings"
     ]
   },
   "effective_surface_diagnostic": {
@@ -115,30 +138,54 @@
     "non_approved_tool_names_recorded": false,
     "tool_descriptions_recorded": false,
     "session_key_recorded": false,
-    "execution_count_authorized": 1
+    "execution_count_authorized_after_code_audit": 1
   },
-  "controlled_activation_retry": {
-    "second_execution_consumed": true,
-    "third_attempt_authorized": false,
-    "next_full_enablement_condition": "Read GitHub effective-tool-surface evidence and resolve either materialization or provider/model capability before authorizing another model turn."
+  "handoff_archive": {
+    "complete": true,
+    "session_archive": "memory/dev_employee/SESSION_ARCHIVE_2026-06-20.md",
+    "environment_snapshot": "memory/dev_employee/ENVIRONMENT_AND_WORKING_CONTEXT_2026-06-20.md",
+    "next_chat_handoff": "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-20.md",
+    "includes_original_mandate": true,
+    "includes_environment": true,
+    "includes_interaction_contract": true,
+    "includes_engineering_standards": true,
+    "includes_completed_and_unfinished_work": true,
+    "includes_latest_failure_and_rollback": true,
+    "includes_next_decision_tree": true
   },
-  "blocked_reason": "The model completed three native turns but emitted zero tool calls. A third full enablement attempt is prohibited until native tools.effective evidence proves whether the three ORIS tools were actually present for the persisted Agent session.",
-  "next_action": "Pull latest main and run scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh exactly once. Do not run the enablement entrypoint.",
+  "blocked_reason": "A third full enablement is prohibited. Before the prepared native tools.effective diagnostic may run, current main must pass a fresh code-first audit with all tracked duplicate, authority, cycle, hardcoding, layering and contract findings at zero.",
+  "next_action": "Start a new conversation with memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-20.md. In that conversation, read GitHub context, audit current main, fix all code findings, then run the effective-tool-surface diagnostic exactly once and review GitHub evidence.",
   "next_action_requirements": [
-    "pull latest origin/main on the ORIS development/control host",
-    "run scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh exactly once",
+    "start a new conversation using the durable handoff prompt",
+    "read the mandatory GitHub context before planning",
+    "audit current main before any OpenClaw runtime access",
+    "fix duplicate functions, variables, classes, parsers, policies, helpers and authorities",
+    "fix hardcoding, import cycles, oversized modules, legacy paths and contract errors",
+    "obtain CODE_AUDIT_PASS on the exact current main commit",
+    "only then run scripts/dev_employee_diagnose_openclaw_effective_tool_surface.sh once",
     "do not run scripts/dev_employee_enable_openclaw_readonly_tools.sh",
-    "compile and pass source governance and automatic selftests before mutation",
-    "repeat native candidate dry-run and exact config hash validation",
-    "temporarily activate only the validated single-scope read-only policy",
-    "call native tools.effective for the configured persisted Agent session",
-    "do not run natural-language model turns",
-    "do not invoke ORIS tools",
-    "restore the exact tools-denied config, marker and Skill state",
-    "verify final Gateway health, queue, product and listener invariants",
+    "do not run natural-language model turns during the diagnostic",
+    "do not invoke ORIS tools or submit a product task",
+    "restore exact tools-denied config, marker and Skill state",
+    "verify final Gateway, queue, product and listener invariants",
     "publish sanitized detached-worktree evidence",
-    "do not add write tools or submit a product task",
+    "do not add write tools",
     "do not touch the production host"
+  ],
+  "unfinished_original_work": [
+    "successful native natural-language acceptance for all three read-only tools",
+    "approved-only non-zero after_tool_call telemetry",
+    "real privacy-safe model/tool/agent latency baseline",
+    "read-only P0 completion persistence",
+    "typed write actions with approval, RBAC, project authorization, idempotency and audit",
+    "generic project onboarding and capability discovery",
+    "Admin UI Provider, Model and Policy management",
+    "monitoring and alerting",
+    "privacy and retention controls",
+    "backup, restore and disaster recovery",
+    "multi-tenant identity and isolation",
+    "quota, metering and commercial packaging",
+    "production deployment validation"
   ],
   "commercial_sequence_after_p0": [
     "resolve effective tool surface or provider/model tool-call capability",
@@ -153,11 +200,15 @@
   "authoritative_context": [
     "memory/dev_employee/CONTEXT_INDEX.md",
     "memory/dev_employee/CURRENT_STATE_2026-06-20.md",
+    "memory/dev_employee/SESSION_ARCHIVE_2026-06-20.md",
+    "memory/dev_employee/ENVIRONMENT_AND_WORKING_CONTEXT_2026-06-20.md",
+    "memory/dev_employee/NEXT_CHAT_HANDOFF_2026-06-20.md",
     "memory/dev_employee/current_task.json",
     "memory/dev_employee/current_task.md",
+    "docs/DEV_EMPLOYEE_CODE_FIRST_CONTINUATION_GATE_2026-06-20.md",
     "docs/DEV_EMPLOYEE_EFFECTIVE_TOOL_SURFACE_DIAGNOSTIC_PLAN_2026-06-20.md",
     "logs/dev_employee/openclaw_readonly_tool_enablement/openclaw-readonly-automatic-enablement-20260620T134702Z.json",
-    "docs/DEV_EMPLOYEE_CONTROLLED_ACTIVATION_RETRY_AUTHORIZATION_2026-06-20.md",
+    "docs/DEV_EMPLOYEE_ENVIRONMENT_AND_OPERATING_MODEL_ADDENDUM_2026-06-19.md",
     "orchestration/project_registry.json"
   ],
   "updated_at": "2026-06-20"
