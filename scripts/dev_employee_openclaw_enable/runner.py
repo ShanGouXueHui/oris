@@ -14,7 +14,7 @@ from .models import CheckRecorder, RunState, RuntimeContext
 from .policy import PolicyApplication, PolicyBackup, create_backup, restore_denied_policy
 from .preflight_checks import run_transaction_preflight
 from .service_control import GatewayServiceError, restart_service_and_wait
-from .skill import SkillBackup, backup_routing_skill, restore_routing_skill
+from .skill_installation import SkillBackup, backup_routing_skill, restore_routing_skill
 
 
 SUCCESS_RESULT = "ENABLED_READONLY_AUTOMATIC_ACCEPTED"
