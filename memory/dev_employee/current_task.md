@@ -1,122 +1,148 @@
 # Current AI Dev Employee Task
 
-Status: `three_tool_native_acceptance_passed_support_tool_contract_fix_pending`
+Status: `readonly_p0_completed_latency_baseline_v1_persisted_typed_write_actions_design_pending`
 
-Task id: `commercial-openclaw-readonly-tool-enable-20260618`
+Task id: `commercial-openclaw-typed-write-actions-20260620`
 
-Current step: `merge_bounded_native_skill_support_contract_then_rerun_once`
+Current step: `new_chat_audit_current_main_then_reconcile_and_implement_offline_typed_write_action_foundation`
 
-## Latest complete acceptance evidence
+## Completed predecessor
+
+Task:
+
+`commercial-openclaw-readonly-tool-enable-20260618`
+
+Result:
+
+`ENABLED_READONLY_AUTOMATIC_ACCEPTED`
 
 Evidence commit:
 
-`59725fd783732464b6aec0f249868e78e30a5da2`
+`65217d4bb81f4ac3cd8c6d917af95425d2b47529`
 
-Reported result:
+Checks:
 
-`FAILED / RuntimeError`
+- total: 26;
+- pass: 26;
+- fail: 0;
+- not checked: 0.
 
-The previous telemetry schema correction worked:
+## Current accepted runtime
 
-- `schema_ok=true`;
-- `execution_outcome_ok=true`;
-- all three ORIS tools were called successfully exactly once;
-- no failed model, tool, or Agent outcome was recorded.
+- Plugin `oris-dev-employee` `0.1.0` remains installed.
+- Routing Skill `oris-readonly-status` remains installed and visible to Agent `main`.
+- Policy mode is `profile-authority-preserved+created-profile-also-allow+skill-unrestricted`.
+- `oris_queue_status`, `oris_task_status` and `oris_latest_task_status` passed direct and native natural-language acceptance.
+- Typed telemetry is schema-valid, privacy-safe and correlated to a persisted native session.
+- Queue, product repository, ORIS source and loopback listener invariants passed.
+- No rollback was required because the validated read-only policy was retained.
+- No product task was submitted.
+- No write tool is present or authorized.
 
-The complete runtime path also proved:
+## Initial latency baseline v1
 
-- source governance and automatic selftests passed;
-- Free Mesh protocol version 2 passed;
-- all direct probes passed;
-- three native Agent turns completed through Gateway;
-- one persisted native session and the exact three-turn boundary passed;
-- telemetry content safety and file permissions passed;
-- queue and product baselines remained protected;
-- rollback restored the exact tools-denied configuration;
-- no product task or write tool was introduced.
+Model duration:
 
-Observed telemetry counts:
+- samples: 8;
+- minimum: 2,661 ms;
+- P50: 5,478 ms;
+- maximum: 49,734 ms.
 
-- `model_call_ended=7`;
-- `agent_end=3`;
-- `after_tool_call=4`;
-- `oris_queue_status=1`;
-- `oris_latest_task_status=1`;
-- `oris_task_status=1`;
-- native core tool `read=1`.
+Agent total duration:
 
-## Accurate failure boundary
+- samples: 3;
+- minimum: 8,538 ms;
+- P50: 9,029 ms;
+- maximum: 69,134 ms.
 
-The only rejection was:
+ORIS tools:
 
-`unexpected_tools_seen=[read]`
+- `oris_queue_status`: 13 ms;
+- `oris_task_status`: 42 ms;
+- `oris_latest_task_status`: 13–41 ms, P50 27 ms;
+- native Skill hydration `read`: 92 ms.
 
-OpenClaw injects a compact Skill catalog rather than every complete Skill body. A model may therefore use the native `read` tool to load the selected `SKILL.md` body before applying it.
+The ORIS tools are millisecond-scale. Model and Agent orchestration dominate observed latency. This is an initial observed baseline, not an SLO or SLA. TTFT is unavailable from the approved typed hooks.
 
-The previous validator incorrectly treated the native Skill-hydration call as an additional ORIS business capability.
+## Current task objective
 
-## Correct authority separation
+Design and implement the minimum generic offline foundation for typed write actions with:
 
-### ORIS business tools
+- typed action schemas;
+- identity mapping;
+- RBAC;
+- project authorization;
+- risk classification;
+- immutable prepared operations;
+- approval and replay protection;
+- idempotency;
+- atomic task/queue transaction semantics;
+- cancellation;
+- explicit terminal retry;
+- privacy-safe audit.
 
-The approved ORIS capability set remains unchanged:
+Authoritative plan:
 
-- `oris_queue_status`;
-- `oris_task_status`;
-- `oris_latest_task_status`.
+`docs/DEV_EMPLOYEE_TYPED_WRITE_ACTIONS_COMMERCIAL_PHASE_PLAN_2026-06-20.md`
 
-All three must remain Plugin-owned and must each complete successfully.
+## Mandatory first action
 
-### Native support tool
+Start a new conversation and read the durable context in the order defined by:
 
-The acceptance contract separately declares:
+`memory/dev_employee/CONTEXT_INDEX_ADDENDUM_2026-06-20.md`
 
-- tool: `read`;
-- maximum calls: `1`;
-- purpose: load the approved routing Skill body from the native OpenClaw Skill catalog.
+Then run a fresh code-first audit on current `main` before modifying source or touching runtime.
 
-This does not add `read` to the ORIS approved-tool set and does not modify the active OpenClaw tool surface.
+The audit must cover:
 
-## Mandatory rejection rules
+- duplicate functions, classes, variables and module bindings;
+- duplicate parsers, validators, policies and profile expansion;
+- duplicate service, rollback, evidence and entrypoint helpers;
+- competing authority;
+- duplicate function bodies;
+- import cycles;
+- oversized mixed-responsibility modules;
+- hardcoded project/path/host/port/branch/provider/model/runtime/version or acceptance special cases;
+- legacy execution paths;
+- config/code separation and contract errors.
 
-The run still fails when:
+Do not suppress a real defect through scanner allowlists.
 
-- a support tool exceeds its configured count;
-- a support-tool call reports failure;
-- a support tool appears after the first ORIS business-tool call;
-- any undeclared tool appears;
-- a support tool overlaps an ORIS business tool;
-- a known write-capable tool is configured as support;
-- any ORIS tool lacks a successful call;
-- any Agent completion fails;
-- schema, privacy, permissions, session, turn, queue, product, route, listener, or source invariants fail.
+## Offline implementation boundary
 
-No tool arguments, results, conversation content, Skill body, or filesystem path may be recorded in GitHub evidence.
+After the code gate passes:
 
-## Current runtime state
-
-The failed transaction rolled back successfully:
-
-- exact tools-denied configuration restored;
-- previous marker and routing Skill restored;
-- Gateway healthy;
-- queue and product unchanged;
-- write tools absent.
-
-## Next required action
-
-1. merge the bounded native Skill support-tool contract only after the exact branch passes the unified code-first audit;
-2. rerun the existing complete acceptance exactly once:
-
-`scripts/dev_employee_enable_openclaw_readonly_tools.sh`
-
-Success requires all three ORIS tools plus zero or one successful pre-ORIS Skill-hydration `read`, with every existing final invariant passing.
+1. inspect existing task, queue, project registry, authorization, idempotency, Plugin and Agent Harness implementations;
+2. identify the single existing authority for each rule;
+3. reconcile the write-action phase plan with existing code;
+4. implement only the minimum generic offline foundation;
+5. add schema, RBAC, authorization, approval, idempotency, transaction, cancellation/retry and privacy tests;
+6. keep write actions unregistered and runtime-disabled;
+7. publish source, tests and durable evidence through GitHub.
 
 ## Prohibitions
 
-- no write tools or typed write actions in this task;
-- no product task submission;
+- no architecture redesign;
+- no generic `exec`, shell or file-write tool;
+- no broad prompt keyword task creation;
+- no write-action registration or runtime activation in the contract-only phase;
+- no real product task submission;
 - no OpenClaw reinstall or upgrade;
 - no provider/model hardcoding;
+- no project-specific shared-code special case;
 - no public exposure of ports `18891` or `18892`;
-- do not touch production host `8.136.28.6`.
+- do not touch production host `8.136.28.6`;
+- do not weaken or remove the accepted read-only policy.
+
+## Remaining commercial work
+
+1. controlled typed write actions;
+2. generic onboarding and capability discovery;
+3. Admin Provider/Model/Policy management;
+4. monitoring, alerts and SLOs;
+5. privacy and retention enforcement;
+6. backup/restore, upgrade rollback and DR;
+7. multi-tenant identity and isolation;
+8. quota and metering;
+9. commercial packaging;
+10. production validation under a separate explicit task.
