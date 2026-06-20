@@ -10,6 +10,7 @@ from .candidate_validation import candidate_policy_compatibility
 from .models import CheckRecorder, stage_status
 from .profile_tool_policy import enable_profile_tools
 from .runtime_policy_patch import build_policy_validation_patch
+from .runtime_validation_output import summarize_dry_run_output
 from .skill_installation import (
     SkillBackup,
     SkillPathBackup,
@@ -90,7 +91,11 @@ def _assert_policy_patch_builder() -> None:
     assert patch["agents"]["defaults"]["skills"][-1] == "sample-routing-skill"
     assert "gateway" not in patch
     assert "unrelated" not in patch["tools"]
-    assert evidence["changed_paths"] == ["tools.alsoAllow", "tools.deny", "agents.defaults.skills"]
+    assert evidence["changed_paths"] == [
+        "tools.alsoAllow",
+        "tools.deny",
+        "agents.defaults.skills",
+    ]
     assert evidence["patch_content_recorded"] is False
 
 
@@ -140,11 +145,42 @@ def _assert_candidate_compatibility() -> None:
     assert invalid_result["checks"]["single_authorization_scope"] is False
 
 
+def _assert_sanitized_runtime_output() -> None:
+    raw = json.dumps(
+        {
+            "ok": False,
+            "operations": 3,
+            "inputModes": ["json"],
+            "checks": {
+                "schema": True,
+                "resolvability": True,
+                "resolvabilityComplete": True,
+            },
+            "refsChecked": 0,
+            "skippedExecRefs": 0,
+            "errors": [
+                {
+                    "kind": "schema",
+                    "message": "tools policy cannot set both allow and alsoAllow in the same scope",
+                }
+            ],
+        }
+    )
+    summary = summarize_dry_run_output(raw)
+    assert summary["json_parsed"] is True
+    assert summary["error_count"] == 1
+    assert summary["errors"][0]["rule_code"] == (
+        "tools_allow_also_allow_mutually_exclusive"
+    )
+    assert "message" not in summary["errors"][0]
+
+
 def run_core_diagnostic_selftests() -> bool:
     _assert_skill_facade()
     _assert_single_scope_transform()
     _assert_policy_patch_builder()
     _assert_candidate_compatibility()
+    _assert_sanitized_runtime_output()
     recorder = CheckRecorder()
     recorder.pass_check("pass", "ok")
     recorder.fail_check("fail", "bad")
