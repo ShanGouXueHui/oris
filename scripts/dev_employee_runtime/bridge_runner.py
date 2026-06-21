@@ -61,14 +61,20 @@ def _run_task_impl(task_path: Path) -> int:
     RUN_DIR.mkdir(parents=True, exist_ok=True)
     SKILL_RESOLUTION_DIR.mkdir(parents=True, exist_ok=True)
 
-    product_path_value = task.get("product_path")
+    product_path_value = task.get("product_path") or task.get("expected_product_path")
     product_path: Path | None = None
     try:
         if product_path_value:
             product_path = Path(str(product_path_value)).expanduser().resolve()
             product_path.relative_to(PROJECTS_DIR.resolve())
+            task["product_path"] = str(product_path)
+        if task.get("expected_product_repo") and not task.get("product_repo"):
+            task["product_repo"] = task.get("expected_product_repo")
     except Exception as exc:
         return fail_task(task_path, task, "blocked", {"failure_code": "unsafe_product_path", "error": str(exc)})
+
+    if product_path is None:
+        return fail_task(task_path, task, "blocked", {"failure_code": "missing_product_path"})
 
     preflight_log = LOG_DIR / f"{task_id}.codex_auth_preflight.json"
     preflight = run_codex_auth_preflight(
@@ -90,11 +96,11 @@ def _run_task_impl(task_path: Path) -> int:
         try:
             codex_result = read_json(result_path)
         except Exception as exc:
-            codex_result = minimum_result_payload(task, str(product_path) if product_path else None, strict)
+            codex_result = minimum_result_payload(task, str(product_path), strict)
             codex_result["parse_error"] = f"{type(exc).__name__}: {exc}"
             atomic_write_json(result_path, codex_result)
     else:
-        codex_result = minimum_result_payload(task, str(product_path) if product_path else None, strict)
+        codex_result = minimum_result_payload(task, str(product_path), strict)
         codex_result["missing_result_file"] = True
         atomic_write_json(result_path, codex_result)
 
@@ -116,15 +122,13 @@ def _run_task_impl(task_path: Path) -> int:
         atomic_write_json(result_path, codex_result)
         return fail_task(task_path, task, "failed", {"failure_code": "skill_resolution_missing", "skill_resolution_errors": skill_errors})
 
-    if product_path is None:
-        return fail_task(task_path, task, "blocked", {"failure_code": "missing_product_path"})
     final = final_check(product_path, task_id)
     if not final.get("ok"):
         codex_result["host_final_check"] = final
         atomic_write_json(result_path, codex_result)
         return fail_task(task_path, task, "failed", {"failure_code": "host_final_check_failed", "final_check": final})
 
-    product_commit = commit_push_product(product_path, str(task.get("commit_message") or f"feat(dev-employee): complete {task_id}"))
+    product_commit = commit_push_product(product_path, str(task.get("commit_message") or task.get("product_commit_message") or f"feat(dev-employee): complete {task_id}"))
     run_payload = {
         "task_id": task_id,
         "status": "success",
