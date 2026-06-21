@@ -32,16 +32,17 @@ print("== parsed status summary ==")
 if data.get("error"):
     print(json.dumps({"error": data.get("error"), "message": data.get("message")}, indent=2, ensure_ascii=False))
     raise SystemExit(20)
+evidence = data.get("github_evidence") or {}
 print(json.dumps({
     "task_id": data.get("task_id"),
     "status": data.get("status"),
     "canonical_status": data.get("canonical_status"),
     "terminal": data.get("terminal"),
     "failure_code": data.get("failure_code"),
-    "product_commit_sha": (data.get("github_evidence") or {}).get("product_commit_sha"),
-    "product_remote_sha": (data.get("github_evidence") or {}).get("product_remote_sha"),
-    "oris_evidence_sha": (data.get("github_evidence") or {}).get("oris_evidence_commit_sha") or (data.get("github_evidence") or {}).get("oris_evidence_sha"),
-    "evidence_files": len((data.get("github_evidence") or {}).get("files") or []),
+    "product_commit_sha": evidence.get("product_commit_sha"),
+    "product_remote_sha": evidence.get("product_remote_sha"),
+    "oris_evidence_sha": evidence.get("oris_evidence_commit_sha") or evidence.get("oris_evidence_sha"),
+    "evidence_files": len(evidence.get("files") or []),
 }, indent=2, ensure_ascii=False))
 PY
 
@@ -54,14 +55,39 @@ echo "PRODUCT_HEAD=$(git rev-parse HEAD)"
 echo "PRODUCT_STATUS_SHORT=$(git status --short | wc -l) changed lines"
 git status --short
 
+if [ -x ".venv/bin/python" ]; then
+  PRODUCT_PY=".venv/bin/python"
+else
+  python3 -m venv .venv
+  PRODUCT_PY=".venv/bin/python"
+fi
+
+if ! "$PRODUCT_PY" -m pytest --version >/dev/null 2>&1; then
+  echo "== install product test dependencies into .venv =="
+  "$PRODUCT_PY" -m pip install -q --upgrade pip
+  if [ -f requirements.txt ]; then
+    "$PRODUCT_PY" -m pip install -q -r requirements.txt
+  else
+    "$PRODUCT_PY" -m pip install -q fastapi httpx pytest uvicorn
+  fi
+fi
+
 {
+  echo "-- python --"
+  "$PRODUCT_PY" --version
   echo "-- compileall --"
-  python3 -m compileall .
+  "$PRODUCT_PY" -m compileall .
   echo "-- pytest -q --"
-  python3 -m pytest -q
+  "$PRODUCT_PY" -m pytest -q
   echo "-- pytest -q -W error --"
-  python3 -m pytest -q -W error
+  "$PRODUCT_PY" -m pytest -q -W error
 } 2>&1 | tee "$PRODUCT_CHECK_LOG"
+CHECK_RC=${PIPESTATUS[0]}
+if [ "$CHECK_RC" -ne 0 ]; then
+  echo "ERROR: product checks failed"
+  echo "PRODUCT_CHECK_LOG=$PRODUCT_CHECK_LOG"
+  exit 50
+fi
 
 if grep -R "healthz/details" -n . --exclude-dir=.git --exclude-dir=.venv --exclude-dir=__pycache__ >/tmp/oris_demo_healthz_grep.txt 2>/dev/null; then
   echo "== endpoint grep =="
@@ -82,12 +108,14 @@ terminal = data.get("terminal")
 evidence = data.get("github_evidence") or {}
 files = evidence.get("files") or []
 product_sha = evidence.get("product_commit_sha")
+status_accept = status in {"success", "completed", "done"} or data.get("status") in {"completed", "done"}
 print(json.dumps({
-    "status_accept": status in {"success", "completed", "done"},
+    "status_accept": status_accept,
     "terminal": terminal,
     "has_product_commit_sha": bool(product_sha),
     "has_evidence_files": bool(files),
     "product_commit_sha": product_sha,
+    "note": "product_commit_sha is required for full Dev Employee acceptance; product checks may still pass locally without evidence commit.",
 }, indent=2, ensure_ascii=False))
 PY
 
