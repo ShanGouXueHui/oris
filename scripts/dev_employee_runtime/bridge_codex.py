@@ -90,11 +90,25 @@ The skill_resolution field in the final result JSON must still contain the requi
     )
 
 
+def _extra_write_dirs(task: dict[str, Any]) -> list[Path]:
+    dirs: list[Path] = [ORIS_DIR]
+    for value in task.get("extra_write_dirs") or []:
+        try:
+            path = safe_path(str(value), [ORIS_DIR, PROJECTS_DIR])
+        except ValueError:
+            continue
+        if path not in dirs:
+            dirs.append(path)
+    return dirs
+
+
 def build_codex_command(task: dict[str, Any], prompt_text: str) -> list[str]:
     # The subprocess cwd is already set to product_path by invoke_codex().
     # Codex CLI 0.133.0 rejects `codex exec --cwd ...`, so do not pass --cwd.
     codex_bin = safe_path(task.get("codex_bin") or str(DEFAULT_CODEX), [Path.home()])
     argv = [str(codex_bin), "exec", "--sandbox", "workspace-write"]
+    for path in _extra_write_dirs(task):
+        argv += ["--add-dir", str(path)]
     if task.get("codex_model"):
         argv += ["--model", str(task["codex_model"])]
     argv.append(prompt_text)
