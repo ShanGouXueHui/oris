@@ -1,6 +1,11 @@
 {
   "schema_version": 2,
-  "scan_roots": ["scripts", "orchestration", "config", "skills"],
+  "scan_roots": [
+    "scripts",
+    "orchestration",
+    "config",
+    "skills"
+  ],
   "excluded_directory_names": [
     ".git",
     ".venv",
@@ -77,7 +82,8 @@
     "orchestration/project_registry.json",
     "orchestration/openclaw_plugins/oris-dev-employee/openclaw.plugin.json",
     "config/dev_employee/openclaw_readonly_acceptance.json",
-    "config/dev_employee/repository_quality_policy.json"
+    "config/dev_employee/repository_quality_policy.json",
+    "config/dev_employee/runtime_settings.json"
   ],
   "detectors": [
     "duplicate_symbol",
@@ -92,9 +98,18 @@
     "forbidden_set_e",
     "large_file"
   ],
-  "environment_ports": [18789, 18891, 18892, 18893],
-  "public_domains": ["control.orisfy.com"],
-  "acceptance_project_names": ["oris-final-acceptance-api"],
+  "environment_ports": [
+    18789,
+    18891,
+    18892,
+    18893
+  ],
+  "public_domains": [
+    "control.orisfy.com"
+  ],
+  "acceptance_project_names": [
+    "oris-final-acceptance-api"
+  ],
   "large_file_line_limits": {
     ".py": 300,
     ".sh": 220,
