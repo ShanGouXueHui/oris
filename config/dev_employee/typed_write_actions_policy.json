@@ -1,0 +1,83 @@
+{
+  "actions": {
+    "task_descriptor.cancel": {
+      "allowed_payload_keys": [
+        "reason"
+      ],
+      "approval_required": false,
+      "approval_ttl_seconds": 900,
+      "permission": "typed_write.cancel",
+      "risk_tier": "low"
+    },
+    "task_descriptor.prepare": {
+      "allowed_payload_keys": [
+        "objective",
+        "constraints",
+        "expected_checks",
+        "paths",
+        "metadata"
+      ],
+      "approval_required": true,
+      "approval_ttl_seconds": 3600,
+      "permission": "typed_write.prepare",
+      "risk_tier": "medium"
+    },
+    "task_descriptor.retry_terminal": {
+      "allowed_payload_keys": [
+        "original_task_id",
+        "retry_task_id",
+        "original_terminal_status",
+        "reason"
+      ],
+      "approval_required": true,
+      "approval_ttl_seconds": 3600,
+      "permission": "typed_write.retry",
+      "risk_tier": "medium"
+    }
+  },
+  "activation": {
+    "enabled": false,
+    "registered": false
+  },
+  "approval": {
+    "require_separation": true
+  },
+  "policy_version": "typed-write-offline-v1",
+  "projects": {
+    "default": {
+      "allowed_actions": [
+        "task_descriptor.prepare",
+        "task_descriptor.cancel",
+        "task_descriptor.retry_terminal"
+      ],
+      "allowed_scopes": [
+        "."
+      ],
+      "forbidden_scopes": [
+        ".git",
+        ".env",
+        "secrets",
+        "node_modules",
+        ".venv"
+      ]
+    }
+  },
+  "role_permissions": {
+    "dev_employee_admin": [
+      "typed_write.prepare",
+      "typed_write.cancel",
+      "typed_write.retry",
+      "typed_write.approve"
+    ],
+    "dev_employee_approver": [
+      "typed_write.approve"
+    ],
+    "dev_employee_operator": [
+      "typed_write.prepare",
+      "typed_write.cancel",
+      "typed_write.retry"
+    ]
+  },
+  "schema_version": 1,
+  "storage_root": "orchestration/dev_employee_typed_write"
+}
