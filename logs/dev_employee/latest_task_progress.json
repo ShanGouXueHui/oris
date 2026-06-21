@@ -1,6 +1,10 @@
 {
-  "task_id": "demo-openclaw-web-task-board-20260622012652",
-  "updated_at": "2026-06-22T01:28:12+08:00",
-  "status": "failed",
-  "failure_code": "codex_invalid_result"
+  "task_id": "demo-openclaw-web-task-board-20260622015615",
+  "updated_at": "2026-06-22T01:59:18+08:00",
+  "status": "local_checks_passed",
+  "summary": "GET /healthz/details is present and covered; local checks passed in the product virtualenv.",
+  "final_check_ok": true,
+  "product_commit_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+  "product_remote_sha": "origin/HEAD",
+  "preflight_ok": true
 }
