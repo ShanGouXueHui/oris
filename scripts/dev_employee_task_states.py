@@ -42,6 +42,8 @@ CANONICAL_TERMINAL_STATES = frozenset(
 )
 
 LEGACY_STATUS_CANONICAL_MAP = {
+    "success": "completed",
+    "done": "completed",
     "running": "claimed",
     "preflight": "claimed",
     "codex_running": "executing",
@@ -135,7 +137,7 @@ def extract_failure_code(status: Any, payload: dict[str, Any] | None = None) -> 
             return str(candidate)
     value = normalize_status(status)
     if value in LEGACY_STATUS_CANONICAL_MAP and value not in CANONICAL_ACTIVE_STATES and value not in CANONICAL_TERMINAL_STATES:
-        return value
+        return value if LEGACY_STATUS_CANONICAL_MAP[value] != "completed" else None
     return None
 
 
