@@ -70,10 +70,15 @@ def _run_task_impl(task_path: Path) -> int:
     except Exception as exc:
         return fail_task(task_path, task, "blocked", {"failure_code": "unsafe_product_path", "error": str(exc)})
 
-    preflight = run_codex_auth_preflight()
+    preflight_log = LOG_DIR / f"{task_id}.codex_auth_preflight.json"
+    preflight = run_codex_auth_preflight(
+        str(task.get("codex_bin") or Path.home() / ".npm-global" / "bin" / "codex"),
+        str(task.get("workdir") or PROJECTS_DIR),
+        log_path=preflight_log,
+    )
     if not preflight.get("ok"):
-        failure_code = "codex_auth_preflight_failed"
-        status = "blocked" if preflight.get("classified") == "auth" else "failed"
+        failure_code = str(preflight.get("failure_code") or "codex_auth_preflight_failed")
+        status = "blocked" if failure_code == "codex_authentication" else "failed"
         return fail_task(task_path, task, status, {"failure_code": failure_code, "preflight": preflight})
 
     codex_log = LOG_DIR / f"{task_id}.codex.log"
@@ -96,11 +101,11 @@ def _run_task_impl(task_path: Path) -> int:
     schema_errors = validate_codex_result(task, codex_result)
     skill_errors = validate_skill_resolution_evidence(task, codex_result)
     if rc != 0:
-        failure = classify_codex_failure(codex_log.read_text(encoding="utf-8") if codex_log.exists() else "")
+        failure = classify_codex_failure(codex_log.read_text(encoding="utf-8") if codex_log.exists() else "", rc)
         codex_result["codex_returncode"] = rc
         codex_result["codex_failure"] = failure
         atomic_write_json(result_path, codex_result)
-        status = "blocked" if failure.get("classified") == "auth" else "failed"
+        status = "blocked" if failure == "codex_authentication" else "failed"
         return fail_task(task_path, task, status, {"failure_code": "codex_auth_failure" if status == "blocked" else "codex_failed", "codex_failure": failure})
     if schema_errors:
         codex_result["validation_errors"] = schema_errors
