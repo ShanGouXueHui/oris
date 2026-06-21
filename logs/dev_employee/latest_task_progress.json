@@ -1,6 +1,6 @@
 {
-  "task_id": "demo-openclaw-web-task-board-20260622011417",
-  "updated_at": "2026-06-22T01:14:25+08:00",
+  "task_id": "demo-openclaw-web-task-board-20260622011819",
+  "updated_at": "2026-06-22T01:21:09+08:00",
   "status": "failed",
-  "failure_code": "codex_failed"
+  "failure_code": "codex_invalid_result"
 }
