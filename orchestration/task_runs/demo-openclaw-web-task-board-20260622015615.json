@@ -108,5 +108,49 @@
   "product_remote_sha": "origin/HEAD",
   "strict_result_schema": true,
   "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.json",
-  "skill_resolver_report_md": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.md"
+  "skill_resolver_report_md": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.md",
+  "oris_evidence": {
+    "changed": true,
+    "commit_sha": "89d54bb945013048366b53805d1ff3d027fbfe55",
+    "push_rc": 0,
+    "remote_sha": "89d54bb945013048366b53805d1ff3d027fbfe55",
+    "files": [
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.json",
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.codex_result.json",
+      "logs/dev_employee/latest_task_progress.json",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615.codex.log",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_py_compile.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_pytest.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_pytest_werror.txt",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.json",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.md"
+    ]
+  },
+  "oris_evidence_sha": "89d54bb945013048366b53805d1ff3d027fbfe55",
+  "oris_evidence_remote_sha": "89d54bb945013048366b53805d1ff3d027fbfe55",
+  "evidence_commit_index": {
+    "task_id": "demo-openclaw-web-task-board-20260622015615",
+    "recorded_at": "2026-06-22T01:59:21+08:00",
+    "product_commit_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "product_remote_sha": "origin/HEAD",
+    "oris_evidence_commit_sha": "89d54bb945013048366b53805d1ff3d027fbfe55",
+    "oris_evidence_remote_sha": "89d54bb945013048366b53805d1ff3d027fbfe55",
+    "run_json": "orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.json",
+    "codex_result_json": "orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.codex_result.json",
+    "evidence_files": [
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.json",
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.codex_result.json",
+      "logs/dev_employee/latest_task_progress.json",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615.codex.log",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_py_compile.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_pytest.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_pytest_werror.txt",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.json",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.md"
+    ],
+    "evidence_index_commit_sha": "73402d682b7a2f4c10f3e359c765853f67f96dbf",
+    "evidence_index_remote_sha": "73402d682b7a2f4c10f3e359c765853f67f96dbf",
+    "evidence_index_final_commit_sha": "eaccdec3acefa794283a5c67b34280d241507a01",
+    "evidence_index_final_remote_sha": "eaccdec3acefa794283a5c67b34280d241507a01"
+  }
 }
