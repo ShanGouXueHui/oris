@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import os
 import time
+import traceback
 from pathlib import Path
 
 from dev_employee_runtime.clock import now_iso
@@ -32,6 +33,28 @@ from dev_employee_codex_auth_preflight import classify_codex_failure, run_codex_
 
 
 def run_task(task_path: Path) -> int:
+    try:
+        return _run_task_impl(task_path)
+    except Exception as exc:  # defensive terminalization: never leave claimed tasks stale-running
+        try:
+            task = read_json(task_path) if task_path.exists() else {}
+        except Exception:
+            task = {}
+        task_id = str(task.get("task_id") or task_path.name.removesuffix(".running.json"))
+        task["task_id"] = task_id
+        return fail_task(
+            task_path,
+            task,
+            "failed",
+            {
+                "failure_code": "bridge_unhandled_exception",
+                "error": f"{type(exc).__name__}: {exc}",
+                "traceback_tail": traceback.format_exc()[-4000:],
+            },
+        )
+
+
+def _run_task_impl(task_path: Path) -> int:
     task = read_json(task_path)
     task_id = str(task.get("task_id") or task_path.name.removesuffix(".running.json"))
     LOG_DIR.mkdir(parents=True, exist_ok=True)
