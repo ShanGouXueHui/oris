@@ -1,0 +1,23 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622012652",
+  "status": "failed",
+  "canonical_status": "failed",
+  "terminal": true,
+  "updated_at": "2026-06-22T01:28:12+08:00",
+  "strict_result_schema": true,
+  "failure_code": "codex_invalid_result",
+  "failure_details": {
+    "failure_code": "codex_invalid_result",
+    "validation_errors": [
+      "invalid status: 'failed'",
+      "missing required field: plan",
+      "missing required field: skill_resolution",
+      "missing required field: changed_files",
+      "missing required field: check_logs",
+      "missing required field: iteration_summary",
+      "missing required field: notes",
+      "skill_resolution must be an object"
+    ]
+  },
+  "next_recommended_action": "retry_after_prompt_or_skill_resolver_repair"
+}
