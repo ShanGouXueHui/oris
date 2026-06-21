@@ -68,9 +68,10 @@ Because skill_resolution_required=true, before making product changes you must:
 
 
 def build_codex_command(task: dict[str, Any], prompt_text: str) -> list[str]:
-    product_path = str(task.get("product_path") or "")
+    # The subprocess cwd is already set to product_path by invoke_codex().
+    # Codex CLI 0.133.0 rejects `codex exec --cwd ...`, so do not pass --cwd.
     codex_bin = safe_path(task.get("codex_bin") or str(DEFAULT_CODEX), [Path.home()])
-    argv = [str(codex_bin), "exec", "--sandbox", "workspace-write", "--cwd", product_path]
+    argv = [str(codex_bin), "exec", "--sandbox", "workspace-write"]
     if task.get("codex_model"):
         argv += ["--model", str(task["codex_model"])]
     argv.append(prompt_text)
