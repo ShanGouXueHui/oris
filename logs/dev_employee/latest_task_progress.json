@@ -1,11 +1,11 @@
 {
-  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "task_id": "demo-openclaw-web-task-board-20260622001439",
   "status": "remote_verification_failed",
   "canonical_status": "remote_verification_failed",
   "terminal": true,
   "failure_code": null,
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-06-22T00:03:03+08:00",
+  "updated_at": "2026-06-22T00:31:30+08:00",
   "next_recommended_action": "Inspect Git push evidence and repository state; resolve Git synchronization or permissions issue, then rerun or resume safely."
 }
