@@ -42,13 +42,28 @@ def commit_files(files: list[str], message: str) -> dict[str, Any]:
     status_before = run(["git", "status", "--short", "--", *existing], ORIS_DIR).stdout.strip()
     if not status_before:
         return {"changed": False, "commit_sha": run(["git", "rev-parse", "HEAD"], ORIS_DIR).stdout.strip(), "files": existing}
-    run(["git", "add", "--", *existing], ORIS_DIR)
+    # Evidence artifacts are intentionally generated under ignored runtime directories.
+    # These paths are selected explicitly by the bridge after repo-relative filtering, so
+    # force-add only this bounded allow-list instead of broad ignored directories.
+    add = run(["git", "add", "-f", "--", *existing], ORIS_DIR)
+    if add.returncode != 0:
+        return {
+            "changed": False,
+            "stage": "git_add",
+            "git_add_failed": True,
+            "git_add_rc": add.returncode,
+            "stdout": add.stdout[-4000:],
+            "stderr": add.stderr[-4000:],
+            "files": existing,
+        }
     commit = run(["git", "commit", "-m", message], ORIS_DIR)
     if commit.returncode != 0:
         return {
             "changed": False,
+            "stage": "git_commit",
             "commit_failed": True,
             "commit_rc": commit.returncode,
+            "stdout": commit.stdout[-4000:],
             "stderr": commit.stderr[-4000:],
             "files": existing,
         }
