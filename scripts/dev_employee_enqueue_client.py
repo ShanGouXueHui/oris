@@ -19,8 +19,8 @@ from typing import Any
 from dev_employee_runtime.env import load_env
 from dev_employee_runtime.http import parse_json_response
 from dev_employee_runtime.net import require_loopback_url
-from dev_employee_runtime.settings import load_runtime_settings
 from dev_employee_runtime.paths import discover_repo_root
+from dev_employee_runtime.settings import load_runtime_settings
 
 DEFAULT_ENV_FILE = Path.home() / ".config" / "oris" / "dev_employee_enqueue.env"
 QUEUE_KEY_NAME = "ORIS_DEV_EMPLOYEE_ENQUEUE_" + "TOKEN"
@@ -53,10 +53,6 @@ def post_json(url: str, auth_value: str, payload: dict[str, Any]) -> tuple[int, 
         return 599, json.dumps({"error": "url_error", "message": str(exc)}, ensure_ascii=False)
 
 
-def parse_response(text: str) -> Any:
-    return parse_json_response(text)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Enqueue an ORIS Dev Employee task through the local API")
     parser.add_argument("--task-id", required=True)
@@ -84,7 +80,7 @@ def main() -> int:
         "note": args.note,
     }
     status, text = post_json(args.url, token, payload)
-    print(json.dumps(parse_response(text), ensure_ascii=False, indent=2))
+    print(json.dumps(parse_json_response(text), ensure_ascii=False, indent=2))
     return 0 if 200 <= status < 300 else 1
 
 
