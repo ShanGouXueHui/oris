@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-06-22T00:00:12+08:00",
+  "ok": true,
+  "status": "ready",
+  "failure_code": null,
+  "executor_path": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+  "executor_version": "codex-cli 0.133.0",
+  "linux_user": "admin",
+  "uid": 1000,
+  "home": "/home/admin",
+  "workdir": "/home/admin/projects",
+  "return_code": 0,
+  "marker_observed": true,
+  "output_tail": "ORIS_CODEX_AUTH_OK\nReading additional input from stdin...\nOpenAI Codex v0.133.0\n--------\nworkdir: /home/admin/projects\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: none\nreasoning summaries: none\nsession id: 019eeae9-3fc4-7f60-b0ee-941a66ed8d0b\n--------\nuser\nRespond with exactly ORIS_CODEX_AUTH_OK. Do not inspect files, do not modify files, and do not run shell commands.\ncodex\nORIS_CODEX_AUTH_OK\ntokens used\n7,143\n"
+}

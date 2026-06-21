@@ -1,9 +1,11 @@
 {
-  "task_id": "chat-oris-final-acceptance-api-20260617-051313-c802347ff17c",
-  "status": "completed",
-  "product_commit_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
-  "product_remote_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "status": "remote_verification_failed",
+  "canonical_status": "remote_verification_failed",
+  "terminal": true,
+  "failure_code": null,
   "oris_evidence_pending": false,
   "strict_result_schema": true,
-  "updated_at": "2026-06-17T05:15:30+08:00"
+  "updated_at": "2026-06-22T00:03:03+08:00",
+  "next_recommended_action": "Inspect Git push evidence and repository state; resolve Git synchronization or permissions issue, then rerun or resume safely."
 }

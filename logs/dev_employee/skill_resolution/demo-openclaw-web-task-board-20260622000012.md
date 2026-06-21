@@ -1,0 +1,25 @@
+# Skill Resolution — demo-openclaw-web-task-board-20260622000012
+
+Resolved at: `2026-06-22T00:00:41+08:00`
+
+## Needed capabilities
+- github_evidence
+- fastapi_pytest
+- safe_execution
+- skill_audit
+
+## Existing ORIS assets to use
+- `scripts/dev_employee_supervised_bridge_v2.py`
+- `scripts/dev_employee_task_status.py`
+- `docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md`
+- `prompts/dev_employee_autonomous_development_task_template_20260526.md`
+- `schemas/dev_employee_task_result.schema.json`
+- `scripts/dev_employee_supervised_bridge_v2.py`
+- `scripts/dev_employee_recover_stale_tasks.py`
+- `docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md`
+- `docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md`
+
+## Quarantine mirrors
+
+## Blockers
+- None

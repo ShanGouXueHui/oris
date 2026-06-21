@@ -1,0 +1,4267 @@
+===== ORIS supervised bridge v3 Codex phase =====
+task_id=demo-openclaw-web-task-board-20260622000012
+worker_id=iZt4n62qkjefjya5xa097pZ:448347:8232761d4f2d
+started_at=2026-06-22T00:00:21+08:00
+workdir=/home/admin/projects
+prompt_path=/home/admin/projects/oris/run/dev_employee_prompts/demo-openclaw-web-task-board-20260622000012.md
+codex_result_path=/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+execution_deadline_at=2026-06-22T02:00:12+08:00
+command=codex exec --skip-git-repo-check ...
+
+Reading additional input from stdin...
+OpenAI Codex v0.133.0
+--------
+workdir: /home/admin/projects
+model: gpt-5.5
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR, /home/admin/projects/oris]
+reasoning effort: none
+reasoning summaries: none
+session id: 019eeae9-5bdb-7173-976e-cff41de78a87
+--------
+user
+# ORIS Autonomous Development Task Template — 2026-05-26
+
+You are ORIS / OpenClaw / Codex-backed AI Dev Employee. This task is executed by the host supervised bridge.
+
+## Runtime contract
+
+The host supervised bridge injects an authoritative runtime task descriptor after this template. The injected descriptor overrides any task id, result path, or product path written here.
+
+## Mission
+
+Complete the assigned development task autonomously:
+
+1. read durable ORIS context;
+2. understand the product task;
+3. resolve required capabilities before coding;
+4. use ORIS-owned tools first;
+5. if external skills are needed, only download/audit them into quarantine and do not install or execute them;
+6. design a minimal implementation plan;
+7. implement changes in the product repository only;
+8. run local checks;
+9. iterate on failures within a reasonable limit;
+10. write a structured result JSON to the runtime `codex_result_path`.
+
+## Autonomous decision doctrine
+
+The human supplies goals and constraints. You decide routine engineering steps yourself. Do not ask the human to choose files, tests, helpers, modules, retry steps, or whether to use an existing ORIS-owned tool. Stop only for doctrine-defined safety, compliance, credential, paid-resource, or destructive-production boundaries.
+
+## Required context
+
+Read these files if present:
+
+1. `docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md`
+2. `docs/DEV_EMPLOYEE_AUTONOMOUS_CAPABILITY_TARGET_2026-05-26.md`
+3. `docs/DEV_EMPLOYEE_AUTONOMOUS_DECISION_DOCTRINE_2026-05-26.md`
+4. `docs/DEV_EMPLOYEE_SUPERVISED_BRIDGE_V2_2026-05-25.md`
+5. `docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md`
+6. `schemas/dev_employee_task_result.schema.json`
+7. `orchestration/project_registry.json`
+8. `logs/dev_employee/latest_task_progress.json`
+
+## Required capability / skill resolution step
+
+Before editing product code, run the ORIS-owned resolver using the injected runtime task id and objective.
+
+If the task objective mentions skills, OpenClaw, ClawHub, MCP, downloading, external tools, or missing capabilities, use quarantine mode. Otherwise run normal resolution.
+
+Recommended commands:
+
+```bash
+python3 /home/admin/projects/oris/scripts/dev_employee_skill_resolver.py \
+  --task-id <runtime_task_id> \
+  --objective "<runtime_task_objective>"
+```
+
+For capability-discovery tasks:
+
+```bash
+python3 /home/admin/projects/oris/scripts/dev_employee_skill_resolver.py \
+  --task-id <runtime_task_id> \
+  --objective "<runtime_task_objective>" \
+  --quarantine
+```
+
+Use the resolver output as the authoritative `skill_resolution` section in the final result JSON. If it reports blockers, stop safely with `status=blocked` and include those blockers.
+
+## Skill policy
+
+Before using any third-party capability:
+
+- check ORIS-owned scripts and docs first;
+- inspect `docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md`;
+- inspect `docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md`;
+- third-party skills may be downloaded only into quarantine;
+- do not install unreviewed skills into runtime;
+- do not run installer scripts, postinstall hooks, or arbitrary third-party code;
+- if a needed skill is unsafe or unavailable, record it under `blocked` in the result JSON.
+
+## Product task
+
+The concrete task will be supplied by the enqueue payload, prompt wrapper, or runtime descriptor. If no concrete product change is specified, perform a no-op smoke verification and explain that no product change was requested.
+
+## Required local checks
+
+At minimum, for Python/FastAPI products run:
+
+```bash
+python3 -m py_compile app/main.py
+PYTHONPATH=<product_path> <product_python> -m pytest -q
+```
+
+If the task involves warning cleanup or dependency modernization, also run:
+
+```bash
+PYTHONPATH=<product_path> <product_python> -m pytest -q -W error::DeprecationWarning
+```
+
+Write exact outputs to `logs/dev_employee/` with filenames based on the runtime task id.
+
+## Result JSON
+
+Write a structured JSON file exactly to the injected runtime `codex_result_path`.
+
+Required success status:
+
+```json
+{
+  "status": "local_checks_passed"
+}
+```
+
+For blocked work:
+
+```json
+{
+  "status": "blocked",
+  "blockers": ["exact blocker evidence"]
+}
+```
+
+The result must include:
+
+- `task_id`
+- `status`
+- `product_path`
+- `plan`
+- `design_summary`
+- `skill_resolution`
+- `changed_files`
+- `check_logs`
+- `iteration_summary`
+- `blockers`
+- `notes`
+
+The `skill_resolution` value must come from `scripts/dev_employee_skill_resolver.py` unless the resolver itself is unavailable, in which case record the exact reason in `blockers`.
+
+## Final response
+
+Return a concise local summary only. Do not claim final completion. The host bridge performs final checks, Git operations, remote verification, and ORIS evidence commit.
+
+
+---
+
+# CONCRETE AUTONOMOUS PRODUCT GOAL
+
+Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.
+
+## Target project
+
+- project_key: `oris-final-acceptance-api`
+- product_repo: `ShanGouXueHui/oris-final-acceptance-api`
+- product_path: `/home/admin/projects/oris-final-acceptance-api`
+
+## Human constraints
+
+- Do not touch production services
+- Do not change existing public API behavior except adding GET /healthz/details
+- Do not hardcode secrets or environment-specific credentials
+- Keep implementation minimal and testable
+
+## Expected checks
+
+- `python -m compileall .`
+- `python -m pytest -q`
+- `python -m pytest -q -W error`
+
+## Autonomy instruction
+
+Do not ask the human to choose routine engineering steps. Decide the plan, implement, test, repair ordinary failures, and write structured evidence. Block only on the doctrine-defined boundaries.
+
+
+---
+
+# ORIS RUNTIME TASK DESCRIPTOR — AUTHORITATIVE
+
+The following runtime descriptor is injected by the host supervised bridge after claiming the queued task. It overrides any hardcoded task id or codex_result path that may appear in the reusable prompt above.
+
+You MUST write the structured result file exactly to `codex_result_path` below, using exactly this `task_id`. Do not write the result to any other task id.
+
+If `strict_result_schema` is true, the result JSON must include the full autonomous evidence fields: plan, design_summary, skill_resolution, changed_files, check_logs, iteration_summary, blockers, and notes. You must also run the ORIS skill resolver first and copy its `skill_resolution` object exactly into the final result JSON.
+
+```json
+{
+  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json",
+  "strict_result_schema": true,
+  "task_objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+  "constraints": [
+    "Do not touch production services",
+    "Do not change existing public API behavior except adding GET /healthz/details",
+    "Do not hardcode secrets or environment-specific credentials",
+    "Keep implementation minimal and testable"
+  ],
+  "expected_checks": [
+    "python -m compileall .",
+    "python -m pytest -q",
+    "python -m pytest -q -W error"
+  ],
+  "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
+  "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
+  "status_required_on_success": "local_checks_passed",
+  "outer_bridge_owns": [
+    "host-side final checks",
+    "product git commit and push",
+    "product GitHub remote verification",
+    "ORIS evidence commit and push"
+  ]
+}
+```
+
+Minimum required success result JSON:
+
+```json
+{
+  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "status": "local_checks_passed",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "plan": [
+    "Inspect durable context",
+    "Resolve capabilities",
+    "Design minimal change",
+    "Implement",
+    "Run checks",
+    "Repair failures if any"
+  ],
+  "design_summary": "Summarize the selected design and why it satisfies the objective.",
+  "skill_resolution": {
+    "needed": [],
+    "used_existing": [],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "changed_files": [],
+  "check_logs": {},
+  "iteration_summary": [
+    {
+      "attempt": 1,
+      "result": "local checks passed"
+    }
+  ],
+  "blockers": [],
+  "notes": "Local checks passed; outer supervised bridge must finish final verification."
+}
+```
+
+codex
+I’ll execute this as an ORIS task: first read the required durable context, then run the ORIS skill resolver with the authoritative runtime task id before touching the product repo.
+exec
+/bin/bash -lc "sed -n '1,220p' docs/DEV_EMPLOYEE_AUTONOMOUS_CAPABILITY_TARGET_2026-05-26.md" in /home/admin/projects/oris
+ succeeded in 0ms:
+# ORIS Dev Employee Autonomous Capability Target — 2026-05-26
+
+## Target
+
+ORIS Dev Employee should be able to receive a development task and autonomously complete the loop:
+
+```text
+understand task
+  -> read durable context
+  -> decide whether more capabilities/skills are needed
+  -> safely discover/download candidate skills if needed
+  -> design an implementation plan
+  -> use Codex CLI for code changes
+  -> run local checks
+  -> iterate on failures
+  -> let host bridge perform final checks and GitHub verification
+  -> persist evidence and status
+```
+
+## Current proven foundation
+
+Already verified:
+
+1. local HTTP enqueue API;
+2. local enqueue client;
+3. systemd bridge service;
+4. Codex CLI execution through the bridge;
+5. runtime task contract injection;
+6. host-side checks;
+7. product GitHub push/remote verification;
+8. ORIS evidence commit/push;
+9. read-only skill discovery/audit/intelligence extraction.
+
+Key evidence commits:
+
+- `7c861d3f2db084a8ac9724e954d51d2d79a8667d` — HTTP enqueue smoke completed.
+- `776b7bb90666e562dc5b3e15fa6a902ff1790d38` — runtime task contract injection completed.
+- `f1161efa323cc764ca7ef2ac56da69640a6f06ee` — enqueue client smoke completed.
+
+## Gap to close
+
+The current bridge executes one prompt reliably. The next gap is the autonomous work loop inside the Codex task:
+
+- plan before coding;
+- detect missing capabilities;
+- use existing ORIS-owned scripts before external skills;
+- download third-party skills only into quarantine;
+- never install unreviewed third-party skills into runtime;
+- run tests and repair failures before returning `local_checks_passed`;
+- produce structured evidence that explains design, changes, checks, blockers, and follow-up work.
+
+## Capability layers
+
+### Layer 1 — Intake and execution
+
+Implemented:
+
+- `scripts/dev_employee_enqueue_server.py`
+- `scripts/dev_employee_enqueue_client.py`
+- `scripts/dev_employee_supervised_bridge_v2.py`
+- `oris-dev-employee-enqueue.service`
+- `oris-dev-employee-bridge.service`
+
+### Layer 2 — Autonomous task prompt
+
+Needed now:
+
+- a reusable autonomous development prompt template;
+- a local helper that creates runtime task prompts and enqueues them;
+- a standard result schema for plan/design/test/repair evidence.
+
+### Layer 3 — Skill resolver
+
+Partially implemented:
+
+- `scripts/skill_candidate_audit.py`
+- `scripts/skill_policy_report.py`
+- `scripts/skill_intelligence_extract.py`
+
+Needed next:
+
+- a skill resolver command that maps task requirements to ORIS-owned capabilities first;
+- if missing, downloads candidates only into quarantine;
+- writes a recommendation report instead of installing automatically.
+
+### Layer 4 — Self-repair and escalation
+
+Needed next:
+
+- structured failure taxonomy;
+- automatic retry limits;
+- repair loop for test failures;
+- blocked status when policy/security/network constraints prevent completion.
+
+## Non-negotiable boundaries
+
+- No product code inside `/home/admin/projects/oris`.
+- No secrets, `.env`, private keys, `.venv`, caches, or runtime queue files in GitHub.
+- No direct production installation of third-party skills.
+- No pseudo execution evidence.
+- Completion requires GitHub-verifiable ORIS evidence.
+
+exec
+/bin/bash -lc "sed -n '1,220p' docs/DEV_EMPLOYEE_AUTONOMOUS_DECISION_DOCTRINE_2026-05-26.md" in /home/admin/projects/oris
+ succeeded in 0ms:
+# ORIS Dev Employee Autonomous Decision Doctrine — 2026-05-26
+
+## One-line target
+
+ORIS Dev Employee must behave as an autonomous AI development employee: the human gives goals and constraints, while ORIS decides the plan, selects or builds capabilities, executes development, tests, repairs failures, and returns verifiable GitHub evidence.
+
+## Operating principle
+
+Human input should be limited to:
+
+1. business/product goal;
+2. explicit constraints;
+3. approval for exceptional risk boundaries when policy requires it.
+
+ORIS should not ask the human to decide routine engineering choices such as:
+
+- which files to inspect;
+- which tests to run;
+- which internal helper to use;
+- whether to create a small missing module;
+- whether to retry after a normal test failure;
+- whether to download a candidate skill into quarantine for audit;
+- whether to update docs/evidence after completion.
+
+## Default autonomous loop
+
+For every development task, ORIS should run this loop without asking for routine decisions:
+
+```text
+1. interpret objective and constraints
+2. read durable context and registry
+3. inspect current repo state
+4. classify task type and risk level
+5. decide implementation strategy
+6. resolve needed capabilities
+7. use existing ORIS-owned tools first
+8. build missing internal helper modules if needed
+9. quarantine/audit third-party skills if needed
+10. implement smallest viable change
+11. run relevant checks
+12. repair failures within retry budget
+13. produce structured result JSON
+14. host bridge performs final verification and GitHub evidence
+15. return concise evidence summary
+```
+
+## Decision authority
+
+ORIS may autonomously decide and execute:
+
+- reading repository files and durable docs;
+- creating/modifying non-sensitive source files;
+- adding tests and small helper modules;
+- running linters, unit tests, smoke tests, and local diagnostics;
+- updating local documentation and runbooks;
+- downloading third-party repositories only into quarantine for audit;
+- generating local reports under `logs/` or `orchestration/task_runs/`;
+- committing and pushing through the supervised bridge after checks pass.
+
+## Mandatory escalation boundaries
+
+ORIS must stop and mark the task `blocked` when completion requires:
+
+- production secret access not already configured;
+- public exposure of a new service endpoint;
+- destructive data migration or data deletion;
+- credential, wallet, browser-profile, or private-key access;
+- installing unreviewed third-party code into runtime;
+- changing payment, legal, compliance, or user-data policy;
+- bypassing security controls;
+- spending paid cloud/API resources not pre-approved by project policy.
+
+## Skill policy
+
+ORIS may autonomously discover and download candidate skills only into quarantine:
+
+- `vendor/skill_candidates/`
+- `logs/dev_employee/skill_audit/`
+
+ORIS may not directly install third-party skills into production runtime unless a promotion policy explicitly permits it.
+
+The preferred model is internalization:
+
+```text
+external skill idea -> quarantine/audit -> extract safe pattern -> implement ORIS-owned module -> test -> evidence
+```
+
+## Failure handling
+
+ORIS should not ask the human what to do after ordinary failures. It should:
+
+1. capture exact error evidence;
+2. form a hypothesis;
+3. apply a minimal fix;
+4. rerun relevant checks;
+5. repeat within retry budget;
+6. block only when policy, missing access, repeated failure, or unclear requirement prevents safe completion.
+
+## Evidence requirement
+
+A task is not complete because ORIS says it is complete. It is complete only when GitHub-verifiable evidence exists:
+
+- product commit SHA;
+- product remote SHA match;
+- ORIS evidence commit SHA;
+- task run JSON;
+- check logs;
+- changed file list;
+- blocker evidence if blocked.
+
+## Prompting implication
+
+Future task prompts should state objectives and constraints, not micro-instructions. The autonomous template and bridge runtime descriptor should guide ORIS to make engineering decisions itself.
+
+exec
+/bin/bash -lc "sed -n '1,220p' docs/DEV_EMPLOYEE_AUTONOMOUS_EXECUTION_POLICY.md" in /home/admin/projects/oris
+ succeeded in 0ms:
+# AI Dev Employee Autonomous Execution Policy
+
+## Purpose
+
+This policy records the commercial execution rules validated during the 2026-05-23 ORIS/OpenClaw/Codex bring-up session.
+
+ORIS is the AI employee platform. OpenClaw Web is the control entrypoint. Codex CLI is the real coding executor. GitHub is the durable delivery and memory boundary.
+
+## Architecture
+
+Validated architecture:
+
+- OpenClaw Web: user-facing task intake and control UI.
+- ORIS Free Mesh: model routing layer for general reasoning and chat.
+- Codex CLI: real coding executor on the host filesystem.
+- GitHub: repository, commit, registry, and handoff memory.
+- ORIS repository: platform orchestration, routing policy, project registry, governance, diagnostics, and logs.
+- Business projects: independent repositories under `/home/admin/projects/<repo>`.
+
+## Non-negotiable execution rule
+
+Development tasks must not be satisfied by simulated tool output. The agent must verify work against:
+
+- real filesystem paths;
+- exact command output;
+- test output;
+- Git commit SHA;
+- GitHub remote state;
+- ORIS registry state when applicable.
+
+For coding tasks, use Codex CLI as the execution backend. Do not output pseudo tool calls as if they were real actions.
+
+## Codex execution rule
+
+Existing project tasks should run Codex inside the target project path. New project tasks should start from `/home/admin/projects` and include `exec --skip-git-repo-check` after the `exec` subcommand.
+
+The tested successful pattern for a new project is:
+
+- work root: `/home/admin/projects`
+- writable additional directory: `/home/admin/projects/oris`
+- sandbox: `workspace-write`
+- subcommand: `exec --skip-git-repo-check`
+
+## Durable task memory
+
+Chat history is not sufficient for commercial execution. Long-running tasks must persist state before and during work.
+
+Required durable files:
+
+- `memory/dev_employee/current_task.json`
+- `memory/dev_employee/current_task.md`
+- `orchestration/task_runs/<task_id>.json`
+- `logs/dev_employee/latest_task_progress.json`
+- `logs/dev_employee/latest_task_progress.md`
+
+Each state record should include task id, status, target project, target repo, target path, current step, completed steps, failed steps, next action, last error, last commit SHA, test result, blocked reason, and update time.
+
+## Autonomous behavior
+
+The AI dev employee should continue execution when the next step is safe and within policy. It should not stop at planning when it can proceed.
+
+Expected behavior:
+
+- Missing project dependency inside a project virtual environment: install from project requirements and rerun tests.
+- Test failure: inspect traceback, patch code, rerun tests.
+- Missing Git remote: add the expected remote and retry push.
+- Missing GitHub repository: create it if the task explicitly allows repository creation.
+- Registry update needed: patch only `orchestration/project_registry.json`, preserving existing structure.
+- Runtime dirty files in ORIS: do not commit them unless explicitly requested.
+
+## Stop conditions
+
+The agent should stop and request user action only for policy boundaries, such as production authorization, account login, infrastructure service changes, destructive operations, or actions outside the approved install scope.
+
+## Forbidden behavior
+
+The AI dev employee must not:
+
+- return only a plan when execution is possible;
+- print pseudo tool calls as if they were real actions;
+- claim command success without exact output;
+- claim remote push success without verifying remote state;
+- return only a branch name as a commit reference;
+- write new business code into the ORIS platform repository;
+- overwrite the `project_registry.json` structure;
+- commit environment files, credential material, virtual environments, caches, or runtime-generated noise.
+
+## Completion requirements
+
+A completed development task must return task id, repository URL, local path, product commit SHA, ORIS registry commit SHA if updated, changed files, exact static check output, exact test output, exact push result, known dirty files intentionally left uncommitted, and confirmation that no product code was written inside ORIS.
+
+## Validated status as of 2026-05-23
+
+Validated:
+
+- OpenClaw Web can connect to ORIS Free Mesh through native `oris/free-auto` provider.
+- Gateway token-only access is usable after removing conflicting external UI authentication blockers.
+- Codex CLI 0.133.0 is installed and authenticated through ChatGPT.
+- Codex CLI can create real files on the host filesystem.
+- GitHub CLI is logged in and configured for SSH Git operations.
+- `oris-dev-smoke-app` was created as an independent GitHub repository.
+- ORIS `project_registry.json` was updated with `oris-dev-smoke-app`.
+
+Pending:
+
+- Full OpenClaw Web-to-Codex autonomous task execution with durable task memory.
+- Final acceptance project `oris-final-acceptance-api`.
+
+exec
+/bin/bash -lc "sed -n '1,220p' docs/DEV_EMPLOYEE_SUPERVISED_BRIDGE_V2_2026-05-25.md" in /home/admin/projects/oris
+ succeeded in 0ms:
+# ORIS Dev Employee Supervised Bridge v2 — 2026-05-25
+
+## Goal
+
+Bridge v1 proved the chain:
+
+```text
+queued task descriptor -> bridge claim -> Codex CLI process -> real sandbox command execution -> log output
+```
+
+Bridge v2 upgrades this into a supervised completion system.
+
+## Core change
+
+Codex no longer owns GitHub push or remote verification when sandbox networking is restricted.
+
+Instead:
+
+1. Codex performs local code changes and local checks.
+2. Codex writes a structured result file under ORIS task runs.
+3. The outer host bridge reads that result file.
+4. The outer host bridge performs final checks, product commit/push, remote verification, ORIS evidence update, and ORIS commit/push.
+
+## Responsibility split
+
+### Codex inside sandbox
+
+Allowed:
+
+- read required ORIS context;
+- edit product repo files inside the product repo;
+- run local tests and write logs;
+- write `orchestration/task_runs/<task_id>.codex_result.json`.
+
+Forbidden:
+
+- claiming final completion without outer bridge verification;
+- relying on GitHub push from sandbox;
+- writing product implementation into ORIS repo;
+- committing secrets, venv, caches, or runtime noise.
+
+### Outer bridge on host
+
+Required:
+
+- claim queued task;
+- invoke Codex CLI;
+- read Codex structured result;
+- rerun final checks outside Codex;
+- commit/push product repo;
+- verify product remote head;
+- write ORIS evidence logs/state;
+- commit/push ORIS evidence;
+- mark task completed only after remote evidence is verified.
+
+## Result contract
+
+Codex must write JSON similar to:
+
+```json
+{
+  "task_id": "formal-test-pydantic-cleanup-v2-20260525",
+  "status": "local_checks_passed",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "changed_files": ["app/main.py"],
+  "check_logs": {
+    "py_compile": "/home/admin/projects/oris/logs/dev_employee/formal_test_pydantic_v2_py_compile_20260525.txt",
+    "pytest": "/home/admin/projects/oris/logs/dev_employee/formal_test_pydantic_v2_pytest_20260525.txt",
+    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/formal_test_pydantic_v2_pytest_werror_20260525.txt"
+  },
+  "notes": "Local checks passed; outer bridge must commit, push, and verify remote."
+}
+```
+
+## Completion criteria
+
+A supervised bridge task is completed only if:
+
+1. Codex exits with return code 0;
+2. result file exists and has `status=local_checks_passed`;
+3. outer bridge reruns all final checks successfully;
+4. product repo has a real commit SHA;
+5. product commit is pushed to GitHub main;
+6. `git ls-remote origin main` matches the product commit;
+7. ORIS evidence files record the product commit, checks, and remote verification;
+8. ORIS evidence commit is pushed to GitHub main.
+
+## Immediate test target
+
+Use Pydantic v2 cleanup as the formal bridge-v2 test because it is small, deterministic, and has a strict no-warning gate:
+
+```bash
+PYTHONPATH=/home/admin/projects/oris-final-acceptance-api python -m pytest -q -W error::DeprecationWarning
+```
+
+exec
+/bin/bash -lc "sed -n '1,220p' docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md" in /home/admin/projects/oris
+ succeeded in 0ms:
+# OpenClaw Web to ORIS Dev Employee Enqueue Integration — 2026-05-26
+
+## Current proven chain
+
+The following chain has been verified with GitHub evidence:
+
+```text
+HTTP enqueue API
+  -> local queue descriptor
+  -> systemd supervised bridge
+  -> Codex CLI
+  -> runtime task contract injection
+  -> local checks
+  -> host-side final checks
+  -> product GitHub verification
+  -> ORIS evidence commit
+```
+
+Verified evidence commits:
+
+- `bridge-service-smoke-http-20260525`: `7c861d3f2db084a8ac9724e954d51d2d79a8667d`
+- `bridge-runtime-contract-smoke-20260526`: `776b7bb90666e562dc5b3e15fa6a902ff1790d38`
+
+## Integration goal
+
+OpenClaw Web must stop pretending to execute shell commands. It should become a task intake surface that calls the local enqueue API:
+
+```text
+POST http://127.0.0.1:18891/enqueue
+```
+
+The enqueue API creates a local queued task descriptor. The supervised bridge service performs all execution and evidence handling.
+
+## Contract
+
+### Request
+
+```json
+{
+  "task_id": "unique-task-id",
+  "prompt_path": "/home/admin/projects/oris/prompts/example.md",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "commit_message": "test(dev-employee): example task",
+  "note": "Queued from OpenClaw Web"
+}
+```
+
+### Headers
+
+```text
+Content-Type: application/json
+X-ORIS-Token: <local token from ~/.config/oris/dev_employee_enqueue.env>
+```
+
+### Response
+
+```json
+{
+  "queued": true,
+  "task_id": "unique-task-id",
+  "path": "/home/admin/projects/oris/orchestration/dev_employee_queue/unique-task-id.queued.json"
+}
+```
+
+## Security model
+
+- The API binds only to `127.0.0.1`.
+- The token is stored only in `~/.config/oris/dev_employee_enqueue.env`.
+- The API does not execute commands.
+- The API does not invoke Codex.
+- The API does not commit or push GitHub.
+- The bridge validates paths and performs execution under the host-side policy.
+- Do not expose the enqueue API directly through public Nginx.
+
+## OpenClaw Web behavior
+
+OpenClaw Web should:
+
+1. generate a task id;
+2. select a prompt path already present under the ORIS repo;
+3. call the enqueue API;
+4. show the queued task id to the user;
+5. poll or display `orchestration/task_runs/<task_id>.json` after completion;
+6. never output pseudo `exec` or pseudo `write` as completion evidence.
+
+## Completion evidence
+
+A task is complete only when `orchestration/task_runs/<task_id>.json` has:
+
+```json
+{
+  "status": "completed",
+  "product_commit_sha": "...",
+  "product_remote_sha": "...",
+  "checks": {"ok": true}
+}
+```
+
+and ORIS evidence has been committed to GitHub.
+
+## Next implementation
+
+Add a local enqueue client wrapper that OpenClaw Web or a local adapter can call without embedding curl snippets:
+
+```text
+scripts/dev_employee_enqueue_client.py
+```
+
+The client should read the token from `~/.config/oris/dev_employee_enqueue.env`, submit the JSON payload, and print only concise JSON output.
+
+codex
+The durable context confirms the split: I only own local product changes, local checks, and the structured result JSON; the host bridge owns final commit/push despite the goal text mentioning commit evidence. Next I’m reading the schema/registry/progress and then resolving capabilities.
+exec
+/bin/bash -lc "sed -n '1,260p' orchestration/project_registry.json" in /home/admin/projects/oris
+ succeeded in 0ms:
+{
+  "version": 1,
+  "updated_at": "2026-05-24",
+  "policy": {
+    "oris_repo_role": "platform_orchestration_only",
+    "business_code_policy": "new_business_projects_must_use_separate_github_repositories",
+    "default_projects_root": "/home/admin/projects",
+    "require_explicit_target_project": true,
+    "require_git_status_before_changes": true,
+    "require_commit_and_push_for_completed_changes": true
+  },
+  "projects": {
+    "oris": {
+      "name": "ORIS",
+      "type": "platform",
+      "repo": "git@github.com:ShanGouXueHui/oris.git",
+      "github": "https://github.com/ShanGouXueHui/oris",
+      "local_path": "/home/admin/projects/oris",
+      "default_branch": "main",
+      "allowed_scope": [
+        "docs/",
+        "orchestration/",
+        "scripts/",
+        "logs/dev_employee/",
+        "memory/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "production_credentials"
+      ],
+      "notes": "AI employee platform, routing, provider orchestration, task governance, and operational logs. Do not place new business application code in this repo."
+    },
+    "aideal-cps": {
+      "name": "AIdeal CPS / 智省优选",
+      "type": "product",
+      "repo": "git@github.com:ShanGouXueHui/aideal-cps.git",
+      "github": "https://github.com/ShanGouXueHui/aideal-cps",
+      "local_path": "/home/admin/projects/aideal-cps",
+      "default_branch": "main",
+      "allowed_scope": [
+        "app/",
+        "scripts/",
+        "docs/",
+        "tests/",
+        "alembic/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "wechat_pay_private_key",
+        "jd_app_secret"
+      ],
+      "notes": "Existing product project. Use this repo for AIdeal CPS product changes, not the ORIS platform repo."
+    },
+    "aideal-site": {
+      "name": "AIdeal official site",
+      "type": "site",
+      "repo": "git@github.com:ShanGouXueHui/aideal-site.git",
+      "github": "https://github.com/ShanGouXueHui/aideal-site",
+      "local_path": "/home/admin/projects/aideal-site",
+      "default_branch": "main",
+      "allowed_scope": [
+        "public/",
+        "src/",
+        "docs/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets"
+      ],
+      "notes": "Official site and ICP-facing content should be maintained here."
+    },
+    "kindafeelfy-nolly": {
+      "name": "Nolly / 略懂半解",
+      "type": "product",
+      "repo": "git@github.com:ShanGouXueHui/kindafeelfy-nolly.git",
+      "github": "https://github.com/ShanGouXueHui/kindafeelfy-nolly",
+      "local_path": "/home/admin/projects/kindafeelfy-nolly",
+      "default_branch": "main",
+      "allowed_scope": [
+        "app/",
+        "scripts/",
+        "docs/",
+        "tests/",
+        "alembic/"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets"
+      ],
+      "notes": "Relationship decision engine. Product logic changes belong in this repo, not ORIS."
+    },
+    "oris-dev-smoke-app": {
+      "name": "ORIS Dev Employee Smoke App",
+      "type": "test_project",
+      "repo": "git@github.com:ShanGouXueHui/oris-dev-smoke-app.git",
+      "github": "https://github.com/ShanGouXueHui/oris-dev-smoke-app",
+      "local_path": "/home/admin/projects/oris-dev-smoke-app",
+      "default_branch": "main",
+      "allowed_scope": [
+        "README.md",
+        "AGENTS.md",
+        "docs/",
+        "app/",
+        "tests/",
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "private_keys",
+        "production_credentials"
+      ],
+      "notes": "Standalone smoke project used to verify Codex-backed AI dev employee can create, test, commit, and push an independent GitHub repository."
+    },
+    "oris-final-acceptance-api": {
+      "name": "ORIS Final Acceptance API",
+      "type": "test_project",
+      "repo": "git@github.com:ShanGouXueHui/oris-final-acceptance-api.git",
+      "github": "https://github.com/ShanGouXueHui/oris-final-acceptance-api",
+      "local_path": "/home/admin/projects/oris-final-acceptance-api",
+      "default_branch": "main",
+      "allowed_scope": [
+        "README.md",
+        "AGENTS.md",
+        "docs/",
+        "app/",
+        "tests/",
+        "requirements.txt",
+        ".gitignore"
+      ],
+      "forbidden_scope": [
+        ".env",
+        "secrets",
+        "private_keys",
+        "production_credentials"
+      ],
+      "notes": "Standalone final acceptance project for validating Codex-backed ORIS AI dev employee execution."
+    }
+  }
+}
+
+exec
+/bin/bash -lc "sed -n '1,220p' logs/dev_employee/latest_task_progress.json" in /home/admin/projects/oris
+ succeeded in 0ms:
+{
+  "task_id": "chat-oris-final-acceptance-api-20260617-051313-c802347ff17c",
+  "status": "completed",
+  "product_commit_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+  "product_remote_sha": "927f1968cc86bfd5213670f4eaa171fc1a3be620",
+  "oris_evidence_pending": false,
+  "strict_result_schema": true,
+  "updated_at": "2026-06-17T05:15:30+08:00"
+}
+
+exec
+/bin/bash -lc "sed -n '1,240p' schemas/dev_employee_task_result.schema.json" in /home/admin/projects/oris
+ succeeded in 0ms:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ORIS Dev Employee Task Result",
+  "type": "object",
+  "required": [
+    "task_id",
+    "status",
+    "product_path",
+    "plan",
+    "skill_resolution",
+    "changed_files",
+    "check_logs",
+    "iteration_summary",
+    "notes"
+  ],
+  "properties": {
+    "task_id": {"type": "string"},
+    "status": {
+      "type": "string",
+      "enum": ["local_checks_passed", "blocked", "local_checks_failed"]
+    },
+    "product_path": {"type": "string"},
+    "plan": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "design_summary": {"type": "string"},
+    "skill_resolution": {
+      "type": "object",
+      "required": ["needed", "used_existing", "downloaded_quarantine", "blocked"],
+      "properties": {
+        "needed": {"type": "array", "items": {"type": "string"}},
+        "used_existing": {"type": "array", "items": {"type": "string"}},
+        "downloaded_quarantine": {"type": "array", "items": {"type": "string"}},
+        "blocked": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "changed_files": {"type": "array", "items": {"type": "string"}},
+    "check_logs": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "iteration_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["attempt", "result"],
+        "properties": {
+          "attempt": {"type": "integer"},
+          "result": {"type": "string"},
+          "action": {"type": "string"}
+        }
+      }
+    },
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  }
+}
+
+exec
+/bin/bash -lc 'python3 scripts/dev_employee_skill_resolver.py --task-id demo-openclaw-web-task-board-20260622000012 --objective "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence."' in /home/admin/projects/oris
+ succeeded in 125ms:
+{
+  "ok": true,
+  "reports": {
+    "json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
+    "markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md"
+  },
+  "result": {
+    "task_id": "demo-openclaw-web-task-board-20260622000012",
+    "resolved_at": "2026-06-22T00:00:41+08:00",
+    "objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+    "skill_resolution": {
+      "needed": [
+        "github_evidence",
+        "fastapi_pytest",
+        "safe_execution",
+        "skill_audit"
+      ],
+      "used_existing": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json",
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py",
+        "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+      ],
+      "downloaded_quarantine": [],
+      "blocked": []
+    },
+    "capability_matches": [
+      {
+        "name": "github_evidence",
+        "decision": "use_existing",
+        "hit_keywords": [
+          "commit",
+          "evidence"
+        ],
+        "owned_assets": [
+          "scripts/dev_employee_supervised_bridge_v2.py",
+          "scripts/dev_employee_task_status.py",
+          "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md"
+        ]
+      },
+      {
+        "name": "fastapi_pytest",
+        "decision": "use_existing",
+        "hit_keywords": [
+          "fastapi",
+          "api",
+          "endpoint",
+          "pytest"
+        ],
+        "owned_assets": [
+          "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+          "schemas/dev_employee_task_result.schema.json"
+        ]
+      },
+      {
+        "name": "safe_execution",
+        "decision": "use_existing",
+        "hit_keywords": [
+          "test",
+          "run"
+        ],
+        "owned_assets": [
+          "scripts/dev_employee_supervised_bridge_v2.py",
+          "scripts/dev_employee_recover_stale_tasks.py"
+        ]
+      },
+      {
+        "name": "skill_audit",
+        "decision": "use_existing_then_quarantine_if_needed",
+        "hit_keywords": [
+          "openclaw"
+        ],
+        "owned_assets": [
+          "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+          "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+        ]
+      }
+    ],
+    "quarantine_results": [],
+    "policy": {
+      "third_party_runtime_install_allowed": false,
+      "quarantine_only": true,
+      "promote_by_internalization_only": true
+    }
+  }
+}
+
+codex
+Skill resolution completed with no blockers and no quarantine downloads. I’m now inspecting the FastAPI project structure, current API shape, tests, and git state so the new endpoint matches existing conventions.
+exec
+/bin/bash -lc 'rg --files' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+AGENTS.md
+tests/test_healthz_repair.py
+tests/test_tasks_api.py
+README.md
+app/main.py
+app/__init__.py
+requirements.txt
+
+exec
+/bin/bash -lc 'git status --short' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 103ms:
+exec
+/bin/bash -lc 'find tests -maxdepth 2 -type f -print' in /home/admin/projects/oris-final-acceptance-api
+exec
+/bin/bash -lc "sed -n '1,260p' app/main.py" in /home/admin/projects/oris-final-acceptance-api
+exec
+/bin/bash -lc "sed -n '1,260p' tests/test_main.py" in /home/admin/projects/oris-final-acceptance-api
+ exited 2 in 0ms:
+sed: can't read tests/test_main.py: No such file or directory
+
+ succeeded in 135ms:
+tests/__pycache__/test_healthz_repair.cpython-310-pytest-9.0.3.pyc
+tests/__pycache__/test_tasks_api.cpython-310.pyc
+tests/__pycache__/test_tasks_api.cpython-310-pytest-9.0.3.pyc
+tests/test_tasks_api.py
+tests/test_healthz_repair.py
+
+ succeeded in 149ms:
+from enum import Enum
+from typing import Dict, Optional
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class TaskStatus(str, Enum):
+    todo = "todo"
+    doing = "doing"
+    done = "done"
+
+
+class TaskCreate(BaseModel):
+    title: str = Field(..., min_length=1)
+    description: str = ""
+    status: TaskStatus = TaskStatus.todo
+    assignee: Optional[str] = None
+    tags: list[str] = Field(default_factory=list)
+
+
+class TaskUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: Optional[str] = Field(default=None, min_length=1)
+    description: Optional[str] = None
+    status: Optional[TaskStatus] = None
+    assignee: Optional[str] = None
+    tags: Optional[list[str]] = None
+
+
+class Task(TaskCreate):
+    id: int
+
+
+class TaskStats(BaseModel):
+    total_tasks: int
+    by_status: dict[str, int]
+
+
+class Capabilities(BaseModel):
+    service: str
+    storage: str
+    features: dict[str, bool]
+
+
+app = FastAPI(title="ORIS Final Acceptance API")
+
+tasks: Dict[int, Task] = {}
+next_task_id = 1
+
+
+@app.get("/health")
+async def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/healthz")
+async def healthz() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/readyz")
+async def readyz() -> dict[str, bool]:
+    return {"ready": True}
+
+
+@app.get("/livez")
+async def livez() -> dict[str, bool]:
+    return {"live": True}
+
+
+@app.get("/consolez")
+async def consolez() -> dict[str, bool]:
+    return {"console": True}
+
+
+@app.get("/ping")
+async def ping() -> dict[str, bool]:
+    return {"pong": True}
+
+
+@app.get("/readonly-e2e")
+async def readonly_e2e() -> dict[str, bool]:
+    return {"readonly_e2e": True}
+
+
+@app.get("/version")
+async def version() -> dict[str, str]:
+    return {"version": "1.0.0"}
+
+
+@app.get("/info")
+async def info() -> dict[str, object]:
+    return {
+        "app_name": "ORIS Final Acceptance API",
+        "version": "1.0.0",
+        "storage": "in-memory",
+        "endpoints": ["health", "healthz", "stats", "tasks"],
+    }
+
+
+@app.get("/capabilities", response_model=Capabilities)
+async def capabilities() -> Capabilities:
+    return Capabilities(
+        service="ORIS Final Acceptance API",
+        storage="in-memory",
+        features={
+            "task_crud": True,
+            "filtering": True,
+            "stats": True,
+        },
+    )
+
+
+@app.get("/stats", response_model=TaskStats)
+async def get_stats() -> TaskStats:
+    by_status = {status.value: 0 for status in TaskStatus}
+    for task in tasks.values():
+        by_status[task.status.value] += 1
+    return TaskStats(total_tasks=len(tasks), by_status=by_status)
+
+
+@app.get("/tasks", response_model=list[Task])
+async def list_tasks(
+    status: Optional[TaskStatus] = None,
+    assignee: Optional[str] = None,
+) -> list[Task]:
+    task_list = list(tasks.values())
+    if status is not None:
+        task_list = [task for task in task_list if task.status == status]
+    if assignee is not None:
+        task_list = [task for task in task_list if task.assignee == assignee]
+    return task_list
+
+
+@app.post("/tasks", response_model=Task, status_code=201)
+async def create_task(task: TaskCreate) -> Task:
+    global next_task_id
+
+    created = Task(id=next_task_id, **task.model_dump())
+    tasks[created.id] = created
+    next_task_id += 1
+    return created
+
+
+@app.get("/tasks/{task_id}", response_model=Task)
+async def get_task(task_id: int) -> Task:
+    task = tasks.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+
+@app.patch("/tasks/{task_id}", response_model=Task)
+async def update_task(task_id: int, patch: TaskUpdate) -> Task:
+    task = tasks.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    updated_data = task.model_dump()
+    updated_data.update(patch.model_dump(exclude_unset=True))
+    updated = Task(**updated_data)
+    tasks[task_id] = updated
+    return updated
+
+
+@app.delete("/tasks/{task_id}")
+async def delete_task(task_id: int) -> dict[str, object]:
+    if task_id not in tasks:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    del tasks[task_id]
+    return {"deleted": True, "id": task_id}
+
+codex
+The repo is clean and the app keeps metadata inline in `app/main.py`: service title, version `1.0.0`, and in-memory task storage. I found the tests are split across task API and health repair files, so I’m reading those before patching.
+exec
+/bin/bash -lc "sed -n '1,280p' tests/test_tasks_api.py" in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+from fastapi.testclient import TestClient
+
+from app.main import app, tasks
+
+
+client = TestClient(app)
+
+
+def setup_function() -> None:
+    tasks.clear()
+    import app.main as main
+
+    main.next_task_id = 1
+
+
+def test_health() -> None:
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+def test_readyz_returns_ready_true() -> None:
+    response = client.get("/readyz")
+
+    assert response.status_code == 200
+    assert response.json() == {"ready": True}
+
+
+def test_livez_returns_exact_live_true() -> None:
+    response = client.get("/livez")
+
+    assert response.status_code == 200
+    assert response.json() == {"live": True}
+
+
+def test_consolez_returns_exact_console_true() -> None:
+    response = client.get("/consolez")
+
+    assert response.status_code == 200
+    assert response.json() == {"console": True}
+
+
+def test_ping_returns_exact_pong_true() -> None:
+    response = client.get("/ping")
+
+    assert response.status_code == 200
+    assert response.json() == {"pong": True}
+
+
+def test_readonly_e2e_returns_exact_true() -> None:
+    response = client.get("/readonly-e2e")
+
+    assert response.status_code == 200
+    assert response.json() == {"readonly_e2e": True}
+
+
+def test_info_returns_stable_api_metadata() -> None:
+    response = client.get("/info")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "app_name": "ORIS Final Acceptance API",
+        "version": "1.0.0",
+        "storage": "in-memory",
+        "endpoints": ["health", "healthz", "stats", "tasks"],
+    }
+
+
+def test_capabilities_returns_service_storage_and_features() -> None:
+    response = client.get("/capabilities")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "service": "ORIS Final Acceptance API",
+        "storage": "in-memory",
+        "features": {
+            "task_crud": True,
+            "filtering": True,
+            "stats": True,
+        },
+    }
+
+
+def test_capabilities_field_contract() -> None:
+    body = client.get("/capabilities").json()
+
+    assert set(body) == {"service", "storage", "features"}
+    assert isinstance(body["service"], str)
+    assert isinstance(body["storage"], str)
+    assert {"task_crud", "filtering", "stats"} <= set(body["features"])
+
+
+def test_version_returns_exact_api_version() -> None:
+    response = client.get("/version")
+
+    assert response.status_code == 200
+    assert response.json() == {"version": "1.0.0"}
+
+
+def test_stats_returns_zero_counts_for_empty_board() -> None:
+    response = client.get("/stats")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "total_tasks": 0,
+        "by_status": {"todo": 0, "doing": 0, "done": 0},
+    }
+
+
+def test_stats_counts_tasks_by_status() -> None:
+    client.post("/tasks", json={"title": "Plan", "status": "todo"})
+    doing = client.post("/tasks", json={"title": "Build", "status": "doing"}).json()
+    client.post("/tasks", json={"title": "Ship", "status": "done"})
+    client.patch(f"/tasks/{doing['id']}", json={"status": "done"})
+
+    response = client.get("/stats")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "total_tasks": 3,
+        "by_status": {"todo": 1, "doing": 0, "done": 2},
+    }
+
+
+def test_create_and_list_tasks() -> None:
+    response = client.post(
+        "/tasks",
+        json={"title": "Write tests", "description": "Cover API", "assignee": "dev"},
+    )
+
+    assert response.status_code == 201
+    assert response.json() == {
+        "id": 1,
+        "title": "Write tests",
+        "description": "Cover API",
+        "status": "todo",
+        "assignee": "dev",
+        "tags": [],
+    }
+    assert client.get("/tasks").json() == [response.json()]
+
+
+def test_list_tasks_filters_by_status() -> None:
+    todo = client.post("/tasks", json={"title": "Plan", "status": "todo"}).json()
+    client.post("/tasks", json={"title": "Build", "status": "doing"})
+    done = client.post("/tasks", json={"title": "Ship", "status": "done"}).json()
+
+    assert client.get("/tasks", params={"status": "todo"}).json() == [todo]
+    assert client.get("/tasks", params={"status": "done"}).json() == [done]
+
+
+def test_list_tasks_filters_by_assignee() -> None:
+    dev_task = client.post(
+        "/tasks",
+        json={"title": "Build", "assignee": "dev"},
+    ).json()
+    client.post("/tasks", json={"title": "Review", "assignee": "lead"})
+    unassigned = client.post("/tasks", json={"title": "Backlog"}).json()
+
+    assert client.get("/tasks", params={"assignee": "dev"}).json() == [dev_task]
+    assert client.get("/tasks", params={"assignee": "lead"}).json()[0]["title"] == "Review"
+    assert unassigned not in client.get("/tasks", params={"assignee": "dev"}).json()
+
+
+def test_list_tasks_filters_by_status_and_assignee() -> None:
+    match = client.post(
+        "/tasks",
+        json={"title": "Owned done", "status": "done", "assignee": "dev"},
+    ).json()
+    client.post("/tasks", json={"title": "Other done", "status": "done", "assignee": "lead"})
+    client.post("/tasks", json={"title": "Owned todo", "status": "todo", "assignee": "dev"})
+
+    response = client.get("/tasks", params={"status": "done", "assignee": "dev"})
+
+    assert response.status_code == 200
+    assert response.json() == [match]
+
+
+def test_list_tasks_rejects_invalid_status_filter() -> None:
+    response = client.get("/tasks", params={"status": "blocked"})
+
+    assert response.status_code == 422
+
+
+def test_read_task_by_id() -> None:
+    created = client.post("/tasks", json={"title": "Read me"}).json()
+
+    response = client.get(f"/tasks/{created['id']}")
+
+    assert response.status_code == 200
+    assert response.json()["title"] == "Read me"
+    assert response.json()["tags"] == []
+
+
+def test_patch_task() -> None:
+    created = client.post("/tasks", json={"title": "Start"}).json()
+
+    response = client.patch(
+        f"/tasks/{created['id']}",
+        json={"title": "Finish", "status": "done", "assignee": None},
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": created["id"],
+        "title": "Finish",
+        "description": "",
+        "status": "done",
+        "assignee": None,
+        "tags": [],
+    }
+
+
+def test_create_and_read_task_with_tags() -> None:
+    response = client.post(
+        "/tasks",
+        json={"title": "Tag me", "tags": ["api", "acceptance"]},
+    )
+
+    assert response.status_code == 201
+    assert response.json()["tags"] == ["api", "acceptance"]
+    assert client.get("/tasks").json()[0]["tags"] == ["api", "acceptance"]
+    assert client.get("/tasks/1").json()["tags"] == ["api", "acceptance"]
+
+
+def test_patch_task_tags() -> None:
+    created = client.post("/tasks", json={"title": "Start", "tags": ["old"]}).json()
+
+    response = client.patch(f"/tasks/{created['id']}", json={"tags": ["new", "triaged"]})
+
+    assert response.status_code == 200
+    assert response.json()["tags"] == ["new", "triaged"]
+
+
+def test_delete_task() -> None:
+    created = client.post("/tasks", json={"title": "Remove"}).json()
+
+    response = client.delete(f"/tasks/{created['id']}")
+
+    assert response.status_code == 200
+    assert response.json() == {"deleted": True, "id": created["id"]}
+    assert client.get(f"/tasks/{created['id']}").status_code == 404
+
+
+def test_unknown_task_returns_404() -> None:
+    assert client.get("/tasks/999").status_code == 404
+    assert client.patch("/tasks/999", json={"status": "done"}).status_code == 404
+    assert client.delete("/tasks/999").status_code == 404
+
+
+def test_invalid_status_returns_422() -> None:
+    assert client.post("/tasks", json={"title": "Bad", "status": "blocked"}).status_code == 422
+
+    created = client.post("/tasks", json={"title": "Good"}).json()
+    assert client.patch(f"/tasks/{created['id']}", json={"status": "blocked"}).status_code == 422
+
+
+def test_empty_title_on_creation_returns_422() -> None:
+    response = client.post("/tasks", json={"title": ""})
+
+    assert response.status_code == 422
+
+exec
+/bin/bash -lc "sed -n '1,220p' tests/test_healthz_repair.py" in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+from fastapi.testclient import TestClient
+
+from app.main import app
+
+
+client = TestClient(app)
+
+
+def test_healthz_endpoint_returns_ok():
+    response = client.get('/healthz')
+    assert response.status_code == 200
+    assert response.json() == {'status': 'ok'}
+
+exec
+/bin/bash -lc 'git ls-files' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+.gitignore
+AGENTS.md
+README.md
+app/__init__.py
+app/main.py
+requirements.txt
+tests/test_healthz_repair.py
+tests/test_tasks_api.py
+
+exec
+/bin/bash -lc "sed -n '1,180p' AGENTS.md" in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+# AGENTS.md
+
+This repository is a standalone ORIS final acceptance project.
+
+## Scope
+
+- Product code lives in this repository only.
+- Keep implementation under `app/` and tests under `tests/`.
+- Do not commit secrets, virtual environments, caches, bytecode, or runtime noise.
+
+## Checks
+
+Run these before committing changes:
+
+```bash
+python3 -m py_compile app/main.py
+pytest -q
+```
+
+exec
+/bin/bash -lc "sed -n '1,220p' README.md" in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+# ORIS Final Acceptance API
+
+A small in-memory task-board API built with FastAPI.
+
+## Setup
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+uvicorn app.main:app --reload
+```
+
+## Test
+
+```bash
+python3 -m py_compile app/main.py
+pytest -q
+```
+
+## API
+
+- `GET /health`
+- `GET /capabilities`
+- `GET /tasks`
+- `POST /tasks`
+- `GET /tasks/{task_id}`
+- `PATCH /tasks/{task_id}`
+- `DELETE /tasks/{task_id}`
+
+codex
+I’m going to keep the change narrow: add shared constants for the service metadata, a typed response model for `/healthz/details`, and tests that verify both the empty and populated task-count cases without changing existing endpoints.
+apply patch
+patch: completed
+/home/admin/projects/oris-final-acceptance-api/app/main.py
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+
+codex
+The endpoint is now implemented using existing in-memory state and shared metadata constants. I’m adding focused pytest coverage in the existing task API test file so the task reset fixture keeps the new count tests deterministic.
+apply patch
+patch: completed
+/home/admin/projects/oris-final-acceptance-api/tests/test_tasks_api.py
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+codex
+The code and tests are patched. I’m running the required checks now and writing exact outputs under `logs/dev_employee/` using filenames keyed to the runtime task id.
+exec
+/bin/bash -lc 'mkdir -p /home/admin/projects/oris/logs/dev_employee' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+exec
+/bin/bash -lc 'python -m compileall . 2>&1 | tee /home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+/bin/bash: line 1: python: command not found
+
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+codex
+The literal `python` command is not installed in this sandbox (`python: command not found`), so I’m rerunning the requested checks with `python3`, which is the interpreter used by the ORIS task template. I’ll preserve the failed literal-command log as evidence and report it in the result notes.
+exec
+/bin/bash -lc 'python3 -m compileall . 2>&1 | tee /home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log' in /home/admin/projects/oris-final-acceptance-api
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+ succeeded in 614ms:
+Listing './.venv/lib/python3.10/site-packages/anyio/streams'...
+Listing './.venv/lib/python3.10/site-packages/anyio-4.13.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/anyio-4.13.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/certifi'...
+Listing './.venv/lib/python3.10/site-packages/certifi-2026.5.20.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/certifi-2026.5.20.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/click'...
+Listing './.venv/lib/python3.10/site-packages/click-8.4.1.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/click-8.4.1.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/exceptiongroup'...
+Listing './.venv/lib/python3.10/site-packages/exceptiongroup-1.3.1.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/exceptiongroup-1.3.1.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/fastapi'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/.agents'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/.agents/skills'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/.agents/skills/fastapi'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/.agents/skills/fastapi/references'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/_compat'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/dependencies'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/middleware'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/openapi'...
+Listing './.venv/lib/python3.10/site-packages/fastapi/security'...
+Listing './.venv/lib/python3.10/site-packages/fastapi-0.136.3.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/fastapi-0.136.3.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/h11'...
+Listing './.venv/lib/python3.10/site-packages/h11-0.16.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/h11-0.16.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/httpcore'...
+Listing './.venv/lib/python3.10/site-packages/httpcore/_async'...
+Listing './.venv/lib/python3.10/site-packages/httpcore/_backends'...
+Listing './.venv/lib/python3.10/site-packages/httpcore/_sync'...
+Listing './.venv/lib/python3.10/site-packages/httpcore-1.0.9.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/httpcore-1.0.9.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/httpx'...
+Listing './.venv/lib/python3.10/site-packages/httpx/_transports'...
+Listing './.venv/lib/python3.10/site-packages/httpx-0.28.1.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/httpx-0.28.1.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/idna'...
+Listing './.venv/lib/python3.10/site-packages/idna-3.16.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/idna-3.16.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/iniconfig'...
+Listing './.venv/lib/python3.10/site-packages/iniconfig-2.3.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/iniconfig-2.3.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/packaging'...
+Listing './.venv/lib/python3.10/site-packages/packaging/licenses'...
+Listing './.venv/lib/python3.10/site-packages/packaging-26.2.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/packaging-26.2.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pip'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/cli'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/commands'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/distributions'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/index'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/locations'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/metadata'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/metadata/importlib'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/models'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/network'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/operations'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/operations/build'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/operations/install'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/req'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/resolution'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/resolution/legacy'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/resolution/resolvelib'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/utils'...
+Listing './.venv/lib/python3.10/site-packages/pip/_internal/vcs'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/cachecontrol/caches'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/certifi'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/distlib'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/distro'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/idna'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/msgpack'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/packaging'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/packaging/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pkg_resources'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/platformdirs'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pygments'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pygments/filters'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pygments/formatters'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pygments/lexers'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pygments/styles'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/requests'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/resolvelib'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/resolvelib/resolvers'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/rich'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/tomli'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/tomli_w'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/truststore'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/urllib3'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/urllib3/contrib/emscripten'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/urllib3/http2'...
+Listing './.venv/lib/python3.10/site-packages/pip/_vendor/urllib3/util'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/cachecontrol'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/certifi'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/distlib'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/distro'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/idna'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/msgpack'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/packaging'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/pkg_resources'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/platformdirs'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/pygments'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/pyproject_hooks'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/requests'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/resolvelib'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/rich'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/tomli'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/tomli_w'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/truststore'...
+Listing './.venv/lib/python3.10/site-packages/pip-26.1.1.dist-info/licenses/src/pip/_vendor/urllib3'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources/_vendor'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources/_vendor/packaging'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources/extern'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources/tests'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources/tests/data'...
+Listing './.venv/lib/python3.10/site-packages/pkg_resources/tests/data/my-test-package-source'...
+Listing './.venv/lib/python3.10/site-packages/pluggy'...
+Listing './.venv/lib/python3.10/site-packages/pluggy-1.6.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/pluggy-1.6.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pydantic'...
+Listing './.venv/lib/python3.10/site-packages/pydantic/_internal'...
+Listing './.venv/lib/python3.10/site-packages/pydantic/deprecated'...
+Listing './.venv/lib/python3.10/site-packages/pydantic/experimental'...
+Listing './.venv/lib/python3.10/site-packages/pydantic/plugin'...
+Listing './.venv/lib/python3.10/site-packages/pydantic/v1'...
+Listing './.venv/lib/python3.10/site-packages/pydantic-2.13.4.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/pydantic-2.13.4.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pydantic_core'...
+Listing './.venv/lib/python3.10/site-packages/pydantic_core-2.46.4.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/pydantic_core-2.46.4.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pydantic_core-2.46.4.dist-info/sboms'...
+Listing './.venv/lib/python3.10/site-packages/pygments'...
+Listing './.venv/lib/python3.10/site-packages/pygments/filters'...
+Listing './.venv/lib/python3.10/site-packages/pygments/formatters'...
+Listing './.venv/lib/python3.10/site-packages/pygments/lexers'...
+Listing './.venv/lib/python3.10/site-packages/pygments/styles'...
+Listing './.venv/lib/python3.10/site-packages/pygments-2.20.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/pygments-2.20.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/pytest'...
+Listing './.venv/lib/python3.10/site-packages/pytest-9.0.3.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/pytest-9.0.3.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/setuptools'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/_distutils'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/_distutils/command'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/_vendor'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/_vendor/more_itertools'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/_vendor/packaging'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/command'...
+Listing './.venv/lib/python3.10/site-packages/setuptools/extern'...
+Listing './.venv/lib/python3.10/site-packages/setuptools-59.6.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/starlette'...
+Listing './.venv/lib/python3.10/site-packages/starlette/middleware'...
+Listing './.venv/lib/python3.10/site-packages/starlette-1.1.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/starlette-1.1.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/tomli'...
+Listing './.venv/lib/python3.10/site-packages/tomli-2.4.1.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/tomli-2.4.1.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/typing_extensions-4.15.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/typing_extensions-4.15.0.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/typing_inspection'...
+Listing './.venv/lib/python3.10/site-packages/typing_inspection-0.4.2.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/typing_inspection-0.4.2.dist-info/licenses'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/lifespan'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/loops'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/middleware'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/protocols'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/protocols/http'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/protocols/websockets'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn/supervisors'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn-0.48.0.dist-info'...
+Listing './.venv/lib/python3.10/site-packages/uvicorn-0.48.0.dist-info/licenses'...
+Listing './app'...
+Compiling './app/main.py'...
+Listing './tests'...
+Compiling './tests/test_healthz_repair.py'...
+Compiling './tests/test_tasks_api.py'...
+
+codex
+`python3 -m compileall .` passed, though it traversed the local `.venv` because the expected command targets the whole repo. I’m running pytest through the project virtualenv so it uses the product’s installed FastAPI/Pydantic stack.
+exec
+/bin/bash -lc '.venv/bin/python -m pytest -q 2>&1 | tee /home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log' in /home/admin/projects/oris-final-acceptance-api
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+ succeeded in 839ms:
+............................                                             [100%]
+28 passed in 0.43s
+
+exec
+/bin/bash -lc '.venv/bin/python -m pytest -q -W error 2>&1 | tee /home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log' in /home/admin/projects/oris-final-acceptance-api
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+ succeeded in 707ms:
+............................                                             [100%]
+28 passed in 0.37s
+
+codex
+Both pytest runs passed with 28 tests. I’m checking the final diff and working tree now, including whether compile/test runs produced ignored cache noise.
+exec
+/bin/bash -lc 'git status --short' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+ M app/main.py
+ M tests/test_tasks_api.py
+
+exec
+/bin/bash -lc 'git status --ignored --short' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+ M app/main.py
+ M tests/test_tasks_api.py
+!! .pytest_cache/
+!! .venv/
+!! app/__pycache__/
+!! tests/__pycache__/
+
+exec
+/bin/bash -lc 'git diff -- app/main.py tests/test_tasks_api.py' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+diff --git a/app/main.py b/app/main.py
+index 01fd1e9..1b605c6 100644
+--- a/app/main.py
++++ b/app/main.py
+@@ -44,6 +44,17 @@ class Capabilities(BaseModel):
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@ async def healthz() -> dict[str, str]:
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@ async def readonly_e2e() -> dict[str, bool]:
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@ async def info() -> dict[str, object]:
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/tests/test_tasks_api.py b/tests/test_tasks_api.py
+index e253342..329fef0 100644
+--- a/tests/test_tasks_api.py
++++ b/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@ def test_health() -> None:
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+exec
+/bin/bash -lc "sed -n '1,220p' /home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json" in /home/admin/projects/oris
+ succeeded in 0ms:
+{
+  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "resolved_at": "2026-06-22T00:00:41+08:00",
+  "objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence",
+      "fastapi_pytest",
+      "safe_execution",
+      "skill_audit"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_task_status.py",
+      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py",
+      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [
+    {
+      "name": "github_evidence",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "commit",
+        "evidence"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md"
+      ]
+    },
+    {
+      "name": "fastapi_pytest",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "fastapi",
+        "api",
+        "endpoint",
+        "pytest"
+      ],
+      "owned_assets": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json"
+      ]
+    },
+    {
+      "name": "safe_execution",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "test",
+        "run"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py"
+      ]
+    },
+    {
+      "name": "skill_audit",
+      "decision": "use_existing_then_quarantine_if_needed",
+      "hit_keywords": [
+        "openclaw"
+      ],
+      "owned_assets": [
+        "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+      ]
+    }
+  ],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
+
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+codex
+The final product diff is limited to `app/main.py` and `tests/test_tasks_api.py`; cache directories are ignored. I’m writing the required strict-schema result JSON now, with the resolver’s `skill_resolution` object copied verbatim.
+exec
+/bin/bash -lc "test -f /home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json && sed -n '1,260p' /home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json || true" in /home/admin/projects/oris
+ succeeded in 0ms:
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+
+apply patch
+patch: completed
+/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+diff --git a/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..df7f4e615f4bd4ec2a9f222413266c9f78edee5c
+--- /dev/null
++++ b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+@@ -0,0 +1,62 @@
++{
++  "task_id": "demo-openclaw-web-task-board-20260622000012",
++  "status": "local_checks_passed",
++  "product_path": "/home/admin/projects/oris-final-acceptance-api",
++  "plan": [
++    "Inspect durable ORIS context and runtime descriptor",
++    "Resolve capabilities with the ORIS-owned skill resolver",
++    "Inspect FastAPI app, tests, and product repo state",
++    "Design a minimal read-only health metadata endpoint",
++    "Implement endpoint and pytest coverage",
++    "Run compile and pytest checks, iterating on ordinary failures",
++    "Write strict-schema Codex result evidence for the supervised bridge"
++  ],
++  "design_summary": "Added a typed GET /healthz/details endpoint that reads existing in-memory task state and shared service metadata constants, returning service_name, version, storage_mode, and task_count without changing existing endpoint responses. Added pytest coverage for empty and populated task-board counts.",
++  "skill_resolution": {
++    "needed": [
++      "github_evidence",
++      "fastapi_pytest",
++      "safe_execution",
++      "skill_audit"
++    ],
++    "used_existing": [
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_task_status.py",
++      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
++      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
++      "schemas/dev_employee_task_result.schema.json",
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_recover_stale_tasks.py",
++      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
++      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
++    ],
++    "downloaded_quarantine": [],
++    "blocked": []
++  },
++  "changed_files": [
++    "app/main.py",
++    "tests/test_tasks_api.py"
++  ],
++  "check_logs": {
++    "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
++    "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
++    "compileall_literal_python": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log",
++    "compileall": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log",
++    "pytest": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log",
++    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log"
++  },
++  "iteration_summary": [
++    {
++      "attempt": 1,
++      "action": "Ran literal expected compile command python -m compileall .",
++      "result": "local command unavailable: /bin/bash: line 1: python: command not found"
++    },
++    {
++      "attempt": 2,
++      "action": "Ran python3 -m compileall . and project virtualenv pytest checks",
++      "result": "local checks passed: compileall succeeded; pytest -q passed with 28 tests; pytest -q -W error passed with 28 tests"
++    }
++  ],
++  "blockers": [],
++  "notes": "Local checks passed with python3/project virtualenv because the sandbox has no literal python command. Product changes are local only; outer supervised bridge owns final checks, product commit/push, remote verification, and ORIS evidence commit."
++}
+
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+diff --git a/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..df7f4e615f4bd4ec2a9f222413266c9f78edee5c
+--- /dev/null
++++ b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+@@ -0,0 +1,62 @@
++{
++  "task_id": "demo-openclaw-web-task-board-20260622000012",
++  "status": "local_checks_passed",
++  "product_path": "/home/admin/projects/oris-final-acceptance-api",
++  "plan": [
++    "Inspect durable ORIS context and runtime descriptor",
++    "Resolve capabilities with the ORIS-owned skill resolver",
++    "Inspect FastAPI app, tests, and product repo state",
++    "Design a minimal read-only health metadata endpoint",
++    "Implement endpoint and pytest coverage",
++    "Run compile and pytest checks, iterating on ordinary failures",
++    "Write strict-schema Codex result evidence for the supervised bridge"
++  ],
++  "design_summary": "Added a typed GET /healthz/details endpoint that reads existing in-memory task state and shared service metadata constants, returning service_name, version, storage_mode, and task_count without changing existing endpoint responses. Added pytest coverage for empty and populated task-board counts.",
++  "skill_resolution": {
++    "needed": [
++      "github_evidence",
++      "fastapi_pytest",
++      "safe_execution",
++      "skill_audit"
++    ],
++    "used_existing": [
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_task_status.py",
++      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
++      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
++      "schemas/dev_employee_task_result.schema.json",
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_recover_stale_tasks.py",
++      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
++      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
++    ],
++    "downloaded_quarantine": [],
++    "blocked": []
++  },
++  "changed_files": [
++    "app/main.py",
++    "tests/test_tasks_api.py"
++  ],
++  "check_logs": {
++    "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
++    "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
++    "compileall_literal_python": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log",
++    "compileall": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log",
++    "pytest": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log",
++    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log"
++  },
++  "iteration_summary": [
++    {
++      "attempt": 1,
++      "action": "Ran literal expected compile command python -m compileall .",
++      "result": "local command unavailable: /bin/bash: line 1: python: command not found"
++    },
++    {
++      "attempt": 2,
++      "action": "Ran python3 -m compileall . and project virtualenv pytest checks",
++      "result": "local checks passed: compileall succeeded; pytest -q passed with 28 tests; pytest -q -W error passed with 28 tests"
++    }
++  ],
++  "blockers": [],
++  "notes": "Local checks passed with python3/project virtualenv because the sandbox has no literal python command. Product changes are local only; outer supervised bridge owns final checks, product commit/push, remote verification, and ORIS evidence commit."
++}
+
+codex
+The result file is in place. I’m validating it against the ORIS result schema and doing one last status check before I hand back the local summary.
+exec
+/bin/bash -lc "python3 - <<'PY'
+import json
+from jsonschema import Draft202012Validator
+schema_path = '/home/admin/projects/oris/schemas/dev_employee_task_result.schema.json'
+result_path = '/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json'
+with open(schema_path, encoding='utf-8') as f:
+    schema = json.load(f)
+with open(result_path, encoding='utf-8') as f:
+    result = json.load(f)
+errors = sorted(Draft202012Validator(schema).iter_errors(result), key=lambda e: e.path)
+if errors:
+    for error in errors:
+        print(f'{list(error.path)}: {error.message}')
+    raise SystemExit(1)
+print('schema validation passed')
+PY" in /home/admin/projects/oris
+exec
+/bin/bash -lc 'git status --short -- orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log' in /home/admin/projects/oris
+ succeeded in 0ms:
+?? logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log
+?? logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log
+?? logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log
+?? logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log
+?? logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json
+?? logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md
+
+exec
+/bin/bash -lc "sed -n '1,260p' orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json" in /home/admin/projects/oris
+ succeeded in 0ms:
+{
+  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "status": "local_checks_passed",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "plan": [
+    "Inspect durable ORIS context and runtime descriptor",
+    "Resolve capabilities with the ORIS-owned skill resolver",
+    "Inspect FastAPI app, tests, and product repo state",
+    "Design a minimal read-only health metadata endpoint",
+    "Implement endpoint and pytest coverage",
+    "Run compile and pytest checks, iterating on ordinary failures",
+    "Write strict-schema Codex result evidence for the supervised bridge"
+  ],
+  "design_summary": "Added a typed GET /healthz/details endpoint that reads existing in-memory task state and shared service metadata constants, returning service_name, version, storage_mode, and task_count without changing existing endpoint responses. Added pytest coverage for empty and populated task-board counts.",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence",
+      "fastapi_pytest",
+      "safe_execution",
+      "skill_audit"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_task_status.py",
+      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py",
+      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "changed_files": [
+    "app/main.py",
+    "tests/test_tasks_api.py"
+  ],
+  "check_logs": {
+    "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
+    "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
+    "compileall_literal_python": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log",
+    "compileall": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log",
+    "pytest": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log",
+    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log"
+  },
+  "iteration_summary": [
+    {
+      "attempt": 1,
+      "action": "Ran literal expected compile command python -m compileall .",
+      "result": "local command unavailable: /bin/bash: line 1: python: command not found"
+    },
+    {
+      "attempt": 2,
+      "action": "Ran python3 -m compileall . and project virtualenv pytest checks",
+      "result": "local checks passed: compileall succeeded; pytest -q passed with 28 tests; pytest -q -W error passed with 28 tests"
+    }
+  ],
+  "blockers": [],
+  "notes": "Local checks passed with python3/project virtualenv because the sandbox has no literal python command. Product changes are local only; outer supervised bridge owns final checks, product commit/push, remote verification, and ORIS evidence commit."
+}
+
+exec
+/bin/bash -lc 'git status --short' in /home/admin/projects/oris-final-acceptance-api
+ succeeded in 0ms:
+ M app/main.py
+ M tests/test_tasks_api.py
+
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+diff --git a/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..df7f4e615f4bd4ec2a9f222413266c9f78edee5c
+--- /dev/null
++++ b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+@@ -0,0 +1,62 @@
++{
++  "task_id": "demo-openclaw-web-task-board-20260622000012",
++  "status": "local_checks_passed",
++  "product_path": "/home/admin/projects/oris-final-acceptance-api",
++  "plan": [
++    "Inspect durable ORIS context and runtime descriptor",
++    "Resolve capabilities with the ORIS-owned skill resolver",
++    "Inspect FastAPI app, tests, and product repo state",
++    "Design a minimal read-only health metadata endpoint",
++    "Implement endpoint and pytest coverage",
++    "Run compile and pytest checks, iterating on ordinary failures",
++    "Write strict-schema Codex result evidence for the supervised bridge"
++  ],
++  "design_summary": "Added a typed GET /healthz/details endpoint that reads existing in-memory task state and shared service metadata constants, returning service_name, version, storage_mode, and task_count without changing existing endpoint responses. Added pytest coverage for empty and populated task-board counts.",
++  "skill_resolution": {
++    "needed": [
++      "github_evidence",
++      "fastapi_pytest",
++      "safe_execution",
++      "skill_audit"
++    ],
++    "used_existing": [
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_task_status.py",
++      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
++      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
++      "schemas/dev_employee_task_result.schema.json",
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_recover_stale_tasks.py",
++      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
++      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
++    ],
++    "downloaded_quarantine": [],
++    "blocked": []
++  },
++  "changed_files": [
++    "app/main.py",
++    "tests/test_tasks_api.py"
++  ],
++  "check_logs": {
++    "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
++    "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
++    "compileall_literal_python": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log",
++    "compileall": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log",
++    "pytest": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log",
++    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log"
++  },
++  "iteration_summary": [
++    {
++      "attempt": 1,
++      "action": "Ran literal expected compile command python -m compileall .",
++      "result": "local command unavailable: /bin/bash: line 1: python: command not found"
++    },
++    {
++      "attempt": 2,
++      "action": "Ran python3 -m compileall . and project virtualenv pytest checks",
++      "result": "local checks passed: compileall succeeded; pytest -q passed with 28 tests; pytest -q -W error passed with 28 tests"
++    }
++  ],
++  "blockers": [],
++  "notes": "Local checks passed with python3/project virtualenv because the sandbox has no literal python command. Product changes are local only; outer supervised bridge owns final checks, product commit/push, remote verification, and ORIS evidence commit."
++}
+
+ exited 1 in 288ms:
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ImportError: cannot import name 'Draft202012Validator' from 'jsonschema' (/usr/lib/python3/dist-packages/jsonschema/__init__.py)
+
+codex
+The schema validation attempt hit an old system `jsonschema` package without `Draft202012Validator`, not a result-file error. I’m doing a fallback structural validation against the schema’s required fields/enums and confirming the result file path exists.
+exec
+/bin/bash -lc "python3 -m json.tool /home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json >/tmp/demo-openclaw-web-task-board-20260622000012.codex_result.pretty && echo 'json parse passed'" in /home/admin/projects/oris
+ succeeded in 0ms:
+json parse passed
+
+exec
+/bin/bash -lc 'ls -l /home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json' in /home/admin/projects/oris
+ succeeded in 0ms:
+-rw-rw-r-- 1 admin admin 3343 Jun 22 00:02 /home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+import json
+schema_path = '/home/admin/projects/oris/schemas/dev_employee_task_result.schema.json'
+result_path = '/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json'
+with open(schema_path, encoding='utf-8') as f:
+    schema = json.load(f)
+with open(result_path, encoding='utf-8') as f:
+    result = json.load(f)
+missing = [field for field in schema['required'] if field not in result]
+if missing:
+    raise SystemExit(f'missing required fields: {missing}')
+if result['status'] not in schema['properties']['status']['enum']:
+    raise SystemExit(f'invalid status: {result[\"status\"]}')
+for field in ['needed', 'used_existing', 'downloaded_quarantine', 'blocked']:
+    if field not in result['skill_resolution']:
+        raise SystemExit(f'missing skill_resolution.{field}')
+if result.get('task_id') "'!= '"'demo-openclaw-web-task-board-20260622000012':
+    raise SystemExit('task_id mismatch')
+print('fallback schema contract validation passed')
+PY" in /home/admin/projects/oris
+exec
+/bin/bash -lc 'git status --short orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json' in /home/admin/projects/oris
+ succeeded in 0ms:
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+diff --git a/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..df7f4e615f4bd4ec2a9f222413266c9f78edee5c
+--- /dev/null
++++ b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+@@ -0,0 +1,62 @@
++{
++  "task_id": "demo-openclaw-web-task-board-20260622000012",
++  "status": "local_checks_passed",
++  "product_path": "/home/admin/projects/oris-final-acceptance-api",
++  "plan": [
++    "Inspect durable ORIS context and runtime descriptor",
++    "Resolve capabilities with the ORIS-owned skill resolver",
++    "Inspect FastAPI app, tests, and product repo state",
++    "Design a minimal read-only health metadata endpoint",
++    "Implement endpoint and pytest coverage",
++    "Run compile and pytest checks, iterating on ordinary failures",
++    "Write strict-schema Codex result evidence for the supervised bridge"
++  ],
++  "design_summary": "Added a typed GET /healthz/details endpoint that reads existing in-memory task state and shared service metadata constants, returning service_name, version, storage_mode, and task_count without changing existing endpoint responses. Added pytest coverage for empty and populated task-board counts.",
++  "skill_resolution": {
++    "needed": [
++      "github_evidence",
++      "fastapi_pytest",
++      "safe_execution",
++      "skill_audit"
++    ],
++    "used_existing": [
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_task_status.py",
++      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
++      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
++      "schemas/dev_employee_task_result.schema.json",
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_recover_stale_tasks.py",
++      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
++      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
++    ],
++    "downloaded_quarantine": [],
++    "blocked": []
++  },
++  "changed_files": [
++    "app/main.py",
++    "tests/test_tasks_api.py"
++  ],
++  "check_logs": {
++    "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
++    "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
++    "compileall_literal_python": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log",
++    "compileall": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log",
++    "pytest": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log",
++    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log"
++  },
++  "iteration_summary": [
++    {
++      "attempt": 1,
++      "action": "Ran literal expected compile command python -m compileall .",
++      "result": "local command unavailable: /bin/bash: line 1: python: command not found"
++    },
++    {
++      "attempt": 2,
++      "action": "Ran python3 -m compileall . and project virtualenv pytest checks",
++      "result": "local checks passed: compileall succeeded; pytest -q passed with 28 tests; pytest -q -W error passed with 28 tests"
++    }
++  ],
++  "blockers": [],
++  "notes": "Local checks passed with python3/project virtualenv because the sandbox has no literal python command. Product changes are local only; outer supervised bridge owns final checks, product commit/push, remote verification, and ORIS evidence commit."
++}
+
+ succeeded in 114ms:
+fallback schema contract validation passed
+
+codex
+Local ORIS task work is complete and evidence was written to:
+
+`/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json`
+
+Product changes:
+- Added `GET /healthz/details` in `app/main.py`
+- Added pytest coverage in `tests/test_tasks_api.py`
+
+Checks:
+- Literal `python -m compileall .` could not run because `python` is not installed.
+- `python3 -m compileall .` passed.
+- `.venv/bin/python -m pytest -q` passed: `28 passed`.
+- `.venv/bin/python -m pytest -q -W error` passed: `28 passed`.
+
+No product commit was made from inside Codex because the authoritative runtime descriptor says the outer supervised bridge owns final checks, commit/push, remote verification, and ORIS evidence commit.
+diff --git a/oris-final-acceptance-api/app/main.py b/oris-final-acceptance-api/app/main.py
+index 01fd1e9f3d3f8c491450d365eb6970739c391699..1b605c60f23e9093921b9b47aa35de2aade7bdc9
+--- a/oris-final-acceptance-api/app/main.py
++++ b/oris-final-acceptance-api/app/main.py
+@@ -44,6 +44,17 @@
+     features: dict[str, bool]
+ 
+ 
++class HealthDetails(BaseModel):
++    service_name: str
++    version: str
++    storage_mode: str
++    task_count: int
++
++
++SERVICE_NAME = "ORIS Final Acceptance API"
++SERVICE_VERSION = "1.0.0"
++STORAGE_MODE = "in-memory"
++
+ app = FastAPI(title="ORIS Final Acceptance API")
+ 
+ tasks: Dict[int, Task] = {}
+@@ -60,6 +71,16 @@
+     return {"status": "ok"}
+ 
+ 
++@app.get("/healthz/details", response_model=HealthDetails)
++async def healthz_details() -> HealthDetails:
++    return HealthDetails(
++        service_name=SERVICE_NAME,
++        version=SERVICE_VERSION,
++        storage_mode=STORAGE_MODE,
++        task_count=len(tasks),
++    )
++
++
+ @app.get("/readyz")
+ async def readyz() -> dict[str, bool]:
+     return {"ready": True}
+@@ -87,15 +108,15 @@
+ 
+ @app.get("/version")
+ async def version() -> dict[str, str]:
+-    return {"version": "1.0.0"}
++    return {"version": SERVICE_VERSION}
+ 
+ 
+ @app.get("/info")
+ async def info() -> dict[str, object]:
+     return {
+-        "app_name": "ORIS Final Acceptance API",
+-        "version": "1.0.0",
+-        "storage": "in-memory",
++        "app_name": SERVICE_NAME,
++        "version": SERVICE_VERSION,
++        "storage": STORAGE_MODE,
+         "endpoints": ["health", "healthz", "stats", "tasks"],
+     }
+ 
+@@ -103,8 +124,8 @@
+ @app.get("/capabilities", response_model=Capabilities)
+ async def capabilities() -> Capabilities:
+     return Capabilities(
+-        service="ORIS Final Acceptance API",
+-        storage="in-memory",
++        service=SERVICE_NAME,
++        storage=STORAGE_MODE,
+         features={
+             "task_crud": True,
+             "filtering": True,
+diff --git a/oris-final-acceptance-api/tests/test_tasks_api.py b/oris-final-acceptance-api/tests/test_tasks_api.py
+index e2533426693e4892881fd42c3c16fe53d8ecadf6..329fef09876a1f1ad11efbbdbdbaeb56066c04f2
+--- a/oris-final-acceptance-api/tests/test_tasks_api.py
++++ b/oris-final-acceptance-api/tests/test_tasks_api.py
+@@ -20,6 +20,28 @@
+     assert response.json() == {"status": "ok"}
+ 
+ 
++def test_healthz_details_returns_service_metadata_for_empty_board() -> None:
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json() == {
++        "service_name": "ORIS Final Acceptance API",
++        "version": "1.0.0",
++        "storage_mode": "in-memory",
++        "task_count": 0,
++    }
++
++
++def test_healthz_details_counts_current_tasks() -> None:
++    client.post("/tasks", json={"title": "Plan"})
++    client.post("/tasks", json={"title": "Build"})
++
++    response = client.get("/healthz/details")
++
++    assert response.status_code == 200
++    assert response.json()["task_count"] == 2
++
++
+ def test_readyz_returns_ready_true() -> None:
+     response = client.get("/readyz")
+ 
+diff --git a/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..df7f4e615f4bd4ec2a9f222413266c9f78edee5c
+--- /dev/null
++++ b/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json
+@@ -0,0 +1,62 @@
++{
++  "task_id": "demo-openclaw-web-task-board-20260622000012",
++  "status": "local_checks_passed",
++  "product_path": "/home/admin/projects/oris-final-acceptance-api",
++  "plan": [
++    "Inspect durable ORIS context and runtime descriptor",
++    "Resolve capabilities with the ORIS-owned skill resolver",
++    "Inspect FastAPI app, tests, and product repo state",
++    "Design a minimal read-only health metadata endpoint",
++    "Implement endpoint and pytest coverage",
++    "Run compile and pytest checks, iterating on ordinary failures",
++    "Write strict-schema Codex result evidence for the supervised bridge"
++  ],
++  "design_summary": "Added a typed GET /healthz/details endpoint that reads existing in-memory task state and shared service metadata constants, returning service_name, version, storage_mode, and task_count without changing existing endpoint responses. Added pytest coverage for empty and populated task-board counts.",
++  "skill_resolution": {
++    "needed": [
++      "github_evidence",
++      "fastapi_pytest",
++      "safe_execution",
++      "skill_audit"
++    ],
++    "used_existing": [
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_task_status.py",
++      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
++      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
++      "schemas/dev_employee_task_result.schema.json",
++      "scripts/dev_employee_supervised_bridge_v2.py",
++      "scripts/dev_employee_recover_stale_tasks.py",
++      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
++      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
++    ],
++    "downloaded_quarantine": [],
++    "blocked": []
++  },
++  "changed_files": [
++    "app/main.py",
++    "tests/test_tasks_api.py"
++  ],
++  "check_logs": {
++    "skill_resolver_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.json",
++    "skill_resolver_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622000012.md",
++    "compileall_literal_python": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall.log",
++    "compileall": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_compileall_python3.log",
++    "pytest": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest.log",
++    "pytest_werror": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622000012_pytest_werror.log"
++  },
++  "iteration_summary": [
++    {
++      "attempt": 1,
++      "action": "Ran literal expected compile command python -m compileall .",
++      "result": "local command unavailable: /bin/bash: line 1: python: command not found"
++    },
++    {
++      "attempt": 2,
++      "action": "Ran python3 -m compileall . and project virtualenv pytest checks",
++      "result": "local checks passed: compileall succeeded; pytest -q passed with 28 tests; pytest -q -W error passed with 28 tests"
++    }
++  ],
++  "blockers": [],
++  "notes": "Local checks passed with python3/project virtualenv because the sandbox has no literal python command. Product changes are local only; outer supervised bridge owns final checks, product commit/push, remote verification, and ORIS evidence commit."
++}
+
+tokens used
+81,307
+Local ORIS task work is complete and evidence was written to:
+
+`/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622000012.codex_result.json`
+
+Product changes:
+- Added `GET /healthz/details` in `app/main.py`
+- Added pytest coverage in `tests/test_tasks_api.py`
+
+Checks:
+- Literal `python -m compileall .` could not run because `python` is not installed.
+- `python3 -m compileall .` passed.
+- `.venv/bin/python -m pytest -q` passed: `28 passed`.
+- `.venv/bin/python -m pytest -q -W error` passed: `28 passed`.
+
+No product commit was made from inside Codex because the authoritative runtime descriptor says the outer supervised bridge owns final checks, commit/push, remote verification, and ORIS evidence commit.
+
+finished_at=2026-06-22T00:02:56+08:00
+return_code=0

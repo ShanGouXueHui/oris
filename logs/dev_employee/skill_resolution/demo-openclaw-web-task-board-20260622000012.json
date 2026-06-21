@@ -1,0 +1,84 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622000012",
+  "resolved_at": "2026-06-22T00:00:41+08:00",
+  "objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+  "skill_resolution": {
+    "needed": [
+      "github_evidence",
+      "fastapi_pytest",
+      "safe_execution",
+      "skill_audit"
+    ],
+    "used_existing": [
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_task_status.py",
+      "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+      "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+      "schemas/dev_employee_task_result.schema.json",
+      "scripts/dev_employee_supervised_bridge_v2.py",
+      "scripts/dev_employee_recover_stale_tasks.py",
+      "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+      "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+    ],
+    "downloaded_quarantine": [],
+    "blocked": []
+  },
+  "capability_matches": [
+    {
+      "name": "github_evidence",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "commit",
+        "evidence"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md"
+      ]
+    },
+    {
+      "name": "fastapi_pytest",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "fastapi",
+        "api",
+        "endpoint",
+        "pytest"
+      ],
+      "owned_assets": [
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json"
+      ]
+    },
+    {
+      "name": "safe_execution",
+      "decision": "use_existing",
+      "hit_keywords": [
+        "test",
+        "run"
+      ],
+      "owned_assets": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py"
+      ]
+    },
+    {
+      "name": "skill_audit",
+      "decision": "use_existing_then_quarantine_if_needed",
+      "hit_keywords": [
+        "openclaw"
+      ],
+      "owned_assets": [
+        "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+      ]
+    }
+  ],
+  "quarantine_results": [],
+  "policy": {
+    "third_party_runtime_install_allowed": false,
+    "quarantine_only": true,
+    "promote_by_internalization_only": true
+  }
+}
