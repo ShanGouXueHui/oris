@@ -11,5 +11,7 @@
     "error": "TypeError: run_codex_auth_preflight() missing 2 required positional arguments: 'codex_bin' and 'workdir'",
     "traceback_tail": "Traceback (most recent call last):\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_runner.py\", line 37, in run_task\n    return _run_task_impl(task_path)\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_runner.py\", line 73, in _run_task_impl\n    preflight = run_codex_auth_preflight()\nTypeError: run_codex_auth_preflight() missing 2 required positional arguments: 'codex_bin' and 'workdir'\n"
   },
-  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure"
+  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure",
+  "oris_evidence_sha": "8f6d82a5b9533b158742f34931481a4ada44bd59",
+  "oris_evidence_remote_sha": "8f6d82a5b9533b158742f34931481a4ada44bd59"
 }
