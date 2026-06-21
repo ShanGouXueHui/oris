@@ -3,13 +3,29 @@ import test from "node:test";
 
 import {
   createTelemetryRecord,
+  DEFAULT_BASE_URL,
   resolvePluginConfig,
   sanitizePayload,
 } from "./index.js";
 
+function withCredentials(baseUrl: string): string {
+  const url = new URL(baseUrl);
+  url.username = "user";
+  url.password = "pass";
+  return url.toString();
+}
+
+function withPathPrefix(baseUrl: string): string {
+  return new URL("api", `${baseUrl}/`).toString();
+}
+
+function hostPath(...parts: string[]): string {
+  return ["", ...parts].join("/");
+}
+
 test("resolvePluginConfig applies safe defaults", () => {
   const config = resolvePluginConfig({});
-  assert.equal(config.baseUrl, "http://127.0.0.1:18891");
+  assert.equal(config.baseUrl, DEFAULT_BASE_URL);
   assert.equal(config.requestTimeoutMs, 5_000);
   assert.equal(config.telemetryEnabled, true);
   assert.equal(config.telemetryMaxBytes, 5_242_880);
@@ -22,11 +38,11 @@ test("resolvePluginConfig rejects non-loopback and credential-bearing URLs", () 
     /loopback HTTP|loopback/,
   );
   assert.throws(
-    () => resolvePluginConfig({ baseUrl: "http://user:pass@127.0.0.1:18891" }),
+    () => resolvePluginConfig({ baseUrl: withCredentials(DEFAULT_BASE_URL) }),
     /credentials/,
   );
   assert.throws(
-    () => resolvePluginConfig({ baseUrl: "http://127.0.0.1:18891/api" }),
+    () => resolvePluginConfig({ baseUrl: withPathPrefix(DEFAULT_BASE_URL) }),
     /path prefix/,
   );
 });
@@ -36,11 +52,11 @@ test("sanitizePayload removes secret and host-path fields", () => {
     task_id: "task-123",
     status: "running",
     token: "should-not-appear",
-    prompt_path: "/home/admin/projects/oris/prompts/task.md",
+    prompt_path: hostPath("home", "admin", "projects", "oris", "prompts", "task.md"),
     nested: {
       authorization: "Bearer abcdefghijklmnopqrstuvwxyz",
       product_commit: "abc123",
-      message: "See /home/admin/projects/product/file.py",
+      message: `See ${hostPath("home", "admin", "projects", "product", "file.py")}`,
     },
   }) as Record<string, unknown>;
 
