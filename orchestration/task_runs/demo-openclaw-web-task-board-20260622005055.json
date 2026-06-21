@@ -1,0 +1,15 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622005055",
+  "status": "failed",
+  "canonical_status": "failed",
+  "terminal": true,
+  "updated_at": "2026-06-22T00:51:00+08:00",
+  "strict_result_schema": true,
+  "failure_code": "bridge_unhandled_exception",
+  "failure_details": {
+    "failure_code": "bridge_unhandled_exception",
+    "error": "TypeError: run_codex_auth_preflight() missing 2 required positional arguments: 'codex_bin' and 'workdir'",
+    "traceback_tail": "Traceback (most recent call last):\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_runner.py\", line 37, in run_task\n    return _run_task_impl(task_path)\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_runner.py\", line 73, in _run_task_impl\n    preflight = run_codex_auth_preflight()\nTypeError: run_codex_auth_preflight() missing 2 required positional arguments: 'codex_bin' and 'workdir'\n"
+  },
+  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure"
+}
