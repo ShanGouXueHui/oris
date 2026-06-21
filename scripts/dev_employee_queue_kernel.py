@@ -8,6 +8,8 @@ Importing this module preserves the historical public surface.
 
 from __future__ import annotations
 
+from dev_employee_runtime.clock import now_iso
+from dev_employee_runtime.json_store import atomic_write_json, read_json
 from dev_employee_runtime.queue_kernel import DEFAULT_KERNEL, QueueKernel
 from dev_employee_runtime.queue_types import ACTIVE_SUFFIXES, TERMINAL_SUFFIXES, ClaimResult, LeaseMismatch, QueueKernelError, TaskConflict, TaskNotFound
 from dev_employee_runtime.queue_utils import default_worker_id, generate_retry_task_id, request_fingerprint
@@ -22,7 +24,10 @@ __all__ = [
     "TERMINAL_SUFFIXES",
     "TaskConflict",
     "TaskNotFound",
+    "atomic_write_json",
     "default_worker_id",
     "generate_retry_task_id",
+    "now_iso",
+    "read_json",
     "request_fingerprint",
 ]
