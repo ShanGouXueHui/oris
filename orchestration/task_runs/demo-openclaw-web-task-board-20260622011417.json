@@ -1,0 +1,14 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622011417",
+  "status": "failed",
+  "canonical_status": "failed",
+  "terminal": true,
+  "updated_at": "2026-06-22T01:14:25+08:00",
+  "strict_result_schema": true,
+  "failure_code": "codex_failed",
+  "failure_details": {
+    "failure_code": "codex_failed",
+    "codex_failure": "codex_preflight_failed"
+  },
+  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure"
+}

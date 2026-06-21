@@ -1,0 +1,8 @@
+error: unexpected argument '--cwd' found
+
+  tip: to pass '--cwd' as a value, use '-- --cwd'
+
+Usage: codex exec [OPTIONS] [PROMPT]
+       codex exec [OPTIONS] <COMMAND> [ARGS]
+
+For more information, try '--help'.
