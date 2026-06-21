@@ -3,48 +3,26 @@ from __future__ import annotations
 import ast
 import hashlib
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
-
-
-_PACKAGE_ROOTS = (
-    Path("scripts/dev_employee_openclaw_enable"),
-    Path("scripts/dev_employee_quality"),
-)
-_CALL_CHAIN_FILES = (
-    Path("scripts/oris_free_mesh_api.py"),
-    Path("scripts/oris_infer.py"),
-    Path("scripts/runtime_execute.py"),
-    Path("oris_vnext/free_mesh_compat.py"),
-    Path("oris_vnext/free_mesh_http.py"),
-    Path("oris_vnext/free_mesh_inference.py"),
-    Path("oris_vnext/infer_refresh.py"),
-    Path("oris_vnext/openai_chat_contract.py"),
-    Path("oris_vnext/runtime_execution_engine.py"),
-    Path("oris_vnext/runtime_execution_state.py"),
-    Path("oris_vnext/runtime_provider_client.py"),
-    Path("tests/test_free_mesh_tool_calling.py"),
-    Path("tests/test_free_mesh_protocol.py"),
-    Path("tests/test_script_entrypoint_bootstrap.py"),
-)
 
 
 def _module_name(repo_root: Path, path: Path) -> str:
     return path.relative_to(repo_root).with_suffix("").as_posix().replace("/", ".")
 
 
-def target_python_files(repo_root: Path) -> tuple[Path, ...]:
+def target_python_files(
+    repo_root: Path,
+    configured_files: Iterable[Path],
+) -> tuple[Path, ...]:
     files = {
-        path
-        for relative_root in _PACKAGE_ROOTS
-        for path in (repo_root / relative_root).glob("*.py")
-        if path.is_file()
+        path.resolve()
+        for path in configured_files
+        if path.is_file() and path.suffix == ".py" and "__pycache__" not in path.parts
     }
-    files.update(
-        repo_root / relative
-        for relative in _CALL_CHAIN_FILES
-        if (repo_root / relative).is_file()
-    )
+    for path in files:
+        path.relative_to(repo_root.resolve())
     return tuple(sorted(files))
 
 
@@ -100,8 +78,9 @@ def _cycles(graph: dict[str, set[str]]) -> list[list[str]]:
 def scan_python_architecture(
     repo_root: Path,
     authorities: dict[str, str],
+    configured_files: Iterable[Path],
 ) -> dict[str, Any]:
-    files = target_python_files(repo_root)
+    files = target_python_files(repo_root, configured_files)
     module_by_path = {path: _module_name(repo_root, path) for path in files}
     known_modules = set(module_by_path.values())
     definitions: dict[str, list[str]] = defaultdict(list)

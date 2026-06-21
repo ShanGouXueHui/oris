@@ -11,31 +11,30 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import urllib.error
-import urllib.request
+import urllib.error as urlerror
+import urllib.request as urlrequest
 from pathlib import Path
 from typing import Any
 
-ORIS_DIR = Path("/home/admin/projects/oris")
+from dev_employee_runtime.env import load_env
+from dev_employee_runtime.http import parse_json_response
+from dev_employee_runtime.net import require_loopback_url
+from dev_employee_runtime.paths import discover_repo_root
+from dev_employee_runtime.settings import load_runtime_settings
+
+ORIS_DIR = discover_repo_root()
 BASE_TEMPLATE = ORIS_DIR / "prompts" / "dev_employee_autonomous_development_task_template_20260526.md"
 RUNTIME_PROMPT_DIR = ORIS_DIR / "run" / "dev_employee_prompts"
 DEFAULT_ENV_FILE = Path.home() / ".config" / "oris" / "dev_employee_enqueue.env"
-DEFAULT_URL = "http://127.0.0.1:18891/enqueue"
 AUTH_KEY = "ORIS_DEV_EMPLOYEE_ENQUEUE_" + "TOKEN"
 AUTH_HEADER = "X-ORIS-" + "Token"
 
 
-def load_env(path: Path) -> dict[str, str]:
-    if not path.exists():
-        raise SystemExit(f"ERROR: env file not found: {path}")
-    values: dict[str, str] = {}
-    for raw in path.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        values[key.strip()] = value.strip().strip('"').strip("'")
-    return values
+def default_enqueue_url() -> str:
+    value = os.environ.get("ORIS_DEV_EMPLOYEE_ENQUEUE_URL")
+    if value:
+        return value
+    return f"{load_runtime_settings(ORIS_DIR).queue_url}/enqueue"
 
 
 def write_runtime_prompt(task_id: str, objective: str, constraints: list[str], checks: list[str]) -> Path:
@@ -66,62 +65,27 @@ def write_runtime_prompt(task_id: str, objective: str, constraints: list[str], c
 
 
 def post_json(url: str, auth_value: str, payload: dict[str, Any]) -> tuple[int, str]:
-    if not url.startswith("http://127.0.0.1:") and not url.startswith("http://localhost:"):
-        raise SystemExit("ERROR: refusing non-loopback enqueue URL")
+    require_loopback_url(url)
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
+    req = urlrequest.Request(
         url,
         data=body,
         method="POST",
         headers={"Content-Type": "application/json", AUTH_HEADER: auth_value},
     )
     try:
-        with urllib.request.urlopen(req, timeout=20) as resp:
+        with urlrequest.urlopen(req, timeout=20) as resp:
             return resp.status, resp.read().decode("utf-8")
-    except urllib.error.HTTPError as exc:
+    except urlerror.HTTPError as exc:
         return exc.code, exc.read().decode("utf-8")
-    except urllib.error.URLError as exc:
+    except urlerror.URLError as exc:
         return 599, json.dumps({"error": "url_error", "message": str(exc)}, ensure_ascii=False)
 
 
-def parse_json(text: str) -> Any:
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        return {"raw": text}
-
-
-def annotate_local_descriptor(api_response: Any, objective: str, constraints: list[str], checks: list[str]) -> dict[str, Any]:
-    """Patch the freshly-created local queue descriptor with autonomy metadata.
-
-    The enqueue API intentionally stays generic. This helper immediately enriches
-    the local descriptor so the bridge can enforce strict autonomous result
-    schema before final host-side checks. If the bridge already claimed the file,
-    this function returns a warning instead of failing the enqueue request.
-    """
-    if not isinstance(api_response, dict):
-        return {"annotated": False, "reason": "response_not_object"}
-    response = api_response.get("response") if "response" in api_response else api_response
-    if not isinstance(response, dict):
-        return {"annotated": False, "reason": "missing_response_object"}
-    path_value = response.get("path")
-    if not path_value:
-        return {"annotated": False, "reason": "missing_descriptor_path"}
-    path = Path(str(path_value))
-    if not path.exists():
-        return {"annotated": False, "reason": "descriptor_already_claimed_or_missing", "path": str(path)}
-    data = json.loads(path.read_text(encoding="utf-8"))
-    data.update(
-        {
-            "strict_result_schema": True,
-            "autonomy_mode": "goal_driven",
-            "task_objective": objective,
-            "constraints": constraints,
-            "expected_checks": checks,
-        }
-    )
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return {"annotated": True, "path": str(path)}
+def csv_list(value: str | None) -> list[str]:
+    if not value:
+        return []
+    return [item.strip() for item in value.split(";;") if item.strip()]
 
 
 def main() -> int:
@@ -129,21 +93,26 @@ def main() -> int:
     parser.add_argument("--task-id", required=True)
     parser.add_argument("--objective", required=True)
     parser.add_argument("--constraint", action="append", default=[])
+    parser.add_argument("--constraints", help="Optional ';;' separated constraints")
     parser.add_argument("--check", action="append", default=[])
+    parser.add_argument("--expected-checks", help="Optional ';;' separated expected checks")
     parser.add_argument("--product-path", required=True)
     parser.add_argument("--product-repo", required=True)
     parser.add_argument("--commit-message", required=True)
     parser.add_argument("--note", default="Queued by dev_employee_autonomous_enqueue.py")
-    parser.add_argument("--url", default=os.environ.get("ORIS_DEV_EMPLOYEE_ENQUEUE_URL", DEFAULT_URL))
+    parser.add_argument("--url", default=default_enqueue_url())
     parser.add_argument("--env-file", default=str(DEFAULT_ENV_FILE))
     args = parser.parse_args()
 
+    require_loopback_url(args.url)
     env = load_env(Path(args.env_file))
-    auth_value = env.get(AUTH_KEY)
-    if not auth_value:
-        raise SystemExit(f"ERROR: {AUTH_KEY} missing from env file")
+    token = os.environ.get(AUTH_KEY) or env.get(AUTH_KEY)
+    if not token:
+        raise SystemExit(f"ERROR: missing {AUTH_KEY} in environment or {args.env_file}")
 
-    prompt_path = write_runtime_prompt(args.task_id, args.objective, args.constraint, args.check)
+    constraints = [*args.constraint, *csv_list(args.constraints)]
+    checks = [*args.check, *csv_list(args.expected_checks)]
+    prompt_path = write_runtime_prompt(args.task_id, args.objective, constraints, checks)
     payload = {
         "task_id": args.task_id,
         "prompt_path": str(prompt_path),
@@ -153,19 +122,11 @@ def main() -> int:
         "note": args.note,
         "strict_result_schema": True,
         "task_objective": args.objective,
-        "constraints": args.constraint,
-        "expected_checks": args.check,
+        "constraints": constraints,
+        "expected_checks": checks,
     }
-    status, response_text = post_json(args.url, auth_value, payload)
-    parsed_response = parse_json(response_text)
-    output = {
-        "http_status": status,
-        "runtime_prompt_path": str(prompt_path),
-        "response": parsed_response,
-    }
-    if 200 <= status < 300:
-        output["descriptor_annotation"] = annotate_local_descriptor(output, args.objective, args.constraint, args.check)
-    print(json.dumps(output, ensure_ascii=False, indent=2))
+    status, text = post_json(args.url, token, payload)
+    print(json.dumps(parse_json_response(text), ensure_ascii=False, indent=2))
     return 0 if 200 <= status < 300 else 1
 
 
