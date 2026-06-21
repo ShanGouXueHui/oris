@@ -17,5 +17,7 @@
     "logs/dev_employee/demo-openclaw-web-task-board-20260622015615_host_pytest_werror.txt",
     "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.json",
     "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622015615.md"
-  ]
+  ],
+  "evidence_index_commit_sha": "73402d682b7a2f4c10f3e359c765853f67f96dbf",
+  "evidence_index_remote_sha": "73402d682b7a2f4c10f3e359c765853f67f96dbf"
 }
