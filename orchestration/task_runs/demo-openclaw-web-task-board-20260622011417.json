@@ -10,5 +10,7 @@
     "failure_code": "codex_failed",
     "codex_failure": "codex_preflight_failed"
   },
-  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure"
+  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure",
+  "oris_evidence_sha": "f56f79f73ad891cf1df29861acf6bfc35b1d83c6",
+  "oris_evidence_remote_sha": "f56f79f73ad891cf1df29861acf6bfc35b1d83c6"
 }
