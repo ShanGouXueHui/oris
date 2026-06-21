@@ -19,5 +19,7 @@
       "skill_resolution must be an object"
     ]
   },
-  "next_recommended_action": "retry_after_prompt_or_skill_resolver_repair"
+  "next_recommended_action": "retry_after_prompt_or_skill_resolver_repair",
+  "oris_evidence_sha": "f2fc5d5a1561e3ca8a6b491f89b2cc669b7d2f28",
+  "oris_evidence_remote_sha": "f2fc5d5a1561e3ca8a6b491f89b2cc669b7d2f28"
 }
