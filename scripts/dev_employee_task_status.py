@@ -5,25 +5,31 @@ from __future__ import annotations
 
 import argparse
 import json
-import urllib.error
-import urllib.parse
-import urllib.request
+import urllib.error as urlerror
+import urllib.parse as urlparse
+import urllib.request as urlrequest
 
-DEFAULT_BASE_URL = "http://127.0.0.1:18891"
+from dev_employee_runtime.net import require_loopback_url
+from dev_employee_runtime.paths import discover_repo_root
+from dev_employee_runtime.settings import load_runtime_settings
+
+
+def default_base_url() -> str:
+    return load_runtime_settings(discover_repo_root()).queue_url
 
 
 def fetch_json(url: str) -> tuple[int, object]:
     try:
-        with urllib.request.urlopen(url, timeout=20) as resp:
+        with urlrequest.urlopen(url, timeout=20) as resp:
             text = resp.read().decode("utf-8")
             return resp.status, json.loads(text)
-    except urllib.error.HTTPError as exc:
+    except urlerror.HTTPError as exc:
         text = exc.read().decode("utf-8")
         try:
             return exc.code, json.loads(text)
         except json.JSONDecodeError:
             return exc.code, {"raw": text}
-    except urllib.error.URLError as exc:
+    except urlerror.URLError as exc:
         return 599, {"error": "url_error", "message": str(exc)}
 
 
@@ -32,21 +38,21 @@ def main() -> int:
     parser.add_argument("--task-id")
     parser.add_argument("--latest", action="store_true")
     parser.add_argument("--queue", action="store_true")
-    parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
+    parser.add_argument("--base-url", default=default_base_url())
     args = parser.parse_args()
 
-    if not args.base_url.startswith("http://127.0.0.1:") and not args.base_url.startswith("http://localhost:"):
-        raise SystemExit("ERROR: refusing non-loopback status URL")
-
-    if args.task_id:
-        path = "/task/" + urllib.parse.quote(args.task_id, safe="")
-    elif args.queue:
+    require_loopback_url(args.base_url)
+    base = args.base_url.rstrip("/")
+    if args.queue:
         path = "/queue"
-    else:
+    elif args.latest:
         path = "/latest"
-
-    status, payload = fetch_json(args.base_url.rstrip("/") + path)
-    print(json.dumps({"http_status": status, "response": payload}, ensure_ascii=False, indent=2))
+    elif args.task_id:
+        path = "/task/" + urlparse.quote(args.task_id, safe="")
+    else:
+        raise SystemExit("ERROR: choose --queue, --latest or --task-id")
+    status, payload = fetch_json(base + path)
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0 if 200 <= status < 300 else 1
 
 
