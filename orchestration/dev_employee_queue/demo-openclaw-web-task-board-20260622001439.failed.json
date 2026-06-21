@@ -1,0 +1,158 @@
+{
+  "attempt": 1,
+  "autonomy_mode": "goal_driven",
+  "codex_bin": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+  "constraints": [
+    "Do not touch production services",
+    "Do not change existing public API behavior except adding GET /healthz/details",
+    "Do not hardcode secrets or environment-specific credentials",
+    "Keep implementation minimal and testable"
+  ],
+  "created_at": "2026-06-22T00:14:44+08:00",
+  "created_by": "dev_employee_enqueue_server",
+  "execution_timeout_seconds": 7200,
+  "expected_checks": [
+    "python -m compileall .",
+    "python -m pytest -q",
+    "python -m pytest -q -W error"
+  ],
+  "expected_product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "expected_product_repo": "ShanGouXueHui/oris-final-acceptance-api",
+  "extra_write_dirs": [
+    "/home/admin/projects/oris"
+  ],
+  "lease_seconds": 60,
+  "max_attempts": 3,
+  "notes": "Queued by dev_employee_intake_api_v2.py",
+  "product_commit_message": "feat(demo): add task-board health metadata endpoint",
+  "prompt_path": "/home/admin/projects/oris/run/dev_employee_prompts/demo-openclaw-web-task-board-20260622001439.md",
+  "request_fingerprint": "4f6d4430ca79d4fb2a8e50ca61a01fb7b26d89d1fb191f6a33ee1d67350a8f80",
+  "requeued_from_stale_running": true,
+  "retry_of": null,
+  "root_task_id": "demo-openclaw-web-task-board-20260622001439",
+  "sandbox": "workspace-write",
+  "status": "remote_verification_failed",
+  "strict_result_schema": true,
+  "task_id": "demo-openclaw-web-task-board-20260622001439",
+  "task_objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+  "workdir": "/home/admin/projects",
+  "phase": "pushing",
+  "worker_id": "iZt4n62qkjefjya5xa097pZ:448347:8232761d4f2d",
+  "worker_pid": 448347,
+  "lease_token": "1d7f23ac7f6c45aea938d03774c17fe3",
+  "claimed_at": "2026-06-22T00:28:50+08:00",
+  "heartbeat_at": "2026-06-22T00:31:30+08:00",
+  "lease_expires_at": "2026-06-22T00:32:30+08:00",
+  "execution_deadline_at": "2026-06-22T02:28:50+08:00",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex.log",
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.codex_result.json",
+  "codex_auth_preflight_log_path": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex_auth_preflight.json",
+  "started_at": "2026-06-22T00:28:50+08:00",
+  "product_baseline": {
+    "ok": true,
+    "product_path": "/home/admin/projects/oris-final-acceptance-api",
+    "head_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "remote_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "captured_at": "2026-06-22T00:28:57+08:00",
+    "worktree_clean": true
+  },
+  "executor_preflight": {
+    "ok": true,
+    "status": "ready",
+    "executor_path": "/home/admin/.npm-global/lib/node_modules/@openai/codex/bin/codex.js",
+    "executor_version": "codex-cli 0.133.0",
+    "linux_user": "admin",
+    "uid": 1000,
+    "home": "/home/admin",
+    "workdir": "/home/admin/projects"
+  },
+  "executor_pid": 592425,
+  "canonical_status": "remote_verification_failed",
+  "terminal": true,
+  "finished_at": "2026-06-22T00:31:30+08:00",
+  "product_result": {
+    "ok": true,
+    "committed": false,
+    "commit_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "remote_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "status_before": "",
+    "push_stdout": "",
+    "push_stderr": "Everything up-to-date\n",
+    "remote_stdout": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59\trefs/heads/main\n",
+    "remote_stderr": ""
+  },
+  "oris_result": {
+    "ok": false,
+    "stage": "git_add",
+    "stdout": "",
+    "stderr": "The following paths are ignored by one of your .gitignore files:\norchestration/task_runs\nhint: Use -f if you really want to add them.\nhint: Turn this message off by running\nhint: \"git config advice.addIgnoredFile false\"\n",
+    "files": [
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.json",
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.supervised_result.json",
+      "logs/dev_employee/latest_task_progress.json",
+      "logs/dev_employee/latest_task_progress.md",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_py_compile.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest_werror.txt"
+    ]
+  },
+  "failure_evidence_result": {
+    "ok": false,
+    "stage": "git_add",
+    "stdout": "",
+    "stderr": "The following paths are ignored by one of your .gitignore files:\norchestration/task_runs\nhint: Use -f if you really want to add them.\nhint: Turn this message off by running\nhint: \"git config advice.addIgnoredFile false\"\n",
+    "files": [
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.json",
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.failure_result.json",
+      "logs/dev_employee/latest_task_progress.json",
+      "logs/dev_employee/latest_task_progress.md",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex.log",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex_auth_preflight.json",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_compileall.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_py_compile.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest_werror.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_pytest.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_pytest_werror.txt"
+    ]
+  },
+  "failure_evidence_index_result": {
+    "ok": false,
+    "stage": "missing_evidence_commit_sha",
+    "evidence_result": {
+      "ok": false,
+      "stage": "git_add",
+      "stdout": "",
+      "stderr": "The following paths are ignored by one of your .gitignore files:\norchestration/task_runs\nhint: Use -f if you really want to add them.\nhint: Turn this message off by running\nhint: \"git config advice.addIgnoredFile false\"\n",
+      "files": [
+        "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.json",
+        "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.failure_result.json",
+        "logs/dev_employee/latest_task_progress.json",
+        "logs/dev_employee/latest_task_progress.md",
+        "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+        "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex.log",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex_auth_preflight.json",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_compileall.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_py_compile.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest_werror.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_pytest.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_pytest_werror.txt"
+      ]
+    }
+  },
+  "oris_evidence_push_failed": true,
+  "failure_triage_result": {
+    "ok": false,
+    "return_code": 1,
+    "log": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439_failure_triage.txt",
+    "stdout_tail": "rr\\\": \\\"Everything up-to-date\\\\n\\\", \\\"remote_stdout\\\": \\\"9ccff8fcef6eb8ef08597183eb16fb235f1f7b59\\\\trefs/heads/main\\\\n\\\", \\\"remote_stderr\\\": \\\"\\\"}, \\\"oris_result\\\": {\\\"ok\\\": false, \\\"stage\\\": \\\"git_add\\\", \\\"stdout\\\": \\\"\\\", \\\"stderr\\\": \\\"The following paths are ignored by one of your .gitignore files:\\\\norchestr...\",\n      \"routine_autonomous_repair_allowed\": false,\n      \"recommended_action\": \"Inspect full failure evidence manually before automated rerun.\",\n      \"repair_scope\": \"unknown\"\n    },\n    \"evidence_links\": {\n      \"codex_log_path\": \"/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex.log\",\n      \"codex_result_path\": \"/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.codex_result.json\",\n      \"skill_resolver_report_json\": \"/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json\",\n      \"skill_resolver_report_markdown\": \"/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md\"\n    },\n    \"next_step_contract\": {\n      \"ask_human_for_routine_decision\": false,\n      \"rerun_requires_new_task_id\": true,\n      \"must_preserve_original_failure_evidence\": true\n    }\n  },\n  \"commit\": {\n    \"ok\": false,\n    \"committed\": true,\n    \"commit_sha\": \"c90ff5e414b86234dadd570de6fadf06f6e15f39\",\n    \"remote_sha\": \"5793630e9e2eca4a14614b3a099e1699e59158f9\",\n    \"push_stderr\": \"To github.com:ShanGouXueHui/oris.git\\n ! [rejected]        main -> main (fetch first)\\nerror: failed to push some refs to 'github.com:ShanGouXueHui/oris.git'\\nhint: Updates were rejected because the remote contains work that you do\\nhint: not have locally. This is usually caused by another repository pushing\\nhint: to the same ref. You may want to first integrate the remote changes\\nhint: (e.g., 'git pull ...') before pushing again.\\nhint: See the 'Note about fast-forwards' in 'git push --help' for details.\\n\"\n  }\n}\n",
+    "stderr_tail": ""
+  },
+  "failure_triage_failed": true
+}

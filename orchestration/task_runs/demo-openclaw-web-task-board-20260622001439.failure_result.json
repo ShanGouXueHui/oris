@@ -1,0 +1,74 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622001439",
+  "status": "remote_verification_failed",
+  "canonical_status": "remote_verification_failed",
+  "terminal": true,
+  "failure_code": null,
+  "updated_at": "2026-06-22T00:31:30+08:00",
+  "strict_result_schema": true,
+  "task_objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+  "failure_stage": "remote_verification_failed",
+  "failure_details": {
+    "product_result": {
+      "ok": true,
+      "committed": false,
+      "commit_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+      "remote_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+      "status_before": "",
+      "push_stdout": "",
+      "push_stderr": "Everything up-to-date\n",
+      "remote_stdout": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59\trefs/heads/main\n",
+      "remote_stderr": ""
+    },
+    "oris_result": {
+      "ok": false,
+      "stage": "git_add",
+      "stdout": "",
+      "stderr": "The following paths are ignored by one of your .gitignore files:\norchestration/task_runs\nhint: Use -f if you really want to add them.\nhint: Turn this message off by running\nhint: \"git config advice.addIgnoredFile false\"\n",
+      "files": [
+        "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.json",
+        "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.supervised_result.json",
+        "logs/dev_employee/latest_task_progress.json",
+        "logs/dev_employee/latest_task_progress.md",
+        "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+        "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_py_compile.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest.txt",
+        "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest_werror.txt"
+      ]
+    }
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex.log",
+  "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+  "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+  "next_recommended_action": "Inspect Git push evidence and repository state; resolve Git synchronization or permissions issue, then rerun or resume safely.",
+  "product_result": {
+    "ok": true,
+    "committed": false,
+    "commit_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "remote_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+    "status_before": "",
+    "push_stdout": "",
+    "push_stderr": "Everything up-to-date\n",
+    "remote_stdout": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59\trefs/heads/main\n",
+    "remote_stderr": ""
+  },
+  "oris_result": {
+    "ok": false,
+    "stage": "git_add",
+    "stdout": "",
+    "stderr": "The following paths are ignored by one of your .gitignore files:\norchestration/task_runs\nhint: Use -f if you really want to add them.\nhint: Turn this message off by running\nhint: \"git config advice.addIgnoredFile false\"\n",
+    "files": [
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.json",
+      "orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.supervised_result.json",
+      "logs/dev_employee/latest_task_progress.json",
+      "logs/dev_employee/latest_task_progress.md",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+      "logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_py_compile.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest.txt",
+      "logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest_werror.txt"
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622001439",
+  "status": "completed",
+  "updated_at": "2026-06-22T00:31:30+08:00",
+  "product_path": "/home/admin/projects/oris-final-acceptance-api",
+  "product_commit_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+  "product_remote_sha": "9ccff8fcef6eb8ef08597183eb16fb235f1f7b59",
+  "checks": {
+    "ok": true,
+    "python_bin": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python",
+    "results": [
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m py_compile app/main.py",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_py_compile.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest.txt"
+      },
+      {
+        "cmd": "/home/admin/projects/oris-final-acceptance-api/.venv/bin/python -m pytest -q -W error::DeprecationWarning",
+        "return_code": 0,
+        "log": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439_host_pytest_werror.txt"
+      }
+    ]
+  },
+  "codex_result_path": "/home/admin/projects/oris/orchestration/task_runs/demo-openclaw-web-task-board-20260622001439.codex_result.json",
+  "codex_log_path": "/home/admin/projects/oris/logs/dev_employee/demo-openclaw-web-task-board-20260622001439.codex.log",
+  "strict_result_schema": true,
+  "task_objective": "Demo project test from OpenClaw Web observation flow. In the FastAPI task-board API project, add a read-only health metadata endpoint GET /healthz/details returning service name, version, storage mode, and task count. Add or update pytest coverage. Preserve existing API behavior. Run compile and pytest checks. Commit changes with evidence.",
+  "skill_resolver_report_json": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.json",
+  "skill_resolver_report_markdown": "/home/admin/projects/oris/logs/dev_employee/skill_resolution/demo-openclaw-web-task-board-20260622001439.md",
+  "autonomous_result": {
+    "plan": [
+      "Inspect durable ORIS context and project registry",
+      "Resolve capabilities with ORIS-owned resolver in quarantine mode because the objective mentions OpenClaw",
+      "Inspect the FastAPI task-board API and current pytest coverage",
+      "Confirm or implement GET /healthz/details with service metadata and live task count",
+      "Run compile and pytest checks, repairing ordinary failures if needed",
+      "Write strict structured local evidence for the supervised bridge"
+    ],
+    "design_summary": "The product repository already contained a minimal read-only GET /healthz/details endpoint using the existing service constants and in-memory task dictionary. It returns a typed HealthDetails response with service_name, version, storage_mode, and task_count, so no product code edit was required. Existing pytest coverage verifies the empty-board metadata response and that task_count reflects created tasks while preserving existing task API behavior.",
+    "skill_resolution": {
+      "needed": [
+        "github_evidence",
+        "fastapi_pytest",
+        "safe_execution",
+        "skill_audit"
+      ],
+      "used_existing": [
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_task_status.py",
+        "docs/OPENCLAW_WEB_TO_DEV_EMPLOYEE_ENQUEUE_INTEGRATION_2026-05-26.md",
+        "prompts/dev_employee_autonomous_development_task_template_20260526.md",
+        "schemas/dev_employee_task_result.schema.json",
+        "scripts/dev_employee_supervised_bridge_v2.py",
+        "scripts/dev_employee_recover_stale_tasks.py",
+        "docs/SKILL_INTAKE_AND_REUSE_PLAN_2026-05-25.md",
+        "docs/SKILL_INTERNALIZATION_SHORTLIST_2026-05-25.md"
+      ],
+      "downloaded_quarantine": [
+        "/home/admin/projects/oris/vendor/skill_candidates/awesome-openclaw-skills",
+        "/home/admin/projects/oris/vendor/skill_candidates/clawhub",
+        "/home/admin/projects/oris/vendor/skill_candidates/awesome-mcp-servers"
+      ],
+      "blocked": []
+    },
+    "changed_files": [],
+    "iteration_summary": [
+      {
+        "attempt": 1,
+        "result": "check invocation failed",
+        "action": "The host PATH has no python executable, so python -m compileall and python -m pytest could not start."
+      },
+      {
+        "attempt": 2,
+        "result": "partial check invocation failed",
+        "action": "python3 -m compileall passed, but python3 did not have pytest installed."
+      },
+      {
+        "attempt": 3,
+        "result": "local checks passed",
+        "action": "Used the product virtual environment interpreter .venv/bin/python for compileall, pytest, and pytest -W error. Both pytest gates reported 28 passed."
+      }
+    ],
+    "blockers": [],
+    "notes": "Local checks passed. No product files were changed because the requested endpoint and tests were already present in the clean product repository. The outer supervised bridge must perform final checks, product Git operations, remote verification, and ORIS evidence commit."
+  }
+}
