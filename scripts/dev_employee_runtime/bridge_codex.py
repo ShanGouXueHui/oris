@@ -30,18 +30,33 @@ def build_runtime_prompt(task: dict[str, Any], base_prompt: str, result_path: Pa
 At the end of execution, write exactly one JSON object to this path:
 {result_path}
 
-Required JSON fields:
-- status: one of success, failed, blocked
+The JSON object MUST match the ORIS autonomous result validator contract.
+
+Required top-level JSON fields:
+- task_id: runtime task id, exactly as provided in ORIS_DEV_EMPLOYEE_TASK_ID
+- status: one of local_checks_passed, local_checks_failed, blocked
+- product_path: target product repository path
+- plan: array of concrete steps you followed
+- skill_resolution: object with exactly these array fields: needed, used_existing, downloaded_quarantine, blocked
+- changed_files: array of changed product file paths; empty array is allowed if the requested work already exists
+- check_logs: object mapping check names to log paths or concise check evidence
+- iteration_summary: array of attempt/result/action objects or strings
+- notes: array of residual notes; empty array is allowed
+
+Recommended optional fields:
+- blockers: required and non-empty if status is blocked
 - summary: concise human-readable completion summary
-- files_changed: array of changed file paths
-- tests_run: array of commands/checks actually executed
-- checks: array of check result objects or strings
 - risks: array of residual risks or empty array
 - next_steps: array of concrete follow-up actions or empty array
-- product_path: target product repository path
-- task_id: runtime task id
+- skill_resolver_report_json: path to the JSON skill evidence report when skill resolution is required
+- skill_resolver_report_md: path to the Markdown skill evidence report when skill resolution is required
 
-Do not include secrets, tokens, raw session IDs, or private prompts in the JSON.
+Status semantics:
+- Use local_checks_passed only when implementation state is correct and local checks have passed.
+- Use local_checks_failed when local checks fail or you cannot complete the product-side work.
+- Use blocked only for policy, credential, missing access, or unsafe-operation blocks, and include blockers.
+
+Do not use status values success, failed, or passed. Do not include secrets, tokens, raw session IDs, or private prompts in the JSON.
 """.format(result_path=result_path)
     if task.get("skill_resolution_required"):
         required += """
@@ -53,6 +68,14 @@ Because skill_resolution_required=true, before making product changes you must:
 2. Write a JSON report to skill_resolver_report_json.
 3. Write a markdown report to skill_resolver_report_md.
 4. Include the resolved skill name and evidence paths in the final result JSON.
+
+The skill_resolution field in the final result JSON must still contain the required object:
+{
+  "needed": [...],
+  "used_existing": [...],
+  "downloaded_quarantine": [...],
+  "blocked": []
+}
 """
     return (
         base_prompt
