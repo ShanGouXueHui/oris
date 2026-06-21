@@ -1,6 +1,6 @@
 {
-  "task_id": "demo-openclaw-web-task-board-20260622005055",
-  "updated_at": "2026-06-22T00:51:00+08:00",
+  "task_id": "demo-openclaw-web-task-board-20260622005827",
+  "updated_at": "2026-06-22T00:58:37+08:00",
   "status": "failed",
   "failure_code": "bridge_unhandled_exception"
 }

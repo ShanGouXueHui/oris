@@ -1,0 +1,15 @@
+{
+  "task_id": "demo-openclaw-web-task-board-20260622005827",
+  "status": "failed",
+  "canonical_status": "failed",
+  "terminal": true,
+  "updated_at": "2026-06-22T00:58:37+08:00",
+  "strict_result_schema": true,
+  "failure_code": "bridge_unhandled_exception",
+  "failure_details": {
+    "failure_code": "bridge_unhandled_exception",
+    "error": "KeyError: 'product_path'",
+    "traceback_tail": "Traceback (most recent call last):\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_runner.py\", line 37, in run_task\n    return _run_task_impl(task_path)\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_runner.py\", line 86, in _run_task_impl\n    rc = invoke_codex(task, codex_log, result_path)\n  File \"/home/admin/projects/oris/scripts/dev_employee_runtime/bridge_codex.py\", line 82, in invoke_codex\n    product_path = safe_path(task[\"product_path\"], [PROJECTS_DIR])\nKeyError: 'product_path'\n"
+  },
+  "next_recommended_action": "inspect_evidence_then_retry_terminal_failure"
+}
