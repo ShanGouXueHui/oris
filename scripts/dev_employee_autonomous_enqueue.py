@@ -82,10 +82,6 @@ def post_json(url: str, auth_value: str, payload: dict[str, Any]) -> tuple[int, 
         return 599, json.dumps({"error": "url_error", "message": str(exc)}, ensure_ascii=False)
 
 
-def parse_json(text: str) -> Any:
-    return parse_json_response(text)
-
-
 def csv_list(value: str | None) -> list[str]:
     if not value:
         return []
@@ -130,7 +126,7 @@ def main() -> int:
         "expected_checks": checks,
     }
     status, text = post_json(args.url, token, payload)
-    print(json.dumps(parse_json(text), ensure_ascii=False, indent=2))
+    print(json.dumps(parse_json_response(text), ensure_ascii=False, indent=2))
     return 0 if 200 <= status < 300 else 1
 
 
