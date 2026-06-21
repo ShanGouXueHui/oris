@@ -14,3 +14,11 @@ def discover_repo_root(anchor: Path | None = None) -> Path:
         ):
             return candidate
     raise RuntimeError("ORIS repository root not found")
+
+
+def repo_relative(path: Path, repo_root: Path | None = None) -> str | None:
+    root = (repo_root or discover_repo_root()).resolve()
+    try:
+        return path.resolve().relative_to(root).as_posix()
+    except ValueError:
+        return None
