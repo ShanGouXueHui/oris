@@ -8,12 +8,13 @@ The next chat must not rely on prior chat context. Read these files from GitHub 
 
 1. `memory/dev_employee/CURRENT_STATE_2026-06-22_AUTONOMOUS_RUNTIME_V2.md`
 2. `memory/dev_employee/NEXT_CHAT_START_PROMPT_2026-06-22_AUTONOMOUS_RUNTIME_V2.md`
-3. `docs/DEV_EMPLOYEE_AUTONOMOUS_RUNTIME_V2_ACCEPTANCE_2026-06-22.md`
-4. `docs/OPERATING_CONTEXT_AND_ENGINEERING_RULES_2026-06-22_RUNTIME_V2.md`
-5. `orchestration/project_registry.json`
-6. `memory/dev_employee/current_task.json`
-7. `memory/dev_employee/current_task.md`
-8. GitHub issue `https://github.com/ShanGouXueHui/oris/issues/15`
+3. `memory/dev_employee/ENGINEERING_GUARDRAILS_SCRIPT_AND_EVIDENCE_2026-06-22.md`
+4. `docs/DEV_EMPLOYEE_AUTONOMOUS_RUNTIME_V2_ACCEPTANCE_2026-06-22.md`
+5. `docs/OPERATING_CONTEXT_AND_ENGINEERING_RULES_2026-06-22_RUNTIME_V2.md`
+6. `orchestration/project_registry.json`
+7. `memory/dev_employee/current_task.json`
+8. `memory/dev_employee/current_task.md`
+9. GitHub issue `https://github.com/ShanGouXueHui/oris/issues/15`
 
 Then inspect the current latest commits in:
 
@@ -24,11 +25,13 @@ Then inspect the current latest commits in:
 
 - Runtime v2 acceptance issue exists: `https://github.com/ShanGouXueHui/oris/issues/15`.
 - Runtime v2 authority doc exists: `docs/DEV_EMPLOYEE_AUTONOMOUS_RUNTIME_V2_ACCEPTANCE_2026-06-22.md`.
-- Authority doc commit: `01f828ba1c20995dd1c69a4540a55c92ea93087f`.
-- Current state archive commit: `ce9b5f57b2183416785a7b48f4c0da3b049e993f`.
-- Insight product Module 0 commit: `7d1d604b92b21f1213f990140b3345b4be2163ca`.
-- Module 1 modularization was prompted, but not verified complete in this chat.
-- SSH command to `admin@43.106.55.255` failed with `Permission denied (publickey)`.
+- Runtime v2 Module A is accepted.
+- Module A final commit: `c244e2467fe153377b370df0ffc35d541b8b3ef1`.
+- Module A evidence commit recorded inside report: `a785cef3fb7fd5b5f3403a568d1e701a9e72ac13`.
+- Module A latest test result: `reports/testing/latest_test_result.json` with `status=passed` and `test_exit_code=0`.
+- Module A execution report: `reports/execution/module_A_execution_report.md`.
+- Insight product Module 0 commit remains: `7d1d604b92b21f1213f990140b3345b4be2163ca`.
+- Product repo was checked read-only by `git ls-remote`; old interactive insight product was not continued.
 
 ## Strategic direction
 
@@ -42,38 +45,38 @@ Upgrade ORIS -> Autonomous Dev Employee Runtime v2 -> use upgraded ORIS to rebui
 
 ## Immediate next task
 
-Start Runtime v2 Module A: Architecture and State Machine Design.
+Start Runtime v2 Module B: Persistent Run Store and Queue Contract.
 
-Module A deliverables:
+Module B should turn Module A's design into a minimal durable runtime substrate:
 
-- architecture doc;
-- state machine schema;
-- failure taxonomy;
-- acceptance criteria;
-- tests for status transitions;
-- `docs/testing/MODULE_A_TEST_PLAN.md`;
-- `reports/testing/module_A_test_result.json`;
+- persistent run record model;
+- queue item contract;
+- state transition function/API;
+- append-only event log semantics;
+- idempotency and recovery rules;
+- tests for enqueue, dequeue/claim, state transition validation, terminal-state protection, and event persistence;
+- `docs/testing/MODULE_B_TEST_PLAN.md`;
+- `reports/testing/module_B_test_result.json`;
 - `reports/testing/latest_test_result.json`;
-- `reports/execution/module_A_execution_report.md`.
+- `reports/execution/module_B_execution_report.md`.
 
-Module A cannot be marked complete unless implementation and evidence are committed and pushed to GitHub.
+Module B cannot be marked complete unless implementation and evidence are committed and pushed to GitHub.
 
-## Operational blocker
+## Script and evidence guardrail
 
-The user tried to run the SSH bootstrap command and got:
+The user explicitly corrected the process after Module A: do not create many compatibility scripts or parallel executable versions. This is now a binding memory in:
 
-```text
-admin@43.106.55.255: Permission denied (publickey)
-```
+- `memory/dev_employee/ENGINEERING_GUARDRAILS_SCRIPT_AND_EVIDENCE_2026-06-22.md`
 
-This is an access/auth problem, not an ORIS code problem.
+The assistant must obey:
 
-Use one of these routes:
-
-1. user runs commands inside an already authenticated terminal on `43.106.55.255`;
-2. user fixes local SSH key access to `admin@43.106.55.255`;
-3. use ORIS/OpenClaw Web if it has sufficient write/execute actions;
-4. use GitHub connector for repo docs/issues, but note it cannot kill remote processes or run server commands.
+- one official executable entry point per workflow only;
+- no `_v2.sh`, `_v3.sh`, `compat.sh`, or similar script proliferation unless explicitly approved;
+- old executable script versions are backed up by Git history, not by extra repo files;
+- before asking the user to rerun a script, verify GitHub state and remove duplicate executable entry points;
+- keep terminal output short;
+- read reports/logs from GitHub instead of asking the user to paste long logs;
+- ORIS platform validation must not mutate product repositories unless explicitly required.
 
 ## Verification protocol
 
@@ -96,6 +99,7 @@ Do not accept OpenClaw UI text alone.
 - Do not touch Hangzhou production host `8.136.28.6` unless explicitly authorized.
 - Do not commit credentials, tokens, private env files, or secrets.
 - Do not use `set -e` in copy-paste commands.
+- Do not create duplicate executable bootstrap scripts for the same workflow.
 
 ## Desired end state
 
