@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ORIS Runtime v2 Module A bootstrap script.
-# Policy: do not use `set -e`; keep terminal output short; write evidence to GitHub-friendly files.
+# Policy: do not use `set -e`; keep terminal output short; write detailed logs to repo evidence files.
 
 ORIS_REPO_URL="${ORIS_REPO_URL:-https://github.com/ShanGouXueHui/oris.git}"
 PRODUCT_REPO_URL="${PRODUCT_REPO_URL:-https://github.com/ShanGouXueHui/oris-commercial-insight-employee.git}"
@@ -11,8 +11,7 @@ PRODUCT_DIR="${PRODUCT_DIR:-$WORKDIR/oris-commercial-insight-employee}"
 BRANCH="${ORIS_BRANCH:-main}"
 COMMIT_AND_PUSH="${ORIS_MODULE_A_COMMIT_AND_PUSH:-1}"
 MODULE0_SHA="7d1d604b92b21f1213f990140b3345b4be2163ca"
-
-mkdir -p "$WORKDIR"
+LOG_FILE=""
 
 summary() {
   printf '%s\n' "$1"
@@ -26,39 +25,48 @@ fail_short() {
   exit 1
 }
 
-clone_or_update_repo() {
-  repo_url="$1"
-  repo_dir="$2"
-  branch="$3"
-  label="$4"
-
-  if [ ! -d "$repo_dir/.git" ]; then
-    git clone "$repo_url" "$repo_dir" >> "$LOG_FILE" 2>&1
-    rc=$?
-    if [ "$rc" -ne 0 ]; then
-      fail_short "cannot clone $label"
-    fi
-  else
-    cd "$repo_dir" || fail_short "cannot enter $label repo"
-    git fetch origin >> "$LOG_FILE" 2>&1
-    git checkout "$branch" >> "$LOG_FILE" 2>&1
-    git pull --ff-only origin "$branch" >> "$LOG_FILE" 2>&1
-    rc=$?
-    if [ "$rc" -ne 0 ]; then
-      fail_short "cannot fast-forward $label repo"
-    fi
+append_log() {
+  if [ -n "$LOG_FILE" ]; then
+    printf '%s\n' "$1" >> "$LOG_FILE" 2>/dev/null
   fi
 }
 
-# Prepare ORIS repo and log location first.
+run_logged() {
+  desc="$1"
+  shift
+  append_log ""
+  append_log "# $desc"
+  "$@" >> "$LOG_FILE" 2>&1
+  return $?
+}
+
+mkdir -p "$WORKDIR"
+summary "ORIS Runtime v2 Module A bootstrap starting..."
+
+# 1. Clone/update ORIS first. Before ORIS log exists, use a temp log.
 TEMP_LOG="/tmp/oris_module_A_bootstrap_$$.log"
 LOG_FILE="$TEMP_LOG"
-summary "ORIS Runtime v2 Module A bootstrap starting..."
-clone_or_update_repo "$ORIS_REPO_URL" "$ORIS_DIR" "$BRANCH" "ORIS"
 
-cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo"
+if [ ! -d "$ORIS_DIR/.git" ]; then
+  git clone "$ORIS_REPO_URL" "$ORIS_DIR" >> "$LOG_FILE" 2>&1
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    fail_short "cannot clone ORIS repo"
+  fi
+else
+  cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo"
+  git fetch origin >> "$LOG_FILE" 2>&1
+  git checkout "$BRANCH" >> "$LOG_FILE" 2>&1
+  git pull --ff-only origin "$BRANCH" >> "$LOG_FILE" 2>&1
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    fail_short "cannot fast-forward ORIS repo; please inspect local changes in $ORIS_DIR"
+  fi
+fi
+
+cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo after clone/update"
 mkdir -p reports/execution
-LOG_FILE="reports/execution/module_A_bootstrap_latest.log"
+LOG_FILE="$ORIS_DIR/reports/execution/module_A_bootstrap_latest.log"
 {
   echo "# Module A bootstrap log"
   echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -66,31 +74,63 @@ LOG_FILE="reports/execution/module_A_bootstrap_latest.log"
   echo "product_dir=$PRODUCT_DIR"
   echo "branch=$BRANCH"
   echo ""
-  echo "# pre-clone log"
+  echo "# pre-log bootstrap output"
   if [ -f "$TEMP_LOG" ]; then
     cat "$TEMP_LOG"
   fi
 } > "$LOG_FILE" 2>&1
 rm -f "$TEMP_LOG"
 
-clone_or_update_repo "$PRODUCT_REPO_URL" "$PRODUCT_DIR" "$BRANCH" "product"
+# 2. Product repo is only read-only evidence. It must not block Runtime v2 Module A.
+PRODUCT_HEAD="UNKNOWN"
+PRODUCT_CHECK_STATUS="unknown"
+summary "Checking product repo state quietly..."
+if [ ! -d "$PRODUCT_DIR/.git" ]; then
+  run_logged "clone product repo for read-only head check" git clone "$PRODUCT_REPO_URL" "$PRODUCT_DIR"
+  product_clone_rc=$?
+  if [ "$product_clone_rc" -ne 0 ]; then
+    PRODUCT_CHECK_STATUS="clone_failed_non_blocking"
+  fi
+else
+  cd "$PRODUCT_DIR" || PRODUCT_CHECK_STATUS="cannot_enter_product_repo_non_blocking"
+  if [ -d "$PRODUCT_DIR/.git" ]; then
+    git fetch origin >> "$LOG_FILE" 2>&1
+    fetch_rc=$?
+    if [ "$fetch_rc" -ne 0 ]; then
+      PRODUCT_CHECK_STATUS="fetch_failed_non_blocking"
+    else
+      PRODUCT_CHECK_STATUS="fetched_origin"
+    fi
+  fi
+fi
+
+if [ -d "$PRODUCT_DIR/.git" ]; then
+  cd "$PRODUCT_DIR" || true
+  PRODUCT_HEAD="$(git rev-parse "origin/$BRANCH" 2>> "$LOG_FILE")"
+  if [ -z "$PRODUCT_HEAD" ]; then
+    PRODUCT_HEAD="$(git rev-parse HEAD 2>> "$LOG_FILE")"
+  fi
+  if [ -z "$PRODUCT_HEAD" ]; then
+    PRODUCT_HEAD="UNKNOWN"
+  fi
+fi
 
 cd "$ORIS_DIR" || fail_short "cannot return to ORIS repo"
 BASE_SHA="$(git rev-parse HEAD 2>> "$LOG_FILE")"
-PRODUCT_HEAD="$(cd "$PRODUCT_DIR" && git rev-parse HEAD 2>> "$ORIS_DIR/$LOG_FILE")"
 
 {
   echo ""
   echo "# repository state"
   echo "base_sha=$BASE_SHA"
+  echo "product_check_status=$PRODUCT_CHECK_STATUS"
   echo "product_head=$PRODUCT_HEAD"
+  echo "product_module0_sha=$MODULE0_SHA"
   if [ "$PRODUCT_HEAD" = "$MODULE0_SHA" ]; then
     echo "product_module_state=module_0_only"
+  elif [ "$PRODUCT_HEAD" = "UNKNOWN" ]; then
+    echo "product_module_state=unknown_non_blocking"
   else
-    echo "product_module_state=has_commits_after_module_0"
-    echo "product_commits_after_module0:"
-    cd "$PRODUCT_DIR" && git log --oneline "$MODULE0_SHA"..HEAD
-    cd "$ORIS_DIR" || exit 0
+    echo "product_module_state=has_commits_after_or_different_from_module_0"
   fi
   echo ""
   echo "# required context file existence"
@@ -366,7 +406,7 @@ else
   TEST_STATUS="failed"
 fi
 
-export PYTEST_RC TEST_STATUS BASE_SHA PRODUCT_HEAD MODULE0_SHA LOG_FILE
+export PYTEST_RC TEST_STATUS BASE_SHA PRODUCT_HEAD MODULE0_SHA LOG_FILE PRODUCT_CHECK_STATUS
 python - <<'PY' >> "$LOG_FILE" 2>&1
 import json
 import os
@@ -379,6 +419,7 @@ base_sha = os.environ.get("BASE_SHA", "")
 product_head = os.environ.get("PRODUCT_HEAD", "")
 module0_sha = os.environ.get("MODULE0_SHA", "")
 log_file = os.environ.get("LOG_FILE", "")
+product_check_status = os.environ.get("PRODUCT_CHECK_STATUS", "")
 
 result = {
     "module": "Runtime v2 Module A",
@@ -386,6 +427,7 @@ result = {
     "generated_at": datetime.now(timezone.utc).isoformat(),
     "pytest_exit_code": pytest_rc,
     "base_sha": base_sha,
+    "product_repo_check_status": product_check_status,
     "product_repo_head": product_head,
     "product_repo_module0_sha": module0_sha,
     "old_interactive_insight_product_continued": False,
@@ -423,6 +465,7 @@ $BASE_SHA
 
 ## Product Repository Check
 
+- Product repo check status: $PRODUCT_CHECK_STATUS
 - Product repo head: $PRODUCT_HEAD
 - Module 0 expected commit: $MODULE0_SHA
 - Old interactive insight product continued: no
@@ -454,13 +497,14 @@ Pending until commit step completes.
 EOF
 
 if [ "$PYTEST_RC" -ne 0 ]; then
-  summary "Module A tests failed. No commit pushed. See $ORIS_DIR/$LOG_FILE"
+  summary "Module A tests failed. No commit pushed."
+  summary "Log: $LOG_FILE"
   exit "$PYTEST_RC"
 fi
 
 if [ "$COMMIT_AND_PUSH" != "1" ]; then
   summary "Tests passed. Commit/push skipped by ORIS_MODULE_A_COMMIT_AND_PUSH=$COMMIT_AND_PUSH"
-  summary "Log: $ORIS_DIR/$LOG_FILE"
+  summary "Log: $LOG_FILE"
   exit 0
 fi
 
@@ -478,7 +522,7 @@ git add \
 
 if git diff --cached --quiet >> "$LOG_FILE" 2>&1; then
   summary "Tests passed. No file changes to commit."
-  summary "Log: $ORIS_DIR/$LOG_FILE"
+  summary "Log: $LOG_FILE"
   exit 0
 fi
 
@@ -497,7 +541,7 @@ text = text.replace("Pending until commit step completes.", "$MODULE_COMMIT_SHA"
 p.write_text(text, encoding="utf-8")
 PY
 
-git add reports/execution/module_A_execution_report.md >> "$LOG_FILE" 2>&1
+git add reports/execution/module_A_execution_report.md reports/execution/module_A_bootstrap_latest.log >> "$LOG_FILE" 2>&1
 git commit -m "runtime-v2(module-a): record execution commit sha" >> "$LOG_FILE" 2>&1
 REPORT_COMMIT_RC=$?
 if [ "$REPORT_COMMIT_RC" -ne 0 ]; then
@@ -508,7 +552,8 @@ FINAL_SHA="$(git rev-parse HEAD 2>> "$LOG_FILE")"
 git push origin "$BRANCH" >> "$LOG_FILE" 2>&1
 PUSH_RC=$?
 if [ "$PUSH_RC" -ne 0 ]; then
-  summary "Tests passed and local commits created, but push failed. See $ORIS_DIR/$LOG_FILE"
+  summary "Tests passed and local commits created, but push failed."
+  summary "Log: $LOG_FILE"
   exit "$PUSH_RC"
 fi
 
