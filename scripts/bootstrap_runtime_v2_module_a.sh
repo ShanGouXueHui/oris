@@ -2,6 +2,7 @@
 
 # ORIS Runtime v2 Module A bootstrap script.
 # Policy: do not use `set -e`; keep terminal output short; write detailed logs to repo evidence files.
+# v3: use Python stdlib unittest and push failure evidence so logs can be inspected from GitHub.
 
 ORIS_REPO_URL="${ORIS_REPO_URL:-https://github.com/ShanGouXueHui/oris.git}"
 PRODUCT_REPO_URL="${PRODUCT_REPO_URL:-https://github.com/ShanGouXueHui/oris-commercial-insight-employee.git}"
@@ -13,22 +14,16 @@ COMMIT_AND_PUSH="${ORIS_MODULE_A_COMMIT_AND_PUSH:-1}"
 MODULE0_SHA="7d1d604b92b21f1213f990140b3345b4be2163ca"
 LOG_FILE=""
 
-summary() {
-  printf '%s\n' "$1"
-}
+summary() { printf '%s\n' "$1"; }
 
 fail_short() {
   summary "FAILED: $1"
-  if [ -n "$LOG_FILE" ]; then
-    summary "Log: $LOG_FILE"
-  fi
+  if [ -n "$LOG_FILE" ]; then summary "Log: $LOG_FILE"; fi
   exit 1
 }
 
 append_log() {
-  if [ -n "$LOG_FILE" ]; then
-    printf '%s\n' "$1" >> "$LOG_FILE" 2>/dev/null
-  fi
+  if [ -n "$LOG_FILE" ]; then printf '%s\n' "$1" >> "$LOG_FILE" 2>/dev/null; fi
 }
 
 run_logged() {
@@ -40,28 +35,93 @@ run_logged() {
   return $?
 }
 
+ensure_git_identity() {
+  name="$(git config user.name 2>/dev/null)"
+  email="$(git config user.email 2>/dev/null)"
+  if [ -z "$name" ]; then git config user.name "oris-runtime-bot" >> "$LOG_FILE" 2>&1; fi
+  if [ -z "$email" ]; then git config user.email "oris-runtime-bot@example.local" >> "$LOG_FILE" 2>&1; fi
+}
+
+commit_and_push_evidence() {
+  status_label="$1"
+  message_prefix="$2"
+
+  cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo for evidence commit"
+  ensure_git_identity
+
+  git add \
+    docs/runtime_v2/ARCHITECTURE_AND_STATE_MACHINE_MODULE_A.md \
+    schemas/runtime_v2/state_machine.schema.json \
+    docs/runtime_v2/FAILURE_TAXONOMY_MODULE_A.md \
+    docs/runtime_v2/ACCEPTANCE_CRITERIA_MODULE_A.md \
+    tests/runtime_v2/test_state_machine_transitions.py \
+    docs/testing/MODULE_A_TEST_PLAN.md \
+    reports/testing/module_A_test_result.json \
+    reports/testing/latest_test_result.json \
+    reports/execution/module_A_execution_report.md \
+    reports/execution/module_A_bootstrap_latest.log >> "$LOG_FILE" 2>&1
+
+  if git diff --cached --quiet >> "$LOG_FILE" 2>&1; then
+    summary "$status_label. No file changes to commit."
+    summary "Log: $LOG_FILE"
+    return 0
+  fi
+
+  git commit -m "$message_prefix" >> "$LOG_FILE" 2>&1
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    summary "$status_label, but git commit failed."
+    summary "Log: $LOG_FILE"
+    return "$rc"
+  fi
+
+  evidence_sha="$(git rev-parse HEAD 2>> "$LOG_FILE")"
+  python - <<PY >> "$LOG_FILE" 2>&1
+from pathlib import Path
+p = Path("reports/execution/module_A_execution_report.md")
+text = p.read_text(encoding="utf-8")
+text = text.replace("Pending until evidence commit completes.", "$evidence_sha")
+p.write_text(text, encoding="utf-8")
+PY
+
+  git add reports/execution/module_A_execution_report.md reports/execution/module_A_bootstrap_latest.log >> "$LOG_FILE" 2>&1
+  if ! git diff --cached --quiet >> "$LOG_FILE" 2>&1; then
+    git commit -m "runtime-v2(module-a): record evidence commit sha" >> "$LOG_FILE" 2>&1
+  fi
+
+  final_sha="$(git rev-parse HEAD 2>> "$LOG_FILE")"
+  git push origin "$BRANCH" >> "$LOG_FILE" 2>&1
+  rc=$?
+  if [ "$rc" -ne 0 ]; then
+    summary "$status_label, local evidence committed but push failed."
+    summary "Local commit: $final_sha"
+    summary "Log: $LOG_FILE"
+    return "$rc"
+  fi
+
+  summary "$status_label. Evidence pushed."
+  summary "Commit: $final_sha"
+  summary "Evidence: reports/testing/latest_test_result.json; reports/execution/module_A_execution_report.md"
+  return 0
+}
+
 mkdir -p "$WORKDIR"
 summary "ORIS Runtime v2 Module A bootstrap starting..."
 
-# 1. Clone/update ORIS first. Before ORIS log exists, use a temp log.
 TEMP_LOG="/tmp/oris_module_A_bootstrap_$$.log"
 LOG_FILE="$TEMP_LOG"
 
 if [ ! -d "$ORIS_DIR/.git" ]; then
   git clone "$ORIS_REPO_URL" "$ORIS_DIR" >> "$LOG_FILE" 2>&1
   rc=$?
-  if [ "$rc" -ne 0 ]; then
-    fail_short "cannot clone ORIS repo"
-  fi
+  if [ "$rc" -ne 0 ]; then fail_short "cannot clone ORIS repo"; fi
 else
   cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo"
   git fetch origin >> "$LOG_FILE" 2>&1
   git checkout "$BRANCH" >> "$LOG_FILE" 2>&1
   git pull --ff-only origin "$BRANCH" >> "$LOG_FILE" 2>&1
   rc=$?
-  if [ "$rc" -ne 0 ]; then
-    fail_short "cannot fast-forward ORIS repo; please inspect local changes in $ORIS_DIR"
-  fi
+  if [ "$rc" -ne 0 ]; then fail_short "cannot fast-forward ORIS repo; please inspect local changes in $ORIS_DIR"; fi
 fi
 
 cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo after clone/update"
@@ -75,44 +135,29 @@ LOG_FILE="$ORIS_DIR/reports/execution/module_A_bootstrap_latest.log"
   echo "branch=$BRANCH"
   echo ""
   echo "# pre-log bootstrap output"
-  if [ -f "$TEMP_LOG" ]; then
-    cat "$TEMP_LOG"
-  fi
+  if [ -f "$TEMP_LOG" ]; then cat "$TEMP_LOG"; fi
 } > "$LOG_FILE" 2>&1
 rm -f "$TEMP_LOG"
 
-# 2. Product repo is only read-only evidence. It must not block Runtime v2 Module A.
 PRODUCT_HEAD="UNKNOWN"
 PRODUCT_CHECK_STATUS="unknown"
 summary "Checking product repo state quietly..."
 if [ ! -d "$PRODUCT_DIR/.git" ]; then
   run_logged "clone product repo for read-only head check" git clone "$PRODUCT_REPO_URL" "$PRODUCT_DIR"
-  product_clone_rc=$?
-  if [ "$product_clone_rc" -ne 0 ]; then
-    PRODUCT_CHECK_STATUS="clone_failed_non_blocking"
-  fi
+  if [ "$?" -ne 0 ]; then PRODUCT_CHECK_STATUS="clone_failed_non_blocking"; fi
 else
   cd "$PRODUCT_DIR" || PRODUCT_CHECK_STATUS="cannot_enter_product_repo_non_blocking"
   if [ -d "$PRODUCT_DIR/.git" ]; then
     git fetch origin >> "$LOG_FILE" 2>&1
-    fetch_rc=$?
-    if [ "$fetch_rc" -ne 0 ]; then
-      PRODUCT_CHECK_STATUS="fetch_failed_non_blocking"
-    else
-      PRODUCT_CHECK_STATUS="fetched_origin"
-    fi
+    if [ "$?" -ne 0 ]; then PRODUCT_CHECK_STATUS="fetch_failed_non_blocking"; else PRODUCT_CHECK_STATUS="fetched_origin"; fi
   fi
 fi
 
 if [ -d "$PRODUCT_DIR/.git" ]; then
   cd "$PRODUCT_DIR" || true
   PRODUCT_HEAD="$(git rev-parse "origin/$BRANCH" 2>> "$LOG_FILE")"
-  if [ -z "$PRODUCT_HEAD" ]; then
-    PRODUCT_HEAD="$(git rev-parse HEAD 2>> "$LOG_FILE")"
-  fi
-  if [ -z "$PRODUCT_HEAD" ]; then
-    PRODUCT_HEAD="UNKNOWN"
-  fi
+  if [ -z "$PRODUCT_HEAD" ]; then PRODUCT_HEAD="$(git rev-parse HEAD 2>> "$LOG_FILE")"; fi
+  if [ -z "$PRODUCT_HEAD" ]; then PRODUCT_HEAD="UNKNOWN"; fi
 fi
 
 cd "$ORIS_DIR" || fail_short "cannot return to ORIS repo"
@@ -147,11 +192,7 @@ for f in \
   memory/dev_employee/current_task.json \
   memory/dev_employee/current_task.md
  do
-  if [ -f "$f" ]; then
-    echo "OK $f" >> "$LOG_FILE"
-  else
-    echo "MISSING $f" >> "$LOG_FILE"
-  fi
+  if [ -f "$f" ]; then echo "OK $f" >> "$LOG_FILE"; else echo "MISSING $f" >> "$LOG_FILE"; fi
 done
 
 mkdir -p docs/runtime_v2 schemas/runtime_v2 tests/runtime_v2 docs/testing reports/testing reports/execution
@@ -161,7 +202,7 @@ cat > docs/testing/MODULE_A_TEST_PLAN.md <<'EOF'
 
 ## Scope
 
-Validate the Runtime v2 Module A architecture and state machine design.
+Validate the Runtime v2 Module A architecture and state machine design using Python standard-library `unittest` so the check does not depend on external test packages.
 
 ## Test Targets
 
@@ -233,79 +274,80 @@ EOF
 
 cat > tests/runtime_v2/test_state_machine_transitions.py <<'EOF'
 import json
+import unittest
 from pathlib import Path
 
 SCHEMA_PATH = Path("schemas/runtime_v2/state_machine.schema.json")
 
 
-def load_schema():
-    return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+class StateMachineTransitionTests(unittest.TestCase):
+    def load_schema(self):
+        return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+
+    def test_schema_exists_and_has_required_keys(self):
+        schema = self.load_schema()
+        self.assertIn("states", schema)
+        self.assertIn("terminal_states", schema)
+        self.assertIn("transitions", schema)
+
+    def test_required_states_exist(self):
+        schema = self.load_schema()
+        states = set(schema["states"])
+        required = {
+            "RECEIVED",
+            "PLANNED",
+            "READY",
+            "RUNNING",
+            "WAITING_APPROVAL",
+            "REPAIRING",
+            "TESTING",
+            "COMMITTING",
+            "COMPLETED",
+            "FAILED_RETRYABLE",
+            "FAILED_BLOCKED",
+            "FAILED_FATAL",
+            "CANCELLED",
+        }
+        self.assertTrue(required.issubset(states))
+
+    def test_required_transitions_exist(self):
+        schema = self.load_schema()
+        transitions = {tuple(item) for item in schema["transitions"]}
+        required = {
+            ("RECEIVED", "PLANNED"),
+            ("PLANNED", "READY"),
+            ("READY", "RUNNING"),
+            ("RUNNING", "WAITING_APPROVAL"),
+            ("RUNNING", "TESTING"),
+            ("RUNNING", "FAILED_RETRYABLE"),
+            ("FAILED_RETRYABLE", "REPAIRING"),
+            ("REPAIRING", "TESTING"),
+            ("TESTING", "COMMITTING"),
+            ("COMMITTING", "COMPLETED"),
+            ("WAITING_APPROVAL", "RUNNING"),
+            ("WAITING_APPROVAL", "FAILED_BLOCKED"),
+        }
+        self.assertTrue(required.issubset(transitions))
+
+    def test_terminal_states_have_no_outgoing_transitions(self):
+        schema = self.load_schema()
+        terminal_states = set(schema["terminal_states"])
+        transitions = {tuple(item) for item in schema["transitions"]}
+        outgoing_from_terminal = [
+            transition for transition in transitions if transition[0] in terminal_states
+        ]
+        self.assertEqual(outgoing_from_terminal, [])
+
+    def test_every_transition_uses_declared_states(self):
+        schema = self.load_schema()
+        states = set(schema["states"])
+        for source, target in schema["transitions"]:
+            self.assertIn(source, states)
+            self.assertIn(target, states)
 
 
-def test_schema_exists_and_has_required_keys():
-    schema = load_schema()
-    assert "states" in schema
-    assert "terminal_states" in schema
-    assert "transitions" in schema
-
-
-def test_required_states_exist():
-    schema = load_schema()
-    states = set(schema["states"])
-    required = {
-        "RECEIVED",
-        "PLANNED",
-        "READY",
-        "RUNNING",
-        "WAITING_APPROVAL",
-        "REPAIRING",
-        "TESTING",
-        "COMMITTING",
-        "COMPLETED",
-        "FAILED_RETRYABLE",
-        "FAILED_BLOCKED",
-        "FAILED_FATAL",
-        "CANCELLED",
-    }
-    assert required.issubset(states)
-
-
-def test_required_transitions_exist():
-    schema = load_schema()
-    transitions = {tuple(item) for item in schema["transitions"]}
-    required = {
-        ("RECEIVED", "PLANNED"),
-        ("PLANNED", "READY"),
-        ("READY", "RUNNING"),
-        ("RUNNING", "WAITING_APPROVAL"),
-        ("RUNNING", "TESTING"),
-        ("RUNNING", "FAILED_RETRYABLE"),
-        ("FAILED_RETRYABLE", "REPAIRING"),
-        ("REPAIRING", "TESTING"),
-        ("TESTING", "COMMITTING"),
-        ("COMMITTING", "COMPLETED"),
-        ("WAITING_APPROVAL", "RUNNING"),
-        ("WAITING_APPROVAL", "FAILED_BLOCKED"),
-    }
-    assert required.issubset(transitions)
-
-
-def test_terminal_states_have_no_outgoing_transitions():
-    schema = load_schema()
-    terminal_states = set(schema["terminal_states"])
-    transitions = {tuple(item) for item in schema["transitions"]}
-    outgoing_from_terminal = [
-        transition for transition in transitions if transition[0] in terminal_states
-    ]
-    assert outgoing_from_terminal == []
-
-
-def test_every_transition_uses_declared_states():
-    schema = load_schema()
-    states = set(schema["states"])
-    for source, target in schema["transitions"]:
-        assert source in states
-        assert target in states
+if __name__ == "__main__":
+    unittest.main()
 EOF
 
 cat > docs/runtime_v2/FAILURE_TAXONOMY_MODULE_A.md <<'EOF'
@@ -396,42 +438,31 @@ Failure categories are stored in:
 - No paid resource provisioning.
 EOF
 
-summary "Generated Module A files. Running tests quietly..."
-python -m pytest tests/runtime_v2 -q >> "$LOG_FILE" 2>&1
-PYTEST_RC=$?
+summary "Generated Module A files. Running stdlib tests quietly..."
+TEST_COMMAND="python -m unittest discover -s tests/runtime_v2 -p 'test_*.py' -q"
+python -m unittest discover -s tests/runtime_v2 -p 'test_*.py' -q >> "$LOG_FILE" 2>&1
+TEST_RC=$?
+if [ "$TEST_RC" -eq 0 ]; then TEST_STATUS="passed"; else TEST_STATUS="failed"; fi
 
-if [ "$PYTEST_RC" -eq 0 ]; then
-  TEST_STATUS="passed"
-else
-  TEST_STATUS="failed"
-fi
-
-export PYTEST_RC TEST_STATUS BASE_SHA PRODUCT_HEAD MODULE0_SHA LOG_FILE PRODUCT_CHECK_STATUS
+export TEST_RC TEST_STATUS BASE_SHA PRODUCT_HEAD MODULE0_SHA LOG_FILE PRODUCT_CHECK_STATUS TEST_COMMAND
 python - <<'PY' >> "$LOG_FILE" 2>&1
 import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-pytest_rc = int(os.environ.get("PYTEST_RC", "1"))
-status = os.environ.get("TEST_STATUS", "failed")
-base_sha = os.environ.get("BASE_SHA", "")
-product_head = os.environ.get("PRODUCT_HEAD", "")
-module0_sha = os.environ.get("MODULE0_SHA", "")
-log_file = os.environ.get("LOG_FILE", "")
-product_check_status = os.environ.get("PRODUCT_CHECK_STATUS", "")
-
 result = {
     "module": "Runtime v2 Module A",
-    "status": status,
+    "status": os.environ.get("TEST_STATUS", "failed"),
     "generated_at": datetime.now(timezone.utc).isoformat(),
-    "pytest_exit_code": pytest_rc,
-    "base_sha": base_sha,
-    "product_repo_check_status": product_check_status,
-    "product_repo_head": product_head,
-    "product_repo_module0_sha": module0_sha,
+    "test_command": os.environ.get("TEST_COMMAND", ""),
+    "test_exit_code": int(os.environ.get("TEST_RC", "1")),
+    "base_sha": os.environ.get("BASE_SHA", ""),
+    "product_repo_check_status": os.environ.get("PRODUCT_CHECK_STATUS", ""),
+    "product_repo_head": os.environ.get("PRODUCT_HEAD", ""),
+    "product_repo_module0_sha": os.environ.get("MODULE0_SHA", ""),
     "old_interactive_insight_product_continued": False,
-    "log_file": log_file,
+    "log_file": os.environ.get("LOG_FILE", ""),
     "checks": [
         "schema_exists",
         "required_states_exist",
@@ -440,16 +471,9 @@ result = {
         "every_transition_uses_declared_states",
     ],
 }
-
 Path("reports/testing").mkdir(parents=True, exist_ok=True)
-Path("reports/testing/module_A_test_result.json").write_text(
-    json.dumps(result, indent=2, ensure_ascii=False),
-    encoding="utf-8",
-)
-Path("reports/testing/latest_test_result.json").write_text(
-    json.dumps(result, indent=2, ensure_ascii=False),
-    encoding="utf-8",
-)
+Path("reports/testing/module_A_test_result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+Path("reports/testing/latest_test_result.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
 PY
 
 cat > reports/execution/module_A_execution_report.md <<EOF
@@ -472,11 +496,11 @@ $BASE_SHA
 
 ## Test Command
 
-\`python -m pytest tests/runtime_v2 -q\`
+\`$TEST_COMMAND\`
 
 ## Test Result
 
-- pytest exit code: $PYTEST_RC
+- test exit code: $TEST_RC
 - status: $TEST_STATUS
 
 ## Evidence Files
@@ -491,72 +515,21 @@ $BASE_SHA
 - \`reports/testing/latest_test_result.json\`
 - \`reports/execution/module_A_bootstrap_latest.log\`
 
-## Module A Commit SHA
+## Module A Evidence Commit SHA
 
-Pending until commit step completes.
+Pending until evidence commit completes.
 EOF
 
-if [ "$PYTEST_RC" -ne 0 ]; then
-  summary "Module A tests failed. No commit pushed."
-  summary "Log: $LOG_FILE"
-  exit "$PYTEST_RC"
-fi
-
 if [ "$COMMIT_AND_PUSH" != "1" ]; then
-  summary "Tests passed. Commit/push skipped by ORIS_MODULE_A_COMMIT_AND_PUSH=$COMMIT_AND_PUSH"
+  summary "Tests $TEST_STATUS. Commit/push skipped by ORIS_MODULE_A_COMMIT_AND_PUSH=$COMMIT_AND_PUSH"
   summary "Log: $LOG_FILE"
-  exit 0
+  exit "$TEST_RC"
 fi
 
-git add \
-  docs/runtime_v2/ARCHITECTURE_AND_STATE_MACHINE_MODULE_A.md \
-  schemas/runtime_v2/state_machine.schema.json \
-  docs/runtime_v2/FAILURE_TAXONOMY_MODULE_A.md \
-  docs/runtime_v2/ACCEPTANCE_CRITERIA_MODULE_A.md \
-  tests/runtime_v2/test_state_machine_transitions.py \
-  docs/testing/MODULE_A_TEST_PLAN.md \
-  reports/testing/module_A_test_result.json \
-  reports/testing/latest_test_result.json \
-  reports/execution/module_A_execution_report.md \
-  reports/execution/module_A_bootstrap_latest.log >> "$LOG_FILE" 2>&1
-
-if git diff --cached --quiet >> "$LOG_FILE" 2>&1; then
-  summary "Tests passed. No file changes to commit."
-  summary "Log: $LOG_FILE"
-  exit 0
+if [ "$TEST_RC" -eq 0 ]; then
+  commit_and_push_evidence "DONE: Runtime v2 Module A tests passed" "runtime-v2(module-a): add architecture and state machine design"
+  exit $?
+else
+  commit_and_push_evidence "FAILED: Runtime v2 Module A tests failed" "runtime-v2(module-a): record failed bootstrap evidence"
+  exit "$TEST_RC"
 fi
-
-git commit -m "runtime-v2(module-a): add architecture and state machine design" >> "$LOG_FILE" 2>&1
-COMMIT_RC=$?
-if [ "$COMMIT_RC" -ne 0 ]; then
-  fail_short "git commit failed"
-fi
-
-MODULE_COMMIT_SHA="$(git rev-parse HEAD 2>> "$LOG_FILE")"
-python - <<PY >> "$LOG_FILE" 2>&1
-from pathlib import Path
-p = Path("reports/execution/module_A_execution_report.md")
-text = p.read_text(encoding="utf-8")
-text = text.replace("Pending until commit step completes.", "$MODULE_COMMIT_SHA")
-p.write_text(text, encoding="utf-8")
-PY
-
-git add reports/execution/module_A_execution_report.md reports/execution/module_A_bootstrap_latest.log >> "$LOG_FILE" 2>&1
-git commit -m "runtime-v2(module-a): record execution commit sha" >> "$LOG_FILE" 2>&1
-REPORT_COMMIT_RC=$?
-if [ "$REPORT_COMMIT_RC" -ne 0 ]; then
-  fail_short "execution report commit failed"
-fi
-
-FINAL_SHA="$(git rev-parse HEAD 2>> "$LOG_FILE")"
-git push origin "$BRANCH" >> "$LOG_FILE" 2>&1
-PUSH_RC=$?
-if [ "$PUSH_RC" -ne 0 ]; then
-  summary "Tests passed and local commits created, but push failed."
-  summary "Log: $LOG_FILE"
-  exit "$PUSH_RC"
-fi
-
-summary "DONE: Runtime v2 Module A committed and pushed."
-summary "Commit: $FINAL_SHA"
-summary "Evidence: reports/testing/latest_test_result.json; reports/execution/module_A_execution_report.md"
