@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-# ORIS Runtime v2 Module A bootstrap script.
-# Policy: do not use `set -e`; keep terminal output short; write detailed logs to repo evidence files.
-# v3: use Python stdlib unittest and push failure evidence so logs can be inspected from GitHub.
+# ORIS Runtime v2 Module A official bootstrap script.
+# Policy: do not use `set -e`; terminal output stays short; detailed logs are written as GitHub evidence.
 
+VERSION="2026-06-22-runtime-v2-module-a-official"
 ORIS_REPO_URL="${ORIS_REPO_URL:-https://github.com/ShanGouXueHui/oris.git}"
 PRODUCT_REPO_URL="${PRODUCT_REPO_URL:-https://github.com/ShanGouXueHui/oris-commercial-insight-employee.git}"
 WORKDIR="${ORIS_WORKDIR:-$HOME/projects}"
 ORIS_DIR="${ORIS_DIR:-$WORKDIR/oris}"
-PRODUCT_DIR="${PRODUCT_DIR:-$WORKDIR/oris-commercial-insight-employee}"
 BRANCH="${ORIS_BRANCH:-main}"
 COMMIT_AND_PUSH="${ORIS_MODULE_A_COMMIT_AND_PUSH:-1}"
 MODULE0_SHA="7d1d604b92b21f1213f990140b3345b4be2163ca"
 LOG_FILE=""
+PYTHON_BIN="${PYTHON_BIN:-python3}"
 
 summary() { printf '%s\n' "$1"; }
 
@@ -20,19 +20,6 @@ fail_short() {
   summary "FAILED: $1"
   if [ -n "$LOG_FILE" ]; then summary "Log: $LOG_FILE"; fi
   exit 1
-}
-
-append_log() {
-  if [ -n "$LOG_FILE" ]; then printf '%s\n' "$1" >> "$LOG_FILE" 2>/dev/null; fi
-}
-
-run_logged() {
-  desc="$1"
-  shift
-  append_log ""
-  append_log "# $desc"
-  "$@" >> "$LOG_FILE" 2>&1
-  return $?
 }
 
 ensure_git_identity() {
@@ -44,7 +31,7 @@ ensure_git_identity() {
 
 commit_and_push_evidence() {
   status_label="$1"
-  message_prefix="$2"
+  commit_message="$2"
 
   cd "$ORIS_DIR" || fail_short "cannot enter ORIS repo for evidence commit"
   ensure_git_identity
@@ -67,7 +54,7 @@ commit_and_push_evidence() {
     return 0
   fi
 
-  git commit -m "$message_prefix" >> "$LOG_FILE" 2>&1
+  git commit -m "$commit_message" >> "$LOG_FILE" 2>&1
   rc=$?
   if [ "$rc" -ne 0 ]; then
     summary "$status_label, but git commit failed."
@@ -76,7 +63,7 @@ commit_and_push_evidence() {
   fi
 
   evidence_sha="$(git rev-parse HEAD 2>> "$LOG_FILE")"
-  python - <<PY >> "$LOG_FILE" 2>&1
+  "$PYTHON_BIN" - <<PY >> "$LOG_FILE" 2>&1
 from pathlib import Path
 p = Path("reports/execution/module_A_execution_report.md")
 text = p.read_text(encoding="utf-8")
@@ -106,10 +93,17 @@ PY
 }
 
 mkdir -p "$WORKDIR"
-summary "ORIS Runtime v2 Module A bootstrap starting..."
+summary "ORIS Runtime v2 Module A official bootstrap $VERSION starting..."
 
 TEMP_LOG="/tmp/oris_module_A_bootstrap_$$.log"
 LOG_FILE="$TEMP_LOG"
+
+if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
+  PYTHON_BIN="python"
+fi
+if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
+  fail_short "python3/python not found"
+fi
 
 if [ ! -d "$ORIS_DIR/.git" ]; then
   git clone "$ORIS_REPO_URL" "$ORIS_DIR" >> "$LOG_FILE" 2>&1
@@ -129,40 +123,28 @@ mkdir -p reports/execution
 LOG_FILE="$ORIS_DIR/reports/execution/module_A_bootstrap_latest.log"
 {
   echo "# Module A bootstrap log"
+  echo "version=$VERSION"
   echo "started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "oris_dir=$ORIS_DIR"
-  echo "product_dir=$PRODUCT_DIR"
   echo "branch=$BRANCH"
+  echo "python_bin=$PYTHON_BIN"
   echo ""
   echo "# pre-log bootstrap output"
   if [ -f "$TEMP_LOG" ]; then cat "$TEMP_LOG"; fi
 } > "$LOG_FILE" 2>&1
 rm -f "$TEMP_LOG"
 
-PRODUCT_HEAD="UNKNOWN"
-PRODUCT_CHECK_STATUS="unknown"
-summary "Checking product repo state quietly..."
-if [ ! -d "$PRODUCT_DIR/.git" ]; then
-  run_logged "clone product repo for read-only head check" git clone "$PRODUCT_REPO_URL" "$PRODUCT_DIR"
-  if [ "$?" -ne 0 ]; then PRODUCT_CHECK_STATUS="clone_failed_non_blocking"; fi
+summary "Checking product repo state via git ls-remote..."
+PRODUCT_CHECK_STATUS="ls_remote_unknown"
+PRODUCT_HEAD="$(git ls-remote "$PRODUCT_REPO_URL" "refs/heads/$BRANCH" 2>> "$LOG_FILE" | awk '{print $1}')"
+if [ -n "$PRODUCT_HEAD" ]; then
+  PRODUCT_CHECK_STATUS="ls_remote_ok"
 else
-  cd "$PRODUCT_DIR" || PRODUCT_CHECK_STATUS="cannot_enter_product_repo_non_blocking"
-  if [ -d "$PRODUCT_DIR/.git" ]; then
-    git fetch origin >> "$LOG_FILE" 2>&1
-    if [ "$?" -ne 0 ]; then PRODUCT_CHECK_STATUS="fetch_failed_non_blocking"; else PRODUCT_CHECK_STATUS="fetched_origin"; fi
-  fi
+  PRODUCT_HEAD="UNKNOWN"
+  PRODUCT_CHECK_STATUS="ls_remote_failed_non_blocking"
 fi
 
-if [ -d "$PRODUCT_DIR/.git" ]; then
-  cd "$PRODUCT_DIR" || true
-  PRODUCT_HEAD="$(git rev-parse "origin/$BRANCH" 2>> "$LOG_FILE")"
-  if [ -z "$PRODUCT_HEAD" ]; then PRODUCT_HEAD="$(git rev-parse HEAD 2>> "$LOG_FILE")"; fi
-  if [ -z "$PRODUCT_HEAD" ]; then PRODUCT_HEAD="UNKNOWN"; fi
-fi
-
-cd "$ORIS_DIR" || fail_short "cannot return to ORIS repo"
 BASE_SHA="$(git rev-parse HEAD 2>> "$LOG_FILE")"
-
 {
   echo ""
   echo "# repository state"
@@ -202,7 +184,7 @@ cat > docs/testing/MODULE_A_TEST_PLAN.md <<'EOF'
 
 ## Scope
 
-Validate the Runtime v2 Module A architecture and state machine design using Python standard-library `unittest` so the check does not depend on external test packages.
+Validate Runtime v2 Module A architecture and state machine design using Python standard-library `unittest`, avoiding external test package dependency.
 
 ## Test Targets
 
@@ -439,13 +421,13 @@ Failure categories are stored in:
 EOF
 
 summary "Generated Module A files. Running stdlib tests quietly..."
-TEST_COMMAND="python -m unittest discover -s tests/runtime_v2 -p 'test_*.py' -q"
-python -m unittest discover -s tests/runtime_v2 -p 'test_*.py' -q >> "$LOG_FILE" 2>&1
+TEST_COMMAND="$PYTHON_BIN -m unittest discover -s tests/runtime_v2 -p test_*.py -q"
+$PYTHON_BIN -m unittest discover -s tests/runtime_v2 -p 'test_*.py' -q >> "$LOG_FILE" 2>&1
 TEST_RC=$?
 if [ "$TEST_RC" -eq 0 ]; then TEST_STATUS="passed"; else TEST_STATUS="failed"; fi
 
-export TEST_RC TEST_STATUS BASE_SHA PRODUCT_HEAD MODULE0_SHA LOG_FILE PRODUCT_CHECK_STATUS TEST_COMMAND
-python - <<'PY' >> "$LOG_FILE" 2>&1
+export TEST_RC TEST_STATUS BASE_SHA PRODUCT_HEAD MODULE0_SHA LOG_FILE PRODUCT_CHECK_STATUS TEST_COMMAND VERSION
+"$PYTHON_BIN" - <<'PY' >> "$LOG_FILE" 2>&1
 import json
 import os
 from datetime import datetime, timezone
@@ -453,6 +435,7 @@ from pathlib import Path
 
 result = {
     "module": "Runtime v2 Module A",
+    "bootstrap_version": os.environ.get("VERSION", ""),
     "status": os.environ.get("TEST_STATUS", "failed"),
     "generated_at": datetime.now(timezone.utc).isoformat(),
     "test_command": os.environ.get("TEST_COMMAND", ""),
@@ -482,6 +465,10 @@ cat > reports/execution/module_A_execution_report.md <<EOF
 ## Module
 
 Architecture and State Machine Design
+
+## Bootstrap Version
+
+$VERSION
 
 ## Base Commit
 
