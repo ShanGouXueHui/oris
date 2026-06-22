@@ -1,0 +1,47 @@
+{
+  "version": "runtime_v2_module_A",
+  "states": [
+    "RECEIVED",
+    "PLANNED",
+    "READY",
+    "RUNNING",
+    "WAITING_APPROVAL",
+    "REPAIRING",
+    "TESTING",
+    "COMMITTING",
+    "COMPLETED",
+    "FAILED_RETRYABLE",
+    "FAILED_BLOCKED",
+    "FAILED_FATAL",
+    "CANCELLED"
+  ],
+  "terminal_states": [
+    "COMPLETED",
+    "FAILED_FATAL",
+    "CANCELLED"
+  ],
+  "transitions": [
+    ["RECEIVED", "PLANNED"],
+    ["PLANNED", "READY"],
+    ["READY", "RUNNING"],
+    ["RUNNING", "WAITING_APPROVAL"],
+    ["RUNNING", "TESTING"],
+    ["RUNNING", "FAILED_RETRYABLE"],
+    ["FAILED_RETRYABLE", "REPAIRING"],
+    ["REPAIRING", "TESTING"],
+    ["TESTING", "COMMITTING"],
+    ["COMMITTING", "COMPLETED"],
+    ["WAITING_APPROVAL", "RUNNING"],
+    ["WAITING_APPROVAL", "FAILED_BLOCKED"],
+    ["RECEIVED", "CANCELLED"],
+    ["PLANNED", "CANCELLED"],
+    ["READY", "CANCELLED"],
+    ["RUNNING", "CANCELLED"],
+    ["WAITING_APPROVAL", "CANCELLED"],
+    ["REPAIRING", "CANCELLED"],
+    ["TESTING", "CANCELLED"],
+    ["COMMITTING", "CANCELLED"],
+    ["FAILED_RETRYABLE", "CANCELLED"],
+    ["FAILED_BLOCKED", "CANCELLED"]
+  ]
+}

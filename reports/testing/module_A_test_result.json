@@ -1,0 +1,21 @@
+{
+  "module": "Runtime v2 Module A",
+  "bootstrap_version": "2026-06-22-runtime-v2-module-a-official",
+  "status": "passed",
+  "generated_at": "2026-06-22T21:16:22.292080+00:00",
+  "test_command": "python3 -m unittest discover -s tests/runtime_v2 -p test_*.py -q",
+  "test_exit_code": 0,
+  "base_sha": "5560d045a87c54ff769070696d54d6efee8477b6",
+  "product_repo_check_status": "ls_remote_ok",
+  "product_repo_head": "7d1d604b92b21f1213f990140b3345b4be2163ca",
+  "product_repo_module0_sha": "7d1d604b92b21f1213f990140b3345b4be2163ca",
+  "old_interactive_insight_product_continued": false,
+  "log_file": "/home/admin/projects/oris/reports/execution/module_A_bootstrap_latest.log",
+  "checks": [
+    "schema_exists",
+    "required_states_exist",
+    "required_transitions_exist",
+    "terminal_states_have_no_outgoing_transitions",
+    "every_transition_uses_declared_states"
+  ]
+}
