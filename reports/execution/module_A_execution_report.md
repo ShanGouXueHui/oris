@@ -42,4 +42,4 @@ Architecture and State Machine Design
 
 ## Module A Evidence Commit SHA
 
-Pending until evidence commit completes.
+a785cef3fb7fd5b5f3403a568d1e701a9e72ac13
