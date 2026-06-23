@@ -1,0 +1,12 @@
+{
+  "version": "runtime_v2_module_F",
+  "type": "object",
+  "required": ["approval_id", "decision", "actor", "decided_at"],
+  "properties": {
+    "approval_id": {"type": "string"},
+    "decision": {"enum": ["APPROVE", "REJECT", "EXPIRE"]},
+    "actor": {"type": "string"},
+    "comment": {"type": "string"},
+    "decided_at": {"type": "string"}
+  }
+}

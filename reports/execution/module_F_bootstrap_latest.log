@@ -1,0 +1,62 @@
+# Module F bootstrap log
+version=2026-06-23-runtime-v2-module-f-official
+started_at=2026-06-23T18:57:59Z
+oris_dir=/home/admin/projects/oris
+branch=main
+python_bin=python3
+
+# pre-log bootstrap output
+From github.com:ShanGouXueHui/oris
+   b8b1680..85353ed  main       -> origin/main
+Already on 'main'
+M	orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.json
+M	reports/execution/module_A_bootstrap_latest.log
+M	reports/execution/module_B_bootstrap_latest.log
+M	reports/execution/module_C_bootstrap_latest.log
+M	reports/execution/module_D_bootstrap_latest.log
+M	reports/execution/module_E_bootstrap_latest.log
+Your branch is behind 'origin/main' by 2 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Updating b8b1680..85353ed
+Fast-forward
+ ...HAT_HANDOFF_2026-06-22_AUTONOMOUS_RUNTIME_V2.md |  34 +-
+ scripts/bootstrap_runtime_v2_module_f.sh           | 582 +++++++++++++++++++++
+ 2 files changed, 600 insertions(+), 16 deletions(-)
+ create mode 100644 scripts/bootstrap_runtime_v2_module_f.sh
+
+# repository state
+base_sha=85353ed4e1d39fcd5486c4d85254a42261225dbd
+module_E_expected_final_sha=b8b168051ed3a3cd67ddea8798ec2f1983cd5a40
+product_check_status=ls_remote_ok
+product_head=7d1d604b92b21f1213f990140b3345b4be2163ca
+product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
+
+# module E evidence check
+{
+  "module": "Runtime v2 Module E",
+  "bootstrap_version": "2026-06-23-runtime-v2-module-e-official",
+  "status": "passed",
+  "generated_at": "2026-06-23T18:54:34.111153+00:00",
+  "test_command": "python3 -m unittest discover -s tests/runtime_v2 -p test_*.py -q",
+  "test_exit_code": 0,
+  "base_sha": "b192897e3331a6be2475d6e207f2eb44c15a731a",
+  "module_D_final_sha": "62506edf6ef6fa439a8992e904a5d2bc510a26f1",
+  "product_repo_check_status": "ls_remote_ok",
+  "product_repo_head": "7d1d604b92b21f1213f990140b3345b4be2163ca",
+  "product_repo_module0_sha": "7d1d604b92b21f1213f990140b3345b4be2163ca",
+  "old_interactive_insight_product_continued": false,
+  "log_file": "/home/admin/projects/oris/reports/execution/module_E_bootstrap_latest.log",
+  "checks": [
+    "artifact_hash_capture",
+    "missing_artifact_protection",
+    "deterministic_index_id",
+    "publish_plan_generation",
+    "issue_payload_generation",
+    "executor_worker_evidence_aggregation"
+  ]
+}----------------------------------------------------------------------
+Ran 37 tests in 0.054s
+
+OK

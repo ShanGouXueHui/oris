@@ -1,0 +1,16 @@
+{
+  "version": "runtime_v2_module_F",
+  "type": "object",
+  "required": ["approval_id", "run_id", "status", "risk_level", "action_type", "created_at"],
+  "properties": {
+    "approval_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "status": {"enum": ["PENDING", "APPROVED", "REJECTED", "EXPIRED"]},
+    "risk_level": {"enum": ["MEDIUM", "HIGH"]},
+    "action_type": {"type": "string"},
+    "reason": {"type": "string"},
+    "evidence_ref": {"type": ["string", "null"]},
+    "created_at": {"type": "string"},
+    "decided_at": {"type": ["string", "null"]}
+  }
+}
