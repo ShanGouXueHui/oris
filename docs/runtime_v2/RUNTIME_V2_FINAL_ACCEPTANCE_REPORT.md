@@ -36,4 +36,4 @@ passed
 
 ## Next Phase
 
-Rebuild the commercial insight capability using the upgraded Runtime v2 substrate. The product repository remains .
+Rebuild the commercial insight capability using the upgraded Runtime v2 substrate. The product repository remains `ShanGouXueHui/oris-commercial-insight-employee`.
