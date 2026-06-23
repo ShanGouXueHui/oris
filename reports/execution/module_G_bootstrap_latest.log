@@ -38,3 +38,14 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 43 tests in 0.109s
 
 OK
+[main 63c407a] runtime-v2(module-g): add end-to-end acceptance harness
+ 10 files changed, 329 insertions(+), 13 deletions(-)
+ create mode 100644 docs/runtime_v2/END_TO_END_RUNTIME_HARNESS_AND_ACCEPTANCE_RUNNER_MODULE_G.md
+ create mode 100644 docs/testing/MODULE_G_TEST_PLAN.md
+ create mode 100644 reports/execution/module_G_bootstrap_latest.log
+ create mode 100644 reports/execution/module_G_execution_report.md
+ create mode 100644 reports/testing/module_G_test_result.json
+ create mode 100644 schemas/runtime_v2/acceptance_scenario.schema.json
+ create mode 100644 schemas/runtime_v2/acceptance_summary.schema.json
+ create mode 100644 scripts/lib/runtime_v2_acceptance_harness.py
+ create mode 100644 tests/runtime_v2/test_acceptance_harness.py
