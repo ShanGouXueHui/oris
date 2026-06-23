@@ -1,0 +1,14 @@
+{
+  "version": "runtime_v2_module_C",
+  "type": "object",
+  "required": ["worker_id", "status", "run_id", "queue_id", "decision"],
+  "properties": {
+    "worker_id": {"type": "string"},
+    "status": {"enum": ["IDLE", "COMPLETED", "REPAIRED", "WAITING_APPROVAL", "FAILED_FATAL", "SKIPPED_TERMINAL"]},
+    "run_id": {"type": ["string", "null"]},
+    "queue_id": {"type": ["string", "null"]},
+    "decision": {"type": "string"},
+    "attempts": {"type": "integer"},
+    "created_at": {"type": "string"}
+  }
+}

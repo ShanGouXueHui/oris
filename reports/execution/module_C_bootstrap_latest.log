@@ -1,0 +1,59 @@
+# Module C bootstrap log
+version=2026-06-23-runtime-v2-module-c-official
+started_at=2026-06-23T03:29:35Z
+oris_dir=/home/admin/projects/oris
+branch=main
+python_bin=python3
+
+# pre-log bootstrap output
+From github.com:ShanGouXueHui/oris
+   68a704d..b6b17d6  main       -> origin/main
+Already on 'main'
+M	orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.json
+M	reports/execution/module_A_bootstrap_latest.log
+M	reports/execution/module_B_bootstrap_latest.log
+Your branch is behind 'origin/main' by 2 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Updating 68a704d..b6b17d6
+Fast-forward
+ ...HAT_HANDOFF_2026-06-22_AUTONOMOUS_RUNTIME_V2.md |  38 +-
+ scripts/bootstrap_runtime_v2_module_c.sh           | 572 +++++++++++++++++++++
+ 2 files changed, 593 insertions(+), 17 deletions(-)
+ create mode 100644 scripts/bootstrap_runtime_v2_module_c.sh
+
+# repository state
+base_sha=b6b17d6e7a97fe54ce013d8049092e31e898ee11
+module_B_expected_final_sha=68a704da3f03bff31206f90cb5806f240c8ba9f6
+product_check_status=ls_remote_ok
+product_head=7d1d604b92b21f1213f990140b3345b4be2163ca
+product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
+
+# module B evidence check
+{
+  "module": "Runtime v2 Module B",
+  "bootstrap_version": "2026-06-22-runtime-v2-module-b-official",
+  "status": "passed",
+  "generated_at": "2026-06-23T03:24:13.058394+00:00",
+  "test_command": "python3 -m unittest discover -s tests/runtime_v2 -p test_*.py -q",
+  "test_exit_code": 0,
+  "base_sha": "b939fe27a1a0e548a032d193a36f145602a87b6a",
+  "module_A_final_sha": "c244e2467fe153377b370df0ffc35d541b8b3ef1",
+  "product_repo_check_status": "ls_remote_ok",
+  "product_repo_head": "7d1d604b92b21f1213f990140b3345b4be2163ca",
+  "product_repo_module0_sha": "7d1d604b92b21f1213f990140b3345b4be2163ca",
+  "old_interactive_insight_product_continued": false,
+  "log_file": "/home/admin/projects/oris/reports/execution/module_B_bootstrap_latest.log",
+  "checks": [
+    "run_record_persists_across_reload",
+    "create_run_is_idempotent",
+    "queue_claim_is_exactly_once",
+    "state_transition_validation",
+    "terminal_state_protection",
+    "event_log_is_append_only_and_persistent"
+  ]
+}----------------------------------------------------------------------
+Ran 17 tests in 0.028s
+
+OK
