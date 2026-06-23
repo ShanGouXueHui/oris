@@ -3,9 +3,10 @@
 # ORIS Runtime v2 Module H official bootstrap script.
 # Policy: do not use `set -e`; terminal output stays short; detailed logs are written as GitHub evidence.
 
-VERSION="2026-06-23-runtime-v2-module-h-official"
+VERSION="2026-06-23-runtime-v2-module-h-official-fixed"
 ORIS_REPO_URL="${ORIS_REPO_URL:-https://github.com/ShanGouXueHui/oris.git}"
 PRODUCT_REPO_URL="${PRODUCT_REPO_URL:-https://github.com/ShanGouXueHui/oris-commercial-insight-employee.git}"
+PRODUCT_REPO_FULL_NAME="ShanGouXueHui/oris-commercial-insight-employee"
 WORKDIR="${ORIS_WORKDIR:-$HOME/projects}"
 ORIS_DIR="${ORIS_DIR:-$WORKDIR/oris}"
 BRANCH="${ORIS_BRANCH:-main}"
@@ -165,10 +166,10 @@ Validate Runtime v2 final acceptance evidence and create the handoff for rebuild
 
 Module H passes only when tests pass and evidence is written to:
 
-- `reports/testing/module_H_test_result.json`
-- `reports/testing/latest_test_result.json`
-- `reports/execution/module_H_execution_report.md`
-- `docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md`
+- reports/testing/module_H_test_result.json
+- reports/testing/latest_test_result.json
+- reports/execution/module_H_execution_report.md
+- docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md
 EOF
 
 cat > tests/runtime_v2/test_final_acceptance_gate.py <<'EOF'
@@ -236,7 +237,7 @@ $TEST_STATUS
 
 ## Final Gate Test Command
 
-\`$TEST_COMMAND\`
+$TEST_COMMAND
 
 ## Final Gate Test Exit Code
 
@@ -266,21 +267,21 @@ Pending until evidence commit completes.
 
 ## Next Phase
 
-Rebuild the commercial insight capability using the upgraded Runtime v2 substrate. The product repository remains `ShanGouXueHui/oris-commercial-insight-employee`.
+Rebuild the commercial insight capability using the upgraded Runtime v2 substrate. The product repository remains $PRODUCT_REPO_FULL_NAME.
 EOF
 
 cat > memory/dev_employee/NEXT_CHAT_START_PROMPT_2026-06-23_INSIGHT_REBUILD_AFTER_RUNTIME_V2.md <<'EOF'
 Continue ORIS / OpenClaw / Codex-backed AI Dev Employee after Runtime v2 final acceptance.
 
-Do not rebuild from scratch. First read GitHub evidence from `ShanGouXueHui/oris`:
+Do not rebuild from scratch. First read GitHub evidence from ShanGouXueHui/oris:
 
-1. `docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md`
-2. `reports/testing/latest_test_result.json`
-3. `reports/execution/module_H_execution_report.md`
-4. `memory/dev_employee/ENGINEERING_GUARDRAILS_SCRIPT_AND_EVIDENCE_2026-06-22.md`
-5. `memory/dev_employee/GUARDRAIL_MINIMAL_MANUAL_INTERVENTION_2026-06-23.md`
+1. docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md
+2. reports/testing/latest_test_result.json
+3. reports/execution/module_H_execution_report.md
+4. memory/dev_employee/ENGINEERING_GUARDRAILS_SCRIPT_AND_EVIDENCE_2026-06-22.md
+5. memory/dev_employee/GUARDRAIL_MINIMAL_MANUAL_INTERVENTION_2026-06-23.md
 
-Then inspect product repo `ShanGouXueHui/oris-commercial-insight-employee`.
+Then inspect product repo ShanGouXueHui/oris-commercial-insight-employee.
 
 Goal: rebuild commercial insight capability using Runtime v2 as the autonomous development employee substrate. Do not continue old interactive insight product blindly. Start with a fresh evidence-backed module plan for insight rebuild.
 EOF
@@ -340,7 +341,7 @@ $MODULE_G_FINAL_SHA
 
 ## Test Command
 
-\`$TEST_COMMAND\`
+$TEST_COMMAND
 
 ## Test Result
 
@@ -349,14 +350,14 @@ $MODULE_G_FINAL_SHA
 
 ## Evidence Files
 
-- \`docs/runtime_v2/FINAL_ACCEPTANCE_AND_INSIGHT_REBUILD_HANDOFF_MODULE_H.md\`
-- \`docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md\`
-- \`memory/dev_employee/NEXT_CHAT_START_PROMPT_2026-06-23_INSIGHT_REBUILD_AFTER_RUNTIME_V2.md\`
-- \`tests/runtime_v2/test_final_acceptance_gate.py\`
-- \`docs/testing/MODULE_H_TEST_PLAN.md\`
-- \`reports/testing/module_H_test_result.json\`
-- \`reports/testing/latest_test_result.json\`
-- \`reports/execution/module_H_bootstrap_latest.log\`
+- docs/runtime_v2/FINAL_ACCEPTANCE_AND_INSIGHT_REBUILD_HANDOFF_MODULE_H.md
+- docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md
+- memory/dev_employee/NEXT_CHAT_START_PROMPT_2026-06-23_INSIGHT_REBUILD_AFTER_RUNTIME_V2.md
+- tests/runtime_v2/test_final_acceptance_gate.py
+- docs/testing/MODULE_H_TEST_PLAN.md
+- reports/testing/module_H_test_result.json
+- reports/testing/latest_test_result.json
+- reports/execution/module_H_bootstrap_latest.log
 
 ## Module H Evidence Commit SHA
 
