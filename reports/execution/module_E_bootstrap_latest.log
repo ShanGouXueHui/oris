@@ -60,3 +60,14 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 30 tests in 0.043s
 
 OK
+[main 1ce5525] runtime-v2(module-e): add github evidence publisher and index
+ 10 files changed, 402 insertions(+), 13 deletions(-)
+ create mode 100644 docs/runtime_v2/GITHUB_EVIDENCE_PUBLISHER_AND_RUN_EVIDENCE_INDEX_MODULE_E.md
+ create mode 100644 docs/testing/MODULE_E_TEST_PLAN.md
+ create mode 100644 reports/execution/module_E_bootstrap_latest.log
+ create mode 100644 reports/execution/module_E_execution_report.md
+ create mode 100644 reports/testing/module_E_test_result.json
+ create mode 100644 schemas/runtime_v2/evidence_index.schema.json
+ create mode 100644 schemas/runtime_v2/github_publish_plan.schema.json
+ create mode 100644 scripts/lib/runtime_v2_evidence_publisher.py
+ create mode 100644 tests/runtime_v2/test_evidence_publisher.py
