@@ -60,3 +60,14 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 37 tests in 0.054s
 
 OK
+[main 8fa8355] runtime-v2(module-f): add approval gate and control plane contract
+ 10 files changed, 444 insertions(+), 11 deletions(-)
+ create mode 100644 docs/runtime_v2/APPROVAL_GATE_AND_CONTROL_PLANE_CONTRACT_MODULE_F.md
+ create mode 100644 docs/testing/MODULE_F_TEST_PLAN.md
+ create mode 100644 reports/execution/module_F_bootstrap_latest.log
+ create mode 100644 reports/execution/module_F_execution_report.md
+ create mode 100644 reports/testing/module_F_test_result.json
+ create mode 100644 schemas/runtime_v2/approval_decision.schema.json
+ create mode 100644 schemas/runtime_v2/approval_request.schema.json
+ create mode 100644 scripts/lib/runtime_v2_approval_gate.py
+ create mode 100644 tests/runtime_v2/test_approval_gate.py
