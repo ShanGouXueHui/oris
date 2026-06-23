@@ -58,3 +58,15 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 24 tests in 0.033s
 
 OK
+[main 9e69e22] runtime-v2(module-d): add tool executor adapter and evidence contract
+ 11 files changed, 435 insertions(+), 12 deletions(-)
+ create mode 100644 docs/runtime_v2/TOOL_EXECUTOR_ADAPTER_AND_EVIDENCE_CONTRACT_MODULE_D.md
+ create mode 100644 docs/testing/MODULE_D_TEST_PLAN.md
+ create mode 100644 reports/execution/module_D_bootstrap_latest.log
+ create mode 100644 reports/execution/module_D_execution_report.md
+ create mode 100644 reports/testing/module_D_test_result.json
+ create mode 100644 schemas/runtime_v2/evidence_artifact.schema.json
+ create mode 100644 schemas/runtime_v2/executor_action.schema.json
+ create mode 100644 schemas/runtime_v2/executor_result.schema.json
+ create mode 100644 scripts/lib/runtime_v2_executor.py
+ create mode 100644 tests/runtime_v2/test_executor_adapter.py
