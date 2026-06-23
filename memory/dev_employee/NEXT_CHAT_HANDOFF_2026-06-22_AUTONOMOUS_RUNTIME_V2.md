@@ -7,14 +7,13 @@ Date: 2026-06-23
 The next chat must not rely on prior chat context. Read these files from GitHub in order:
 
 1. `memory/dev_employee/CURRENT_STATE_2026-06-22_AUTONOMOUS_RUNTIME_V2.md`
-2. `memory/dev_employee/NEXT_CHAT_START_PROMPT_2026-06-22_RUNTIME_V2_MODULE_B.md`
-3. `memory/dev_employee/ENGINEERING_GUARDRAILS_SCRIPT_AND_EVIDENCE_2026-06-22.md`
-4. `docs/DEV_EMPLOYEE_AUTONOMOUS_RUNTIME_V2_ACCEPTANCE_2026-06-22.md`
-5. `docs/OPERATING_CONTEXT_AND_ENGINEERING_RULES_2026-06-22_RUNTIME_V2.md`
-6. `orchestration/project_registry.json`
-7. `memory/dev_employee/current_task.json`
-8. `memory/dev_employee/current_task.md`
-9. GitHub issue `https://github.com/ShanGouXueHui/oris/issues/15`
+2. `memory/dev_employee/ENGINEERING_GUARDRAILS_SCRIPT_AND_EVIDENCE_2026-06-22.md`
+3. `docs/DEV_EMPLOYEE_AUTONOMOUS_RUNTIME_V2_ACCEPTANCE_2026-06-22.md`
+4. `docs/OPERATING_CONTEXT_AND_ENGINEERING_RULES_2026-06-22_RUNTIME_V2.md`
+5. `orchestration/project_registry.json`
+6. `memory/dev_employee/current_task.json`
+7. `memory/dev_employee/current_task.md`
+8. GitHub issue `https://github.com/ShanGouXueHui/oris/issues/15`
 
 Then inspect the current latest commits in:
 
@@ -31,8 +30,11 @@ Then inspect the current latest commits in:
 - Runtime v2 Module B is accepted.
 - Module B final commit: `68a704da3f03bff31206f90cb5806f240c8ba9f6`.
 - Module B evidence commit recorded inside report: `c5f732672d8d3080e4c56af4ff3fccb945a95bf5`.
-- Module B latest test result: `reports/testing/latest_test_result.json` with `status=passed` and `test_exit_code=0`.
-- Module B execution report: `reports/execution/module_B_execution_report.md`.
+- Runtime v2 Module C is accepted.
+- Module C final commit: `83358d791f643fb3f734eec1af5351c65947be78`.
+- Module C evidence commit recorded inside report: `755b757e4e7dd5ac6d2eb80efff2338aab19e346`.
+- Module C latest test result: `reports/testing/latest_test_result.json` with `status=passed` and `test_exit_code=0`.
+- Module C execution report: `reports/execution/module_C_execution_report.md`.
 - Insight product Module 0 commit remains: `7d1d604b92b21f1213f990140b3345b4be2163ca`.
 - Product repo was checked read-only by `git ls-remote`; old interactive insight product was not continued.
 
@@ -48,23 +50,24 @@ Upgrade ORIS -> Autonomous Dev Employee Runtime v2 -> use upgraded ORIS to rebui
 
 ## Immediate next task
 
-Start Runtime v2 Module C: Autonomous Worker Loop and Repair Policy.
+Start Runtime v2 Module D: Tool Executor Adapter and Evidence Contract.
 
-Module C should connect the persistent substrate from Module B to a bounded autonomous worker iteration:
+Module D should connect the Module C worker loop to a safe executor abstraction without enabling unbounded generic execution:
 
-- worker loop contract;
-- context pack loading rule;
-- queue claim -> run transition -> task execution stub -> test evidence -> commit/evidence decision flow;
-- retryable failure repair policy;
-- blocked/fatal failure handling;
-- approval gate handling for high-risk actions;
-- tests for successful worker iteration, retryable repair path, blocked approval path, terminal protection, and event evidence;
-- `docs/testing/MODULE_C_TEST_PLAN.md`;
-- `reports/testing/module_C_test_result.json`;
+- executor adapter interface;
+- allowed action contract;
+- command/action result schema;
+- evidence artifact contract;
+- execution sandbox policy;
+- denied-action handling;
+- test executor for deterministic local validation;
+- tests for allowed action execution, denied action protection, evidence capture, retryable executor failure mapping, fatal executor failure mapping, and worker integration;
+- `docs/testing/MODULE_D_TEST_PLAN.md`;
+- `reports/testing/module_D_test_result.json`;
 - `reports/testing/latest_test_result.json`;
-- `reports/execution/module_C_execution_report.md`.
+- `reports/execution/module_D_execution_report.md`.
 
-Module C cannot be marked complete unless implementation and evidence are committed and pushed to GitHub.
+Module D cannot be marked complete unless implementation and evidence are committed and pushed to GitHub.
 
 ## Script and evidence guardrail
 
