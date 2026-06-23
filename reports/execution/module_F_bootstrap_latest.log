@@ -54,3 +54,5 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 37 tests in 0.054s
 
 OK
+[main 6365a15] runtime-v2(module-f): add approval gate and control plane contract
+ 4 files changed, 23 insertions(+), 40 deletions(-)
