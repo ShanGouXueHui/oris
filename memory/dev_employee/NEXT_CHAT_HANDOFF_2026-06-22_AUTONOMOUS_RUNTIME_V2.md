@@ -33,8 +33,11 @@ Then inspect the current latest commits in:
 - Runtime v2 Module C is accepted.
 - Module C final commit: `83358d791f643fb3f734eec1af5351c65947be78`.
 - Module C evidence commit recorded inside report: `755b757e4e7dd5ac6d2eb80efff2338aab19e346`.
-- Module C latest test result: `reports/testing/latest_test_result.json` with `status=passed` and `test_exit_code=0`.
-- Module C execution report: `reports/execution/module_C_execution_report.md`.
+- Runtime v2 Module D is accepted.
+- Module D final commit: `62506edf6ef6fa439a8992e904a5d2bc510a26f1`.
+- Module D evidence commit recorded inside report: `9e69e2256f22c718aaa81fe5cfd019fd9fc59c95`.
+- Module D latest test result: `reports/testing/latest_test_result.json` with `status=passed` and `test_exit_code=0`.
+- Module D execution report: `reports/execution/module_D_execution_report.md`.
 - Insight product Module 0 commit remains: `7d1d604b92b21f1213f990140b3345b4be2163ca`.
 - Product repo was checked read-only by `git ls-remote`; old interactive insight product was not continued.
 
@@ -50,24 +53,24 @@ Upgrade ORIS -> Autonomous Dev Employee Runtime v2 -> use upgraded ORIS to rebui
 
 ## Immediate next task
 
-Start Runtime v2 Module D: Tool Executor Adapter and Evidence Contract.
+Start Runtime v2 Module E: GitHub Evidence Publisher and Run Evidence Index.
 
-Module D should connect the Module C worker loop to a safe executor abstraction without enabling unbounded generic execution:
+Module E should make ORIS evidence inspectable and auditable from GitHub without relying on chat history or long terminal logs:
 
-- executor adapter interface;
-- allowed action contract;
-- command/action result schema;
-- evidence artifact contract;
-- execution sandbox policy;
-- denied-action handling;
-- test executor for deterministic local validation;
-- tests for allowed action execution, denied action protection, evidence capture, retryable executor failure mapping, fatal executor failure mapping, and worker integration;
-- `docs/testing/MODULE_D_TEST_PLAN.md`;
-- `reports/testing/module_D_test_result.json`;
+- evidence index contract;
+- publish plan contract;
+- artifact hashing and manifest generation;
+- run/module evidence aggregation;
+- commit metadata capture;
+- issue-update payload generation;
+- deterministic local publisher for validation;
+- tests for artifact hash capture, missing artifact protection, deterministic index id, publish plan generation, issue payload generation, and executor/worker evidence aggregation;
+- `docs/testing/MODULE_E_TEST_PLAN.md`;
+- `reports/testing/module_E_test_result.json`;
 - `reports/testing/latest_test_result.json`;
-- `reports/execution/module_D_execution_report.md`.
+- `reports/execution/module_E_execution_report.md`.
 
-Module D cannot be marked complete unless implementation and evidence are committed and pushed to GitHub.
+Module E cannot be marked complete unless implementation and evidence are committed and pushed to GitHub.
 
 ## Script and evidence guardrail
 
