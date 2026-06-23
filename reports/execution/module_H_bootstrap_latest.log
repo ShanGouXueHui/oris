@@ -37,3 +37,13 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 47 tests in 0.109s
 
 OK
+[main 37c24d7] runtime-v2(module-h): add final acceptance gate and insight rebuild handoff
+ 9 files changed, 239 insertions(+), 12 deletions(-)
+ create mode 100644 docs/runtime_v2/FINAL_ACCEPTANCE_AND_INSIGHT_REBUILD_HANDOFF_MODULE_H.md
+ create mode 100644 docs/runtime_v2/RUNTIME_V2_FINAL_ACCEPTANCE_REPORT.md
+ create mode 100644 docs/testing/MODULE_H_TEST_PLAN.md
+ create mode 100644 memory/dev_employee/NEXT_CHAT_START_PROMPT_2026-06-23_INSIGHT_REBUILD_AFTER_RUNTIME_V2.md
+ create mode 100644 reports/execution/module_H_bootstrap_latest.log
+ create mode 100644 reports/execution/module_H_execution_report.md
+ create mode 100644 reports/testing/module_H_test_result.json
+ create mode 100644 tests/runtime_v2/test_final_acceptance_gate.py

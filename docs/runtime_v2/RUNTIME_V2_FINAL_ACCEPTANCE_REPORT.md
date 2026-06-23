@@ -32,7 +32,7 @@ passed
 
 ## Runtime v2 Final Evidence Commit SHA
 
-Pending until evidence commit completes.
+37c24d7565951a2b909ab223920da80d888fc6e7
 
 ## Next Phase
 
