@@ -57,3 +57,13 @@ product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
 Ran 17 tests in 0.028s
 
 OK
+[main 755b757] runtime-v2(module-c): add autonomous worker loop and repair policy
+ 9 files changed, 435 insertions(+), 12 deletions(-)
+ create mode 100644 docs/runtime_v2/AUTONOMOUS_WORKER_LOOP_AND_REPAIR_POLICY_MODULE_C.md
+ create mode 100644 docs/testing/MODULE_C_TEST_PLAN.md
+ create mode 100644 reports/execution/module_C_bootstrap_latest.log
+ create mode 100644 reports/execution/module_C_execution_report.md
+ create mode 100644 reports/testing/module_C_test_result.json
+ create mode 100644 schemas/runtime_v2/worker_iteration.schema.json
+ create mode 100644 scripts/lib/runtime_v2_worker.py
+ create mode 100644 tests/runtime_v2/test_worker_loop.py

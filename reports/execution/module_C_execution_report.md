@@ -45,4 +45,4 @@ b6b17d6e7a97fe54ce013d8049092e31e898ee11
 
 ## Module C Evidence Commit SHA
 
-Pending until evidence commit completes.
+755b757e4e7dd5ac6d2eb80efff2338aab19e346
