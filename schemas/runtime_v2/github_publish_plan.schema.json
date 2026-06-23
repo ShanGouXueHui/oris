@@ -1,0 +1,12 @@
+{
+  "version": "runtime_v2_module_E",
+  "type": "object",
+  "required": ["branch", "commit_message", "files", "evidence_index_ref"],
+  "properties": {
+    "branch": {"type": "string"},
+    "commit_message": {"type": "string"},
+    "files": {"type": "array", "items": {"type": "string"}},
+    "evidence_index_ref": {"type": "string"},
+    "issue_update": {"type": "object"}
+  }
+}

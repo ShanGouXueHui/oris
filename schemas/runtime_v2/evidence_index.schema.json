@@ -1,0 +1,13 @@
+{
+  "version": "runtime_v2_module_E",
+  "type": "object",
+  "required": ["index_id", "module", "status", "artifacts", "created_at"],
+  "properties": {
+    "index_id": {"type": "string"},
+    "module": {"type": "string"},
+    "status": {"type": "string"},
+    "artifacts": {"type": "array"},
+    "created_at": {"type": "string"},
+    "commit_sha": {"type": ["string", "null"]}
+  }
+}
