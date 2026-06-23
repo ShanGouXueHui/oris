@@ -1,0 +1,11 @@
+{
+  "version": "runtime_v2_module_D",
+  "type": "object",
+  "required": ["action_type", "payload"],
+  "properties": {
+    "action_type": {"type": "string"},
+    "payload": {"type": "object"},
+    "risk_level": {"enum": ["LOW", "MEDIUM", "HIGH"]},
+    "idempotency_key": {"type": ["string", "null"]}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "version": "runtime_v2_module_D",
+  "type": "object",
+  "required": ["artifact_id", "action_type", "status", "created_at"],
+  "properties": {
+    "artifact_id": {"type": "string"},
+    "action_type": {"type": "string"},
+    "status": {"type": "string"},
+    "created_at": {"type": "string"},
+    "payload_summary": {"type": "object"}
+  }
+}

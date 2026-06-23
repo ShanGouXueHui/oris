@@ -1,0 +1,11 @@
+{
+  "version": "runtime_v2_module_D",
+  "type": "object",
+  "required": ["status", "outcome_type", "evidence_ref"],
+  "properties": {
+    "status": {"enum": ["SUCCEEDED", "DENIED", "RETRYABLE_FAILED", "FATAL_FAILED", "APPROVAL_REQUIRED"]},
+    "outcome_type": {"enum": ["success", "denied", "retryable", "fatal", "approval_required"]},
+    "evidence_ref": {"type": ["string", "null"]},
+    "message": {"type": "string"}
+  }
+}
