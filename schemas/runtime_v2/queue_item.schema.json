@@ -1,0 +1,15 @@
+{
+  "version": "runtime_v2_module_B",
+  "type": "object",
+  "required": ["queue_id", "run_id", "status", "priority", "created_at", "updated_at"],
+  "properties": {
+    "queue_id": {"type": "string"},
+    "run_id": {"type": "string"},
+    "status": {"enum": ["QUEUED", "CLAIMED", "ACKED", "DEAD"]},
+    "priority": {"type": "integer"},
+    "worker_id": {"type": ["string", "null"]},
+    "idempotency_key": {"type": ["string", "null"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"}
+  }
+}

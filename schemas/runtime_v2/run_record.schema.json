@@ -1,0 +1,16 @@
+{
+  "version": "runtime_v2_module_B",
+  "type": "object",
+  "required": ["run_id", "objective", "module", "state", "created_at", "updated_at"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "objective": {"type": "string"},
+    "module": {"type": "string"},
+    "state": {"type": "string"},
+    "idempotency_key": {"type": ["string", "null"]},
+    "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
+    "context_pack_ref": {"type": ["string", "null"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"}
+  }
+}
