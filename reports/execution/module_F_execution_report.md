@@ -10,7 +10,7 @@ Approval Gate and Control Plane Contract
 
 ## Base Commit
 
-85353ed4e1d39fcd5486c4d85254a42261225dbd
+b1b1fb419b52244fc8ccb58f804f9d137a809210
 
 ## Module E Baseline
 
@@ -46,4 +46,4 @@ b8b168051ed3a3cd67ddea8798ec2f1983cd5a40
 
 ## Module F Evidence Commit SHA
 
-8fa835504efcf6a511336e3b7fd1490152acb447
+Pending until evidence commit completes.
