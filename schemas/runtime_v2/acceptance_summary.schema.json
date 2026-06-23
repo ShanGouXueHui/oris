@@ -1,0 +1,11 @@
+{
+  "version": "runtime_v2_module_G",
+  "type": "object",
+  "required": ["module", "status", "scenarios"],
+  "properties": {
+    "module": {"type": "string"},
+    "status": {"enum": ["passed", "failed"]},
+    "scenarios": {"type": "array"},
+    "created_at": {"type": "string"}
+  }
+}

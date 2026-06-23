@@ -1,0 +1,13 @@
+{
+  "version": "runtime_v2_module_G",
+  "type": "object",
+  "required": ["scenario_id", "scenario_type", "status", "run_id", "evidence_index_id"],
+  "properties": {
+    "scenario_id": {"type": "string"},
+    "scenario_type": {"enum": ["success", "repair", "approval", "blocked"]},
+    "status": {"enum": ["passed", "failed"]},
+    "run_id": {"type": "string"},
+    "final_state": {"type": "string"},
+    "evidence_index_id": {"type": ["string", "null"]}
+  }
+}

@@ -1,0 +1,40 @@
+# Module G bootstrap log
+version=2026-06-23-runtime-v2-module-g-official
+started_at=2026-06-23T19:22:46Z
+oris_dir=/home/admin/projects/oris
+branch=main
+python_bin=python3
+
+# pre-log bootstrap output
+From github.com:ShanGouXueHui/oris
+   3e0aa69..a6e8e93  main       -> origin/main
+Already on 'main'
+M	orchestration/task_runs/demo-openclaw-web-task-board-20260622015615.json
+M	reports/execution/module_A_bootstrap_latest.log
+M	reports/execution/module_B_bootstrap_latest.log
+M	reports/execution/module_C_bootstrap_latest.log
+M	reports/execution/module_D_bootstrap_latest.log
+M	reports/execution/module_E_bootstrap_latest.log
+M	reports/execution/module_F_bootstrap_latest.log
+Your branch is behind 'origin/main' by 2 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+From github.com:ShanGouXueHui/oris
+ * branch            main       -> FETCH_HEAD
+Updating 3e0aa69..a6e8e93
+Fast-forward
+ ...DRAIL_MINIMAL_MANUAL_INTERVENTION_2026-06-23.md |  15 +
+ scripts/bootstrap_runtime_v2_module_g.sh           | 468 +++++++++++++++++++++
+ 2 files changed, 483 insertions(+)
+ create mode 100644 memory/dev_employee/GUARDRAIL_MINIMAL_MANUAL_INTERVENTION_2026-06-23.md
+ create mode 100644 scripts/bootstrap_runtime_v2_module_g.sh
+
+# repository state
+base_sha=a6e8e936d6cd95ae6a391d53568fcdb2e2d6e5e1
+module_F_expected_final_sha=3e0aa696b7866aa368fd1e2020a7a9cf1b3f174a
+product_check_status=ls_remote_ok
+product_head=7d1d604b92b21f1213f990140b3345b4be2163ca
+product_module0_sha=7d1d604b92b21f1213f990140b3345b4be2163ca
+----------------------------------------------------------------------
+Ran 43 tests in 0.109s
+
+OK
